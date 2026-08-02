@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://origin-protocol.dev/schemas/manifest.schema.json",
+  "$id": "https://benxiang.dev/schemas/manifest.schema.json",
   "title": "Origin Pack Manifest",
   "description": "本象包（.origin/）manifest 的草案 Schema（v0.1）。对应 docs/03-协议草案-v0.1.md 第二、三节。manifest 在磁盘上通常写为 manifest.yaml，本 Schema 按其 JSON 等价物定义。",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://origin-protocol.dev/schemas/transaction.schema.json",
+  "$id": "https://benxiang.dev/schemas/transaction.schema.json",
   "title": "Semantic Transaction",
   "description": "语义事务——AI 的标准输出单元（v0.1 草案）。对应 docs/03-协议草案-v0.1.md 第六节。AI 不输出终态全文，只提交：操作+目标+依赖+内容+状态变化+断言。",
   "type": "object",

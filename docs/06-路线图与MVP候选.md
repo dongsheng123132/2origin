@@ -88,7 +88,22 @@ MCP 工具雏形：
 - Windows 原生 Office 黄金验证节点（商业）
 - 「AI Ready」认证与 Artifact Benchmark
 
-## 四、首个对外 Demo 的口径（无论选哪条路径）
+## 四、生态互动行动清单（2026-08-02 新增，用户已认可）
+
+调研（见 [research/2026-08-全球格局调研与评估](../research/2026-08-全球格局调研与评估.md)）确认：学界已收敛到我们的方向但无人工程化，先行者与论文作者是盟友不是对手。主动互动：
+
+| 对象 | 动作 |
+|---|---|
+| **天命**（zy-zmc/tianming-novel-ai-writer，369★） | 精读其 15 维快照 / 12 类变更声明 / 6 道门禁设计；提 issue 致意；探讨互操作——把天命数据格式列为 Story 方言的兼容/迁移目标，争取作者参与协议设计 |
+| **MemTX**（arXiv 2607.23929）作者 | 邮件/GitHub 互动：本象是其事务模型的工程化落地方向，争取引用与反馈 |
+| **Cordon**（arXiv 2606.17573）、**Eywa**（2605.30771）、SagaLLM 作者 | 同上；Commit Compiler 设计对齐其 prepare/validate/commit 语义 |
+| **ConStory-Bench**（ACL Findings 2026）团队 | 采用其 CED 指标（每万词一致性错误数）；联络探讨百万字级扩展合作 |
+| **Flint**（microsoft/flint-chart） | adapters/flint-chart 对接实践中反馈 issue，建立联系 |
+| ICML 2026「missing runtime」position paper 作者 | 对话：本象即其呼吁的可移植 state/budget/guardrail runtime 的实现尝试 |
+
+原则：引用先于宣称，合作先于对撕；所有对外互动前先过 [07-开源与商业](07-开源与商业.md) 的口径与诚实边界。
+
+## 五、首个对外 Demo 的口径（无论选哪条路径）
 
 对外演示必须是**可对照的**：
 

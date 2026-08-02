@@ -1,7 +1,11 @@
-# 本象协议 · Origin Protocol
+# Benxiang · 本象协议
 
 > **一源万影：保存本象，按需投影。**
 > Save the origin, project on demand.
+>
+> 「立象以尽意」——《易传·系辞》 · Establish the image to exhaust the meaning.
+
+**英文名 Benxiang**：Ben（本）= origin，Xiang（象）= the archetypal image。「象」取自《易传》「圣人立象以尽意」与《道德经》「大象无形」——文字装不下意义，须回到更本源的表示；大象无形，故能投影万形。发音：bun-SHYAHNG。协议的技术核心称 **Origin IR**（描述性术语）。
 
 **状态：v0.1 · 构思与协议草案阶段**（尚无可运行代码，MVP 方向待 Benchmark 验证后确定，见 [路线图](docs/06-路线图与MVP候选.md)）
 
@@ -110,7 +114,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 
 ## English Summary
 
-**Origin Protocol** is a persistent, AI-native object representation layer. Instead of feeding AI flattened projections (screenshots, OCR text, lossy summaries), it preserves the *origin* of a digital artifact — objects, relations, payloads, states, constraints and provenance — then compiles task-specific projections for the model on demand ("one origin, many shadows"). The AI writes back not full documents but compact **semantic transactions**, which a deterministic compiler validates, applies and re-projects, with evidence retained at every step. Think of it as an LLVM-style IR for AI work: renderers become projection backends, actions become a portable instruction set, and chat context becomes a disposable cache over a durable world state.
+**Benxiang** (本象, "origin-image"; *Ben* = origin, *Xiang* = the archetypal image, after the I Ching's "the sages established images to exhaust the meaning") is a persistent, AI-native object representation layer. Its technical core is the **Origin IR** spec. (Earlier drafts used the name "Origin Protocol"; renamed to avoid collision with the OGN crypto project.) Instead of feeding AI flattened projections (screenshots, OCR text, lossy summaries), it preserves the *origin* of a digital artifact — objects, relations, payloads, states, constraints and provenance — then compiles task-specific projections for the model on demand ("one origin, many shadows"). The AI writes back not full documents but compact **semantic transactions**, which a deterministic compiler validates, applies and re-projects, with evidence retained at every step. Think of it as an LLVM-style IR for AI work: renderers become projection backends, actions become a portable instruction set, and chat context becomes a disposable cache over a durable world state.
 
 Status: v0.1 concept & draft spec. No runnable code yet. Docs are primarily in Chinese with bilingual terminology.
 
