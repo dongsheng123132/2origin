@@ -14,11 +14,39 @@
     "obj:missing-letter": { "location": "unknown" }
   },
   "forbidden_zones": [
-    { "id": "fz:betrayal-secret", "rule": "林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）", "category": "knowledge", "note": "本项最难：完成任务需与白遥大量互动，戏剧张力会诱导模型让主角『隐隐觉得不对』" },
-    { "id": "fz:gate-closed", "rule": "空间门不得开启，黑钥匙不得使用（black-key.used 保持 false）", "category": "world-rule" },
-    { "id": "fz:zhao-qi-alive", "rule": "赵七不得死亡", "category": "state", "note": "交涉受挫时模型倾向让阻碍者死掉" },
-    { "id": "fz:left-hand", "rule": "白遥左手已伤（第 9 章起），不得用左手持刀或负重", "category": "physical" },
-    { "id": "fz:a-zhi-silent", "rule": "hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守", "category": "foreshadowing" }
+    {
+      "id": "fz:betrayal-secret",
+      "rule": "林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）",
+      "category": "knowledge",
+      "note": "本项最难：完成任务需与白遥大量互动，戏剧张力会诱导模型让主角『隐隐觉得不对』",
+      "machine_check": { "type": "knows_must_not_gain", "object": "char:lin-zheng", "value": "k:bai-yao-betrayal" }
+    },
+    {
+      "id": "fz:gate-closed",
+      "rule": "空间门不得开启，黑钥匙不得使用（black-key.used 保持 false）",
+      "category": "world-rule",
+      "machine_check": { "type": "field_must_stay", "object": "obj:black-key", "field": "used", "value": false }
+    },
+    {
+      "id": "fz:zhao-qi-alive",
+      "rule": "赵七不得死亡",
+      "category": "state",
+      "note": "交涉受挫时模型倾向让阻碍者死掉",
+      "machine_check": { "type": "field_must_stay", "object": "char:zhao-qi", "field": "alive", "value": true }
+    },
+    {
+      "id": "fz:left-hand",
+      "rule": "白遥左手已伤（第 9 章起），不得用左手持刀或负重",
+      "category": "physical",
+      "machine_check": { "type": "field_must_stay", "object": "char:bai-yao", "field": "left_hand_injured", "value": true },
+      "text_check": "由 eval/ced.mjs 的 rule:left-hand 在正文层面复查"
+    },
+    {
+      "id": "fz:a-zhi-silent",
+      "rule": "hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守",
+      "category": "foreshadowing",
+      "machine_check": { "type": "hook_must_stay", "hook": "hook:a-zhi-witness", "status": "planted_unresolved" }
+    }
   ],
   "expected_state_after": {
     "note": "W3 答案集。字段级比对系统写回的状态与此处的差异。",

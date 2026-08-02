@@ -117,20 +117,36 @@ benchmark/shadowbench-w/
 - [x] **状态重放器**（`eval/replay.mjs`）——ground truth 由事件折叠导出，可取任意章节的世界状态；含规格自洽校验（首跑即抓出两个真实缺陷，见 [world/README §5](world/README.md)）
 - [x] **W2 答案集**（`world/planted.json`）——6 条注入矛盾（2 易 3 中 1 难）+ 2 个误报陷阱
 - [x] **W3 答案集**（`world/spec.origin/tasks/continuation.json`）——续写任务、5 条禁区、预期终态
-- [ ] 生成 S 级基线正文（3 万字）并回读校验
-- [ ] 实现 A0（裸模型）与 A3（Benxiang）两臂
-- [ ] `eval/ced.mjs` 与 `eval/state-diff.mjs` 判分器
+- [x] **三个判分器**：`eval/ced.mjs`（W1，确定性通道全实现 + 语义通道接口）、`eval/detect-score.mjs`（W2 准确率/召回率）、`eval/state-diff.mjs`（W3 状态比对）
+- [x] **判分器自测**（`eval/selftest.mjs`）——用已知违规夹具反测规则是否真的会响，用干净文本反测误报
+- [x] **两个实验臂**：A0 裸模型、A3 Benxiang（含[上下文编译器](arms/a3-benxiang/context-compiler.mjs)与[提交编译器](arms/a3-benxiang/commit-compiler.mjs)——协议输入侧与输出侧的最小实现）
+- [x] **编排器**（`run.mjs`）+ stub 模型，全流程零成本跑通
+- [ ] 生成 S 级基线正文（3 万字）并回读校验 ← **下一步，第一次花 API 额度**
+- [ ] 接入语义通道（知识越界、语气暗示的双模型 judge）
 - [ ] **跑 Gate 0**
 - [ ] Gate 0 通过后补 A1/A2，升 M 级
 
 ```bash
-# 校验世界规格自洽
-node eval/replay.mjs --validate
-
-# 查看任意章节末的 ground truth 状态
-node eval/replay.mjs --chapter 10
-node eval/replay.mjs --chapter 3 --json
+node eval/replay.mjs --validate            # 校验世界规格自洽
+node eval/replay.mjs --chapter 10          # 任意章节末的 ground truth
+node eval/selftest.mjs                     # 判分器自测（必须全绿）
+node run.mjs --provider stub               # 零成本跑通全流程
+node run.mjs --provider stub --scenario violating --arm a3   # 验证门禁能拦住违规
+node run.mjs --provider anthropic --model claude-sonnet-5    # 真实实验（需 API Key）
 ```
+
+## 九、harness 已验证的行为
+
+以下均为实跑结果（stub 模式，只证明流程与判分逻辑正确，不含任何模型能力结论）：
+
+| 验证项 | 结果 |
+|---|---|
+| 世界规格自洽 | ✓ 引用完整、状态链无断裂；首跑抓出 2 个真实缺陷 |
+| 判分器不空转 | ✓ 6 条确定性规则全部命中已知违规，干净对照零误报 |
+| W3 能抓状态错误 | ✓ knows 泄漏、钥匙未转手、字段漏报均被判失败 |
+| W2 计分正确 | ✓ 召回/准确/误报陷阱识别均符合预期 |
+| **提交编译器能拦违规** | ✓ 违规剧本下 15 次提交全被拒，**0 字违规正文落地**；违规类型逐条回传模型 |
+| 无状态臂的 W3 采集 | ✓ 通过额外一轮状态询问采集，该轮 Token 计入其成本 |
 
 ---
 

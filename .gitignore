@@ -21,3 +21,4 @@ __pycache__/
 # 本地实验产物
 tmp/
 *.local.*
+benchmark/shadowbench-w/results/

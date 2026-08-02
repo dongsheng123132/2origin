@@ -115,8 +115,10 @@ function validate(spec) {
   return errors
 }
 
-const args = process.argv.slice(2)
-if (args.includes('--validate')) {
+const args = process.argv[1] === fileURLToPath(import.meta.url) ? process.argv.slice(2) : ['--noop']
+if (args.includes('--noop')) {
+  // 作为模块被导入，不执行 CLI
+} else if (args.includes('--validate')) {
   const errors = validate(loadSpec())
   if (errors.length) {
     console.error('✗ 规格校验未通过：')
