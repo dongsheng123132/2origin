@@ -1,0 +1,118 @@
+# 本象协议 · Origin Protocol
+
+> **一源万影：保存本象，按需投影。**
+> Save the origin, project on demand.
+
+**状态：v0.1 · 构思与协议草案阶段**（尚无可运行代码，MVP 方向待 Benchmark 验证后确定，见 [路线图](docs/06-路线图与MVP候选.md)）
+
+---
+
+## 这是什么
+
+本象协议是一套**面向 AI 的持久对象表示层**。
+
+过去的软件把数字世界展示给人看；本象协议要做的，是把数字世界的**本源结构**保存下来，按需投影给 AI 看、供 AI 改、由系统验证——并证明 AI 真的做对了。
+
+一句话对比：
+
+> 过去，人类把世界压缩成文档交给计算机；
+> 未来，AI 直接理解世界的本象，再为人类生成所需要的投影。
+
+## 它解决什么问题
+
+当前 AI 工作方式有三个结构性缺陷：
+
+| 缺陷 | 表现 | 本象协议的回答 |
+|---|---|---|
+| **感知**：AI 没有眼睛 | AI 能生成 Word/Excel/PPT/CAD，却没有稳定的「打开-看见-定位-修改-复验」系统；读到的往往是投影的投影（截图的 OCR、摘要的摘要） | 保留本源对象、投影规则和修改历史，按任务编译 AI 最需要的上下文 |
+| **记忆**：上下文必炸 | 聊天记录被当成项目状态，聊得越久越接近内存爆满，压缩摘要不断失真 | Chat 只是操作本象的临时窗口；世界状态持久存在于本象中，随时可恢复 |
+| **输出**：终态不稳 | AI 直接输出完整成品（几十页 PPT、百万字全文、几百行图表配置），内容、格式、引用一起失控 | AI 只输出紧凑的**语义事务**（改什么、依赖什么、断言什么），确定性编译器生成终态 |
+
+## 核心理念
+
+**本象不是「一个更大的 JSON」**，它同时保存六种东西：
+
+```text
+对象（objects）——稳定 ID 的真实实体
+关系（relations）——谁拥有/引用/依赖/生成谁
+数据（payloads）——各领域的原生载荷（几何、公式、时间轴……）
+状态与时间（states）——过去、现在、变化及其原因
+行为与约束（constraints）——能做什么、不能违反什么
+来源与证据（provenance）——谁创建、谁修改、哪些是推断
+```
+
+PDF、图片、Markdown、EPUB 都**不是源文件**，而是本象生成的**投影（缓存视图）**。
+
+## 体系一图流
+
+```text
+Word / CAD / Excel / 视频 / 网页 / 对话历史
+                    ↓  导入
+              本象 IR（Origin IR）
+        对象 + 语义 + 关系 + 状态 + 约束 + 来源
+                    ↓  Context Compiler（输入侧编译）
+     视觉地图 + 对象图 + 精确片段 + 可用动作 → AI
+                    ↓  AI 输出语义事务
+              Commit Compiler（输出侧编译）
+        校验约束 → 更新状态 → 留存证据 → 重新投影
+                    ↓
+      PDF / 图片 / 文字 / 三维 / 界面 …（多影输出）
+```
+
+配套概念分工（详见 [概念体系](docs/02-概念体系.md)）：
+
+> **影域负责隔离，本象负责保存，叠象负责看见与比较，影核负责行动，舟舱负责人类确认。**
+
+计算机体系类比：
+
+| 本体系 | 类比 |
+|---|---|
+| 本象 IR / Origin IR | AI 时代的 LLVM IR（通用中间表示） |
+| 影核协议 / ActionParity | 统一指令集 |
+| Shadow Runtime | 虚拟机 |
+| 叠象 / Redline | 调试器 + 测试系统 + Git |
+| 舟舱 / PodApp | 面向人的显示器和控制台 |
+
+## 文档导航
+
+| 文档 | 回答什么 |
+|---|---|
+| [01-愿景与定位](docs/01-愿景与定位.md) | 为什么做，做到哪个高度 |
+| [02-概念体系](docs/02-概念体系.md) | 术语表：本象/影子/叠象/影核/影域/舟舱（全项目术语准绳） |
+| [03-协议草案-v0.1](docs/03-协议草案-v0.1.md) | `.origin` 包结构、Origin IR 最小核心、事务格式 |
+| [04-架构设计](docs/04-架构设计.md) | 双向编译器、三级记忆、与 RAG 的区别 |
+| [05-生态对照](docs/05-生态对照.md) | 借鉴谁、不重复造谁（OfficeCLI/Docling/Flint/GraphRAG…） |
+| [06-路线图与MVP候选](docs/06-路线图与MVP候选.md) | 三条 MVP 路径对比与决策标准（ShadowBench） |
+| [07-开源与商业](docs/07-开源与商业.md) | 许可选择、开源/商业边界、诚实边界声明 |
+
+## 仓库结构
+
+```text
+本象协议/
+├── docs/        # 创始文档集（本轮产出）
+├── spec/        # JSON Schema 草稿 + 示例 .origin 包
+├── compiler/    # （占位）双向编译器：context-compiler / commit-compiler
+├── adapters/    # （占位）领域方言：flint / office / story / memory
+├── benchmark/   # （占位）ShadowBench 任务与指标定义
+└── reference/   # 原始构思文档存档
+```
+
+## 三条候选 MVP（待定）
+
+1. **本象记忆 / Shadow Memory**——MCP Server，把聊天历史持续提交为项目世界状态，新会话秒恢复，解决上下文爆炸
+2. **100 页 PPT 低 Token 审阅**——视觉总览 + 对象编号 + 按需加载，公开 Benchmark 对比纯文本/纯截图方案
+3. **本象写作引擎 / OriginWriter**——百万字小说不失忆：正文 + 人物状态 + 时间线 + 伏笔图谱，AI 以事务提交写作
+
+决策方式：先跑 ShadowBench 小实验，用数据说话。详见 [06-路线图与MVP候选](docs/06-路线图与MVP候选.md)。
+
+---
+
+## English Summary
+
+**Origin Protocol** is a persistent, AI-native object representation layer. Instead of feeding AI flattened projections (screenshots, OCR text, lossy summaries), it preserves the *origin* of a digital artifact — objects, relations, payloads, states, constraints and provenance — then compiles task-specific projections for the model on demand ("one origin, many shadows"). The AI writes back not full documents but compact **semantic transactions**, which a deterministic compiler validates, applies and re-projects, with evidence retained at every step. Think of it as an LLVM-style IR for AI work: renderers become projection backends, actions become a portable instruction set, and chat context becomes a disposable cache over a durable world state.
+
+Status: v0.1 concept & draft spec. No runnable code yet. Docs are primarily in Chinese with bilingual terminology.
+
+## License
+
+协议与核心运行时拟采用 **Apache-2.0**，示例采用 MIT，测试数据采用 CC0（详见 [07-开源与商业](docs/07-开源与商业.md)）。正式 LICENSE 文件将在首个可运行版本发布时添加。

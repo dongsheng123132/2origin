@@ -1,0 +1,4 @@
+[
+  { "rule": "revenue must_not_be_negative", "severity": "error", "scope": "field:revenue" },
+  { "rule": "projection must_disclose_truncation", "severity": "warning", "scope": "projection:*" }
+]

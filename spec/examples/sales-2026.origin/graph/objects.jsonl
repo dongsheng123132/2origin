@@ -1,0 +1,5 @@
+{"id": "dataset:sales-2026", "type": "dataset", "fields": ["month", "revenue", "region"]}
+{"id": "field:month", "type": "field", "semantic": "YearMonth"}
+{"id": "field:revenue", "type": "field", "semantic": "Amount", "unit": "CNY"}
+{"id": "field:region", "type": "field", "semantic": "Region"}
+{"id": "projection:revenue-trend", "type": "projection", "engine": "flint", "chart": "Line Chart"}

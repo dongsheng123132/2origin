@@ -1,0 +1,23 @@
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+
+# Node（未来）
+node_modules/
+dist/
+*.log
+
+# Python（未来）
+__pycache__/
+.venv/
+*.pyc
+
+# 本地实验产物
+tmp/
+*.local.*

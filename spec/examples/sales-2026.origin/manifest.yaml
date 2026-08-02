@@ -1,0 +1,40 @@
+# 本象包 manifest 示例（v0.1 草案）
+# Schema: ../../schemas/manifest.schema.json
+
+artifact:
+  id: sales-2026
+  kind: dataset
+  title: 2026 年度分区域销售数据
+
+payload:
+  uri: ./payloads/sales.arrow
+  media_type: application/vnd.apache.arrow.file
+  # digest: sha256:...   # 正式实现时由导入器计算
+
+semantics:
+  month: YearMonth
+  revenue:
+    type: Amount
+    unit: CNY
+  region: Region
+
+relations:
+  - revenue derived_from order_items
+
+constraints:
+  - revenue must_not_be_negative
+  - projection must_disclose_truncation
+
+projections:
+  - engine: flint
+    chart: Line Chart
+    encoding:
+      x: month
+      y: revenue
+      color: region
+    output: ./projections/revenue-trend.png
+
+provenance:
+  source: sales.xlsx
+  imported_at: 2026-08-02
+  history: ./provenance/history.jsonl

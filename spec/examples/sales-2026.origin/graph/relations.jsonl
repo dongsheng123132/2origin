@@ -1,0 +1,2 @@
+{"subject": "field:revenue", "predicate": "derived_from", "object": "dataset:order-items"}
+{"subject": "projection:revenue-trend", "predicate": "projects", "object": "dataset:sales-2026"}

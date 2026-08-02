@@ -1,0 +1,2 @@
+{"event": "imported", "source": "sales.xlsx", "at": "2026-08-02", "by": "origin-importer@draft"}
+{"event": "projection_registered", "projection": "projection:revenue-trend", "engine": "flint", "at": "2026-08-02"}

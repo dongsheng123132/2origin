@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://origin-protocol.dev/schemas/transaction.schema.json",
+  "title": "Semantic Transaction",
+  "description": "语义事务——AI 的标准输出单元（v0.1 草案）。对应 docs/03-协议草案-v0.1.md 第六节。AI 不输出终态全文，只提交：操作+目标+依赖+内容+状态变化+断言。",
+  "type": "object",
+  "required": ["transaction_id", "operation", "target"],
+  "properties": {
+    "transaction_id": {
+      "type": "string",
+      "description": "事务唯一 ID，建议 tx-<日期>-<序号>",
+      "examples": ["tx-20260802-001"]
+    },
+    "operation": {
+      "type": "string",
+      "description": "语义操作名。各方言在统一动作面之上登记自己的操作。",
+      "examples": ["append_scene", "replace_image", "set_cell_formula", "update_canon", "patch_projection"]
+    },
+    "target": {
+      "type": "string",
+      "description": "目标对象的稳定路径/ID",
+      "examples": ["volume-07/chapter-823/scene-004", "slide-17/chart-2"]
+    },
+    "depends_on": {
+      "type": "array",
+      "description": "本事务依赖的对象与状态版本（object-id 或 object-id@state-version）。运行时据此做冲突检查。",
+      "items": { "type": "string" },
+      "examples": [["scene:volume-07/chapter-823/scene-003", "character:lin-zheng@state-822"]]
+    },
+    "content": {
+      "type": "object",
+      "description": "新增/替换的内容载荷。遵循 Flint 原则：大型已有载荷只引用不重复输出。",
+      "required": ["format"],
+      "properties": {
+        "format": { "type": "string", "examples": ["markdown", "json", "yaml-patch"] },
+        "text": { "type": "string" },
+        "ref": { "type": "string", "description": "引用已有载荷而非内联（与 text 二选一）" }
+      }
+    },
+    "state_changes": {
+      "type": "array",
+      "description": "显式的状态变更（from→to），可校验、可回滚",
+      "items": {
+        "type": "object",
+        "required": ["object", "field", "to"],
+        "properties": {
+          "object": { "type": "string" },
+          "field": { "type": "string" },
+          "from": { "description": "变更前值；省略表示新建字段" },
+          "to": { "description": "变更后值" }
+        }
+      }
+    },
+    "foreshadowing": {
+      "type": "object",
+      "description": "（Story 方言）伏笔的回收与新建",
+      "properties": {
+        "resolved": { "type": "array", "items": { "type": "string" } },
+        "created": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "description": "AI 声明本次修改不违反的边界，由验证器复核；任一断言不成立则事务拒绝",
+      "items": { "type": "string" },
+      "examples": [["bai-yao-betrayal-remains-secret", "zhao-qi-remains-alive"]]
+    },
+    "patch": {
+      "type": "object",
+      "description": "纯投影修改的退化形态（不动源数据），如 { target: 'projections[0]', set: { chart: 'Grouped Bar Chart' } }",
+      "required": ["target", "set"],
+      "properties": {
+        "target": { "type": "string" },
+        "set": { "type": "object" }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "transaction_id": "tx-20260802-001",
+  "operation": "patch_projection",
+  "target": "sales-2026",
+  "depends_on": ["projection:revenue-trend"],
+  "patch": {
+    "target": "projections[0]",
+    "set": {
+      "chart": "Grouped Bar Chart"
+    }
+  },
+  "assertions": [
+    "no-source-data-modified",
+    "truncation-disclosed-if-any"
+  ]
+}

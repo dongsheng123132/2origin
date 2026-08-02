@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://origin-protocol.dev/schemas/manifest.schema.json",
+  "title": "Origin Pack Manifest",
+  "description": "本象包（.origin/）manifest 的草案 Schema（v0.1）。对应 docs/03-协议草案-v0.1.md 第二、三节。manifest 在磁盘上通常写为 manifest.yaml，本 Schema 按其 JSON 等价物定义。",
+  "type": "object",
+  "required": ["artifact"],
+  "properties": {
+    "artifact": {
+      "type": "object",
+      "description": "对象元信息",
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string", "description": "包内唯一、稳定的对象 ID" },
+        "kind": {
+          "type": "string",
+          "description": "领域方言标识",
+          "examples": ["dataset", "office.pptx", "office.docx", "cad", "story", "memory", "web", "media", "archive"]
+        },
+        "title": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "payload": {
+      "description": "原生载荷（单个或多个），内容寻址",
+      "oneOf": [
+        { "$ref": "#/$defs/payloadEntry" },
+        { "type": "array", "items": { "$ref": "#/$defs/payloadEntry" } }
+      ]
+    },
+    "semantics": {
+      "type": "object",
+      "description": "字段/对象的语义类型标注（参考 Flint semantic_types 思路）。值可为语义类型名字符串，或带 type/unit 的对象。",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string" },
+              "unit": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+    "relations": {
+      "type": "array",
+      "description": "对象间关系。v0.1 允许自然语句字符串（如 'revenue derived_from order_items'）或结构化三元组。",
+      "items": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "required": ["subject", "predicate", "object"],
+            "properties": {
+              "subject": { "type": "string" },
+              "predicate": { "type": "string" },
+              "object": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "description": "约束规则。v0.1 允许字符串或结构化对象。",
+      "items": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "required": ["rule"],
+            "properties": {
+              "rule": { "type": "string" },
+              "severity": { "type": "string", "enum": ["error", "warning"] },
+              "scope": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+    "projections": {
+      "type": "array",
+      "description": "已登记的投影意图/缓存视图",
+      "items": {
+        "type": "object",
+        "required": ["engine"],
+        "properties": {
+          "engine": { "type": "string", "examples": ["flint", "office", "pdf", "atlas"] },
+          "chart": { "type": "string" },
+          "encoding": { "type": "object" },
+          "output": { "type": "string", "description": "投影产物的相对路径（projections/ 下）" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "description": "来源信息",
+      "properties": {
+        "source": { "type": "string" },
+        "imported_at": { "type": "string", "format": "date" },
+        "imported_by": { "type": "string" },
+        "history": { "type": "string", "description": "事件日志文件相对路径，默认 provenance/history.jsonl" }
+      }
+    }
+  },
+  "$defs": {
+    "payloadEntry": {
+      "type": "object",
+      "required": ["uri"],
+      "properties": {
+        "uri": { "type": "string", "description": "载荷相对路径（payloads/ 下）或内容寻址 URI" },
+        "media_type": { "type": "string" },
+        "digest": { "type": "string", "description": "内容哈希（如 sha256:...），参考 OCI" }
+      }
+    }
+  }
+}
