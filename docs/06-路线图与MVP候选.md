@@ -55,10 +55,15 @@
 - ✅ `.origin` 包结构定义 + JSON Schema 草稿 + 示例包
 - ✅ 仓库骨架 + git init
 
-### Phase 1：ShadowBench 小实验 + MVP 决策（下一轮）
+### Phase 1：ShadowBench 小实验 + MVP 决策（进行中）
 
-- 手工构造 3-5 个 `.origin` 示例包（不写完整编译器，手工/半自动生成 atlas+graph+exact）
-- 跑三种输入方式对比，产出数据报告
+**写侧基准设计已完成** → [`benchmark/shadowbench-w/README.md`](../benchmark/shadowbench-w/README.md)：W1 生成一致性 / W2 缺陷检出 / **W3 状态回写正确性（全球空白，我们的独有考题）**；四个实验臂（裸模型 / 向量RAG / 天命式 / Benxiang）；世界规格先行的 CC0 语料方案；**Gate 0 生死题**（S 级 3 万字上若不赢裸模型就停下改架构）。
+
+待办：
+
+- 编写 S 级世界规格（`world/spec.origin/`）——同时是本象包的第一个真实用例
+- 生成并校验 S 级基线正文
+- 实现 A0/A3 两臂 + `eval/state-diff.mjs`，跑 Gate 0
 - 依据数据选定 MVP 路径，冻结协议 v0.2
 
 ### Phase 2：MVP 实现

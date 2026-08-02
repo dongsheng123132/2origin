@@ -1,5 +1,7 @@
 # benchmark/ · ShadowBench（Phase 1 首要任务）
 
+> **本文件是读侧/通用对比的指标定义。写侧基准（本项目的战略资产）见 [`shadowbench-w/`](shadowbench-w/README.md)——那里有 W1/W2/W3 三道考题、四个实验臂、语料构建方案和 Gate 0 生死题。**
+
 > 协议成立与否由这里的数据决定，不由文档决定。MVP 决策依赖本目录的实验结果（见 [docs/06-路线图](../docs/06-路线图与MVP候选.md) 第二节）。
 
 ## 对比的三种输入方式
