@@ -143,14 +143,22 @@ for (const ch of targets) {
   }
 }
 
-// 合并全本，供 A0 臂作「最近正文」使用
-const parts = spec.outline
+// 合并全本，供 A0/A1 臂作「最近正文」使用。
+//
+// 文件名必须反映实际合并到第几章——此处曾写死 `ch01-10.txt`：M-lite 生成 47 章后
+// 全部灌进了这个名字，而 run.mjs 正是按它取 S 级基线，等于把 ch11-15 的标准答案
+// 直接喂给模型。命名对不上内容，就是一枚不会响的哑雷。
+const merged = spec.outline
   .map((ch) => {
     const f = join(CORPUS, `ch${String(ch.chapter).padStart(2, '0')}.txt`)
-    return existsSync(f) ? `第${ch.chapter}章 ${ch.title}\n\n${readFileSync(f, 'utf8')}` : null
+    return existsSync(f) ? { chapter: ch.chapter, text: `第${ch.chapter}章 ${ch.title}\n\n${readFileSync(f, 'utf8')}` } : null
   })
   .filter(Boolean)
-if (parts.length) {
-  writeFileSync(join(CORPUS, 'ch01-10.txt'), parts.join('\n\n'), 'utf8')
-  console.log(`\n合并 ${parts.length} 章 → corpus/ch01-10.txt（共 ${parts.join('').replace(/\s/g, '').length} 字，耗时 ${((Date.now() - t0) / 1000).toFixed(0)}s）`)
+if (merged.length) {
+  const last = Math.max(...merged.map((m) => m.chapter))
+  const name = `ch01-${String(last).padStart(2, '0')}.txt`
+  writeFileSync(join(CORPUS, name), merged.map((m) => m.text).join('\n\n'), 'utf8')
+  const chars = merged.map((m) => m.text).join('').replace(/\s/g, '').length
+  console.log(`\n合并 ${merged.length} 章（至第 ${last} 章）→ corpus/${name}（共 ${chars} 字，耗时 ${((Date.now() - t0) / 1000).toFixed(0)}s）`)
+  if (last !== 10) console.log(`  提示：S 级基线读的是 corpus/ch01-10.txt，本次未覆盖它。`)
 }

@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { scoreW1 } from './ced.mjs'
 import { scoreW3 } from './state-diff.mjs'
+import { specHash } from './spec-hash.mjs'
 
 const HERE = dirname(dirname(fileURLToPath(import.meta.url)))
 const DIR = join(HERE, 'results')
@@ -20,6 +21,27 @@ const write = process.argv.includes('--write')
 
 const files = readdirSync(DIR).filter((f) => /^a\d-bailian-rep\d+\.json$/.test(f)).sort()
 if (!files.length) { console.error('✗ results/ 下没有 rep 结果文件'); process.exit(1) }
+
+// 口径闸门：重打分只在同一版世界规格下有意义。
+// 2026-08-03 事故——M-lite 往 state-changes.jsonl 追加的 27 条里有 2 条落在 S 级评测
+// 区间（ch11 黑钥匙转手、ch14 云姑获知），ground truth 变了而正文没变，重打分后
+// A0 0.54→0.72、A3 0.28→0.58。纯新增无删除，看 diff 察觉不到。
+const CURRENT = specHash(HERE, process.argv.includes('--task-m') ? 'continuation-m.json' : 'continuation.json')
+const seen = {}
+let noProv = 0
+for (const f of files) {
+  const h = JSON.parse(readFileSync(join(DIR, f), 'utf8')).provenance?.specHash
+  if (!h) noProv++
+  else (seen[h] ??= []).push(f.replace('-bailian', '').replace('.json', ''))
+}
+const stale = Object.keys(seen).filter((h) => h !== CURRENT)
+if (noProv || stale.length) {
+  console.error(`⚠ 判分口径不一致——下列数字不可横向比较，须重跑后再下结论`)
+  console.error(`  当前规格指纹：${CURRENT}`)
+  if (noProv) console.error(`  ${noProv} 份结果没有 provenance（2026-08-03 护栏之前跑的），无法证明对着哪版规格判的`)
+  for (const h of stale) console.error(`  规格 ${h}（已过期）：${seen[h].join(' ')}`)
+  console.error('')
+}
 
 const rows = []
 for (const f of files) {

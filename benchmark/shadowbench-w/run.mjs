@@ -15,6 +15,7 @@ import { dirname, join } from 'node:path'
 import { loadSpec, replay } from './eval/replay.mjs'
 import { scoreW1 } from './eval/ced.mjs'
 import { scoreW3 } from './eval/state-diff.mjs'
+import { specHash } from './eval/spec-hash.mjs'
 import { createModel } from './arms/lib/model.mjs'
 import * as A0 from './arms/a0-naive/index.mjs'
 import * as A1 from './arms/a1-rag/index.mjs'
@@ -46,13 +47,32 @@ if (problems.length) {
 }
 
 // A0 需要「最近正文」。基线语料尚未生成时用大纲摘要顶替，并在报告中标注。
+const corpusFile = `ch01-${String(baselineThrough).padStart(2, '0')}.txt`
 let corpusTail = ''
 let corpusIsReal = false
 try {
-  corpusTail = readFileSync(join(HERE, 'corpus', `ch01-${String(baselineThrough).padStart(2, '0')}.txt`), 'utf8')
+  corpusTail = readFileSync(join(HERE, 'corpus', corpusFile), 'utf8')
   corpusIsReal = true
 } catch {
   corpusTail = spec.outline.map((c) => `第${c.chapter}章 ${c.title}：${c.summary}`).join('\n')
+}
+
+// ── 答案泄漏闸门（2026-08-03 第三起事故后加）──────────────────────────────
+// 事故：tools/gen-corpus.mjs 把合并结果写死到 `ch01-10.txt`，不管实际合了多少章。
+// M-lite 生成 47 章后，S 级的基线语料文件里装的是 47 章、27.7 万字——而文件名没变。
+// 后果：S 级考的是 ch11-15，模型却会拿到 ch11-15 的标准答案原文当「最近正文」，
+// A0 照抄即满分。文件名完全看不出来，判分器也发现不了。
+//
+// 光改命名不够——命名可以再错一次。这里直接校验内容：基线语料不得含考题章节。
+if (corpusIsReal) {
+  const present = [...corpusTail.matchAll(/^第(\d+)章/gm)].map((m) => Number(m[1]))
+  const leaked = present.filter((n) => n > baselineThrough)
+  if (leaked.length) {
+    console.error(`✗ 基线语料 corpus/${corpusFile} 含第 ${Math.min(...leaked)}-${Math.max(...leaked)} 章，超出基线范围（应 ≤ ${baselineThrough}）`)
+    console.error(`  这会把考题答案直接喂给模型。先修复语料再跑——不修就跑出来的分数没有意义。`)
+    console.error(`  修法：git checkout -- corpus/${corpusFile}，或用 tools/gen-corpus.mjs 重新生成到正确文件名。`)
+    process.exit(1)
+  }
 }
 
 const arms = { a0: A0, a1: A1, a3: A3 }
@@ -99,6 +119,9 @@ const provenance = {
   pid: process.pid,
   argv: process.argv.slice(2).join(' '),
   gitCommit,
+  // 规格指纹：ground truth 变了就必须重跑，不能拿旧正文对新标准答案打分
+  specHash: specHash(HERE, taskFile),
+  taskFile,
   provider,
   model: modelName ?? '(默认)',
   budget,
