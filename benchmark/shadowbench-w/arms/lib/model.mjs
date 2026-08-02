@@ -86,8 +86,50 @@ function anthropicModel(model = 'claude-sonnet-5') {
   }
 }
 
+/**
+ * 本机 Hermes CLI（当前配置：deepseek-v4-flash / 自定义端点）。
+ * 便宜、够用、无需另配 Key——批量生成语料的默认通道。
+ * 代价：CLI 不回报 token 用量，只能按字符估算（usageEstimated 标记会一路带到报告里）。
+ */
+function hermesModel(model) {
+  return {
+    id: `hermes:${model ?? 'default(deepseek-v4-flash)'}`,
+    stub: false,
+    usageEstimated: true,
+    async complete({ prompt, maxTokens: _mt, timeoutMs = 300_000 }) {
+      if (prompt.length > 25_000) throw new Error(`prompt 过长（${prompt.length} 字符），超出 CLI 参数上限`)
+      const { spawn } = await import('node:child_process')
+      const args = ['-z', prompt, ...(model ? ['-m', model] : [])]
+      const t0 = Date.now()
+      const raw = await new Promise((resolve, reject) => {
+        // 必须直接 spawn 可执行文件、不经 shell——走 shell 会把多行提示词拆坏
+        const bin = process.env.HERMES_BIN ?? (process.platform === 'win32' ? 'hermes.exe' : 'hermes')
+        const p = spawn(bin, args, { shell: false })
+        let out = '', err = ''
+        const timer = setTimeout(() => { p.kill(); reject(new Error(`hermes 超时（${timeoutMs}ms）`)) }, timeoutMs)
+        p.stdout.on('data', (d) => (out += d))
+        p.stderr.on('data', (d) => (err += d))
+        p.on('error', (e) => { clearTimeout(timer); reject(e) })
+        p.on('close', (code) => {
+          clearTimeout(timer)
+          code === 0 ? resolve(out) : reject(new Error(`hermes 退出码 ${code}: ${err.slice(0, 500)}`))
+        })
+      })
+      let parsed = null
+      const m = raw.match(/\{[\s\S]*\}/)
+      if (m) try { parsed = JSON.parse(m[0]) } catch {}
+      return {
+        raw,
+        parsed,
+        usage: { inputTokens: estTokens(prompt), outputTokens: estTokens(raw), ms: Date.now() - t0, estimated: true },
+      }
+    },
+  }
+}
+
 export function createModel({ provider = 'stub', model, scenario } = {}) {
   if (provider === 'stub') return stubModel(scenario)
   if (provider === 'anthropic') return anthropicModel(model)
-  throw new Error(`未知 provider: ${provider}`)
+  if (provider === 'hermes') return hermesModel(model)
+  throw new Error(`未知 provider: ${provider}（可选 stub / hermes / anthropic）`)
 }

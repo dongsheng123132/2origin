@@ -65,14 +65,16 @@ const RULES = [
   {
     id: 'rule:custody',
     category: 'custody-chain',
-    check: ({ text, state, spec }) => {
+    check: ({ text, state, stateAfter, spec }) => {
+      // 转手发生的那一章，前后两个持有者都是合法的——否则会把「交接过程」误判成矛盾
       const holder = state['obj:black-key']?.holder
+      const legal = new Set([holder, stateAfter?.['obj:black-key']?.holder].filter(Boolean))
       const names = Object.fromEntries(spec.characters.map((c) => [c.id, c.name]))
       const out = []
       for (const s of sentences(text)) {
         if (!/钥匙/.test(s)) continue
         for (const c of spec.characters) {
-          if (c.id === holder) continue
+          if (legal.has(c.id)) continue
           // 「钥匙在X手」「X手里的钥匙」形式的错误归属
           if (new RegExp(`钥匙[^。！？]{0,8}在${c.name}|${c.name}[^。！？]{0,6}手(中|里|上)[^。！？]{0,8}钥匙`).test(s))
             out.push({ quote: s.trim(), why: `保管链错误：黑钥匙应在${names[holder] ?? holder}处，文中归于${c.name}` })
@@ -127,11 +129,13 @@ export function scoreW1({ arm, chapters }) {
   let words = 0
 
   for (const ch of chapters) {
-    // ground truth 取该章之前的状态：本章正文须与「写作时的既定事实」一致
+    // ground truth 取该章之前的状态：本章正文须与「写作时的既定事实」一致。
+    // stateAfter 供「本章内发生的合法变更」参考（如物品交接的那一章）。
     const { state } = replay(spec, ch.chapter - 1)
+    const { state: stateAfter } = replay(spec, ch.chapter)
     words += ch.text.replace(/\s/g, '').length
     for (const rule of RULES) {
-      for (const v of rule.check({ text: ch.text, state, spec, chapter: ch.chapter }))
+      for (const v of rule.check({ text: ch.text, state, stateAfter, spec, chapter: ch.chapter }))
         findings.push({ chapter: ch.chapter, rule: rule.id, category: rule.category, ...v })
     }
   }

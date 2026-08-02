@@ -22,3 +22,4 @@ __pycache__/
 tmp/
 *.local.*
 benchmark/shadowbench-w/results/
+benchmark/shadowbench-w/corpus/
