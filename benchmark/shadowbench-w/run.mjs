@@ -8,7 +8,8 @@
 // 选项：--arm a0|a1|a3|all（可逗号分隔，默认 all）  --budget <字符数>  --out <目录>
 //       --repeat <次数>  --rep-offset <起始编号偏移，用于续跑不覆盖已有数据>
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync } from 'node:fs'
+import { execSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { loadSpec, replay } from './eval/replay.mjs'
@@ -59,6 +60,51 @@ const repOffset = Number(arg('rep-offset', 0)) // 续跑时接着编号，不覆
 const report = []
 mkdirSync(outDir, { recursive: true })
 
+// ── 运行护栏（2026-08-03 事故后加）────────────────────────────────────────
+// 事故：两个 a3 实验并发跑，各自按同样规则命名，后者静默覆盖了前者的 rep9/rep10。
+// 被覆盖的两轮拒绝数 10、11，而另外八轮最高只有 6——数据被换掉了，而且没有任何痕迹，
+// 已发表的结论（EPC 0.16、p=0.0121）无法从磁盘上的文件复现。
+//
+// 三条防护：① 同一 results/ 下不允许并发写（并发还会让带门禁的臂被系统性惩罚：
+// 争用导致的超时会触发重试与复核，而无门禁的臂照单全收，偏差只打一边）
+// ② 不许静默覆盖已存在的 rep 文件 ③ 每份结果盖上出处（时刻、commit、命令行）
+const LOCK = join(outDir, '.run.lock')
+const allowConcurrent = process.argv.includes('--allow-concurrent')
+const force = process.argv.includes('--force')
+
+if (existsSync(LOCK) && !allowConcurrent) {
+  const held = JSON.parse(readFileSync(LOCK, 'utf8'))
+  let alive = true
+  try { process.kill(held.pid, 0) } catch { alive = false }
+  if (alive) {
+    console.error(`✗ 已有实验在跑（pid ${held.pid}，${held.startedAt}）：\n    ${held.argv}`)
+    console.error('  并发会静默覆盖同名 rep 文件，且只惩罚带门禁的臂。等它跑完，或换 --out 目录。')
+    console.error('  确知无害可加 --allow-concurrent。')
+    process.exit(1)
+  }
+  console.error(`  ⚠ 发现残留锁（pid ${held.pid} 已不存在），清理后继续`)
+}
+
+const gitCommit = (() => {
+  try {
+    return execSync('git rev-parse --short HEAD', { cwd: HERE, encoding: 'utf8' }).trim()
+  } catch { return null }
+})()
+const provenance = {
+  startedAt: new Date().toISOString(),
+  pid: process.pid,
+  argv: process.argv.slice(2).join(' '),
+  gitCommit,
+  provider,
+  model: modelName ?? '(默认)',
+  budget,
+  concurrentAllowed: allowConcurrent,
+}
+writeFileSync(LOCK, JSON.stringify(provenance, null, 2))
+const releaseLock = () => { try { unlinkSync(LOCK) } catch {} }
+process.on('exit', releaseLock)
+for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { releaseLock(); process.exit(130) })
+
 for (const key of selected) {
   const mod = arms[key]
   if (!mod) throw new Error(`未知实验臂 ${key}`)
@@ -73,7 +119,13 @@ for (const key of selected) {
 
     const n = rep + repOffset
     const suffix = repeat > 1 || repOffset ? `-rep${n}` : `-${scenario}`
-    writeFileSync(join(outDir, `${key}-${provider}${suffix}.json`), JSON.stringify({ result, w1, w3 }, null, 2))
+    const path = join(outDir, `${key}-${provider}${suffix}.json`)
+    // 不静默覆盖：已有同名结果就报错退出，要么换 --rep-offset，要么明确 --force
+    if (existsSync(path) && !force && suffix.startsWith('-rep')) {
+      console.error(`✗ ${path} 已存在，拒绝覆盖。改 --rep-offset 续编号，或确认要重跑再加 --force。`)
+      process.exit(1)
+    }
+    writeFileSync(path, JSON.stringify({ result, w1, w3, provenance: { ...provenance, rep: n, finishedAt: new Date().toISOString() } }, null, 2))
     if (repeat > 1 || repOffset)
       console.error(
         `  [${key} 第 ${n} 次] 完成 ${result.chapters.filter((c) => c.text).length}/5，错误 ${w1.errors} 处，W3 ${(w3.stateAccuracy * 100).toFixed(0)}%`
