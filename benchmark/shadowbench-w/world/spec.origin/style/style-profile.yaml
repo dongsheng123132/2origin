@@ -1,0 +1,13 @@
+# 风格档案——续写臂必须遵守，避免"文风漂移"混入一致性评分
+viewpoint: 第三人称限知（每章单一视角人物，见 chapters/outline.jsonl 的 pov 字段）
+tense: 过去时叙述
+tone: 克制、冷峭，少用感叹
+dialogue_ratio: 约 30%
+paragraph_length: 短段为主，罕有超过 5 行的段落
+forbidden:
+  - 上帝视角旁白（不得直述视角人物不知之事）
+  - 直接点破白遥叛变（S 级禁区）
+  - 现代词汇与外来语
+  - 章末预告式收尾（"欲知后事如何"）
+naming: 人物一律用本名，不用绰号别称
+chapter_length: 约 3000 字

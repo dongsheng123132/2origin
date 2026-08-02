@@ -1,0 +1,6 @@
+{"id":"obj:black-key","name":"黑钥匙","type":"artifact","initial_state":{"holder":"char:lao-tao","used":false,"intact":true},"custody_chain":["char:lao-tao","char:zhao-qi"],"note":"只能使用一次，用后碎裂（rule:key-once）；续写任务目标是转交林峥"}
+{"id":"obj:bronze-bell","name":"铜铃","type":"artifact","initial_state":{"holder":null,"location":"unknown"},"note":"第3章鸣响一次，来源未解释（伏笔 hook:bronze-bell）；鸣响时方圆十里禽鸟尽飞（rule:bell-birds）"}
+{"id":"obj:archive-scroll","name":"观星台档案","type":"document","initial_state":{"holder":"char:yun-gu","location":"loc:guanxing-tai"}}
+{"id":"obj:missing-letter","name":"无署名信","type":"document","initial_state":{"holder":null,"location":"loc:guanxing-tai"},"note":"第7章失踪，去向未明（伏笔 hook:missing-letter）"}
+{"id":"obj:bai-yao-dagger","name":"白遥短刀","type":"weapon","initial_state":{"holder":"char:bai-yao"},"note":"白遥惯用左手持刀——第9章左手受伤后应改右手，此处是刻意埋的可违反点"}
+{"id":"obj:beiting-token","name":"北庭令牌","type":"token","initial_state":{"holder":"char:pei-zhao"},"note":"持之入渡口镇须交械（rule:disarm）"}

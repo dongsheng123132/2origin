@@ -1,0 +1,10 @@
+{"seq":1,"chapter":2,"object":"obj:black-key","field":"holder","from":"char:lao-tao","to":"char:zhao-qi","valid_from":"ev:002","evidence":"scene:02-03"}
+{"seq":2,"chapter":4,"object":"char:bai-yao","field":"secret_betrayal","from":false,"to":true,"valid_from":"ev:004","evidence":"scene:04-05"}
+{"seq":3,"chapter":4,"object":"char:bai-yao","field":"knows","op":"append","to":"k:beiting-allegiance","valid_from":"ev:004","evidence":"scene:04-05"}
+{"seq":4,"chapter":5,"object":"char:lin-zheng","field":"location","from":"loc:guanxing-tai","to":"loc:dukou-zhen","valid_from":"ev:005","evidence":"scene:05-01"}
+{"seq":5,"chapter":6,"object":"char:a-zhi","field":"knows","op":"append","to":"k:bai-yao-meets-pei-zhao","valid_from":"ev:006","evidence":"scene:06-02"}
+{"seq":6,"chapter":7,"object":"obj:missing-letter","field":"location","from":"loc:guanxing-tai","to":"unknown","valid_from":"ev:007","evidence":"scene:07-04"}
+{"seq":7,"chapter":7,"object":"char:shen-yan","field":"suspects_mole","from":false,"to":true,"valid_from":"ev:007","evidence":"scene:07-04"}
+{"seq":8,"chapter":8,"object":"char:bai-yao","field":"knows","op":"append","to":"k:black-key-held-by-zhao-qi","valid_from":"ev:008","evidence":"scene:08-02"}
+{"seq":9,"chapter":9,"object":"char:bai-yao","field":"left_hand_injured","from":false,"to":true,"valid_from":"ev:009","evidence":"scene:09-03"}
+{"seq":10,"chapter":10,"object":"char:zhao-qi","field":"location","from":"loc:dukou-zhen","to":"loc:dukou-teahouse","valid_from":"ev:010","evidence":"scene:10-01"}

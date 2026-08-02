@@ -1,0 +1,74 @@
+{
+  "spec_version": "0.1",
+  "purpose": "W2（缺陷检出）答案集。基线正文生成并校验通过后，据此制作 Planted 版：将下列矛盾逐条注入指定章节，其余文字不动。系统检出结果与本清单比对，计准确率与召回率。",
+  "injection_rules": [
+    "注入须自然融入行文，不得留下格式痕迹（如突兀的短句或重复段）",
+    "每条注入只制造一处矛盾，不得连带引发第二处",
+    "注入后须记录实际落入的段落号，写入 corpus/planted-manifest.json 以便定位评分"
+  ],
+  "planted": [
+    {
+      "id": "planted:001",
+      "chapter": 10,
+      "category": "physical-state",
+      "difficulty": "easy",
+      "injection": "白遥（此章原本不在场，改为途经茶肆）以左手挥刀格开落瓦。",
+      "contradicts": { "fact": "char:bai-yao.left_hand_injured = true", "since_chapter": 9, "evidence": "scene:09-03" },
+      "detectable_by": "确定性规则（身体状态字段 + 动作涉及左手）"
+    },
+    {
+      "id": "planted:002",
+      "chapter": 8,
+      "category": "knowledge",
+      "difficulty": "hard",
+      "injection": "林峥心下掠过一念：白遥近来常往北庭大营去。",
+      "contradicts": { "fact": "char:lin-zheng.knows 不含 k:beiting-allegiance；白遥密会为 secret 事件（ev:004）", "since_chapter": 4, "evidence": "scene:04-05" },
+      "detectable_by": "纯语义——规则引擎抓不到，须知识状态推理。**这是区分「有状态机」与「有好状态机」的关键项**"
+    },
+    {
+      "id": "planted:003",
+      "chapter": 6,
+      "category": "world-rule",
+      "difficulty": "easy",
+      "injection": "正午时分，月台之门无声开启一线。",
+      "contradicts": { "rule": "rule:gate-time（空间门只能在月落后子时至寅时开启）" },
+      "detectable_by": "确定性规则（时辰 + 开门情节）"
+    },
+    {
+      "id": "planted:004",
+      "chapter": 9,
+      "category": "custody-chain",
+      "difficulty": "medium",
+      "injection": "赵七说：那钥匙还在老陶手上，你寻我作甚。",
+      "contradicts": { "fact": "obj:black-key.holder = char:zhao-qi", "since_chapter": 2, "evidence": "scene:02-03" },
+      "detectable_by": "保管链字段比对"
+    },
+    {
+      "id": "planted:005",
+      "chapter": 7,
+      "category": "timeline",
+      "difficulty": "medium",
+      "injection": "三日前铜铃又响过一次，这回镇上竟无人听见。",
+      "contradicts": { "fact": "timeline 中仅 ev:003 一次铃响；且 rule:bell-birds 规定铃响必伴禽鸟尽飞，不可静默发生" },
+      "detectable_by": "事件表比对 + 规则校验（双重可检，用于验证系统是否重复报同一处）"
+    },
+    {
+      "id": "planted:006",
+      "chapter": 4,
+      "category": "timeline-knowledge",
+      "difficulty": "medium",
+      "injection": "沈砚对云姑道：台中已有内应，你我需谨言。",
+      "contradicts": { "fact": "char:shen-yan.suspects_mole 于第 7 章（ev:007）方为 true", "since_chapter": 7, "evidence": "scene:07-04" },
+      "detectable_by": "状态生效时点比对（valid_from 早于引用时点）"
+    }
+  ],
+  "distribution": {
+    "by_difficulty": { "easy": 2, "medium": 3, "hard": 1 },
+    "by_category": { "physical-state": 1, "knowledge": 1, "world-rule": 1, "custody-chain": 1, "timeline": 1, "timeline-knowledge": 1 },
+    "note": "刻意让确定性可检项占多数（便于各臂都有分可得、拉开梯度），但保留 planted:002 这一纯语义项作为区分度来源。"
+  },
+  "false_positive_traps": [
+    { "id": "trap:001", "chapter": 3, "description": "第 3 章铃响时禽鸟尽飞——符合 rule:bell-birds，不是矛盾。系统若报此项即计误报。" },
+    { "id": "trap:002", "chapter": 5, "description": "林峥离台赴渡口镇为奉命而行（ev:005），不违反 rule:leave-limit 的『独自离台超三日』。系统若报此项即计误报。" }
+  ]
+}

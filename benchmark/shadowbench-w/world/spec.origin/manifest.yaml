@@ -1,0 +1,37 @@
+# ShadowBench-W · S 级世界规格（本象包 · Story 方言）
+# Schema: ../../../../spec/schemas/manifest.schema.json
+
+artifact:
+  id: sb-w-s01
+  kind: story
+  title: 《月落渡口》S 级测试世界
+  version: "0.1"
+
+semantics:
+  character: Entity.Person
+  location: Entity.Place
+  object: Entity.Artifact
+  faction: Entity.Organization
+  knows: State.Knowledge      # 知识状态：本世界最重要的可违反物
+  holder: State.Custody       # 保管链
+  injured: State.Physical
+
+relations:
+  - state derived_from timeline/state-changes.jsonl
+  - foreshadowing anchored_to timeline/events.jsonl
+
+constraints:
+  - world_rules must_not_be_violated          # canon/world-rules.jsonl
+  - character must_not_act_on_unknown_knowledge
+  - state_change must_have_evidence
+  - forbidden_zones must_hold                 # tasks/continuation.json
+
+projections:
+  - engine: story
+    output: ../../corpus/          # 基线正文（尚未生成）
+
+provenance:
+  source: 人工编写（ShadowBench-W ground truth）
+  imported_at: 2026-08-02
+  license: CC0-1.0
+  note: 状态非静态存储，由 timeline/state-changes.jsonl 重放导出

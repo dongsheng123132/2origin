@@ -111,12 +111,26 @@ benchmark/shadowbench-w/
 
 主要开销是语料生成与续写。S 级四臂一轮约几美元量级；M 级约几十美元；L 级（百万字语料生成 + 四臂各续写 50 章）预计低三位数美元。**先跑 S 级 Gate 0，通过再往上投。**
 
-## 八、下一步
+## 八、进度
 
-1. 编写世界规格（S 级，`world/spec.origin/`）——同时是本象包的第一个真实用例
-2. 生成 S 级基线正文并校验
-3. 实现 A0/A3 两臂 + `eval/state-diff.mjs`，跑 Gate 0
-4. Gate 0 通过后再补 A1/A2，升 M 级
+- [x] **S 级世界规格**（`world/spec.origin/`）——8 人 / 6 地 / 6 物 / 3 势力 / 6 条硬规则 / 10 章大纲 / 10 条带证据的状态变更 / 5 条伏笔；同时是 `.origin` 包的第一个真实用例
+- [x] **状态重放器**（`eval/replay.mjs`）——ground truth 由事件折叠导出，可取任意章节的世界状态；含规格自洽校验（首跑即抓出两个真实缺陷，见 [world/README §5](world/README.md)）
+- [x] **W2 答案集**（`world/planted.json`）——6 条注入矛盾（2 易 3 中 1 难）+ 2 个误报陷阱
+- [x] **W3 答案集**（`world/spec.origin/tasks/continuation.json`）——续写任务、5 条禁区、预期终态
+- [ ] 生成 S 级基线正文（3 万字）并回读校验
+- [ ] 实现 A0（裸模型）与 A3（Benxiang）两臂
+- [ ] `eval/ced.mjs` 与 `eval/state-diff.mjs` 判分器
+- [ ] **跑 Gate 0**
+- [ ] Gate 0 通过后补 A1/A2，升 M 级
+
+```bash
+# 校验世界规格自洽
+node eval/replay.mjs --validate
+
+# 查看任意章节末的 ground truth 状态
+node eval/replay.mjs --chapter 10
+node eval/replay.mjs --chapter 3 --json
+```
 
 ---
 
