@@ -12,6 +12,34 @@ const ASSERTIONS = {
   'key-intact': (s) => s['obj:black-key']?.intact === true,
 }
 
+/**
+ * ID 归一化。模型极易漏掉命名空间前缀（写 zhao-qi 而非 char:zhao-qi），
+ * 而这在语义上毫无歧义——用严格匹配把它判为「未知对象」纯属接口刁难。
+ * 协议层的经验：**基于 ID 的协议必须自带归一化层，否则每个模型都会栽在前缀上。**
+ */
+export function normalizeId(raw, known) {
+  if (typeof raw !== 'string') return raw
+  if (known.has(raw)) return raw
+  for (const p of ['char:', 'obj:', 'loc:', 'hook:', 'k:', 'faction:']) {
+    if (known.has(p + raw)) return p + raw
+  }
+  return raw
+}
+
+/** 把事务里的对象引用与取值一并归一化，返回新事务 */
+export function normalizeTransaction(tx, known) {
+  if (!tx?.state_changes) return tx
+  return {
+    ...tx,
+    state_changes: tx.state_changes.map((c) => ({
+      ...c,
+      object: normalizeId(c.object, known),
+      from: normalizeId(c.from, known),
+      to: normalizeId(c.to, known),
+    })),
+  }
+}
+
 function fold(state, changes) {
   const next = structuredClone(state)
   for (const c of changes) {

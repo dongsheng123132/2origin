@@ -2,18 +2,26 @@
 // 每章一个循环：编译上下文 → 模型出事务 → 校验 → 不过则带违规回退重试 → 通过才落地。
 
 import { compileContext, buildPrompt } from './context-compiler.mjs'
-import { validateTransaction, applyTransaction } from './commit-compiler.mjs'
+import { validateTransaction, applyTransaction, normalizeTransaction } from './commit-compiler.mjs'
 
 export const meta = { id: 'a3-benxiang', name: 'Benxiang（状态机+事务+证据+预算编译）' }
 
-export async function run({ spec, task, state0, chapters, model, budget = 6000, maxRetries = 2 }) {
+export async function run({ spec, task, state0, chapters, model, budget = 6000, maxRetries = 2, corpusTail = '' }) {
   let state = structuredClone(state0)
   let evidence = {}
+  const knownIds = new Set([
+    ...spec.characters.map((c) => c.id),
+    ...spec.objects.map((o) => o.id),
+    ...(spec.locations ?? []).map((l) => l.id),
+    ...spec.hooks.map((h) => h.id),
+  ])
   const hooks = Object.fromEntries(spec.hooks.map((h) => [h.id, { status: h.status }]))
   const out = []
   const usage = { inputTokens: 0, outputTokens: 0, ms: 0, calls: 0 }
-  const gate = { attempts: 0, rejections: 0, byCode: {} }
-  let recentText = ''
+  const gate = { attempts: 0, rejections: 0, byCode: {}, rejected: [] }
+  // 精确载荷层（三层投影里的「原文负责准」）。曾漏接此参数，导致本臂在完全没读过
+  // 前文正文的情况下续写——结构状态齐备、文体与既有惯例全无依据，原文层错误反超裸模型。
+  let recentText = corpusTail
 
   for (const chapter of chapters) {
     const ctx = compileContext({ spec, state, task, chapter, budget, recentText })
@@ -28,7 +36,7 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
       usage.ms += res.usage.ms
       usage.calls++
 
-      const tx = res.parsed
+      const tx = normalizeTransaction(res.parsed, knownIds)
       const check = validateTransaction({ tx, stateBefore: state, task, hooks })
       if (check.ok) {
         accepted = tx
@@ -36,6 +44,14 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
       }
       gate.rejections++
       for (const v of check.errors) gate.byCode[v.code] = (gate.byCode[v.code] ?? 0) + 1
+      // 记录被拒事务，否则「全被拒」时无从诊断
+      gate.rejected.push({
+        chapter,
+        attempt,
+        submitted: tx?.state_changes ?? null,
+        textLen: tx?.text?.length ?? 0,
+        errors: check.errors.map((v) => `[${v.code}] ${v.msg}`),
+      })
 
       // 带证据的退回：把具体违规讲清楚，而不是笼统说「不一致」
       prompt =

@@ -26,23 +26,28 @@ export function compileContext({ spec, state, task, chapter, budget = 6000, rece
   const lines = []
   lines.push(`【任务】写第 ${chapter} 章，约 3000 字。总目标：${task.goal}`)
 
-  lines.push('\n【相关人物·当前状态】')
+  // 一律用完整 ID 呈现字段值——曾为「好读」把 loc:/char: 前缀剥掉，
+  // 模型照抄了那份人类可读的写法，事务里全是无前缀 ID，被门禁判为未知对象、5 章全废。
+  lines.push('\n【相关人物·当前状态】（字段值请原样照抄，含前缀）')
   for (const id of chars) {
     const s = state[id] ?? {}
     const bits = []
-    if (s.location) bits.push(`在${s.location.replace(/^loc:/, '')}`)
-    if (s.left_hand_injured) bits.push('左手有伤')
-    if (s.alive === false) bits.push('已死')
-    if (s.knows?.length) bits.push(`知晓：${s.knows.map((k) => k.replace(/^k:/, '')).join('、')}`)
-    lines.push(`  ${nameOf[id] ?? id}（${id}）${bits.join('；')}`)
+    if (s.location) bits.push(`location=${s.location}`)
+    if (s.left_hand_injured) bits.push('left_hand_injured=true')
+    if (s.alive === false) bits.push('alive=false')
+    if (s.knows?.length) bits.push(`knows=[${s.knows.join(', ')}]`)
+    lines.push(`  ${id}（${nameOf[id] ?? id}）${bits.join('；')}`)
   }
 
   lines.push('\n【关键物品】')
   for (const o of spec.objects) {
     const s = state[o.id] ?? {}
     if (!s.holder && !s.location) continue
-    lines.push(`  ${o.name}（${o.id}）持有者：${nameOf[s.holder] ?? s.holder ?? '无'}${s.used ? '，已使用' : ''}`)
+    lines.push(`  ${o.id}（${o.name}）holder=${s.holder ?? 'null'}${s.used !== undefined ? `；used=${s.used}` : ''}`)
   }
+
+  lines.push('\n【可用地点 ID】')
+  lines.push('  ' + (spec.locations ?? []).map((l) => `${l.id}（${l.name}）`).join('　'))
 
   lines.push('\n【世界规则·不可违反】')
   for (const r of spec.rules) lines.push(`  - ${r.statement}`)
@@ -77,6 +82,8 @@ export function buildPrompt(ctx) {
   "state_changes": [ { "object": "对象ID", "field": "字段", "from": 变更前值, "to": 变更后值 } ],
   "assertions": ["zhao-qi-alive", "gate-not-opened", "betrayal-undisclosed"]
 }
-state_changes 只写本章真实发生的状态变化；from 必须与上文所给的当前状态一致。
+state_changes 只写本章真实发生的状态变化。
+object 与取值必须原样使用上文给出的完整 ID（如 char:lin-zheng、loc:dukou-teahouse），不可省略前缀。
+from 必须与上文所给的当前状态一致；不确定就不要写这条变更。
 assertions 是你声明本章未违反的边界，将由校验器逐条复核——写了做不到会被判失败。`
 }

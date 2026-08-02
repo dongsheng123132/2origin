@@ -99,8 +99,17 @@ const a0 = report.find((r) => r.meta.id === 'a0-naive')
 const a3 = report.find((r) => r.meta.id === 'a3-benxiang')
 if (a0 && a3) {
   console.log('\n' + '─'.repeat(64))
-  const pass = a3.w1.ced <= a0.w1.ced
-  console.log(` Gate 0：A3 的 CED ${a3.w1.ced.toFixed(3)} ${pass ? '≤' : '>'} A0 的 ${a0.w1.ced.toFixed(3)} → ${pass ? '通过' : '未通过，停止扩大规模，回头改架构'}`)
+  // 前置条件：先得真的写出东西。一个把所有提交都拒掉的系统 CED 天然为 0，
+  // 若只比 CED 就会「靠什么都不写」赢下 Gate 0——这是判定标准本身的漏洞，必须堵上。
+  const wrote = a3.result.chapters.filter((c) => c.text).length
+  const total = a3.result.chapters.length
+  const completed = wrote === total
+  const cedBetter = a3.w1.ced <= a0.w1.ced
+  const pass = completed && cedBetter
+
+  console.log(` 前置：A3 产出 ${wrote}/${total} 章 ${completed ? '✓' : '✗（未完成任务，CED 无可比性）'}`)
+  console.log(` 比较：A3 的 CED ${a3.w1.ced.toFixed(3)} ${cedBetter ? '≤' : '>'} A0 的 ${a0.w1.ced.toFixed(3)}`)
+  console.log(` Gate 0：${pass ? '通过' : '未通过 —— 停止扩大规模，回头改架构'}`)
   if (stub) console.log(' （stub 模式下此判定无意义）')
 }
 console.log(`\n结果已写入 ${outDir}\n`)

@@ -29,6 +29,7 @@ export function loadSpec() {
   return {
     characters: readJsonl('canon/characters.jsonl'),
     objects: readJsonl('canon/objects.jsonl'),
+    locations: readJsonl('canon/locations.jsonl'),
     rules: readJsonl('canon/world-rules.jsonl'),
     events: readJsonl('timeline/events.jsonl'),
     changes: readJsonl('timeline/state-changes.jsonl'),
