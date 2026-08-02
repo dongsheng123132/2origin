@@ -65,12 +65,16 @@ export function validateTransaction({ tx, stateBefore, task, hooks = {} }) {
   for (const [i, c] of changes.entries()) {
     if (!c.object || !c.field) v.push({ code: 'schema', msg: `state_changes[${i}] 缺少 object 或 field` })
     else if (!stateBefore[c.object]) v.push({ code: 'unknown-object', msg: `state_changes[${i}] 未知对象 ${c.object}` })
-    // ② 快照隔离：声明的前值必须接得上当前值，接不上说明模型记错了世界
+    // ② 快照隔离：声明的前值接不上当前值，说明模型对世界的记忆有偏差。
+    //    但这**不该拦截提交**——运行时本来就知道当前值，要求模型精确复述旧值是接口刁难，
+    //    与 ID 前缀是同一类错误。实测一次运行因此废掉 3 章正文（10 次 stale-write 全拒）。
+    //    正确做法：降为警告并计入指标（模型记忆偏差率是有价值的观测量），按当前值落地。
     else if ('from' in c && c.op !== 'append') {
       const now = stateBefore[c.object][c.field]
       if (JSON.stringify(now) !== JSON.stringify(c.from))
         v.push({
           code: 'stale-write',
+          severity: 'warning',
           msg: `${c.object}.${c.field} 前值不符：事务声明 ${JSON.stringify(c.from)}，实际 ${JSON.stringify(now)}`,
         })
     }

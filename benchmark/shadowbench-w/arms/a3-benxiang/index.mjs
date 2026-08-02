@@ -18,7 +18,7 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
   const hooks = Object.fromEntries(spec.hooks.map((h) => [h.id, { status: h.status }]))
   const out = []
   const usage = { inputTokens: 0, outputTokens: 0, ms: 0, calls: 0 }
-  const gate = { attempts: 0, rejections: 0, byCode: {}, rejected: [] }
+  const gate = { attempts: 0, rejections: 0, byCode: {}, warnings: {}, rejected: [] }
   // 精确载荷层（三层投影里的「原文负责准」）。曾漏接此参数，导致本臂在完全没读过
   // 前文正文的情况下续写——结构状态齐备、文体与既有惯例全无依据，原文层错误反超裸模型。
   let recentText = corpusTail
@@ -38,6 +38,10 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
 
       const tx = normalizeTransaction(res.parsed, knownIds)
       const check = validateTransaction({ tx, stateBefore: state, task, hooks })
+      // 警告不拦截，但要计数——模型对世界的记忆偏差是有价值的观测量
+      for (const w of check.violations.filter((x) => x.severity === 'warning')) {
+        gate.warnings[w.code] = (gate.warnings[w.code] ?? 0) + 1
+      }
       if (check.ok) {
         accepted = tx
         break

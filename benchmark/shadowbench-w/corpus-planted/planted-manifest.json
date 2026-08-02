@@ -1,0 +1,58 @@
+{
+  "planted": [
+    {
+      "id": "planted:001",
+      "chapter": 10,
+      "category": "physical-state",
+      "difficulty": "easy",
+      "paragraph": 29,
+      "text": "白遥以左手挥刀格开落瓦。"
+    },
+    {
+      "id": "planted:002",
+      "chapter": 8,
+      "category": "knowledge",
+      "difficulty": "hard",
+      "paragraph": 21,
+      "text": "林峥心下掠过一念：白遥近来常往北庭大营去。"
+    },
+    {
+      "id": "planted:003",
+      "chapter": 6,
+      "category": "world-rule",
+      "difficulty": "easy",
+      "paragraph": 29,
+      "text": "正午时分，月台之门无声开启一线。"
+    },
+    {
+      "id": "planted:004",
+      "chapter": 9,
+      "category": "custody-chain",
+      "difficulty": "medium",
+      "paragraph": 54,
+      "text": "赵七说：那钥匙还在老陶手上，你寻我作甚。"
+    },
+    {
+      "id": "planted:005",
+      "chapter": 7,
+      "category": "timeline",
+      "difficulty": "medium",
+      "paragraph": 25,
+      "text": "三日前铜铃又响过一次，这回镇上竟无人听见。"
+    },
+    {
+      "id": "planted:006",
+      "chapter": 4,
+      "category": "timeline-knowledge",
+      "difficulty": "medium",
+      "paragraph": 27,
+      "text": "沈砚对云姑道：台中已有内应，你我需谨言。"
+    }
+  ],
+  "cleanChapters": [
+    1,
+    2,
+    3,
+    5
+  ]
+}

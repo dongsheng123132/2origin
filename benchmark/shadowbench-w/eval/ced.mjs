@@ -168,12 +168,25 @@ export function scoreW1({ arm, chapters }) {
   const byCategory = {}
   for (const f of findings) byCategory[f.category] = (byCategory[f.category] ?? 0) + 1
 
+  // 指标口径（Run #4 教训）：CED 按字数归一，在错误数是个位数时可以靠「多写字」刷低——
+  // 两臂各 3 处错误，仅因 A0 多写 4643 字，CED 就从 1.828 变成 1.425。
+  // 因此主指标改为 EPC（每章错误数）：章是任务单位，各臂章数相同，无法靠注水改善。
+  // CED 保留为次要指标，仅用于与 ConStory-Bench 的外部可比性（其测试文本长度固定，无此漏洞）。
+  const n = chapters.length
+  const targetLen = 3000 // 任务书给各臂的统一长度要求
+  const avgLen = n ? Math.round(words / n) : 0
+
   return {
     arm,
     words,
+    chapters: n,
     findings,
+    errors: findings.length,
     byCategory,
-    ced: words ? (findings.length / words) * 10000 : 0,
+    epc: n ? findings.length / n : 0, // ← 主指标
+    ced: words ? (findings.length / words) * 10000 : 0, // ← 次要，供外部对照
+    avgChapterLen: avgLen,
+    lengthRatio: +(avgLen / targetLen).toFixed(2), // 显著 >1 提示注水，须与 EPC 一并看
     channel: { deterministic: true, semantic: false },
   }
 }
