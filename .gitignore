@@ -23,3 +23,4 @@ tmp/
 *.local.*
 benchmark/shadowbench-w/results/
 benchmark/shadowbench-w/corpus/prompt-ch*.txt
+benchmark/shadowbench-w/results/*.judged.json
