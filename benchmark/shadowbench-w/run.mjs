@@ -53,6 +53,7 @@ const selected = which === 'all' ? ['a0', 'a3'] : [which]
 const chapters = task.chapters
 
 const repeat = Number(arg('repeat', 1))
+const repOffset = Number(arg('rep-offset', 0)) // 续跑时接着编号，不覆盖已有数据
 const report = []
 mkdirSync(outDir, { recursive: true })
 
@@ -68,9 +69,13 @@ for (const key of selected) {
     const w3 = scoreW3(result)
     report.push({ meta: mod.meta, result, w1, w3, rep })
 
-    const suffix = repeat > 1 ? `-rep${rep}` : `-${scenario}`
+    const n = rep + repOffset
+    const suffix = repeat > 1 || repOffset ? `-rep${n}` : `-${scenario}`
     writeFileSync(join(outDir, `${key}-${provider}${suffix}.json`), JSON.stringify({ result, w1, w3 }, null, 2))
-    if (repeat > 1) console.error(`  [${key} 第 ${rep}/${repeat} 次] 错误 ${w1.errors} 处，W3 ${(w3.stateAccuracy * 100).toFixed(0)}%`)
+    if (repeat > 1 || repOffset)
+      console.error(
+        `  [${key} 第 ${n} 次] 完成 ${result.chapters.filter((c) => c.text).length}/5，错误 ${w1.errors} 处，W3 ${(w3.stateAccuracy * 100).toFixed(0)}%`
+      )
   }
 }
 

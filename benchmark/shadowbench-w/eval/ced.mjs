@@ -125,6 +125,29 @@ export const RULES = [
         .map((s) => ({ quote: s.trim(), why: '触碰禁区 fz:zhao-qi-alive（赵七不得死亡）' })),
   },
   {
+    // 状态被提前引用：某状态第 N 章才生效，第 N 之前的正文却已当它成立。
+    // 这是「每个状态都有来源」这条协议原则的直接推论——有 valid_from，就能查是否越界引用。
+    // 需要规格给出 text_signature（该状态在正文里长什么样），否则无从检测。
+    id: 'premature-state',
+    category: 'timeline',
+    check: ({ text, spec, chapter }) => {
+      if (chapter == null) return [] // 门禁场景下章号未知，跳过
+      const out = []
+      for (const c of spec.changes) {
+        if (!c.text_signature || c.chapter <= chapter) continue
+        const re = new RegExp(c.text_signature)
+        for (const s of sentences(text)) {
+          if (re.test(s))
+            out.push({
+              quote: s.trim(),
+              why: `${c.object}.${c.field} 第 ${c.chapter} 章（${c.valid_from}）才生效，本章尚不成立`,
+            })
+        }
+      }
+      return out
+    },
+  },
+  {
     id: 'unknown-entity',
     category: 'unknown-entity',
     check: ({ text, spec }) => {
