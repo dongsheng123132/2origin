@@ -1,6 +1,8 @@
 // 模型调用抽象。
 //   provider=stub  零成本，用固定剧本驱动，只为验证 harness 逻辑是否跑得通
 //   provider=anthropic  真实调用（需 ANTHROPIC_API_KEY）
+//   provider=hermes  真实调用（复用本机 hermes 配置的模型端点，HTTP 直连，无提示词长度上限）
+//   provider=bailian  真实调用（百炼 CLI，提示词走文件）
 //
 // ⚠ stub 模式产出的一切数字都不是实验结果，run.mjs 会在报告里显著标注。
 
@@ -87,43 +89,121 @@ function anthropicModel(model = 'claude-sonnet-5') {
 }
 
 /**
- * 本机 Hermes CLI（当前配置：deepseek-v4-flash / 自定义端点）。
+ * 本机 Hermes 配置的模型通道（当前：deepseek-v4-flash / 自定义端点 api.u-claw.org.cn）。
  * 便宜、够用、无需另配 Key——批量生成语料的默认通道。
- * 代价：CLI 不回报 token 用量，只能按字符估算（usageEstimated 标记会一路带到报告里）。
+ *
+ * v2 修复（2026-08-02）：原先用 `hermes -z <提示词>` 把整段提示词塞进命令行参数，
+ * 撞上 Windows argv 上限（CreateProcess 32767 字符），>25k 字符的提示词直接报
+ * 「超出 CLI 参数上限」——那不是模型上下文不够，是传输通道太窄。
+ * 现改为直接 HTTP 调用 hermes 配置里的同一个 OpenAI 兼容端点：
+ *   - 无提示词长度上限（带前文章节/世界状态的长提示词不再炸）
+ *   - 回报真实 token 用量（usage 不再标 estimated）
+ * 配置来源与 hermes CLI 同源（$HERMES_HOME/config.yaml 的 model: 段）。
+ * 兜底：读不到配置时退回 CLI 通道（-z，仍受 argv 上限约束，仅适合短提示词）。
  */
 function hermesModel(model) {
   return {
     id: `hermes:${model ?? 'default(deepseek-v4-flash)'}`,
     stub: false,
-    usageEstimated: true,
-    async complete({ prompt, maxTokens: _mt, timeoutMs = 300_000 }) {
-      if (prompt.length > 25_000) throw new Error(`prompt 过长（${prompt.length} 字符），超出 CLI 参数上限`)
-      const { spawn } = await import('node:child_process')
-      const args = ['-z', prompt, ...(model ? ['-m', model] : [])]
-      const t0 = Date.now()
-      const raw = await new Promise((resolve, reject) => {
-        // 必须直接 spawn 可执行文件、不经 shell——走 shell 会把多行提示词拆坏
-        const bin = process.env.HERMES_BIN ?? (process.platform === 'win32' ? 'hermes.exe' : 'hermes')
-        const p = spawn(bin, args, { shell: false })
-        let out = '', err = ''
-        const timer = setTimeout(() => { p.kill(); reject(new Error(`hermes 超时（${timeoutMs}ms）`)) }, timeoutMs)
-        p.stdout.on('data', (d) => (out += d))
-        p.stderr.on('data', (d) => (err += d))
-        p.on('error', (e) => { clearTimeout(timer); reject(e) })
-        p.on('close', (code) => {
-          clearTimeout(timer)
-          code === 0 ? resolve(out) : reject(new Error(`hermes 退出码 ${code}: ${err.slice(0, 500)}`))
-        })
-      })
-      let parsed = null
-      const m = raw.match(/\{[\s\S]*\}/)
-      if (m) try { parsed = JSON.parse(m[0]) } catch {}
-      return {
-        raw,
-        parsed,
-        usage: { inputTokens: estTokens(prompt), outputTokens: estTokens(raw), ms: Date.now() - t0, estimated: true },
-      }
+    usageEstimated: false,
+    async complete({ prompt, maxTokens = 8192, timeoutMs = 300_000 }) {
+      const cfg = await readHermesModelConfig()
+      if (cfg) return completeViaHttp(cfg, model, prompt, maxTokens, timeoutMs)
+      return completeViaCli(model, prompt, timeoutMs)
     },
+  }
+}
+
+/** 读取 hermes 配置里的模型段（与 hermes CLI 同源，尊重 HERMES_HOME 覆盖） */
+async function readHermesModelConfig() {
+  try {
+    const { readFileSync, existsSync } = await import('node:fs')
+    const { homedir } = await import('node:os')
+    const { join } = await import('node:path')
+    const cfgPath = join(process.env.HERMES_HOME || join(homedir(), '.hermes'), 'config.yaml')
+    if (!existsSync(cfgPath)) return null
+    const yaml = readFileSync(cfgPath, 'utf8')
+    const sec = yaml.match(/^model:\s*\n([\s\S]*?)(?=^\S|\Z)/m)?.[1]
+    if (!sec) return null
+    const get = (k) => {
+      const m = sec.match(new RegExp(`^\\s*${k}:\\s*(?:['\"]([^'\"]+)['\"]|(\\S+))`, 'm'))
+      return m ? (m[1] ?? m[2]).trim() : null
+    }
+    const cfg = { baseUrl: get('base_url'), apiKey: get('api_key'), defaultModel: get('default') }
+    return cfg.baseUrl && cfg.apiKey ? cfg : null
+  } catch {
+    return null
+  }
+}
+
+/** 主通道：OpenAI 兼容 HTTP（无 argv 上限，真实 token 用量） */
+async function completeViaHttp(cfg, modelOverride, prompt, maxTokens, timeoutMs) {
+  const t0 = Date.now()
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs)
+  try {
+    const res = await fetch(`${cfg.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${cfg.apiKey}` },
+      body: JSON.stringify({
+        model: modelOverride ?? cfg.defaultModel,
+        max_tokens: maxTokens,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+      signal: ctrl.signal,
+    })
+    if (!res.ok) throw new Error(`hermes 端点 ${res.status}: ${(await res.text()).slice(0, 400)}`)
+    const data = await res.json()
+    const raw = data.choices?.[0]?.message?.content ?? ''
+    let parsed = null
+    const m = raw.match(/\{[\s\S]*\}/)
+    if (m) try { parsed = JSON.parse(m[0]) } catch {}
+    return {
+      raw,
+      parsed,
+      usage: {
+        inputTokens: data.usage?.prompt_tokens ?? estTokens(prompt),
+        outputTokens: data.usage?.completion_tokens ?? estTokens(raw),
+        reasoningTokens: data.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
+        ms: Date.now() - t0,
+      },
+    }
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+/** 兜底通道：hermes CLI 单发（仅适合短提示词；长提示词请走 HTTP 主通道） */
+async function completeViaCli(model, prompt, timeoutMs) {
+  if (prompt.length > 24_000)
+    throw new Error(
+      `prompt 过长（${prompt.length} 字符）且读不到 hermes 配置（无法走 HTTP 通道）。` +
+        `请检查 $HERMES_HOME/config.yaml 的 model: 段，或把提示词拆短。`
+    )
+  const { spawn } = await import('node:child_process')
+  const args = ['-z', prompt, ...(model ? ['-m', model] : [])]
+  const t0 = Date.now()
+  const raw = await new Promise((resolve, reject) => {
+    // 必须直接 spawn 可执行文件、不经 shell——走 shell 会把多行提示词拆坏
+    const bin = process.env.HERMES_BIN ?? (process.platform === 'win32' ? 'hermes.exe' : 'hermes')
+    const p = spawn(bin, args, { shell: false })
+    let out = '', err = ''
+    const timer = setTimeout(() => { p.kill(); reject(new Error(`hermes 超时（${timeoutMs}ms）`)) }, timeoutMs)
+    p.stdout.on('data', (d) => (out += d))
+    p.stderr.on('data', (d) => (err += d))
+    p.on('error', (e) => { clearTimeout(timer); reject(e) })
+    p.on('close', (code) => {
+      clearTimeout(timer)
+      code === 0 ? resolve(out) : reject(new Error(`hermes 退出码 ${code}: ${err.slice(0, 500)}`))
+    })
+  })
+  let parsed = null
+  const m = raw.match(/\{[\s\S]*\}/)
+  if (m) try { parsed = JSON.parse(m[0]) } catch {}
+  return {
+    raw,
+    parsed,
+    usage: { inputTokens: estTokens(prompt), outputTokens: estTokens(raw), ms: Date.now() - t0, estimated: true },
   }
 }
 
