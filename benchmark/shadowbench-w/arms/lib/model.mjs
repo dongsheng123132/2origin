@@ -127,9 +127,60 @@ function hermesModel(model) {
   }
 }
 
+/**
+ * 本机百炼 CLI（`bl`）。相比 hermes 的三个优势：
+ *   ① 回报真实 token 用量（成本不必估算）② 长提示词稳定 ③ 快
+ * 默认 qwen-plus——非推理模型。实测 qwen3.6-plus 会把 8472 个输出 token 里的 7354 个
+ * 花在思考上，对「按设定写正文」这类任务纯属浪费。
+ */
+function bailianModel(model = 'qwen-plus') {
+  return {
+    id: `bailian:${model}`,
+    stub: false,
+    usageEstimated: false,
+    async complete({ prompt, maxTokens = 4096, timeoutMs = 300_000 }) {
+      const { spawn } = await import('node:child_process')
+      const { writeFileSync, mkdtempSync } = await import('node:fs')
+      const { join } = await import('node:path')
+      const { tmpdir } = await import('node:os')
+      // 提示词走文件，命令行只传短路径：既绕开 npm .cmd 包装必须用 shell 的限制，
+      // 又避免长提示词被 shell 的引号/换行处理弄坏
+      const msgFile = join(mkdtempSync(join(tmpdir(), 'bl-')), 'messages.json')
+      writeFileSync(msgFile, JSON.stringify([{ role: 'user', content: prompt }]), 'utf8')
+      const args = ['text', 'chat', '--model', model, '--max-tokens', String(maxTokens), '--messages-file', msgFile]
+      const t0 = Date.now()
+      const raw = await new Promise((resolve, reject) => {
+        const p = spawn('bl', args, { shell: process.platform === 'win32' })
+        let out = '', err = ''
+        const timer = setTimeout(() => { p.kill(); reject(new Error(`bl 超时（${timeoutMs}ms）`)) }, timeoutMs)
+        p.stdout.on('data', (d) => (out += d))
+        p.stderr.on('data', (d) => (err += d))
+        p.on('error', (e) => { clearTimeout(timer); reject(e) })
+        p.on('close', (c) => { clearTimeout(timer); c === 0 ? resolve(out) : reject(new Error(`bl 退出码 ${c}: ${err.slice(0, 400)}`)) })
+      })
+      const envelope = JSON.parse(raw)
+      const content = envelope.choices?.[0]?.message?.content ?? ''
+      let parsed = null
+      const m = content.match(/\{[\s\S]*\}/)
+      if (m) try { parsed = JSON.parse(m[0]) } catch {}
+      return {
+        raw: content,
+        parsed,
+        usage: {
+          inputTokens: envelope.usage?.prompt_tokens ?? 0,
+          outputTokens: envelope.usage?.completion_tokens ?? 0,
+          reasoningTokens: envelope.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
+          ms: Date.now() - t0,
+        },
+      }
+    },
+  }
+}
+
 export function createModel({ provider = 'stub', model, scenario } = {}) {
   if (provider === 'stub') return stubModel(scenario)
   if (provider === 'anthropic') return anthropicModel(model)
   if (provider === 'hermes') return hermesModel(model)
-  throw new Error(`未知 provider: ${provider}（可选 stub / hermes / anthropic）`)
+  if (provider === 'bailian') return bailianModel(model)
+  throw new Error(`未知 provider: ${provider}（可选 stub / bailian / hermes / anthropic）`)
 }

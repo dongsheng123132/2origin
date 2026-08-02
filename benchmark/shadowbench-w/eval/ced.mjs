@@ -21,6 +21,10 @@ const HERE = dirname(fileURLToPath(import.meta.url))
 const TASK = JSON.parse(readFileSync(join(HERE, '..', 'world', 'spec.origin', 'tasks', 'continuation.json'), 'utf8'))
 
 const NOON = /正午|午时|日中|晌午|烈日当空/
+// 回忆、记载、转述里的铃响不是当下发生的事件
+const BELL_NOT_NOW = /记得|想起|回想|响过|那年|那夜|第[一二三四五六七八九十]+夜|丙戌|案|卷宗|册|记载|听说|据说|问谁|若|如果|倘/
+// 「闩死」「锁死」这类是把门关紧，不是人死；判死亡前须先排除
+const DEATH_COMPOUND = /(闩|锁|关|钉|堵|封|掩|咬|盯|attach|死死)死/
 const OPEN_GATE = /(月台|空间门)[^。！？]{0,20}(开启|开了|洞开|启开)|(开启|推开)[^。！？]{0,10}(月台|空间门)/
 const LEFT_HAND_ACT = /左手[^。！？]{0,12}(持|握|挥|提|抬|按|抓|接过|拔|扬)/
 
@@ -86,17 +90,38 @@ const RULES = [
   {
     id: 'rule:bell-birds',
     category: 'world-rule',
-    check: ({ text }) =>
-      sentences(text)
-        .filter((s) => /铜铃[^。！？]{0,10}(响|鸣|作声)/.test(s) && !/禽|鸟|雀|鸦/.test(s))
-        .map((s) => ({ quote: s.trim(), why: '铃响未伴禽鸟异动（rule:bell-birds）' })),
+    check: ({ text }) => {
+      const ss = sentences(text)
+      const out = []
+      for (const [i, s] of ss.entries()) {
+        if (!/铜铃[^。！？]{0,10}(响|鸣|作声)/.test(s)) continue
+        // ① 否定句不算铃响：「铜铃仍不响」「未闻其响」「未响」
+        if (/(不|没|未|无)\s*(响|鸣|闻|见)|寂然|默然/.test(s)) continue
+        // ② 回忆/记载/转述/假设都不是当下发生（实测这类误报最多）
+        if (BELL_NOT_NOW.test(s)) continue
+        // ③ 禽鸟异动往往写在铃响之后隔几句（先写声音、再写人物反应、最后才写鸟）
+        //    实测第 3 章正确样本里隔了 4 句，窗口太窄会把正确文本误判成违规
+        const window = ss.slice(Math.max(0, i - 3), i + 7).join('')
+        if (/禽|鸟|雀|鸦|鹊|鸽/.test(window)) continue
+        out.push({ quote: s.trim(), why: '铃响未伴禽鸟异动（rule:bell-birds）' })
+      }
+      return out
+    },
   },
   {
     id: 'fz:zhao-qi-alive',
     category: 'forbidden-zone',
     check: ({ text }) =>
       sentences(text)
-        .filter((s) => /赵七[^。！？]{0,15}(死|亡|气绝|殒|尸|毙)/.test(s))
+        .filter((s) => {
+          const m = s.match(/赵七(.{0,12})/)
+          if (!m) return false
+          const after = m[1]
+          if (!/(死了|已死|身死|死在|气绝|殒命|毙命|断气|尸)/.test(after)) return false
+          if (DEATH_COMPOUND.test(after)) return false // 闩死/锁死：关门不是人死
+          if (/[说道问答听念]/.test(after)) return false // 「赵七说，他死前……」是转述他人
+          return true
+        })
         .map((s) => ({ quote: s.trim(), why: '触碰禁区 fz:zhao-qi-alive（赵七不得死亡）' })),
   },
   {
