@@ -18,7 +18,7 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
   const hooks = Object.fromEntries(spec.hooks.map((h) => [h.id, { status: h.status }]))
   const out = []
   const usage = { inputTokens: 0, outputTokens: 0, ms: 0, calls: 0 }
-  const gate = { attempts: 0, rejections: 0, byCode: {}, warnings: {}, rejected: [] }
+  const gate = { attempts: 0, rejections: 0, byCode: {}, warnings: {}, rejected: [], needsReview: [] }
   // 精确载荷层（三层投影里的「原文负责准」）。曾漏接此参数，导致本臂在完全没读过
   // 前文正文的情况下续写——结构状态齐备、文体与既有惯例全无依据，原文层错误反超裸模型。
   let recentText = corpusTail
@@ -27,6 +27,7 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
     const ctx = compileContext({ spec, state, task, chapter, budget, recentText })
     let prompt = buildPrompt(ctx)
     let accepted = null
+    let best = null // 重试耗尽时的兜底：留错误最少的一稿，而不是丢掉整章
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       gate.attempts++
@@ -48,6 +49,7 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
       }
       gate.rejections++
       for (const v of check.errors) gate.byCode[v.code] = (gate.byCode[v.code] ?? 0) + 1
+      if (tx?.text && (!best || check.errors.length < best.errors)) best = { tx, errors: check.errors.length }
       // 记录被拒事务，否则「全被拒」时无从诊断
       gate.rejected.push({
         chapter,
@@ -64,12 +66,19 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
         check.errors.map((v) => `  - [${v.code}] ${v.msg}`).join('\n')
     }
 
+    // 重试耗尽仍不合格：**不丢章**，收下错误最少的一稿并标记待人工复核。
+    // 直接丢弃会让系统拿完整性换正确性——实测三次运行各丢 1-2 章，
+    // 这在真实使用中不可接受。协议里「舟舱负责人类确认」正是为这种情形准备的。
+    if (!accepted && best) {
+      accepted = best.tx
+      gate.needsReview.push({ chapter, remainingErrors: best.errors })
+    }
     if (!accepted) {
       out.push({ chapter, text: '', rejected: true })
       continue
     }
     ;({ state, evidence } = applyTransaction({ tx: accepted, state, evidence, chapter }))
-    out.push({ chapter, text: accepted.text })
+    out.push({ chapter, text: accepted.text, needsReview: gate.needsReview.some((r) => r.chapter === chapter) })
     recentText = accepted.text
   }
 

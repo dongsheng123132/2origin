@@ -103,6 +103,9 @@ for (const { meta, result, w1, w3, rep } of report) {
     )
     const w = Object.entries(result.gate.warnings ?? {})
     if (w.length) console.log(`  记忆偏差（放行但计数）：${w.map(([k, v]) => `${k}×${v}`).join('，')}`)
+    const nr = result.gate.needsReview ?? []
+    if (nr.length)
+      console.log(`  待人工复核：${nr.length} 章（重试耗尽后收下最优稿）→ ${nr.map((r) => `ch${r.chapter}(残留${r.remainingErrors})`).join('，')}`)
   }
   const u = result.usage
   console.log(`  用量：输入 ${u.inputTokens} tok，输出 ${u.outputTokens} tok，${u.calls} 次调用，${u.ms}ms`)
