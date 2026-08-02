@@ -31,7 +31,7 @@ const LEFT_HAND_ACT = /左手[^。！？]{0,12}(持|握|挥|提|抬|按|抓|接�
 /** 句子级切分，便于定位 */
 const sentences = (t) => t.split(/(?<=[。！？…\n])/).filter((s) => s.trim())
 
-const RULES = [
+export const RULES = [
   {
     id: 'rule:gate-time',
     category: 'world-rule',

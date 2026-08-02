@@ -4,6 +4,8 @@
 //   validateTransaction() → { ok, violations }   不通过则把 violations 回传模型重试（带证据的门禁）
 //   applyTransaction()    → { state, evidence }  通过后折叠进世界状态，并记录每个字段的来源
 
+import { RULES } from '../../eval/ced.mjs'
+
 /** 断言名 → 可复核的谓词。模型自己立的字据，由校验器验收。 */
 const ASSERTIONS = {
   'zhao-qi-alive': (s) => s['char:zhao-qi']?.alive === true,
@@ -54,7 +56,7 @@ function fold(state, changes) {
   return next
 }
 
-export function validateTransaction({ tx, stateBefore, task, hooks = {} }) {
+export function validateTransaction({ tx, stateBefore, task, hooks = {}, spec = null }) {
   const v = []
   const changes = tx?.state_changes ?? []
 
@@ -105,6 +107,18 @@ export function validateTransaction({ tx, stateBefore, task, hooks = {} }) {
     const pred = ASSERTIONS[a]
     if (!pred) v.push({ code: 'unknown-assertion', msg: `断言 ${a} 无法复核（未登记）`, severity: 'warning' })
     else if (!pred(after)) v.push({ code: 'assertion-failed', msg: `模型声明 ${a}，复核不成立` })
+  }
+
+  // ⑤ 正文对照状态：只校验状态变更是不够的。
+  //    实测中出现过状态字段完全正确、正文却把黑钥匙写在别人手上的情况——
+  //    状态层与正文层是脱钩的，光管住状态管不住文字。协议要求的「修改后必须通过的验证」
+  //    必须把正文也纳进来，否则门禁形同虚设。
+  if (spec && tx?.text) {
+    for (const rule of RULES) {
+      for (const hit of rule.check({ text: tx.text, state: stateBefore, stateAfter: after, spec, chapter: null })) {
+        v.push({ code: 'prose-violation', rule: rule.id, msg: `${hit.why}｜「${hit.quote.slice(0, 40)}」` })
+      }
+    }
   }
 
   const errors = v.filter((x) => x.severity !== 'warning')

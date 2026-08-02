@@ -37,7 +37,7 @@ export async function run({ spec, task, state0, chapters, model, budget = 6000, 
       usage.calls++
 
       const tx = normalizeTransaction(res.parsed, knownIds)
-      const check = validateTransaction({ tx, stateBefore: state, task, hooks })
+      const check = validateTransaction({ tx, stateBefore: state, task, hooks, spec })
       // 警告不拦截，但要计数——模型对世界的记忆偏差是有价值的观测量
       for (const w of check.violations.filter((x) => x.severity === 'warning')) {
         gate.warnings[w.code] = (gate.warnings[w.code] ?? 0) + 1
