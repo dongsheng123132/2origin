@@ -1,0 +1,3 @@
+{"id":"faction:guanxing-tai","name":"观星台","type":"order","stance":"守护空间门知识","members":["char:lin-zheng","char:bai-yao","char:shen-yan","char:yun-gu"]}
+{"id":"faction:bei-ting","name":"北庭","type":"military","stance":"欲夺空间门","members":["char:pei-zhao"],"secret_members":["char:bai-yao"]}
+{"id":"faction:dukou-neutral","name":"渡口镇民","type":"civilian","stance":"中立","members":["char:zhao-qi","char:a-zhi","char:lao-tao"]}

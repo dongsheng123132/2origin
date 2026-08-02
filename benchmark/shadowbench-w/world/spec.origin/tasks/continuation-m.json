@@ -1,0 +1,74 @@
+{
+  "task_id": "sb-w-m01-cont",
+  "level": "M-lite",
+  "baseline_through": 50,
+  "description": "M-lite 续写任务：与 S 级同构（转交关键物品 + 守住秘密 + 保人不死），唯一变量是历史长度——基线从 10 章增至 50 章。用于检验「状态优势是否随历史长度增长」。",
+  "chapters": [51, 52, 53, 54, 55],
+  "goal": "北庭于月落之夜来袭。林峥须守住月台，最终将黑钥匙交回沈砚保管，且空间门始终未被开启。",
+  "why_this_task": "第 50 章末的世界状态里，有三样东西是**只能靠累积才答得出**的：①黑钥匙历经五次转手（老陶→赵七→林峥→沈砚→林峥）②白遥叛变的知情者已扩至五人而主角仍不在其中 ③沈砚与云姑已私下锁定嫌疑却议定不告知林峥。检索能捞回写着这些事的段落，但答不出『此刻谁持钥、此刻谁知情』——这正是本实验要测的差别。",
+  "state_at_baseline": {
+    "note": "由 canon 初始状态 + chapter ≤ 50 的状态变更重放导出，此处仅供人工核对。",
+    "obj:black-key": { "holder": "char:lin-zheng", "used": false, "intact": true },
+    "char:lin-zheng": { "location": "loc:moon-platform", "knows": ["k:space-gate-exists", "k:black-key-exists", "k:mole-exists"] },
+    "char:bai-yao": { "secret_betrayal": true, "wavering": true, "left_hand_injured": true },
+    "char:shen-yan": { "suspects_bai_yao": true, "suspect_pool": 2 },
+    "char:yun-gu": { "suspects_bai_yao": true },
+    "char:zhao-qi": { "alive": true }
+  },
+  "forbidden_zones": [
+    {
+      "id": "fz:betrayal-secret",
+      "rule": "林峥仍不得获知白遥叛变。注意沈砚与云姑已锁定嫌疑却议定不告知他（第 47 章）——行文不得让这层保密破功",
+      "category": "knowledge",
+      "machine_check": { "type": "knows_must_not_gain", "object": "char:lin-zheng", "value": "k:bai-yao-betrayal" }
+    },
+    {
+      "id": "fz:gate-closed",
+      "rule": "空间门不得开启，黑钥匙不得使用",
+      "category": "world-rule",
+      "machine_check": { "type": "field_must_stay", "object": "obj:black-key", "field": "used", "value": false }
+    },
+    {
+      "id": "fz:zhao-qi-alive",
+      "rule": "赵七不得死亡",
+      "category": "state",
+      "machine_check": { "type": "field_must_stay", "object": "char:zhao-qi", "field": "alive", "value": true }
+    },
+    {
+      "id": "fz:left-hand",
+      "rule": "白遥左手伤自第 9 章起未愈（第 20 章寒夜复发），不得用左手持刀或负重",
+      "category": "physical",
+      "machine_check": { "type": "field_must_stay", "object": "char:bai-yao", "field": "left_hand_injured", "value": true }
+    },
+    {
+      "id": "fz:suspicion-unresolved",
+      "rule": "hook:shen-yan-suspicion 不得在本段回收——沈砚不得当众点破内应身份",
+      "category": "foreshadowing",
+      "machine_check": { "type": "hook_must_stay", "hook": "hook:shen-yan-suspicion", "status": "planted_unresolved" }
+    }
+  ],
+  "expected_state_after": {
+    "note": "W3 答案集。字段级比对系统写回的状态与此处的差异。",
+    "must_hold": {
+      "obj:black-key.holder": "char:shen-yan",
+      "obj:black-key.used": false,
+      "obj:black-key.intact": true,
+      "char:zhao-qi.alive": true,
+      "char:bai-yao.left_hand_injured": true,
+      "char:bai-yao.secret_betrayal": true,
+      "char:lin-zheng.knows.not_contains": "k:bai-yao-betrayal",
+      "hook:shen-yan-suspicion.status": "planted_unresolved"
+    },
+    "free_variables": [
+      "月台攻防的经过与伤亡（赵七除外）",
+      "白遥在袭击中的立场表现（其动摇状态为 true，可写出挣扎，但不得被林峥看破）",
+      "char:lin-zheng.location",
+      "可新增次要人物与新伏笔"
+    ]
+  },
+  "scoring": {
+    "W1": "同 S 级：规则类走确定性检查，语义类走双模型 judge。",
+    "W3": "取各臂自报世界状态与 expected_state_after.must_hold 字段级比对。",
+    "note": "与 S 级唯一的差别是基线长度（10 章 → 50 章）。指标口径、判分器、实验臂全部不变，故 M 与 S 的结果可直接对比。"
+  }
+}

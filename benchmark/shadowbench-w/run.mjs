@@ -34,8 +34,12 @@ const budget = Number(arg('budget', 6000))
 const outDir = arg('out', join(HERE, 'results'))
 
 const spec = loadSpec()
-const task = JSON.parse(readFileSync(join(HERE, 'world/spec.origin/tasks/continuation.json'), 'utf8'))
-const { state: state0, problems } = replay(spec, 10)
+// 任务文件可切换：S 级 continuation.json，M-lite continuation-m.json（--task 指定）
+const taskFile = arg('task', 'continuation.json')
+const task = JSON.parse(readFileSync(join(HERE, 'world/spec.origin/tasks', taskFile), 'utf8'))
+// 基线长度由任务文件声明，不再写死
+const baselineThrough = task.baseline_through ?? 10
+const { state: state0, problems } = replay(spec, baselineThrough)
 if (problems.length) {
   console.error('✗ 世界规格重放有问题，先修规格再跑实验：\n' + problems.map((p) => '  - ' + p).join('\n'))
   process.exit(1)
@@ -45,7 +49,7 @@ if (problems.length) {
 let corpusTail = ''
 let corpusIsReal = false
 try {
-  corpusTail = readFileSync(join(HERE, 'corpus', 'ch01-10.txt'), 'utf8')
+  corpusTail = readFileSync(join(HERE, 'corpus', `ch01-${String(baselineThrough).padStart(2, '0')}.txt`), 'utf8')
   corpusIsReal = true
 } catch {
   corpusTail = spec.outline.map((c) => `第${c.chapter}章 ${c.title}：${c.summary}`).join('\n')

@@ -1,5 +1,6 @@
-{"id":"hook:bronze-bell","summary":"铜铃夜半鸣响，来源不明","setup":{"chapter":3,"event":"ev:003"},"status":"planted_unresolved","tier":"main","intended_payoff":"S 级之后","note":"续写中若回收，必须同时解释禽鸟异动（rule:bell-birds）"}
-{"id":"hook:missing-letter","summary":"档案室无署名信失踪","setup":{"chapter":7,"event":"ev:007"},"status":"planted_unresolved","tier":"main","intended_payoff":"S 级之后"}
-{"id":"hook:a-zhi-witness","summary":"阿枝目睹白遥与裴照会面却缄口","setup":{"chapter":6,"event":"ev:006"},"status":"planted_unresolved","tier":"main","note":"S 级禁区：此伏笔若在续写中回收，将导致林峥获知白遥叛变——即违反禁区"}
-{"id":"hook:yun-gu-silence","summary":"云姑知晓黑钥匙来历而不言","setup":{"chapter":1,"event":"ev:001"},"status":"planted_unresolved","tier":"sub"}
+{"id":"hook:bronze-bell","summary":"铜铃夜半鸣响，来源不明","setup":{"chapter":3,"event":"ev:003"},"status":"resolved","tier":"main","intended_payoff":"S 级之后","note":"续写中若回收，必须同时解释禽鸟异动（rule:bell-birds）","payoff":{"chapter":19,"event":"ev:019"}}
+{"id":"hook:missing-letter","summary":"档案室无署名信失踪","setup":{"chapter":7,"event":"ev:007"},"status":"resolved","tier":"main","intended_payoff":"S 级之后","payoff":{"chapter":40,"event":"ev:040"}}
+{"id":"hook:a-zhi-witness","summary":"阿枝目睹白遥与裴照会面却缄口","setup":{"chapter":6,"event":"ev:006"},"status":"resolved","tier":"main","note":"S 级禁区：此伏笔若在续写中回收，将导致林峥获知白遥叛变——即违反禁区","payoff":{"chapter":43,"event":"ev:043"}}
+{"id":"hook:yun-gu-silence","summary":"云姑知晓黑钥匙来历而不言","setup":{"chapter":1,"event":"ev:001"},"status":"resolved","tier":"sub","payoff":{"chapter":14,"event":"ev:014"}}
 {"id":"hook:shen-yan-suspicion","summary":"沈砚断定台中有内应，然不知其人","setup":{"chapter":7,"event":"ev:007"},"status":"planted_unresolved","tier":"sub"}
+{"id":"hook:second-bell","summary":"铜铃第二次夜响，与黑钥匙共鸣之谜","setup":{"chapter":32,"event":"ev:032"},"status":"resolved","tier":"main","payoff":{"chapter":48,"event":"ev:048"}}

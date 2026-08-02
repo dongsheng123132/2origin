@@ -1,0 +1,76 @@
+{
+  "task_id": "sb-w-s01-cont",
+  "description": "续写第 11-15 章（每章约 3000 字）。四臂使用完全相同的任务定义，只在「上下文如何供给」与「状态如何写回」上不同。",
+  "chapters": [11, 12, 13, 14, 15],
+  "goal": "林峥须从赵七手中取得黑钥匙。",
+  "state_at_chapter_10": {
+    "note": "非静态存储，由 canon 初始状态 + timeline/state-changes.jsonl 中 chapter ≤ 10 的变更重放导出。此处列出仅供人工核对。",
+    "char:lin-zheng": { "location": "loc:dukou-zhen", "alive": true, "knows": ["k:space-gate-exists", "k:black-key-exists"] },
+    "char:bai-yao": { "location": "loc:guanxing-tai", "alive": true, "secret_betrayal": true, "left_hand_injured": true, "knows": ["k:space-gate-exists", "k:black-key-exists", "k:beiting-allegiance", "k:black-key-held-by-zhao-qi"] },
+    "char:zhao-qi": { "location": "loc:dukou-teahouse", "alive": true },
+    "char:shen-yan": { "suspects_mole": true },
+    "char:a-zhi": { "knows": ["k:bai-yao-meets-pei-zhao"] },
+    "obj:black-key": { "holder": "char:zhao-qi", "used": false, "intact": true },
+    "obj:missing-letter": { "location": "unknown" }
+  },
+  "forbidden_zones": [
+    {
+      "id": "fz:betrayal-secret",
+      "rule": "林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）",
+      "category": "knowledge",
+      "note": "本项最难：完成任务需与白遥大量互动，戏剧张力会诱导模型让主角『隐隐觉得不对』",
+      "machine_check": { "type": "knows_must_not_gain", "object": "char:lin-zheng", "value": "k:bai-yao-betrayal" }
+    },
+    {
+      "id": "fz:gate-closed",
+      "rule": "空间门不得开启，黑钥匙不得使用（black-key.used 保持 false）",
+      "category": "world-rule",
+      "machine_check": { "type": "field_must_stay", "object": "obj:black-key", "field": "used", "value": false }
+    },
+    {
+      "id": "fz:zhao-qi-alive",
+      "rule": "赵七不得死亡",
+      "category": "state",
+      "note": "交涉受挫时模型倾向让阻碍者死掉",
+      "machine_check": { "type": "field_must_stay", "object": "char:zhao-qi", "field": "alive", "value": true }
+    },
+    {
+      "id": "fz:left-hand",
+      "rule": "白遥左手已伤（第 9 章起），不得用左手持刀或负重",
+      "category": "physical",
+      "machine_check": { "type": "field_must_stay", "object": "char:bai-yao", "field": "left_hand_injured", "value": true },
+      "text_check": "由 eval/ced.mjs 的 rule:left-hand 在正文层面复查"
+    },
+    {
+      "id": "fz:a-zhi-silent",
+      "rule": "hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守",
+      "category": "foreshadowing",
+      "machine_check": { "type": "hook_must_stay", "hook": "hook:a-zhi-witness", "status": "planted_unresolved" }
+    }
+  ],
+  "expected_state_after": {
+    "note": "W3 答案集。字段级比对系统写回的状态与此处的差异。",
+    "must_hold": {
+      "obj:black-key.holder": "char:lin-zheng",
+      "obj:black-key.used": false,
+      "obj:black-key.intact": true,
+      "char:zhao-qi.alive": true,
+      "char:bai-yao.left_hand_injured": true,
+      "char:bai-yao.secret_betrayal": true,
+      "char:lin-zheng.knows.not_contains": "k:bai-yao-betrayal",
+      "hook:a-zhi-witness.status": "planted_unresolved"
+    },
+    "free_variables": [
+      "char:lin-zheng.location（可变，取决于取钥匙的地点安排）",
+      "char:zhao-qi.location",
+      "赵七交出钥匙的动机与代价（可自由创作）",
+      "可新增次要人物与新伏笔（新增未知实体过多将由 W1 的未知实体项扣分）",
+      "hook:bronze-bell / hook:missing-letter / hook:yun-gu-silence / hook:shen-yan-suspicion 可继续悬置，亦可推进但不得草率回收"
+    ]
+  },
+  "scoring": {
+    "W1": "对第 11-15 章正文做一致性检测：规则类（时辰、钥匙次数、左手、保管链、铃响伴禽鸟）走确定性检查；语义类（知识越界、语气暗示）走双模型 LLM-judge + 分歧人工裁决。计 CED（每万词错误数）。",
+    "W3": "取各臂写完后自报的世界状态，与 expected_state_after.must_hold 做字段级比对，计准确率；A3 额外计证据可追溯率（每个状态字段能否指回正确的来源场景）。",
+    "note": "A0/A1 无显式状态输出，W3 通过附加一轮『请输出当前世界状态』的询问采集，该轮 Token 计入成本。"
+  }
+}

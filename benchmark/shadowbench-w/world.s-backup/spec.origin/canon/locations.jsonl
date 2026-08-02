@@ -1,0 +1,6 @@
+{"id":"loc:guanxing-tai","name":"观星台","type":"stronghold","controlled_by":"faction:guanxing-tai","note":"执事不得独自离台超三日（rule:leave-limit）"}
+{"id":"loc:dukou-zhen","name":"渡口镇","type":"town","controlled_by":"faction:dukou-neutral","note":"中立商埠；北庭令牌持有者入镇须交械（rule:disarm）"}
+{"id":"loc:dukou-teahouse","name":"渡口茶肆","type":"venue","within":"loc:dukou-zhen"}
+{"id":"loc:bei-ting-camp","name":"北庭大营","type":"military","controlled_by":"faction:bei-ting"}
+{"id":"loc:moon-platform","name":"月台","type":"ritual_site","note":"空间门所在；仅月落时可开（rule:gate-time）"}
+{"id":"loc:north-corridor","name":"北廊","type":"passage","within":"loc:guanxing-tai"}

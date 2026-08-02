@@ -1,0 +1,6 @@
+{"id":"rule:gate-time","statement":"空间门只能在月落之后（子时至寅时）开启","severity":"error","检测方式":"文本中出现开门情节时校验时辰"}
+{"id":"rule:key-once","statement":"黑钥匙只能使用一次，用后碎裂","severity":"error","检测方式":"obj:black-key.used 为 true 后不得再次使用"}
+{"id":"rule:gate-needs-two","statement":"空间门开启需两人同时在场","severity":"error"}
+{"id":"rule:leave-limit","statement":"观星台执事不得独自离开台域超过三日","severity":"warning","检测方式":"离台事件与归台事件的时间差"}
+{"id":"rule:disarm","statement":"持北庭令牌者进入渡口镇必须交械","severity":"warning"}
+{"id":"rule:bell-birds","statement":"铜铃鸣响时方圆十里禽鸟尽飞（可观测现象，不可静默发生）","severity":"error","检测方式":"铃响情节必须伴随禽鸟异动描写"}

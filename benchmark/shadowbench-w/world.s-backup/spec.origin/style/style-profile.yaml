@@ -1,0 +1,16 @@
+# 风格档案——基线生成与续写臂共用，避免"文风漂移"混入一致性评分。
+# 注意：本文件只管「怎么写」，不管「写什么」。
+#   章节长度以 chapters/outline.jsonl 的 words 为准；
+#   剧情禁区以 tasks/continuation.json 的 forbidden_zones 为准（仅适用于续写阶段）。
+#   —— 曾因把续写阶段的禁区写进本文件，导致基线第 4 章（白遥视角写其投敌）
+#      与「不得点破白遥叛变」自相矛盾，模型直接卡死不返回。
+viewpoint: 第三人称限知（每章单一视角人物，见 chapters/outline.jsonl 的 pov 字段）
+tense: 过去时叙述
+tone: 克制、冷峭，少用感叹
+dialogue_ratio: 约 30%
+paragraph_length: 短段为主，罕有超过 5 行的段落
+naming: 人物一律用本名，不用绰号别称
+forbidden:
+  - 上帝视角旁白（不得直述视角人物不知之事）
+  - 现代词汇与外来语
+  - 章末预告式收尾（"欲知后事如何"）

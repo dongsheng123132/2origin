@@ -19,7 +19,8 @@ import { loadSpec, replay } from './replay.mjs'
 import { createModel } from '../arms/lib/model.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const TASK = JSON.parse(readFileSync(join(HERE, '..', 'world/spec.origin/tasks/continuation.json'), 'utf8'))
+// 任务文件可切换（S 级 / M-lite），由环境变量 SBW_TASK 指定
+const TASK = JSON.parse(readFileSync(join(HERE, '..', 'world/spec.origin/tasks', process.env.SBW_TASK ?? 'continuation.json'), 'utf8'))
 
 const CATEGORIES = `
 1. knowledge-leak（知识越界）：某人物的言行/心理表明他知道了依设定他不该知道的事

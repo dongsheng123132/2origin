@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const TASK = JSON.parse(readFileSync(join(HERE, '..', 'world', 'spec.origin', 'tasks', 'continuation.json'), 'utf8'))
+const TASK = JSON.parse(readFileSync(join(HERE, '..', 'world', 'spec.origin', 'tasks', process.env.SBW_TASK ?? 'continuation.json'), 'utf8'))
 
 /** "char:lin-zheng.knows.not_contains" → { id, field, op } */
 function parseKey(key) {

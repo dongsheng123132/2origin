@@ -1,0 +1,10 @@
+{"seq":1,"chapter":1,"id":"ev:001","summary":"林峥受沈砚之命，查三年前铜铃旧案；云姑欲言又止","participants":["char:lin-zheng","char:shen-yan","char:yun-gu"],"location":"loc:guanxing-tai"}
+{"seq":2,"chapter":2,"id":"ev:002","summary":"老陶欠债，将黑钥匙抵与赵七","participants":["char:lao-tao","char:zhao-qi"],"location":"loc:dukou-zhen"}
+{"seq":3,"chapter":3,"id":"ev:003","summary":"铜铃于夜半鸣响一次，方圆十里禽鸟尽飞，无人知其所在","participants":[],"location":"loc:dukou-zhen","note":"伏笔埋设；须伴禽鸟异动描写（rule:bell-birds）"}
+{"seq":4,"chapter":4,"id":"ev:004","summary":"白遥于北庭大营密会裴照，受令归台为内应","participants":["char:bai-yao","char:pei-zhao"],"location":"loc:bei-ting-camp","secret":true,"prompt_hint":"白遥夜访北庭军营，与校尉裴照会面，二人商定日后互通消息"}
+{"seq":5,"chapter":5,"id":"ev:005","summary":"林峥奉命赴渡口镇查访铜铃来历","participants":["char:lin-zheng"],"location":"loc:dukou-zhen"}
+{"seq":6,"chapter":6,"id":"ev:006","summary":"阿枝在茶肆后巷撞见白遥与裴照低语，避而未言","participants":["char:a-zhi","char:bai-yao","char:pei-zhao"],"location":"loc:dukou-teahouse","note":"伏笔埋设"}
+{"seq":7,"chapter":7,"id":"ev:007","summary":"档案室一封无署名信不翼而飞；沈砚由此断定台中有内应，然不知是谁","participants":["char:shen-yan","char:yun-gu"],"location":"loc:guanxing-tai","prompt_hint":"档案室少了一封无署名的信；沈砚由此察觉台中有人私下与外通消息，但不知是谁"}
+{"seq":8,"chapter":8,"id":"ev:008","summary":"白遥辗转探知黑钥匙已在赵七手中","participants":["char:bai-yao"],"location":"loc:guanxing-tai","secret":true,"prompt_hint":"白遥辗转打听到黑钥匙已在赵七手中，暂未告知他人"}
+{"seq":9,"chapter":9,"id":"ev:009","summary":"白遥夜遇伏击，左手为刃所伤","participants":["char:bai-yao"],"location":"loc:north-corridor","note":"此后白遥不得用左手持刀","prompt_hint":"白遥夜行北廊时与人起了冲突，左手被刃所伤，对外只说失足"}
+{"seq":10,"chapter":10,"id":"ev:010","summary":"林峥于渡口茶肆初次向赵七索钥匙，赵七推诿未允","participants":["char:lin-zheng","char:zhao-qi"],"location":"loc:dukou-teahouse"}
