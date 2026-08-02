@@ -94,6 +94,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ├── compiler/    # （占位）双向编译器：context-compiler / commit-compiler
 ├── adapters/    # （占位）领域方言：flint / office / story / memory
 ├── benchmark/   # （占位）ShadowBench 任务与指标定义
+├── research/    # 外部格局调研快照（含 2026-08 三线调研与评估）
 └── reference/   # 原始构思文档存档
 ```
 
