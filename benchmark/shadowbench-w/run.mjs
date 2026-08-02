@@ -5,7 +5,8 @@
 //   node run.mjs --provider stub --scenario violating 验证校验器能拦住违规
 //   node run.mjs --provider anthropic --model claude-sonnet-5   真实实验
 //
-// 选项：--arm a0|a3|all（默认 all）  --budget <字符数>  --out <目录>
+// 选项：--arm a0|a1|a3|all（可逗号分隔，默认 all）  --budget <字符数>  --out <目录>
+//       --repeat <次数>  --rep-offset <起始编号偏移，用于续跑不覆盖已有数据>
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -15,6 +16,7 @@ import { scoreW1 } from './eval/ced.mjs'
 import { scoreW3 } from './eval/state-diff.mjs'
 import { createModel } from './arms/lib/model.mjs'
 import * as A0 from './arms/a0-naive/index.mjs'
+import * as A1 from './arms/a1-rag/index.mjs'
 import * as A3 from './arms/a3-benxiang/index.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -48,8 +50,8 @@ try {
   corpusTail = spec.outline.map((c) => `第${c.chapter}章 ${c.title}：${c.summary}`).join('\n')
 }
 
-const arms = { a0: A0, a3: A3 }
-const selected = which === 'all' ? ['a0', 'a3'] : [which]
+const arms = { a0: A0, a1: A1, a3: A3 }
+const selected = which === 'all' ? ['a0', 'a1', 'a3'] : which.split(',')
 const chapters = task.chapters
 
 const repeat = Number(arg('repeat', 1))

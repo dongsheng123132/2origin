@@ -257,10 +257,41 @@ function bailianModel(model = 'qwen-plus') {
   }
 }
 
-export function createModel({ provider = 'stub', model, scenario } = {}) {
+/**
+ * 瞬时故障重试包装。
+ * 实测：一次 "Network request failed" 就把跑了 40 分钟的 10 轮批量实验整个打死。
+ * 长时间批量作业必须容忍瞬时网络抖动——重跑一次远比重跑一整批便宜。
+ * 只重试网络/限流/超时类错误；参数错误、鉴权失败等确定性错误立即抛出，重试没有意义。
+ */
+const TRANSIENT = /network|timeout|超时|ECONNRESET|ETIMEDOUT|EAI_AGAIN|socket|429|502|503|504|rate.?limit|Throttling/i
+
+function withRetry(m, { tries = 3, baseDelayMs = 5000 } = {}) {
+  const inner = m.complete.bind(m)
+  return {
+    ...m,
+    async complete(opts) {
+      let last
+      for (let i = 1; i <= tries; i++) {
+        try {
+          return await inner(opts)
+        } catch (e) {
+          last = e
+          if (!TRANSIENT.test(String(e.message)) || i === tries) throw e
+          const wait = baseDelayMs * i
+          console.error(`  ⚠ 第 ${i} 次调用失败（${String(e.message).slice(0, 60)}…），${wait / 1000}s 后重试`)
+          await new Promise((r) => setTimeout(r, wait))
+        }
+      }
+      throw last
+    },
+  }
+}
+
+export function createModel({ provider = 'stub', model, scenario, retry = true } = {}) {
+  const wrap = (m) => (retry && !m.stub ? withRetry(m) : m)
   if (provider === 'stub') return stubModel(scenario)
-  if (provider === 'anthropic') return anthropicModel(model)
-  if (provider === 'hermes') return hermesModel(model)
-  if (provider === 'bailian') return bailianModel(model)
+  if (provider === 'anthropic') return wrap(anthropicModel(model))
+  if (provider === 'hermes') return wrap(hermesModel(model))
+  if (provider === 'bailian') return wrap(bailianModel(model))
   throw new Error(`未知 provider: ${provider}（可选 stub / bailian / hermes / anthropic）`)
 }

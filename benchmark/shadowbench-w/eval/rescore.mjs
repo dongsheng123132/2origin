@@ -18,7 +18,7 @@ const HERE = dirname(dirname(fileURLToPath(import.meta.url)))
 const DIR = join(HERE, 'results')
 const write = process.argv.includes('--write')
 
-const files = readdirSync(DIR).filter((f) => /^a[03]-bailian-rep\d+\.json$/.test(f)).sort()
+const files = readdirSync(DIR).filter((f) => /^a\d-bailian-rep\d+\.json$/.test(f)).sort()
 if (!files.length) { console.error('✗ results/ 下没有 rep 结果文件'); process.exit(1) }
 
 const rows = []
@@ -30,7 +30,7 @@ for (const f of files) {
   const w3 = scoreW3(d.result)
   if (write) writeFileSync(path, JSON.stringify({ ...d, w1, w3, rescored: true }, null, 2))
   rows.push({
-    arm: f.startsWith('a0') ? 'A0' : 'A3',
+    arm: f.slice(0, 2).toUpperCase(),
     rep: Number(f.match(/rep(\d+)/)[1]),
     done: chapters.length,
     review: (d.result.gate?.needsReview ?? []).length,
@@ -71,23 +71,50 @@ for (const [arm, g] of Object.entries(groups)) {
   )
 }
 
-// 判定：区间重叠即视为不可区分；同时看均值与中位数是否一致地指向同一方
+/**
+ * 置换检验：把两组标签随机打乱 N 次，看「均值差至少和实测一样大」的比例。
+ * 无分布假设，小样本适用。
+ *
+ * 取代原先的「区间是否重叠」——那个规则太粗：两臂区间重叠可能只是因为都能打到 0，
+ * 完全不代表分布相同。n=10 已足以做真检验，就不该再用代理指标搪塞。
+ */
+function permutationTest(a, b, iters = 20000) {
+  const observed = a.reduce((x, y) => x + y, 0) / a.length - b.reduce((x, y) => x + y, 0) / b.length
+  const pool = [...a, ...b]
+  let extreme = 0
+  for (let i = 0; i < iters; i++) {
+    const s = [...pool]
+    for (let j = s.length - 1; j > 0; j--) {
+      const k = Math.floor(Math.random() * (j + 1))
+      ;[s[j], s[k]] = [s[k], s[j]]
+    }
+    const x = s.slice(0, a.length)
+    const y = s.slice(a.length)
+    const d = x.reduce((p, q) => p + q, 0) / x.length - y.reduce((p, q) => p + q, 0) / y.length
+    if (Math.abs(d) >= Math.abs(observed)) extreme++
+  }
+  return { observed, p: extreme / iters }
+}
+
 const a0 = groups.A0 ? stat(groups.A0.map((r) => r.epc)) : null
 const a3 = groups.A3 ? stat(groups.A3.map((r) => r.epc)) : null
 if (a0 && a3 && a0.n >= 3 && a3.n >= 3) {
   console.log('')
   const complete = groups.A3.every((r) => r.done === 5)
-  const overlap = a3.min <= a0.max && a0.min <= a3.max
-  const meanBetter = a3.mean < a0.mean
-  const medianBetter = a3.median < a0.median
+  const A0e = groups.A0.map((r) => r.epc)
+  const A3e = groups.A3.map((r) => r.epc)
+  const { observed, p } = permutationTest(A3e, A0e)
+
   console.log(`  前置（A3 每轮产出全部章节）：${complete ? '✓' : '✗'}`)
-  console.log(`  EPC：A3 均 ${a3.mean.toFixed(2)} vs A0 均 ${a0.mean.toFixed(2)}；中位 ${a3.median.toFixed(2)} vs ${a0.median.toFixed(2)}`)
-  console.log(`  区间：${overlap ? '重叠' : '不重叠'}（A3 [${a3.min.toFixed(2)}–${a3.max.toFixed(2)}]，A0 [${a0.min.toFixed(2)}–${a0.max.toFixed(2)}]）`)
+  console.log(`  EPC：A3 均 ${a3.mean.toFixed(2)} 中位 ${a3.median.toFixed(2)}  vs  A0 均 ${a0.mean.toFixed(2)} 中位 ${a0.median.toFixed(2)}`)
+  console.log(`  置换检验（n=${a3.n} vs ${a0.n}，20000 次）：均值差 ${observed.toFixed(2)}，p = ${p.toFixed(4)}`)
+
+  const better = a3.mean < a0.mean && a3.median <= a0.median
   console.log(
     `  Gate 0：${
       !complete ? '未通过 —— 任务未完成'
-      : meanBetter && medianBetter && !overlap ? '通过'
-      : meanBetter && medianBetter ? '倾向通过，但区间重叠 —— 需更大样本或更强判分通道方可断言'
+      : better && p < 0.05 ? `通过（p=${p.toFixed(4)} < 0.05，差异显著）`
+      : better ? `倾向通过但未达显著（p=${p.toFixed(4)} ≥ 0.05）—— 需更大样本`
       : '未通过 —— 停止扩大规模，回头改架构'
     }`
   )
