@@ -19,15 +19,15 @@ The claim has been **narrowed by experiment** to exactly one dimension: **state 
 
 | Model · baseline | Benxiang | Naive LLM | Vector RAG |
 |---|---|---|---|
-| qwen-plus · S-tier (20k chars, 10 runs each) | **92.5%** | 75.0% | 75.0% |
-| qwen-plus · M-tier (95k chars, 11 runs each) | **98.9%** | 75.0% | 75.0% |
-| deepseek-v4-flash · M-tier (**n=1, smoke**) | **100.0%** | **37.5%** | 75.0% |
+| qwen-plus · S-tier (20k chars, 10 runs each) | **92.5%** | 75.0% (sd 0) | 75.0% (sd 0) |
+| qwen-plus · M-tier (95k chars, 11 runs each) | **98.9%** | 75.0% (sd 0) | 75.0% (sd 0) |
+| deepseek-v4-flash · M-tier | *n=1: 100.0%* ⏳ | 53.8% ± 32.6 (n=10) | 32.1% ± 37.1 (n=7) |
 
-**The last row carries the most weight.** Bare deepseek scores 37.5% — half of what qwen manages. These two models are not in the same league at tracking state. Put both behind the same state machine and gate, and both land at or near a perfect score.
+**The qwen rows are solid.** Both control arms sat at exactly 75.0% with zero standard deviation across all 33 runs — not "slightly worse on average", but stuck against the same wall without moving once. Benxiang went 92.5% → 98.9%.
 
-**Benxiang lifts two models of very different strength to the same height. State correctness comes from the architecture, not from the model.** That is the property a *protocol* ought to have: it should not depend on how strong the machine underneath happens to be.
+Stretching the baseline from 20k to 95k characters made the gap **wider**, not narrower. Vector RAG is exactly the technique that should benefit from a longer context — it didn't move at all. Retrieval can find text; it cannot find *who is holding the key right now*. That answer appears in no passage — it is derived.
 
-Stretching the baseline from 20k to 95k characters made the gap **wider**, not narrower. Vector RAG is exactly the technique that should benefit from a longer context — it didn't move at all. Retrieval can find text; it cannot find *who is holding the key right now*. That answer appears in no passage — it is derived. RAG can carry a weak model up to the 75% wall; it does not get over it.
+⚠️ **The deepseek row is not a result yet.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%. **A single run tells you nothing about the distribution**: the smoke test measured A0 at 37.5% and A1 at 75.0%; ten runs later those are 53.8% and 32.1%. The Benxiang arm's multi-run is in progress and this row will be updated when it lands. Until then, treat only the qwen rows as findings.
 
 **What we do *not* claim:** prose consistency shows **no significant difference** from RAG (S-tier p=0.9905, M-tier p=0.3361). Benxiang costs **more** tokens, and how much more depends on the model: **+25% on qwen, +149% on the long-reasoning deepseek**. Earlier claims of "writes more consistently" and "saves tokens" have been withdrawn — the data does not support the first and contradicts the second.
 
