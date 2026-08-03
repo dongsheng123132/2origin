@@ -121,6 +121,8 @@ An erroneous negative result is harder to question than an erroneous positive on
 
 ## Layout
 
+📜 **[The Benxiang Manifesto](MANIFESTO.md)** (Chinese) — why this exists, what has been demonstrated, where it goes next.
+
 ```text
 spec/        protocol schemas + example .origin packages
 compiler/    bidirectional compiler — reference implementation (runnable)
