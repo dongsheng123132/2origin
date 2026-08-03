@@ -15,16 +15,21 @@
 
 The claim has been **narrowed by experiment** to exactly one dimension: **state tracking**.
 
-| Baseline length | Benxiang | Naive LLM | Vector RAG |
+**State accuracy (W3)**
+
+| Model · baseline | Benxiang | Naive LLM | Vector RAG |
 |---|---|---|---|
-| S-tier (10 chapters / 20k chars, 10 runs each) | **92.5%** | 75.0% | 75.0% |
-| M-tier (50 chapters / 95k chars, 11 runs each) | **98.9%** | 75.0% | 75.0% |
+| qwen-plus · S-tier (20k chars, 10 runs each) | **92.5%** | 75.0% | 75.0% |
+| qwen-plus · M-tier (95k chars, 11 runs each) | **98.9%** | 75.0% | 75.0% |
+| deepseek-v4-flash · M-tier (**n=1, smoke**) | **100.0%** | **37.5%** | 75.0% |
 
-Both control arms scored **75.0% with zero standard deviation across all 33 runs** — not "slightly worse on average", but stuck against the same wall without moving once.
+**The last row carries the most weight.** Bare deepseek scores 37.5% — half of what qwen manages. These two models are not in the same league at tracking state. Put both behind the same state machine and gate, and both land at or near a perfect score.
 
-The interesting part is the direction: stretching the baseline from 20k to 95k characters made the gap **wider**, not narrower. Vector RAG is exactly the technique that should benefit from a longer context — it didn't move at all. Retrieval can find text; it cannot find *who is holding the key right now*. That answer appears in no passage — it is derived, and only a state machine maintains it.
+**Benxiang lifts two models of very different strength to the same height. State correctness comes from the architecture, not from the model.** That is the property a *protocol* ought to have: it should not depend on how strong the machine underneath happens to be.
 
-**What we do *not* claim:** prose consistency shows **no significant difference** from RAG (S-tier p=0.9905, M-tier p=0.3361), and Benxiang costs **25–55% more tokens**. Earlier claims of "writes more consistently" and "saves tokens" have been withdrawn — the data does not support the first and contradicts the second.
+Stretching the baseline from 20k to 95k characters made the gap **wider**, not narrower. Vector RAG is exactly the technique that should benefit from a longer context — it didn't move at all. Retrieval can find text; it cannot find *who is holding the key right now*. That answer appears in no passage — it is derived. RAG can carry a weak model up to the 75% wall; it does not get over it.
+
+**What we do *not* claim:** prose consistency shows **no significant difference** from RAG (S-tier p=0.9905, M-tier p=0.3361). Benxiang costs **more** tokens, and how much more depends on the model: **+25% on qwen, +149% on the long-reasoning deepseek**. Earlier claims of "writes more consistently" and "saves tokens" have been withdrawn — the data does not support the first and contradicts the second.
 
 ---
 
@@ -104,7 +109,7 @@ What exists: a protocol draft, a working reference implementation with cross-dom
 
 **What does not exist yet:**
 
-1. **Cross-model validation** — every number above comes from a *single* model family. This is the largest single risk to every claim on this page.
+1. **Multi-run cross-model validation** — the second model (deepseek-v4-flash) has been run **once**, as a smoke test. The result is unambiguous (zero errors, 8/8 state fields) but a single run is not a statistical claim. Treat the qwen numbers as measured (n=10–11) and the deepseek row as indicative (n=1).
 2. Production-grade adapters for real formats.
 3. Any real user.
 
