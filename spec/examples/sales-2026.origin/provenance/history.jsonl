@@ -1,2 +1,4 @@
 {"event": "imported", "source": "sales.xlsx", "at": "2026-08-02", "by": "origin-importer@draft"}
 {"event": "projection_registered", "projection": "projection:revenue-trend", "engine": "flint", "at": "2026-08-02"}
+{"event": "state_change", "seq": 1, "object": "projection:revenue-trend", "field": "chart", "from": "Line Chart", "to": "Grouped Bar Chart", "kind": "observed", "basis": ["projection:revenue-trend"], "tx": "tx-20260802-001", "by": "claude@draft", "at": "2026-08-02T14:20:00Z"}
+{"event": "state_change", "seq": 2, "object": "projection:revenue-trend", "field": "chart", "from": "Grouped Bar Chart", "claimed_from": "Line Chart", "to": "Stacked Bar Chart", "kind": "observed", "tx": "tx-20260803-004", "by": "model@demo", "at": "2026-08-03T09:05:00Z"}

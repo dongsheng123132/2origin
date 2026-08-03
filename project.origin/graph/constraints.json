@@ -1,0 +1,73 @@
+[
+  {
+    "id": "decision-status",
+    "rule": "决策状态只能是 proposed / decided / superseded",
+    "check": {
+      "type": "in",
+      "object": "decision:*",
+      "field": "status",
+      "values": [
+        "proposed",
+        "decided",
+        "superseded"
+      ]
+    }
+  },
+  {
+    "id": "decision-rationale",
+    "rule": "每个决策必须写明理由",
+    "check": {
+      "type": "exists",
+      "object": "decision:*",
+      "field": "rationale"
+    }
+  },
+  {
+    "id": "task-status",
+    "rule": "待办状态只能是 open / doing / done / dropped",
+    "check": {
+      "type": "in",
+      "object": "task:*",
+      "field": "status",
+      "values": [
+        "open",
+        "doing",
+        "done",
+        "dropped"
+      ]
+    }
+  },
+  {
+    "id": "task-owner",
+    "rule": "每个待办必须有负责人",
+    "check": {
+      "type": "exists",
+      "object": "task:*",
+      "field": "owner"
+    }
+  },
+  {
+    "id": "risk-status",
+    "rule": "风险状态只能是 open / mitigated / accepted / closed",
+    "check": {
+      "type": "in",
+      "object": "risk:*",
+      "field": "status",
+      "values": [
+        "open",
+        "mitigated",
+        "accepted",
+        "closed"
+      ]
+    }
+  },
+  {
+    "id": "fact-evidence",
+    "rule": "每条事实必须附证据引用",
+    "check": {
+      "type": "exists",
+      "object": "fact:*",
+      "field": "evidence"
+    }
+  }
+]

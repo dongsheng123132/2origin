@@ -1,0 +1,19 @@
+{
+  "name": "benxiang-origin",
+  "version": "0.1.0",
+  "description": "本象协议参考实现：双向编译器 + 证据链只读检视面",
+  "type": "module",
+  "license": "Apache-2.0",
+  "bin": { "origin": "./compiler/cli.mjs" },
+  "exports": { ".": "./compiler/index.mjs" },
+  "scripts": {
+    "test": "node compiler/selftest.mjs",
+    "test:e2e": "node adapters/memory/e2e.mjs",
+    "test:mutation": "node compiler/mutation-check.mjs",
+    "verify": "npm run test && npm run test:e2e && npm run test:mutation",
+    "origin": "node compiler/cli.mjs",
+    "mcp": "node adapters/memory/mcp-server.mjs"
+  },
+  "files": ["compiler/", "spec/"],
+  "engines": { "node": ">=18" }
+}

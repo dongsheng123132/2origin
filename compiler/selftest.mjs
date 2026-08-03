@@ -9,9 +9,13 @@
 
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { tmpdir } from 'node:os'
+import { rmSync } from 'node:fs'
 import {
   loadOrigin, stateFromObjects, compileContext, buildPrompt,
   validateTransaction, applyTransaction, normalizeTransaction, checkConstraints, predicateNames,
+  why, historyOf, replay, diagnose, findMirrorPairs,
+  commit, initPackage, seqOf,
 } from './index.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -143,6 +147,172 @@ check(ctx.text.includes('obj:black-key'), '渲染使用完整 ID（曾因剥前�
 check(ctx.text.includes('holder=char:lin-zheng'), '字段值也带完整 ID 前缀')
 check(!ctx.overBudget, '未超预算')
 check(buildPrompt(ctx).includes('不可省略前缀'), '输出契约包含前缀要求')
+
+// ── 证据链：来源不只是「记下来」，得「查得出」 ───────────────────────
+console.log('\n[证据] provenance 日志与 why 查询')
+
+// 两次事务改同一个字段——覆写式 provenance 在这里会丢掉第一次，append-only 日志不会
+const j1 = applyTransaction({ tx: txMove, state: story.state, by: 'agent-a', at: '2026-08-03T10:00' })
+const txBack = {
+  transaction_id: 'tx-s-007', operation: 'append_scene', target: 'chapter-52',
+  // 故意谎报前值：模型以为钥匙还在林峥手上，实际已转给沈砚
+  state_changes: [{ object: 'obj:black-key', field: 'holder', from: 'char:lin-zheng', to: 'char:zhao-qi' }],
+}
+const j2 = applyTransaction({ tx: txBack, state: j1.state, history: j1.journal, by: 'agent-b', at: '2026-08-03T11:00' })
+const hist = [...j1.journal, ...j2.journal]
+
+check(hist.length === 2 && hist[1].seq === 2, 'journal 按 seq 连续追加（第二次改动没有覆盖第一次）')
+check(hist[1].from === 'char:shen-yan', '记录的 from 是落地时的真实前值')
+check(hist[1].claimed_from === 'char:lin-zheng', '  └ 模型谎报的前值单独存为 claimed_from（此前报个警告就丢了）')
+check(hist[0].claimed_from === undefined, '  └ 前值声明正确时不记 claimed_from')
+
+const w = why({ state: story.state, history: hist, ref: 'obj:black-key.holder' })
+check(w.value === 'char:zhao-qi', 'why 给出重放后的当前值')
+check(w.chain.length === 2 && w.chain[0].seq === 2, 'why 的改动链最新在前')
+check(w.chain[1].by === 'agent-a', '  └ 第一次改动没丢，责任者可追')
+check(w.drift === 1, '  └ 偏差次数可累计（模型记忆偏差率的原料）')
+
+const wInit = why({ state: story.state, history: hist, ref: 'char:zhao-qi.alive' })
+check(wInit.explained === false && wInit.value === true, '未经事务的字段如实报告「来自包的初始对象表」')
+
+const past = replay(story.state, hist, { until: 'tx-s-001' })
+check(past['obj:black-key'].holder === 'char:shen-yan', '按事务 ID 重放到历史某一刻（撤回级联将复用这条路径）')
+
+check(historyOf(hist, { by: 'agent-b' }).length === 1, 'historyOf 可按责任者过滤')
+check(historyOf(hist, { object: 'char:zhao-qi' }).length === 0, 'historyOf 可按对象过滤')
+
+// 双份账本：docs/03 原则六那条实测缺陷的机器版
+const doubled = {
+  'char:lin-zheng': { carries: ['obj:black-key'] },
+  'obj:black-key': { holder: 'char:lin-zheng' },
+}
+check(findMirrorPairs(doubled).length === 1, '双份账本探测抓出 carries/holder 互指（曾致钥匙转手后两边失配）')
+check(findMirrorPairs({ 'a:1': { ref: 'a:2' }, 'a:2': { name: 'x' } }).length === 0, '  └ 单向引用不误报')
+
+// ── 包体检 ────────────────────────────────────────────────────
+console.log('\n[体检] diagnose')
+const diag = diagnose(sales)
+check(diag.changes === 2, '读出示例包 provenance/history.jsonl 里的 2 条状态变更')
+check(diag.findings.some((f) => f.code === 'unenforceable-ratio'), '报出「2 条约束无一可机器判定」')
+check(diag.findings.some((f) => f.code === 'dangling-relation'), '报出关系指向包外对象 dataset:order-items')
+check(diag.findings.some((f) => f.code === 'drift-rate'), '报出模型记忆偏差率')
+check(diag.ok, '以上均为 warning，示例包无 error 级问题（退出码 0）')
+check(
+  replay(sales.state, sales.history)['projection:revenue-trend'].chart === 'Stacked Bar Chart',
+  '重放示例包日志后，图表类型已是两次事务之后的值',
+)
+
+// ── 正文对照状态：只校验状态字段是不够的 ──────────────────────
+// docs/03 原则九的回归保护。实验里出现过状态字段完全正确、正文却把关键物品
+// 写在错误人物手上的情况；把确定性规则接进门禁后三次运行的错误数从 1/6/3 降为 0/0/0。
+// **这条此前没有任何测试覆盖**——是 mutation-check.mjs 把它照出来的。
+console.log('\n[门禁] 正文与状态对照')
+
+const NAME = { 'char:lin-zheng': '林峥', 'char:zhao-qi': '赵七', 'char:shen-yan': '沈砚' }
+/** 宿主提供的正文检查器：正文若让非持有人握着关键物品，就是与状态矛盾。 */
+const holderProse = {
+  check(text, { stateAfter }) {
+    const holder = stateAfter['obj:black-key']?.holder
+    const hits = []
+    for (const [id, name] of Object.entries(NAME))
+      if (id !== holder && text.includes(name) && text.includes('黑钥匙'))
+        hits.push({ why: `正文让${name}握着黑钥匙，状态里的持有人却是 ${holder}`, quote: text })
+    return hits
+  },
+}
+
+const txProseBad = { ...txMove, text: '沈砚走后，林峥仍攥着那把黑钥匙。' }
+const proseBad = validateTransaction({ tx: txProseBad, stateBefore: story.state, constraints: storyConstraints, prose: holderProse })
+check(!proseBad.ok && proseBad.violations.some((v) => v.code === 'prose-violation'), '状态变更全合法、正文却写错持有人 → 拒绝')
+check(
+  validateTransaction({ tx: txMove, stateBefore: story.state, constraints: storyConstraints, prose: holderProse }).ok,
+  '  └ 不带正文时不误判（状态层照常通过）',
+)
+const txProseOk = { ...txMove, text: '沈砚接过黑钥匙，转身走进雨里。' }
+check(validateTransaction({ tx: txProseOk, stateBefore: story.state, constraints: storyConstraints, prose: holderProse }).ok, '  └ 正文与状态一致时放行')
+
+// ── 通配约束与新建：三个域共同要的两样东西 ─────────────────────
+console.log('\n[通用性] 通配约束与显式新建')
+
+// 一条约束管住全部同类对象——图纸有几千个构件时，逐个写规则是不可能的，
+// 更要命的是新增构件不会被旧规则覆盖
+const wildState = {
+  'part:beam-A1': { level: 3.2, material: 'C30' },
+  'part:beam-B7': { level: 2.1, material: 'C30' },
+  'part:beam-C3': { level: 2.9, material: 'C30' },
+}
+const wildRule = [{ id: 'headroom', rule: '梁底净高不得低于 2.6m', check: { type: 'range', object: 'part:*', field: 'level', min: 2.6 } }]
+const wildHits = checkConstraints(wildState, wildRule)
+check(wildHits.length === 1 && wildHits[0].msg.includes('beam-B7'), '一条通配约束扫过全部同类对象，只报越界的那个')
+check(checkConstraints({ ...wildState, 'part:beam-D9': { level: 0.5 } }, wildRule).length === 2, '  └ 新增对象自动被同一条约束覆盖')
+check(checkConstraints({ 'other:x': { level: 0.1 } }, wildRule).length === 0, '  └ 不匹配的对象不受影响')
+
+// in / exists：状态机合法取值与必填
+const enumRule = [{ id: 'rev', rule: '版次只能是 A/B/C', check: { type: 'in', object: 'dwg:*', field: 'rev', values: ['A', 'B', 'C'] } }]
+check(checkConstraints({ 'dwg:S-201': { rev: 'B' } }, enumRule).length === 0, 'in 谓词放行合法取值')
+check(checkConstraints({ 'dwg:S-201': { rev: 'Z' } }, enumRule).length === 1, '  └ 拦住非法取值')
+check(checkConstraints({ 'dwg:S-201': {} }, enumRule).length === 0, '  └ 字段缺失交给 exists 判，不越权')
+
+const reqRule = [{ id: 'owner', rule: '必须有负责人', check: { type: 'exists', object: 'task:*', field: 'owner' } }]
+check(checkConstraints({ 'task:t1': { owner: '张三' } }, reqRule).length === 0, 'exists 谓词放行已填字段')
+check(checkConstraints({ 'task:t1': { owner: '' } }, reqRule).length === 1, '  └ 空字符串算未填')
+check(checkConstraints({ 'task:t1': {} }, reqRule).length === 1, '  └ 字段缺失算未填')
+
+// 新建必须显式声明——否则 ID 打错一个字母就会静默造出永远没人管的幽灵对象
+const txGhost = { transaction_id: 'tx-g', state_changes: [{ object: 'char:lin-zhen', field: 'location', to: 'loc:x' }] }
+const ghostRes = validateTransaction({ tx: txGhost, stateBefore: story.state, constraints: [] })
+check(!ghostRes.ok && ghostRes.violations.some((v) => v.code === 'unknown-object'), '未声明就改不存在的对象 → 拒绝（幽灵对象防护）')
+
+const txCreate = {
+  transaction_id: 'tx-c', creates: [{ id: 'char:shen-yan', type: 'character' }],
+  state_changes: [{ object: 'char:shen-yan', field: 'location', to: 'loc:tower' }],
+}
+const createRes = validateTransaction({ tx: txCreate, stateBefore: story.state, constraints: [] })
+check(createRes.ok, '声明后即可新建', JSON.stringify(createRes.violations))
+check(createRes.stateAfter['char:shen-yan']._type === 'character', '  └ 类型随新建一起落地')
+
+// **实测教训**的回归保护：没写 from 的变更曾被 normalizeTransaction 塞进 from: undefined，
+// 于是前值检查去读一个还不存在的对象，当场崩溃
+const normCreate = normalizeTransaction(txCreate, story.ids)
+check(!('from' in normCreate.state_changes[0]), '归一化不给无 from 的变更凭空补一个 from 键（曾致新建对象时崩溃）')
+
+// ── 落盘：从「校验通过」到「真的写进去了」 ────────────────────────
+console.log('\n[持久化] commit 往返')
+
+const TMP = join(tmpdir(), `origin-selftest-${process.pid}`)
+rmSync(TMP, { recursive: true, force: true })
+initPackage(TMP, {
+  objects: storyObjects,
+  constraints: storyConstraints,
+  manifest: 'artifact:\n  id: selftest-story\n  kind: story\n',
+})
+check(seqOf(TMP) === 0, '新包的 seq 水位为 0')
+
+const c1 = commit(TMP, txMove, { by: 'agent-a', at: '2026-08-04T09:00:00Z' })
+check(c1.ok && c1.receipt.seq_to === 1, '合法事务落盘并返回回执', JSON.stringify(c1.violations ?? []))
+check(c1.receipt.changed[0] === 'obj:black-key.holder', '  └ 回执列出改动的字段')
+
+const reloaded = loadOrigin(TMP)
+check(reloaded.state['obj:black-key'].holder === 'char:shen-yan', '重新加载后当前状态已是新值')
+check(reloaded.initial['obj:black-key'].holder === 'char:lin-zheng', '  └ 出生证明未被覆写（objects.jsonl 原封不动）')
+check(why({ state: reloaded.initial, history: reloaded.history, ref: 'obj:black-key.holder' }).chain[0].by === 'agent-a', '  └ 落盘后 why 查得到责任者')
+
+// 违规事务：一个字节都不许写
+const c2 = commit(TMP, txKill, { by: 'agent-b' })
+check(!c2.ok && c2.violations.some((v) => v.code === 'constraint'), '违规事务被拒绝并给出理由')
+check(seqOf(TMP) === 1, '  └ 拒绝时未落盘（seq 水位没动）')
+
+// 插队检测：拿着过期的水位提交
+const c3 = commit(TMP, txLeak, { by: 'agent-c', expectedSeq: 0 })
+check(!c3.ok && c3.conflict?.actual === 1, '过期水位提交被判为写入冲突（首个写者胜）')
+check(seqOf(TMP) === 1, '  └ 冲突时同样未落盘')
+
+const c4 = commit(TMP, txBack, { by: 'agent-d', expectedSeq: 1, at: '2026-08-04T10:00:00Z' })
+check(c4.ok && c4.receipt.warnings.some((w) => w.code === 'stale-write'), '前值谎报只作为警告随回执返回，不阻断落地')
+check(loadOrigin(TMP).state['obj:black-key'].holder === 'char:zhao-qi', '  └ 第二次提交后状态正确')
+check(diagnose(loadOrigin(TMP)).findings.some((f) => f.code === 'drift-rate' && f.msg.includes('1/2')), '  └ 偏差率累计为 1/2')
+
+rmSync(TMP, { recursive: true, force: true })
 
 console.log(`\n可用谓词：${predicateNames().join('、')}`)
 console.log(`\n${fail ? '✗' : '✓'} ${pass} 通过，${fail} 失败`)

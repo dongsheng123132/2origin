@@ -1,0 +1,8 @@
+# 本象记忆包（Memory 方言）
+artifact:
+  id: benxiang
+  kind: memory
+  title: 本象协议
+
+provenance:
+  history: ./provenance/history.jsonl

@@ -124,13 +124,31 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 本象协议/
 ├── docs/        # 创始文档集（本轮产出）
 ├── spec/        # JSON Schema 草稿 + 示例 .origin 包
-├── compiler/    # 双向编译器参考实现（可运行，27 项跨域自测）
+├── compiler/    # 双向编译器 + 证据链 + 落盘 + `origin` CLI（可运行，60 项跨域自测）
 ├── adapters/    # （占位）领域方言：flint / office / story / memory
 ├── benchmark/   # ShadowBench-W 基准 + 判分器 + 全部原始结果（可复核）
 ├── research/    # 外部格局调研快照（含 2026-08 三线调研与评估）
 ├── outreach/    # 生态互动草稿（天命/MemTX/ConStory-Bench，均未发送）
 └── reference/   # 原始构思文档存档
 ```
+
+## 快速上手
+
+```bash
+npm test                                    # 60 项跨域自测（销售数据 + 叙事世界，同一份代码）
+
+P=spec/examples/sales-2026.origin
+node compiler/cli.mjs status   $P           # 这个包里有什么
+node compiler/cli.mjs why      $P revenue-trend.chart   # 这个值凭什么是这个值（前缀可省）
+node compiler/cli.mjs diagnose $P           # 体检：约束、悬空引用、双份账本、模型偏差率
+
+S=$(node compiler/cli.mjs seq $P -q)        # 记下水位
+node compiler/cli.mjs commit $P tx.json --expect $S --by me   # 唯一的写入口
+```
+
+`commit` 校验不过则**一个字节都不写**，违规理由从 stdout 原样返回供重写；通过则只往
+`provenance/history.jsonl` 追加，绝不覆写 `graph/objects.jsonl`——当前状态由二者重放得出，
+所以任何一个字段都能回答「凭什么」。加 `--json` 即可当本地 API 给 AI 调用。
 
 ## 三条候选 MVP（待定）
 

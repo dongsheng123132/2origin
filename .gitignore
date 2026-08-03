@@ -29,3 +29,7 @@ benchmark/shadowbench-w/corpus/prompt-ch*.txt
 benchmark/shadowbench-w/results/.embed-cache.json
 benchmark/shadowbench-w/results/.run.lock
 benchmark/shadowbench-w/results/*.judged.json
+
+# 本象包的写锁——进程持有期间才存在，崩溃残留的会被下一次提交按超时抢占清理。
+# 包本身（含 provenance/history.jsonl）**要进版本库**：那是证据链。
+*.origin/.origin.lock

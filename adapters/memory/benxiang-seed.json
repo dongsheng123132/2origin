@@ -1,0 +1,195 @@
+[
+  {
+    "id": "decision:real-targets",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "三件实事：百万字小说一致性 / CAD 图纸一致性 / 长上下文管理",
+      "rationale": "用户 2026-08-03 明确纠偏：loopx、论文（MemTX/Cordon/Eywa/ConsistencyGate/ConStory-Bench）、天命一律只是参考借鉴，不要停在调研和对标上。原话「最重要的是要真正去做这个事情」。",
+      "decided_at": "2026-08-03",
+      "evidence": "本次会话用户消息"
+    }
+  },
+  {
+    "id": "decision:english-name",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "Benxiang（技术核心称 Origin IR）",
+      "rationale": "Origin Protocol 撞加密货币 OGN，英文名必须避让。本=origin，象典出《易传》「立象以尽意」，GitHub 无撞车。OriginX 方案否决（撞 xOGN 与 Fabric.js originX）。",
+      "decided_at": "2026-08-02",
+      "evidence": "research/2026-08-全球格局调研与评估.md 第四节风险 1"
+    }
+  },
+  {
+    "id": "decision:claim-scope",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "只主张状态追踪（W3），撤回「写得更一致」与「更省 Token」两条",
+      "rationale": "W1 正文一致性与向量 RAG 无显著差异（S 级 p=0.9905，M 级 p=0.3361）；Token 更贵——qwen 上贵 25%，带长思维链的 deepseek 上贵 149%。护城河只在 W3。",
+      "decided_at": "2026-08-03",
+      "evidence": "README.md 顶部实验收窄声明 + benchmark/shadowbench-w/results-log.md"
+    }
+  },
+  {
+    "id": "decision:append-only",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "只往 provenance/history.jsonl 追加，绝不覆写 graph/objects.jsonl",
+      "rationale": "objects 是出生证明，history 是履历，当前状态由二者重放得出。一旦允许把当前值写回 objects，历史就降级成一份说明文档，对不上账时无从判断是谁错了。",
+      "decided_at": "2026-08-03",
+      "evidence": "docs/03-协议草案-v0.1.md 四之二"
+    }
+  },
+  {
+    "id": "decision:explicit-creates",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "新建对象必须在事务的 creates 里显式声明",
+      "rationale": "不允许创建则新建决策/待办根本无法表达（Memory 方言首次实跑全军覆没）；但直接放开更糟——ID 打错一个字母会静默造出幽灵对象，而幽灵对象永远不被任何约束管到。创建必须是声明出来的意图，不能是打字失误的副作用。",
+      "decided_at": "2026-08-03",
+      "evidence": "compiler/commit-compiler.mjs validateTransaction ①"
+    }
+  },
+  {
+    "id": "decision:mvp-first-step",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "先做 Memory 方言 MCP Server",
+      "rationale": "三件实事里唯一不被阻塞的一件（CAD 卡在源文件格式待确认），当天可用，且是另外两件的载体——CAD 和小说最终也是通过它被 AI 操作的。",
+      "decided_at": "2026-08-03",
+      "evidence": "adapters/memory/"
+    }
+  },
+  {
+    "id": "decision:zero-deps",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "参考实现零第三方依赖（含自实现 YAML 子集与 MCP JSON-RPC）",
+      "rationale": "引 SDK 会让这个仓库从「一份可独立核对的参考实现」变成「一份要先装 node_modules 才能读的东西」。可核对性是这个项目对外的主要资产。",
+      "decided_at": "2026-08-03",
+      "evidence": "compiler/origin.mjs parseSimpleYaml + adapters/memory/mcp-server.mjs"
+    }
+  },
+  {
+    "id": "decision:cli-contract",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "origin CLI 遵循 ai-cli-design：stdout 只出数据，stderr 出说明，退出码 0/1/2",
+      "rationale": "这个 CLI 的主要调用方是 AI，不是人。把它当本地 API 设计，AI 才能直接串进流程而不需要解析人类排版。",
+      "decided_at": "2026-08-03",
+      "evidence": "docs/03-协议草案-v0.1.md 七之二"
+    }
+  },
+  {
+    "id": "decision:license",
+    "type": "decision",
+    "fields": {
+      "status": "decided",
+      "value": "Apache-2.0；示例 MIT，测试语料 CC0",
+      "rationale": "语料由世界规格构造生成，不含第三方版权文本，故可 CC0。协议与核心运行时开源以争取标准制定权。",
+      "decided_at": "2026-08-02",
+      "evidence": "LICENSE + docs/07-开源与商业.md"
+    }
+  },
+
+  {
+    "id": "risk:vendor-absorption",
+    "type": "risk",
+    "fields": {
+      "status": "open",
+      "severity": "high",
+      "summary": "厂商吸收：Anthropic 服务端 compaction 三个月从无到 GA",
+      "mitigation": "输入侧压缩最容易被平台内建；护城河应压在写侧（事务 + 证据链 + 跨域协议）",
+      "evidence": "research/2026-08-全球格局调研与评估.md 第四节风险 3"
+    }
+  },
+  {
+    "id": "risk:window-by-weeks",
+    "type": "risk",
+    "fields": {
+      "status": "open",
+      "severity": "high",
+      "summary": "窗口按周计不按年计：写侧评测两周内进来两篇（Ground Truth First 07-24、ConsistencyGate 07-25）",
+      "mitigation": "尽快公开基准与数据，抢「该域标准」而非「该问题发现者」；停用「没人定义过的考题」这类表述",
+      "evidence": "research/2026-08-全球格局调研与评估.md 2026-08-03 复核更新"
+    }
+  },
+  {
+    "id": "risk:added-structure-worse",
+    "type": "risk",
+    "fields": {
+      "status": "mitigated",
+      "severity": "high",
+      "summary": "加了状态管理反而更差：ConStory-Bench 实测 SuperWriter CED 0.674、DOME 1.033 显著差于 GPT-5-Reasoning 0.113",
+      "mitigation": "ShadowBench-W 第一道生死题就是证明自己不是 SuperWriter 第二；W3 数据已通过该关",
+      "evidence": "research/2026-08-全球格局调研与评估.md 第四节风险 2"
+    }
+  },
+
+  {
+    "id": "task:cad-source-format",
+    "type": "task",
+    "fields": {
+      "status": "open",
+      "owner": "用户",
+      "summary": "确认 CAD 图纸源文件格式（DWG/DXF/IFC/PDF），决定导入器怎么写",
+      "blocking": "CAD 方言"
+    }
+  },
+  {
+    "id": "task:merge-benchmark-lib",
+    "type": "task",
+    "fields": {
+      "status": "open",
+      "owner": "claude",
+      "summary": "benchmark/shadowbench-w/lib/ 自带 commit-compiler/context-compiler 副本，参考实现的改进不会惠及基准，两边正在漂移",
+      "blocking": "无，但越拖越贵"
+    }
+  },
+  {
+    "id": "task:verify-real-mcp-client",
+    "type": "task",
+    "fields": {
+      "status": "open",
+      "owner": "claude",
+      "summary": "MCP server 只被自写客户端驱动过，未经真实 Claude Code MCP 客户端验证",
+      "blocking": "无，最坏情况是显示连接失败"
+    }
+  },
+
+  {
+    "id": "fact:w3-accuracy",
+    "type": "fact",
+    "fields": {
+      "kind": "observed",
+      "summary": "W3 状态准确率：qwen-plus M 级 本象 98.9% vs 裸模型 75.0% vs 向量 RAG 75.0%；deepseek-v4-flash M 级（n=1 冒烟）本象 100% vs 裸模型 37.5%",
+      "evidence": "benchmark/shadowbench-w/results-log.md"
+    }
+  },
+  {
+    "id": "fact:rag-zero-variance",
+    "type": "fact",
+    "fields": {
+      "kind": "observed",
+      "summary": "Run #11：A0 裸模型与 A1 向量 RAG 的 W3 十轮全部 75.0%、标准差 0，即检索对状态维护贡献为零",
+      "caveat": "不是新发现——已有至少 5 篇论文报告同向结论；增量是精度，不是发现",
+      "evidence": "research/2026-08-全球格局调研与评估.md 二"
+    }
+  },
+  {
+    "id": "fact:token-overhead",
+    "type": "fact",
+    "fields": {
+      "kind": "observed",
+      "summary": "本象在写作基准上 Token 更贵：qwen 上 +25%，带长思维链的 deepseek 上 +149%",
+      "evidence": "README.md 顶部实验收窄声明"
+    }
+  }
+]

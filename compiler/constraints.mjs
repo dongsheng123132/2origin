@@ -52,6 +52,26 @@ const PREDICATES = {
     return null
   },
 
+  // 取值必须落在给定集合内——状态机的合法取值。
+  // 三个域同时要它：图纸版次 ∈ {A,B,C}、工序 ∈ {未开工,进行中,已完工}、待办 ∈ {open,doing,done}。
+  // 没有它就只能拿 not_equals 一条条排除，写不全也读不懂。
+  in: (state, c) => {
+    const got = get(state, c.object, c.field)
+    if (got === undefined) return null // 缺失由 exists 负责，各司其职
+    const set = c.values ?? []
+    return set.some((v) => JSON.stringify(v) === JSON.stringify(got))
+      ? null
+      : `${c.object}.${c.field} = ${JSON.stringify(got)}，不在允许取值 ${JSON.stringify(set)} 内`
+  },
+
+  // 字段必须存在且非空。其余谓词一律「字段不存在就不判」，避免把「没写」误判成「写错」；
+  // 真要求必填时用这条显式声明——两种意图分开，才不会互相掩盖。
+  exists: (state, c) => {
+    const got = get(state, c.object, c.field)
+    const empty = got === undefined || got === null || got === '' || (Array.isArray(got) && got.length === 0)
+    return empty ? `${c.object}.${c.field} 必填，当前为空` : null
+  },
+
   // 与 equals 的区别：不需要预先知道该等于什么，只要求这次事务没动它
   unchanged: (state, c, stateBefore) => {
     const before = get(stateBefore, c.object, c.field)
@@ -62,10 +82,28 @@ const PREDICATES = {
   },
 }
 
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/**
+ * 通配展开：`check.object` 含 `*` 时，对状态里每个匹配的对象各校验一次。
+ *
+ * 没有它，「**所有**构件净高不得低于 2.6m」只能给每根梁各写一条约束——
+ * 图纸有几千个构件就得写几千条，而且新增构件时约束不会自动覆盖它，
+ * 这正是「加了状态管理反而更差」的典型来源。三个域同时需要这个能力：
+ *   decision:*.status ∈ {…}　part:*.level ≥ 2.6　task:*.owner 必填
+ * 匹配不到任何对象时不报违规——约束是对未来的承诺，不是对当下的断言。
+ */
+function expand(check, state) {
+  if (typeof check?.object !== 'string' || !check.object.includes('*')) return [check]
+  const re = new RegExp('^' + check.object.split('*').map(escapeRe).join('.*') + '$')
+  return Object.keys(state).filter((id) => re.test(id)).map((id) => ({ ...check, object: id }))
+}
+
 /**
  * 校验一批约束。
  * @param stateAfter  事务折叠后的状态
  * @param constraints 约束数组，每条形如 { id?, rule?, severity?, check: {type, ...} }
+ *                    check.object 支持 `*` 通配，如 `decision:*`
  * @param stateBefore 事务折叠前的状态（unchanged 谓词需要）
  * @returns 违规列表；severity 缺省为 'error'
  */
@@ -85,8 +123,10 @@ export function checkConstraints(stateAfter, constraints = [], stateBefore = {})
       out.push({ id: c.id ?? c.rule, severity: 'warning', code: 'unknown-predicate', msg: `未知谓词 ${check.type}` })
       continue
     }
-    const msg = pred(stateAfter, check, stateBefore)
-    if (msg) out.push({ id: c.id ?? c.rule, severity: c.severity ?? 'error', code: 'constraint', msg: `${c.rule ? c.rule + '｜' : ''}${msg}` })
+    for (const one of expand(check, stateAfter)) {
+      const msg = pred(stateAfter, one, stateBefore)
+      if (msg) out.push({ id: c.id ?? c.rule, severity: c.severity ?? 'error', code: 'constraint', msg: `${c.rule ? c.rule + '｜' : ''}${msg}` })
+    }
   }
   return out
 }
