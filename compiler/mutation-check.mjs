@@ -68,6 +68,24 @@ const MUTATIONS = [
     to: 'if (false)',
   },
   {
+    claim: '编号唯一性（跨对象）',
+    file: 'compiler/constraints.mjs',
+    find: 'if (seen.has(key)) dups.push',
+    to: 'if (false) dups.push',
+  },
+  {
+    claim: '数量对账：同一件事的两处表述必须对上（门窗表 vs 平面图）',
+    file: 'compiler/constraints.mjs',
+    find: 'return n === m ? null : `${c.object} 有 ${n} 个',
+    to: 'return null && `${c.object} 有 ${n} 个',
+  },
+  {
+    claim: '聚合谓词不被通配展开（展开后「一组对象之间的关系」就没意义了）',
+    file: 'compiler/constraints.mjs',
+    find: 'for (const one of AGGREGATE.has(check.type) ? [check] : expand(check, stateAfter)) {',
+    to: 'for (const one of expand(check, stateAfter)) {',
+  },
+  {
     claim: '双份账本探测',
     file: 'compiler/provenance.mjs',
     find: "if (typeof b !== 'string' || b === a || !state[b]) continue",

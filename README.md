@@ -125,7 +125,9 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ├── docs/        # 创始文档集（本轮产出）
 ├── spec/        # JSON Schema 草稿 + 示例 .origin 包
 ├── compiler/    # 双向编译器 + 证据链 + 落盘 + `origin` CLI（可运行，60 项跨域自测）
-├── adapters/    # （占位）领域方言：flint / office / story / memory
+├── adapters/    # 领域方言
+│   ├── memory/  #   项目状态：MCP Server（零依赖）+ 回填工具
+│   └── cad/     #   图纸一致性：DXF 导入器 + 制图规范校验
 ├── benchmark/   # ShadowBench-W 基准 + 判分器 + 全部原始结果（可复核）
 ├── research/    # 外部格局调研快照（含 2026-08 三线调研与评估）
 ├── outreach/    # 生态互动草稿（天命/MemTX/ConStory-Bench，均未发送）
@@ -135,7 +137,8 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ## 快速上手
 
 ```bash
-npm test                                    # 60 项跨域自测（销售数据 + 叙事世界，同一份代码）
+npm run verify   # 自测 81 + CAD 20 + MCP 端到端 18 + 变异检查 13/13
+
 
 P=spec/examples/sales-2026.origin
 node compiler/cli.mjs status   $P           # 这个包里有什么
@@ -149,6 +152,22 @@ node compiler/cli.mjs commit $P tx.json --expect $S --by me   # 唯一的写入�
 `commit` 校验不过则**一个字节都不写**，违规理由从 stdout 原样返回供重写；通过则只往
 `provenance/history.jsonl` 追加，绝不覆写 `graph/objects.jsonl`——当前状态由二者重放得出，
 所以任何一个字段都能回答「凭什么」。加 `--json` 即可当本地 API 给 AI 调用。
+
+两个已跑通的方言：
+
+```bash
+# 图纸一致性（详见 adapters/cad/README.md）
+node adapters/cad/import.mjs adapters/cad/fixtures/A-101.dxf /tmp/A-101.origin
+node compiler/cli.mjs diagnose /tmp/A-101.origin
+#   → 自动抓出：图元留在 0 层 / 编号 C2 重复 / 画了 4 樘窗只标 3 个编号
+
+# 项目状态（详见 adapters/memory/README.md）
+node compiler/cli.mjs status project.origin        # 本仓库自己的世界状态就在这里
+claude mcp add -s local benxiang -- node <绝对路径>/adapters/memory/mcp-server.mjs <包路径>
+```
+
+`compiler/mutation-check.mjs` 是验证里最关键的一环：它故意打坏每一条协议承诺，看自测抓不抓得到。
+抓不到的地方就是那条承诺其实没人守——首次运行即查出「正文与状态对照门禁」零覆盖。
 
 ## 三条候选 MVP（待定）
 

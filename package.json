@@ -8,9 +8,10 @@
   "exports": { ".": "./compiler/index.mjs" },
   "scripts": {
     "test": "node compiler/selftest.mjs",
+    "test:cad": "node adapters/cad/selftest.mjs",
     "test:e2e": "node adapters/memory/e2e.mjs",
     "test:mutation": "node compiler/mutation-check.mjs",
-    "verify": "npm run test && npm run test:e2e && npm run test:mutation",
+    "verify": "npm run test && npm run test:cad && npm run test:e2e && npm run test:mutation",
     "origin": "node compiler/cli.mjs",
     "mcp": "node adapters/memory/mcp-server.mjs"
   },

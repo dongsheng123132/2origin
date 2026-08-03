@@ -1,0 +1,17 @@
+{
+  "title": "办公层平面图 A-101",
+  "layers": [{"name":"墙体","color":7},{"name":"门窗","color":5},{"name":"标注","color":1},{"name":"图框","color":8}],
+  "entities": [
+    {"type":"rect","layer":"墙体","at":[0,0],"w":12000,"h":7200},
+    {"type":"line","layer":"墙体","from":[5000,0],"to":[5000,7200]},
+    {"type":"rect","layer":"门窗","at":[800,7100],"w":1500,"h":200},
+    {"type":"rect","layer":"门窗","at":[2800,7100],"w":1500,"h":200},
+    {"type":"rect","layer":"门窗","at":[6000,7100],"w":1500,"h":200},
+    {"type":"rect","layer":"门窗","at":[9000,7100],"w":1500,"h":200},
+    {"type":"text","layer":"标注","at":[1550,6700],"text":"C1","height":250,"align":"center"},
+    {"type":"text","layer":"标注","at":[3550,6700],"text":"C2","height":250,"align":"center"},
+    {"type":"text","layer":"标注","at":[6750,6700],"text":"C2","height":250,"align":"center"},
+    {"type":"circle","center":[11000,600],"r":300},
+    {"type":"text","layer":"图框","at":[6000,300],"text":"办公层平面图 A-101","height":300,"align":"center"}
+  ]
+}

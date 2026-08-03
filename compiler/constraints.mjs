@@ -72,6 +72,45 @@ const PREDICATES = {
     return empty ? `${c.object}.${c.field} 必填，当前为空` : null
   },
 
+  // ── 以下两条是**聚合谓词**：判的不是某一个对象，而是一组对象之间的关系。 ──
+  // 前面的谓词都能靠通配展开成「逐个对象各判一次」，这两条不行——
+  // 「编号不得重复」「数量必须对上」本质上要同时看见整组，展开就没意义了。
+  // 所以它们不参与 expand，自己按 check.object 的通配去匹配（见 AGGREGATE）。
+
+  // 同类对象的某字段不得重复：图纸编号、构件编号、工序号……
+  unique: (state, c) => {
+    const seen = new Map()
+    const dups = []
+    for (const id of matchIds(state, c.object)) {
+      const val = get(state, id, c.field)
+      if (val === undefined || val === null || val === '') continue
+      const key = JSON.stringify(val)
+      if (seen.has(key)) dups.push(`${val}（${seen.get(key)} 与 ${id}）`)
+      else seen.set(key, id)
+    }
+    return dups.length ? `${c.object}.${c.field} 出现重复：${dups.join('；')}` : null
+  },
+
+  // 一组对象的数量必须等于某个定值，或等于另一组对象的数量。
+  // **这正是「门窗表 5 樘、平面图只画了 4 樘」那类事故的通用形状**：
+  // 同一件事在图上有两处表述，两处必须对得上。跨领域同构——
+  // 待办数 = 计划条目数、章节数 = 目录条目数，都是它。
+  count: (state, c) => {
+    const n = matchIds(state, c.object).length
+    if (typeof c.equals === 'number')
+      return n === c.equals ? null : `${c.object} 实有 ${n} 个，应为 ${c.equals} 个`
+    if (typeof c.equals_count_of === 'string') {
+      const m = matchIds(state, c.equals_count_of).length
+      return n === m ? null : `${c.object} 有 ${n} 个，${c.equals_count_of} 有 ${m} 个，两处对不上`
+    }
+    if (typeof c.equals_ref === 'string') {
+      const i = c.equals_ref.lastIndexOf('.')
+      const want = get(state, c.equals_ref.slice(0, i), c.equals_ref.slice(i + 1))
+      return n === want ? null : `${c.object} 实有 ${n} 个，${c.equals_ref} 声称 ${want} 个`
+    }
+    return null
+  },
+
   // 与 equals 的区别：不需要预先知道该等于什么，只要求这次事务没动它
   unchanged: (state, c, stateBefore) => {
     const before = get(stateBefore, c.object, c.field)
@@ -84,6 +123,17 @@ const PREDICATES = {
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+/** 按 `前缀:*` 之类的通配挑出匹配的对象 ID。通配之外的字符按字面匹配。 */
+export function matchIds(state = {}, pattern) {
+  if (typeof pattern !== 'string') return []
+  if (!pattern.includes('*')) return state[pattern] ? [pattern] : []
+  const re = new RegExp('^' + pattern.split('*').map(escapeRe).join('.*') + '$')
+  return Object.keys(state).filter((id) => re.test(id))
+}
+
+/** 聚合谓词：判的是一组对象之间的关系，不能被通配展开成逐个校验。 */
+const AGGREGATE = new Set(['unique', 'count'])
+
 /**
  * 通配展开：`check.object` 含 `*` 时，对状态里每个匹配的对象各校验一次。
  *
@@ -95,8 +145,7 @@ const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
  */
 function expand(check, state) {
   if (typeof check?.object !== 'string' || !check.object.includes('*')) return [check]
-  const re = new RegExp('^' + check.object.split('*').map(escapeRe).join('.*') + '$')
-  return Object.keys(state).filter((id) => re.test(id)).map((id) => ({ ...check, object: id }))
+  return matchIds(state, check.object).map((id) => ({ ...check, object: id }))
 }
 
 /**
@@ -123,7 +172,8 @@ export function checkConstraints(stateAfter, constraints = [], stateBefore = {})
       out.push({ id: c.id ?? c.rule, severity: 'warning', code: 'unknown-predicate', msg: `未知谓词 ${check.type}` })
       continue
     }
-    for (const one of expand(check, stateAfter)) {
+    // 聚合谓词自己处理通配，其余的展开成逐对象校验
+    for (const one of AGGREGATE.has(check.type) ? [check] : expand(check, stateAfter)) {
       const msg = pred(stateAfter, one, stateBefore)
       if (msg) out.push({ id: c.id ?? c.rule, severity: c.severity ?? 'error', code: 'constraint', msg: `${c.rule ? c.rule + '｜' : ''}${msg}` })
     }

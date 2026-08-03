@@ -258,6 +258,22 @@ check(checkConstraints({ 'task:t1': { owner: '张三' } }, reqRule).length === 0
 check(checkConstraints({ 'task:t1': { owner: '' } }, reqRule).length === 1, '  └ 空字符串算未填')
 check(checkConstraints({ 'task:t1': {} }, reqRule).length === 1, '  └ 字段缺失算未填')
 
+// 聚合谓词：判的是一组对象之间的关系，不能被通配展开成逐个校验
+const codes = {
+  'part:b1': { code: 'C1' }, 'part:b2': { code: 'C2' }, 'part:b3': { code: 'C2' },
+  'label:l1': {}, 'label:l2': {},
+}
+const uniqRule = [{ id: 'u', rule: '构件编号不得重复', check: { type: 'unique', object: 'part:*', field: 'code' } }]
+const uniqHits = checkConstraints(codes, uniqRule)
+check(uniqHits.length === 1 && uniqHits[0].msg.includes('C2'), 'unique 谓词抓出跨对象的重复编号')
+check(checkConstraints({ 'part:b1': { code: 'C1' } }, uniqRule).length === 0, '  └ 不重复时不报')
+
+// 「同一件事有两处表述，两处必须对得上」——门窗表 5 樘 vs 图上 4 樘的通用形状
+const countRule = [{ id: 'c', rule: '构件数必须等于标签数', check: { type: 'count', object: 'part:*', equals_count_of: 'label:*' } }]
+check(checkConstraints(codes, countRule).length === 1, 'count 谓词抓出两处数量对不上（3 vs 2）')
+check(checkConstraints({ 'part:a': {}, 'label:x': {} }, countRule).length === 0, '  └ 对得上时不报')
+check(checkConstraints({ 'ghost:1': {} }, [{ id: 'z', check: { type: 'count', object: 'ghost:*', equals: 0 } }]).length === 1, 'count equals 0 可用来断言「某类对象不该存在」')
+
 // 新建必须显式声明——否则 ID 打错一个字母就会静默造出永远没人管的幽灵对象
 const txGhost = { transaction_id: 'tx-g', state_changes: [{ object: 'char:lin-zhen', field: 'location', to: 'loc:x' }] }
 const ghostRes = validateTransaction({ tx: txGhost, stateBefore: story.state, constraints: [] })
