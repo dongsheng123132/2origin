@@ -35,7 +35,8 @@
 ---
 
 > 📜 **[本象宣言](MANIFESTO.md)** —— 为什么要做这件事、今天证明了什么、往哪里去
-> 🌍 **[English](README.en.md)**
+> 🔬 **[参与 / 复现](CONTRIBUTING.md)** —— 最欢迎的贡献不是加功能，是把我们的结论推翻
+> 🌍 **[English](README.en.md)** · [Manifesto](MANIFESTO.en.md)
 
 ## 这是什么
 
@@ -121,9 +122,9 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 本象协议/
 ├── docs/        # 创始文档集（本轮产出）
 ├── spec/        # JSON Schema 草稿 + 示例 .origin 包
-├── compiler/    # （占位）双向编译器：context-compiler / commit-compiler
+├── compiler/    # 双向编译器参考实现（可运行，27 项跨域自测）
 ├── adapters/    # （占位）领域方言：flint / office / story / memory
-├── benchmark/   # ShadowBench 指标定义 + shadowbench-w/ 写侧基准设计
+├── benchmark/   # ShadowBench-W 基准 + 判分器 + 全部原始结果（可复核）
 ├── research/    # 外部格局调研快照（含 2026-08 三线调研与评估）
 ├── outreach/    # 生态互动草稿（天命/MemTX/ConStory-Bench，均未发送）
 └── reference/   # 原始构思文档存档
@@ -143,8 +144,12 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 
 **Benxiang** (本象, "origin-image"; *Ben* = origin, *Xiang* = the archetypal image, after the I Ching's "the sages established images to exhaust the meaning") is a persistent, AI-native object representation layer. Its technical core is the **Origin IR** spec. (Earlier drafts used the name "Origin Protocol"; renamed to avoid collision with the OGN crypto project.) Instead of feeding AI flattened projections (screenshots, OCR text, lossy summaries), it preserves the *origin* of a digital artifact — objects, relations, payloads, states, constraints and provenance — then compiles task-specific projections for the model on demand ("one origin, many shadows"). The AI writes back not full documents but compact **semantic transactions**, which a deterministic compiler validates, applies and re-projects, with evidence retained at every step. Think of it as an LLVM-style IR for AI work: renderers become projection backends, actions become a portable instruction set, and chat context becomes a disposable cache over a durable world state.
 
-Status: v0.1 concept & draft spec. No runnable code yet. Docs are primarily in Chinese with bilingual terminology.
+Status: v0.1 — draft spec **plus a runnable reference implementation** (`compiler/`, 27 self-tests across two unrelated domains) and two tiers of controlled experimental data with raw results committed.
+
+**Measured result:** on long-form narrative state tracking, Benxiang reaches 98.9–100% state accuracy where a naive LLM and vector RAG sit at 75.0% and 37.5% respectively — lifting two models of very different strength to the same height. State correctness comes from the architecture, not the model. Full numbers, limitations and six self-caught instrumentation accidents: [README.en.md](README.en.md) · [MANIFESTO.en.md](MANIFESTO.en.md) · [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Docs are primarily in Chinese with bilingual terminology.
 
 ## License
 
-协议与核心运行时拟采用 **Apache-2.0**，示例采用 MIT，测试数据采用 CC0（详见 [07-开源与商业](docs/07-开源与商业.md)）。正式 LICENSE 文件将在首个可运行版本发布时添加。
+**Apache-2.0**（见 [LICENSE](LICENSE)）。示例与测试语料按 docs/07 的约定分别采用 MIT 与 CC0——语料由世界规格构造生成，不含第三方版权文本。详见 [07-开源与商业](docs/07-开源与商业.md)。

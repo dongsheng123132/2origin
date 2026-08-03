@@ -1,0 +1,67 @@
+# 参与本象协议 · Contributing
+
+**最欢迎的贡献不是加功能，是把我们的结论推翻。**
+
+这个项目的全部价值建立在一组可核对的数字上。数字如果错了，越早知道越好——一天之内自己查出六起实验装置事故的记录就在 [results-log.md](benchmark/shadowbench-w/results-log.md) 里，我们不认为第七起不存在。
+
+---
+
+## 一、复现（最有价值）
+
+原始结果全部入库（`benchmark/shadowbench-w/results/`），每份自带 provenance：跑的时刻、pid、命令行、gitCommit、规格指纹 `specHash`、判分器指纹 `judgeHash`。**任何一个数字都应该能被倒查到是哪版规格、哪版判分器算出来的。**
+
+零成本先跑通全流程（不花 API 钱）：
+
+```bash
+node compiler/selftest.mjs                        # 协议参考实现，27 项跨两域
+cd benchmark/shadowbench-w
+node eval/selftest.mjs                            # 判分器自测：谁来验证验证者
+node run.mjs --provider stub                      # 全流程冒烟
+node eval/rescore.mjs                             # 用当前规则给所有已存结果重打分
+node eval/rescore.mjs --task-m                    # M 级同上
+```
+
+真实实验（要 API）：
+
+```bash
+node run.mjs --provider bailian --task continuation-m.json --repeat 10
+```
+
+**如果你重打分得到的数字与 `results-log.md` 对不上，那是一个 bug，请开 issue。** 附上 `rescore` 的输出和你机器上的 `specHash` / `judgeHash`。
+
+## 二、我们特别想要的挑战
+
+| 方向 | 具体做什么 |
+|---|---|
+| **换模型** | 最缺的就是这个。跨模型目前只有 deepseek 一轮（n=1）。任何第三个模型的结果都有价值——尤其是**打不出效果**的结果 |
+| **攻击判分器** | 构造能骗过 `eval/ced.mjs` 的正文：真违规但判分器看不出，或没违规却被判违规。把样本加进 `eval/fixtures/ced-selftest.json` 并开 PR |
+| **换语料** | 现有世界是构造出来的（ground truth by construction）。换一个世界规格重跑，看结论是否依赖特定语料 |
+| **第三个方言** | 参考实现只验证了叙事 + 销售数据两个域。第三个域（CAD、Office、你自己的）能跑通，才更像协议 |
+| **指标批评** | W3 按字段对错计分，把「守着旧状态不动」和「凭空捏造」算成等价扣分——这个粒度是否合理？ |
+
+## 三、几条硬规矩
+
+这些是用代价换来的，请一并遵守：
+
+1. **结果文件不许静默覆盖。** 已有同名结果就报错退出，用 `--rep-offset` 续编号。（第五起事故：M 级单次跑吃掉了 S 级同名文件，`results/` 当时不在 git 里，覆盖即不可恢复）
+2. **改了判分器就必须重打分。** 判分逻辑变了，分数会变而规格指纹不动——`judgeHash` 就是为此而生。跨批次并列前先跑 `rescore`。（第四起事故）
+3. **答案集显式传参，不要用环境变量。** `scoreW3(result, task)`。参数漏传会报错，环境变量漏设只会安静地用默认值。（第六起事故：判分器拿 S 级答案判 M 级答卷，把正确答案判成错）
+4. **改判分器先加夹具。** 在 `eval/fixtures/ced-selftest.json` 里先让测试红，再让它绿。真违规样本与误报样本都要有。
+5. **不要在实验跑着的时候改判分器代码。** 运行中的进程用的是启动时加载的版本，跑完的数据口径会和你以为的不一样。
+
+## 四、代码风格
+
+- 注释解释**为什么**，不解释「是什么」。尤其是那些看起来可以简化、实际上不能简化的地方——写清楚它踩过什么坑
+- 中文注释与文档；英文入口页 [README.en.md](README.en.md) / [MANIFESTO.en.md](MANIFESTO.en.md)
+- 无构建步骤、无依赖。Node 原生 ESM，`node xxx.mjs` 直接跑
+
+## 五、提 issue 的时候
+
+**报告一个数字对不上，比报告一个功能缺失有用得多。**
+
+请附：命令行、`specHash`、`judgeHash`、Node 版本、provider 与模型名。如果是判分器误判，直接贴那一句正文。
+
+---
+
+> 我们把六起事故写在门面上，是因为对一个基准来说，**仪器的诚实度就是全部资产**。
+> 帮我们找到第七起，是对这个项目最大的贡献。

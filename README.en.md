@@ -121,7 +121,8 @@ An erroneous negative result is harder to question than an erroneous positive on
 
 ## Layout
 
-📜 **[The Benxiang Manifesto](MANIFESTO.md)** (Chinese) — why this exists, what has been demonstrated, where it goes next.
+📜 **[The Benxiang Manifesto](MANIFESTO.en.md)** — why this exists, what has been demonstrated, where it goes next.
+🔬 **[Contributing / Reproducing](CONTRIBUTING.md)** — the most welcome contribution is not a feature. It is refuting our results.
 
 ```text
 spec/        protocol schemas + example .origin packages
