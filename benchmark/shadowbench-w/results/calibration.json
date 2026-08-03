@@ -1,0 +1,38 @@
+{
+  "words": 20178,
+  "planted": 6,
+  "perJudge": [
+    {
+      "judge": "hermes",
+      "recall": 0.16666666666666666,
+      "precision": 0.3333333333333333,
+      "found": [
+        "planted:002"
+      ],
+      "missed": [
+        "planted:001(easy)",
+        "planted:003(easy)",
+        "planted:004(medium)",
+        "planted:005(medium)",
+        "planted:006(medium)"
+      ],
+      "nonPlanted": 2,
+      "total": 3
+    }
+  ],
+  "agreed": {
+    "count": 0,
+    "recall": 0,
+    "precision": 0,
+    "found": [],
+    "missed": [
+      "planted:001(easy)",
+      "planted:002(hard)",
+      "planted:003(easy)",
+      "planted:004(medium)",
+      "planted:005(medium)",
+      "planted:006(medium)"
+    ],
+    "nonPlanted": 0
+  }
+}

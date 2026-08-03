@@ -1,0 +1,667 @@
+{
+  "result": {
+    "arm": "a3-benxiang",
+    "stub": true,
+    "chapters": [
+      {
+        "chapter": 11,
+        "text": "（stub 第 11 章正文）赵七气绝在案前。林峥忽然想起白遥近来常往北庭大营去，心下一沉。",
+        "needsReview": true
+      },
+      {
+        "chapter": 12,
+        "text": "（stub 第 12 章正文）赵七气绝在案前。林峥忽然想起白遥近来常往北庭大营去，心下一沉。",
+        "needsReview": true
+      },
+      {
+        "chapter": 13,
+        "text": "（stub 第 13 章正文）赵七气绝在案前。林峥忽然想起白遥近来常往北庭大营去，心下一沉。",
+        "needsReview": true
+      },
+      {
+        "chapter": 14,
+        "text": "（stub 第 14 章正文）赵七气绝在案前。林峥忽然想起白遥近来常往北庭大营去，心下一沉。",
+        "needsReview": true
+      },
+      {
+        "chapter": 15,
+        "text": "（stub 第 15 章正文）赵七气绝在案前。林峥忽然想起白遥近来常往北庭大营去，心下一沉。",
+        "needsReview": true
+      }
+    ],
+    "state": {
+      "char:lin-zheng": {
+        "location": "loc:dukou-zhen",
+        "alive": true,
+        "left_hand_injured": false,
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists",
+          "k:bai-yao-betrayal"
+        ]
+      },
+      "char:bai-yao": {
+        "location": "loc:guanxing-tai",
+        "alive": true,
+        "left_hand_injured": true,
+        "secret_betrayal": true,
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists",
+          "k:beiting-allegiance",
+          "k:black-key-held-by-zhao-qi"
+        ],
+        "_carries": [
+          "obj:bai-yao-dagger"
+        ]
+      },
+      "char:zhao-qi": {
+        "location": "loc:dukou-teahouse",
+        "alive": false,
+        "left_hand_injured": false,
+        "knows": [
+          "k:black-key-exists"
+        ],
+        "_carries": [
+          "obj:black-key"
+        ]
+      },
+      "char:shen-yan": {
+        "location": "loc:guanxing-tai",
+        "alive": true,
+        "suspects_mole": true,
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists",
+          "k:gate-needs-two-people"
+        ]
+      },
+      "char:pei-zhao": {
+        "location": "loc:bei-ting-camp",
+        "alive": true,
+        "knows": [
+          "k:space-gate-exists"
+        ],
+        "_carries": [
+          "obj:beiting-token"
+        ]
+      },
+      "char:a-zhi": {
+        "location": "loc:dukou-zhen",
+        "alive": true,
+        "knows": [
+          "k:bai-yao-meets-pei-zhao"
+        ]
+      },
+      "char:lao-tao": {
+        "location": "loc:dukou-zhen",
+        "alive": true,
+        "knows": [
+          "k:black-key-exists",
+          "k:black-key-origin"
+        ]
+      },
+      "char:yun-gu": {
+        "location": "loc:guanxing-tai",
+        "alive": true,
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists",
+          "k:black-key-origin"
+        ],
+        "_carries": [
+          "obj:archive-scroll"
+        ]
+      },
+      "obj:black-key": {
+        "holder": "char:zhao-qi",
+        "used": false,
+        "intact": true
+      },
+      "obj:bronze-bell": {
+        "holder": null,
+        "location": "unknown"
+      },
+      "obj:archive-scroll": {
+        "holder": "char:yun-gu",
+        "location": "loc:guanxing-tai"
+      },
+      "obj:missing-letter": {
+        "holder": null,
+        "location": "unknown"
+      },
+      "obj:bai-yao-dagger": {
+        "holder": "char:bai-yao"
+      },
+      "obj:beiting-token": {
+        "holder": "char:pei-zhao"
+      }
+    },
+    "hooks": {
+      "hook:bronze-bell": {
+        "status": "planted_unresolved"
+      },
+      "hook:missing-letter": {
+        "status": "planted_unresolved"
+      },
+      "hook:a-zhi-witness": {
+        "status": "planted_unresolved"
+      },
+      "hook:yun-gu-silence": {
+        "status": "planted_unresolved"
+      },
+      "hook:shen-yan-suspicion": {
+        "status": "planted_unresolved"
+      }
+    },
+    "evidence": {
+      "char:zhao-qi.alive": "ch15",
+      "char:lin-zheng.knows": "ch15"
+    },
+    "usage": {
+      "inputTokens": 27432,
+      "outputTokens": 1425,
+      "ms": 0,
+      "calls": 15
+    },
+    "gate": {
+      "attempts": 15,
+      "rejections": 15,
+      "byCode": {
+        "forbidden-zone": 30,
+        "prose-violation": 15
+      },
+      "warnings": {
+        "stale-write": 12
+      },
+      "rejected": [
+        {
+          "chapter": 11,
+          "attempt": 0,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 11 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 11,
+          "attempt": 1,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 11 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 11,
+          "attempt": 2,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 11 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 12,
+          "attempt": 0,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 12 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 12,
+          "attempt": 1,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 12 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 12,
+          "attempt": 2,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 12 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 13,
+          "attempt": 0,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 13 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 13,
+          "attempt": 1,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 13 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 13,
+          "attempt": 2,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 13 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 14,
+          "attempt": 0,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 14 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 14,
+          "attempt": 1,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 14 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 14,
+          "attempt": 2,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 14 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 15,
+          "attempt": 0,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 15 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 15,
+          "attempt": 1,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 15 章正文）赵七气绝在案前。」"
+          ]
+        },
+        {
+          "chapter": 15,
+          "attempt": 2,
+          "submitted": [
+            {
+              "object": "char:zhao-qi",
+              "field": "alive",
+              "from": true,
+              "to": false
+            },
+            {
+              "object": "char:lin-zheng",
+              "field": "knows",
+              "op": "append",
+              "to": "k:bai-yao-betrayal"
+            }
+          ],
+          "textLen": 46,
+          "errors": [
+            "[forbidden-zone] 林峥不得获知白遥叛变（其 knows 不得含 k:bai-yao-betrayal，行文亦不得暗示他已察觉）｜char:lin-zheng 获得了 k:bai-yao-betrayal",
+            "[forbidden-zone] 赵七不得死亡｜char:zhao-qi.alive 变为 false",
+            "[prose-violation] 触碰禁区 fz:zhao-qi-alive（赵七不得死亡）｜「（stub 第 15 章正文）赵七气绝在案前。」"
+          ]
+        }
+      ],
+      "needsReview": [
+        {
+          "chapter": 11,
+          "remainingErrors": 3
+        },
+        {
+          "chapter": 12,
+          "remainingErrors": 3
+        },
+        {
+          "chapter": 13,
+          "remainingErrors": 3
+        },
+        {
+          "chapter": 14,
+          "remainingErrors": 3
+        },
+        {
+          "chapter": 15,
+          "remainingErrors": 3
+        }
+      ]
+    }
+  },
+  "w1": {
+    "arm": "a3-benxiang",
+    "words": 215,
+    "chapters": 5,
+    "findings": [
+      {
+        "chapter": 11,
+        "rule": "fz:zhao-qi-alive",
+        "category": "forbidden-zone",
+        "quote": "（stub 第 11 章正文）赵七气绝在案前。",
+        "why": "触碰禁区 fz:zhao-qi-alive（赵七不得死亡）"
+      },
+      {
+        "chapter": 12,
+        "rule": "fz:zhao-qi-alive",
+        "category": "forbidden-zone",
+        "quote": "（stub 第 12 章正文）赵七气绝在案前。",
+        "why": "触碰禁区 fz:zhao-qi-alive（赵七不得死亡）"
+      },
+      {
+        "chapter": 13,
+        "rule": "fz:zhao-qi-alive",
+        "category": "forbidden-zone",
+        "quote": "（stub 第 13 章正文）赵七气绝在案前。",
+        "why": "触碰禁区 fz:zhao-qi-alive（赵七不得死亡）"
+      },
+      {
+        "chapter": 14,
+        "rule": "fz:zhao-qi-alive",
+        "category": "forbidden-zone",
+        "quote": "（stub 第 14 章正文）赵七气绝在案前。",
+        "why": "触碰禁区 fz:zhao-qi-alive（赵七不得死亡）"
+      },
+      {
+        "chapter": 15,
+        "rule": "fz:zhao-qi-alive",
+        "category": "forbidden-zone",
+        "quote": "（stub 第 15 章正文）赵七气绝在案前。",
+        "why": "触碰禁区 fz:zhao-qi-alive（赵七不得死亡）"
+      }
+    ],
+    "errors": 5,
+    "byCategory": {
+      "forbidden-zone": 5
+    },
+    "epc": 1,
+    "ced": 232.5581395348837,
+    "avgChapterLen": 43,
+    "lengthRatio": 0.01,
+    "channel": {
+      "deterministic": true,
+      "semantic": false
+    }
+  },
+  "w3": {
+    "arm": "a3-benxiang",
+    "rows": [
+      {
+        "key": "obj:black-key.holder",
+        "pass": false,
+        "detail": "期望 \"char:lin-zheng\"，实为 \"char:zhao-qi\""
+      },
+      {
+        "key": "obj:black-key.used",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "obj:black-key.intact",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:zhao-qi.alive",
+        "pass": false,
+        "detail": "期望 true，实为 false"
+      },
+      {
+        "key": "char:bai-yao.left_hand_injured",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:bai-yao.secret_betrayal",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:lin-zheng.knows.not_contains",
+        "pass": false,
+        "detail": "违反：含有 k:bai-yao-betrayal"
+      },
+      {
+        "key": "hook:a-zhi-witness.status",
+        "pass": true,
+        "detail": "一致"
+      }
+    ],
+    "stateAccuracy": 0.625,
+    "checked": 8,
+    "passed": 5,
+    "missing": 0,
+    "evidenceTraceability": 1
+  }
+}

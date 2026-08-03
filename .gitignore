@@ -21,6 +21,11 @@ __pycache__/
 # 本地实验产物
 tmp/
 *.local.*
-benchmark/shadowbench-w/results/
 benchmark/shadowbench-w/corpus/prompt-ch*.txt
+
+# 实验结果**要进版本库**——results-log.md 里的每个数字都得能被第三方核对，
+# 否则基准就只剩一句「相信我」。原先此处整目录排除，等于把唯一的证据挡在门外。
+# 只排除两类：可重建的缓存、运行时临时文件。
+benchmark/shadowbench-w/results/.embed-cache.json
+benchmark/shadowbench-w/results/.run.lock
 benchmark/shadowbench-w/results/*.judged.json

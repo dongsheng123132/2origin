@@ -1,0 +1,442 @@
+{
+  "result": {
+    "arm": "a3-benxiang",
+    "stub": true,
+    "chapters": [
+      {
+        "chapter": 11,
+        "text": "（stub 第 11 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "needsReview": true
+      },
+      {
+        "chapter": 12,
+        "text": "（stub 第 12 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "needsReview": true
+      },
+      {
+        "chapter": 13,
+        "text": "（stub 第 13 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "needsReview": true
+      },
+      {
+        "chapter": 14,
+        "text": "（stub 第 14 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "needsReview": true
+      },
+      {
+        "chapter": 15,
+        "text": "（stub 第 15 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "needsReview": true
+      }
+    ],
+    "state": {
+      "char:lin-zheng": {
+        "location": "loc:dukou-zhen",
+        "alive": true,
+        "left_hand_injured": false,
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists"
+        ]
+      },
+      "char:bai-yao": {
+        "location": "loc:guanxing-tai",
+        "alive": true,
+        "left_hand_injured": true,
+        "secret_betrayal": true,
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists",
+          "k:beiting-allegiance",
+          "k:black-key-held-by-zhao-qi"
+        ],
+        "wavering": false,
+        "_carries": [
+          "obj:bai-yao-dagger"
+        ]
+      },
+      "char:zhao-qi": {
+        "location": "loc:dukou-teahouse",
+        "alive": true,
+        "left_hand_injured": false,
+        "knows": [
+          "k:black-key-exists"
+        ],
+        "_carries": [
+          "obj:black-key"
+        ]
+      },
+      "char:shen-yan": {
+        "location": "loc:guanxing-tai",
+        "alive": true,
+        "suspects_mole": true,
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists",
+          "k:gate-needs-two-people"
+        ],
+        "suspect_pool": null,
+        "suspects_bai_yao": false
+      },
+      "char:pei-zhao": {
+        "location": "loc:bei-ting-camp",
+        "alive": true,
+        "knows": [
+          "k:space-gate-exists"
+        ],
+        "_carries": [
+          "obj:beiting-token"
+        ]
+      },
+      "char:a-zhi": {
+        "location": "loc:dukou-zhen",
+        "alive": true,
+        "knows": [
+          "k:bai-yao-meets-pei-zhao"
+        ]
+      },
+      "char:lao-tao": {
+        "location": "loc:dukou-zhen",
+        "alive": true,
+        "knows": [
+          "k:black-key-exists",
+          "k:black-key-origin"
+        ]
+      },
+      "char:yun-gu": {
+        "location": "loc:guanxing-tai",
+        "alive": true,
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists",
+          "k:black-key-origin"
+        ],
+        "suspects_bai_yao": false,
+        "_carries": [
+          "obj:archive-scroll"
+        ]
+      },
+      "obj:black-key": {
+        "holder": "char:lin-zheng",
+        "used": false,
+        "intact": true
+      },
+      "obj:bronze-bell": {
+        "holder": null,
+        "location": "unknown"
+      },
+      "obj:archive-scroll": {
+        "holder": "char:yun-gu",
+        "location": "loc:guanxing-tai"
+      },
+      "obj:missing-letter": {
+        "holder": null,
+        "location": "unknown"
+      },
+      "obj:bai-yao-dagger": {
+        "holder": "char:bai-yao"
+      },
+      "obj:beiting-token": {
+        "holder": "char:pei-zhao"
+      }
+    },
+    "hooks": {
+      "hook:bronze-bell": {
+        "status": "resolved"
+      },
+      "hook:missing-letter": {
+        "status": "resolved"
+      },
+      "hook:a-zhi-witness": {
+        "status": "resolved"
+      },
+      "hook:yun-gu-silence": {
+        "status": "resolved"
+      },
+      "hook:shen-yan-suspicion": {
+        "status": "planted_unresolved"
+      },
+      "hook:second-bell": {
+        "status": "resolved"
+      }
+    },
+    "evidence": {
+      "obj:black-key.holder": "ch15"
+    },
+    "usage": {
+      "inputTokens": 25358,
+      "outputTokens": 1278,
+      "ms": 0,
+      "calls": 15
+    },
+    "gate": {
+      "attempts": 15,
+      "rejections": 15,
+      "byCode": {
+        "forbidden-zone": 15
+      },
+      "warnings": {},
+      "rejected": [
+        {
+          "chapter": 11,
+          "attempt": 0,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 11,
+          "attempt": 1,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 11,
+          "attempt": 2,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 12,
+          "attempt": 0,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 12,
+          "attempt": 1,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 12,
+          "attempt": 2,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 13,
+          "attempt": 0,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 13,
+          "attempt": 1,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 13,
+          "attempt": 2,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 14,
+          "attempt": 0,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 14,
+          "attempt": 1,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 14,
+          "attempt": 2,
+          "submitted": [],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 15,
+          "attempt": 0,
+          "submitted": [
+            {
+              "object": "obj:black-key",
+              "field": "holder",
+              "from": "char:zhao-qi",
+              "to": "char:lin-zheng"
+            }
+          ],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 15,
+          "attempt": 1,
+          "submitted": [
+            {
+              "object": "obj:black-key",
+              "field": "holder",
+              "from": "char:zhao-qi",
+              "to": "char:lin-zheng"
+            }
+          ],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        },
+        {
+          "chapter": 15,
+          "attempt": 2,
+          "submitted": [
+            {
+              "object": "obj:black-key",
+              "field": "holder",
+              "from": "char:zhao-qi",
+              "to": "char:lin-zheng"
+            }
+          ],
+          "textLen": 60,
+          "errors": [
+            "[forbidden-zone] hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守｜hook:a-zhi-witness 状态变为 resolved"
+          ]
+        }
+      ],
+      "needsReview": [
+        {
+          "chapter": 11,
+          "remainingErrors": 1
+        },
+        {
+          "chapter": 12,
+          "remainingErrors": 1
+        },
+        {
+          "chapter": 13,
+          "remainingErrors": 1
+        },
+        {
+          "chapter": 14,
+          "remainingErrors": 1
+        },
+        {
+          "chapter": 15,
+          "remainingErrors": 1
+        }
+      ]
+    }
+  },
+  "w1": {
+    "arm": "a3-benxiang",
+    "words": 285,
+    "chapters": 5,
+    "findings": [],
+    "errors": 0,
+    "byCategory": {},
+    "epc": 0,
+    "ced": 0,
+    "avgChapterLen": 57,
+    "lengthRatio": 0.02,
+    "channel": {
+      "deterministic": true,
+      "semantic": false
+    }
+  },
+  "w3": {
+    "arm": "a3-benxiang",
+    "rows": [
+      {
+        "key": "obj:black-key.holder",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "obj:black-key.used",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "obj:black-key.intact",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:zhao-qi.alive",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:bai-yao.left_hand_injured",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:bai-yao.secret_betrayal",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:lin-zheng.knows.not_contains",
+        "pass": true,
+        "detail": "不含 k:bai-yao-betrayal"
+      },
+      {
+        "key": "hook:a-zhi-witness.status",
+        "pass": false,
+        "detail": "期望 \"planted_unresolved\"，实为 \"resolved\""
+      }
+    ],
+    "stateAccuracy": 0.875,
+    "checked": 8,
+    "passed": 7,
+    "missing": 0,
+    "evidenceTraceability": 1
+  },
+  "provenance": {
+    "startedAt": "2026-08-03T01:26:48.067Z",
+    "pid": 1055496,
+    "argv": "--provider stub --allow-concurrent",
+    "gitCommit": "3d59fee",
+    "specHash": "df34b3b5d8a3",
+    "judgeHash": "84d0fc2d8d7d",
+    "taskFile": "continuation.json",
+    "provider": "stub",
+    "model": "(默认)",
+    "budget": 6000,
+    "concurrentAllowed": true,
+    "rep": 1,
+    "finishedAt": "2026-08-03T01:26:51.907Z"
+  }
+}
