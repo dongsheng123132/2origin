@@ -103,10 +103,14 @@ function anthropicModel(model = 'claude-sonnet-5') {
  */
 function hermesModel(model) {
   return {
+    // 默认配额按**带思维链的模型**设定：reasoning 与正文共享 max_tokens，8192 在长基线上
+    // 会被推演吃光（实测单次可烧掉 22162 个 reasoning token），正文一个字没写就 finish=length；
+    // 300s 同样不够——M 级提示词大，一次生成实测 241s 起步，跨模型验证首跑即因此 AbortError。
+    // 这是基础设施参数，不是实验变量：三臂共用同一组，跨模型比较的是「方法是否成立」。
     id: `hermes:${model ?? 'default(deepseek-v4-flash)'}`,
     stub: false,
     usageEstimated: false,
-    async complete({ prompt, maxTokens = 8192, timeoutMs = 300_000 }) {
+    async complete({ prompt, maxTokens = 32768, timeoutMs = 900_000 }) {
       const cfg = await readHermesModelConfig()
       if (cfg) return completeViaHttp(cfg, model, prompt, maxTokens, timeoutMs)
       return completeViaCli(model, prompt, timeoutMs)
