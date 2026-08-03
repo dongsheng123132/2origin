@@ -22,12 +22,19 @@ const HERE = dirname(dirname(fileURLToPath(import.meta.url)))
 const DIR = join(HERE, 'results')
 const [armA = 'a0', armB = 'a3'] = process.argv.slice(2).filter((s) => !s.startsWith('--'))
 
+// 级别隔离：S 与 M 考题与答案集都不同，不可跨级并列。
+//   node eval/significance.mjs a0 a3            S 级
+//   node eval/significance.mjs a0 a3 --task-m   M 级
+const isM = process.argv.includes('--task-m')
+const TASK = JSON.parse(readFileSync(join(HERE, 'world', 'spec.origin', 'tasks', isM ? 'continuation-m.json' : 'continuation.json'), 'utf8'))
+
 function load(arm) {
-  const files = readdirSync(DIR).filter((f) => new RegExp(`^${arm}-bailian-rep\\d+\\.json$`).test(f))
+  const tag = isM ? '-m' : ''
+  const files = readdirSync(DIR).filter((f) => new RegExp(`^${arm}${tag}-bailian-(?:rep\\d+|clean)\\.json$`).test(f))
   return files.map((f) => {
     const d = JSON.parse(readFileSync(join(DIR, f), 'utf8'))
     const chapters = d.result.chapters.filter((c) => c.text)
-    return { epc: scoreW1({ arm, chapters }).errors / chapters.length, errors: scoreW1({ arm, chapters }).errors, chapters: chapters.length, w3: scoreW3(d.result).stateAccuracy }
+    return { epc: scoreW1({ arm, chapters }).errors / chapters.length, errors: scoreW1({ arm, chapters }).errors, chapters: chapters.length, w3: scoreW3(d.result, TASK).stateAccuracy }
   })
 }
 

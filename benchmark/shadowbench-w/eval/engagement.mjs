@@ -33,8 +33,14 @@ const TRIGGERS = {
   'rule:gate-time': /月台|空间门|正午|午时|晌午|月落/g,
 }
 
+// 级别隔离：S 与 M 的考题、答案集、语料都不同，接触度不可跨级并列。
+//   node eval/engagement.mjs           S 级
+//   node eval/engagement.mjs --task-m  M 级
+const isM = process.argv.includes('--task-m')
+const PATTERN = isM ? /^a\d-m-bailian-(?:rep\d+|clean)\.json$/ : /^a\d-bailian-rep\d+\.json$/
+
 const rows = {}
-for (const f of readdirSync(DIR).filter((f) => /^a\d-bailian-rep\d+\.json$/.test(f))) {
+for (const f of readdirSync(DIR).filter((f) => PATTERN.test(f))) {
   const arm = f.slice(0, 2).toUpperCase()
   const d = JSON.parse(readFileSync(join(DIR, f), 'utf8'))
   const chapters = d.result.chapters.filter((c) => c.text)
@@ -53,7 +59,7 @@ for (const f of readdirSync(DIR).filter((f) => /^a\d-bailian-rep\d+\.json$/.test
   }
 }
 
-console.log('# 接触度校正 · EPC 与「每百次接触错误数」并列\n')
+console.log(`# 接触度校正 · EPC 与「每百次接触错误数」并列 · ${isM ? 'M 级（第 51-55 章）' : 'S 级（第 11-15 章）'}\n`)
 console.log('  臂   轮  均字数   EPC    接触/万字   每百接触错误   规则覆盖')
 for (const [arm, r] of Object.entries(rows).sort()) {
   const epc = r.errors / r.chapters
