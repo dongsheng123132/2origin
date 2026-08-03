@@ -13,33 +13,52 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { scoreW1 } from './ced.mjs'
 import { scoreW3 } from './state-diff.mjs'
-import { specHash } from './spec-hash.mjs'
+import { specHash, judgeHash } from './spec-hash.mjs'
 
 const HERE = dirname(dirname(fileURLToPath(import.meta.url)))
 const DIR = join(HERE, 'results')
 const write = process.argv.includes('--write')
 
-const files = readdirSync(DIR).filter((f) => /^a\d-bailian-rep\d+\.json$/.test(f)).sort()
-if (!files.length) { console.error('✗ results/ 下没有 rep 结果文件'); process.exit(1) }
+// --task-m 不只是换指纹，还要换**答案集**和**待重判的文件集**：M 级结果文件名带 -m 标记，
+// 且 S 级与 M 级的 must_hold 不同（黑钥匙交回沈砚 vs 交给林峥）。第六起事故就是漏了这一层。
+const isM = process.argv.includes('--task-m')
+const taskFile = isM ? 'continuation-m.json' : 'continuation.json'
+const TASK = JSON.parse(readFileSync(join(HERE, 'world', 'spec.origin', 'tasks', taskFile), 'utf8'))
+const filePattern = isM ? /^a\d-m-bailian-(rep\d+|clean)\.json$/ : /^a\d-bailian-rep\d+\.json$/
+
+const files = readdirSync(DIR).filter((f) => filePattern.test(f)).sort()
+if (!files.length) { console.error(`✗ results/ 下没有匹配 ${filePattern} 的结果文件`); process.exit(1) }
 
 // 口径闸门：重打分只在同一版世界规格下有意义。
 // 2026-08-03 事故——M-lite 往 state-changes.jsonl 追加的 27 条里有 2 条落在 S 级评测
 // 区间（ch11 黑钥匙转手、ch14 云姑获知），ground truth 变了而正文没变，重打分后
 // A0 0.54→0.72、A3 0.28→0.58。纯新增无删除，看 diff 察觉不到。
-const CURRENT = specHash(HERE, process.argv.includes('--task-m') ? 'continuation-m.json' : 'continuation.json')
+// 第四起（同日）：口径的另一半是判分器本身。ced.mjs 的 custody / left-hand 补上否定与
+// 转述过滤后，同一批正文、同一版规格，W1 的 findings 从 18 条降到 12 条。只盯 specHash
+// 看不出这件事——规格与判分器必须一起记。
+const CURRENT = specHash(HERE, taskFile)
+const CURRENT_JUDGE = judgeHash(HERE)
 const seen = {}
+const seenJudge = {}
 let noProv = 0
+let noJudge = 0
 for (const f of files) {
-  const h = JSON.parse(readFileSync(join(DIR, f), 'utf8')).provenance?.specHash
-  if (!h) noProv++
-  else (seen[h] ??= []).push(f.replace('-bailian', '').replace('.json', ''))
+  const prov = JSON.parse(readFileSync(join(DIR, f), 'utf8')).provenance
+  const label = f.replace('-bailian', '').replace('.json', '')
+  if (!prov?.specHash) noProv++
+  else (seen[prov.specHash] ??= []).push(label)
+  if (!prov?.judgeHash) noJudge++
+  else (seenJudge[prov.judgeHash] ??= []).push(label)
 }
 const stale = Object.keys(seen).filter((h) => h !== CURRENT)
-if (noProv || stale.length) {
+const staleJudge = Object.keys(seenJudge).filter((h) => h !== CURRENT_JUDGE)
+if (noProv || stale.length || noJudge || staleJudge.length) {
   console.error(`⚠ 判分口径不一致——下列数字不可横向比较，须重跑后再下结论`)
-  console.error(`  当前规格指纹：${CURRENT}`)
+  console.error(`  当前规格指纹：${CURRENT}    当前判分器指纹：${CURRENT_JUDGE}`)
   if (noProv) console.error(`  ${noProv} 份结果没有 provenance（2026-08-03 护栏之前跑的），无法证明对着哪版规格判的`)
   for (const h of stale) console.error(`  规格 ${h}（已过期）：${seen[h].join(' ')}`)
+  if (noJudge) console.error(`  ${noJudge} 份结果没记判分器指纹（judgeHash 护栏之前跑的），无法证明用哪版判分器判的`)
+  for (const h of staleJudge) console.error(`  判分器 ${h}（已过期）：${seenJudge[h].join(' ')}`)
   console.error('')
 }
 
@@ -49,11 +68,11 @@ for (const f of files) {
   const d = JSON.parse(readFileSync(path, 'utf8'))
   const chapters = d.result.chapters.filter((c) => c.text)
   const w1 = scoreW1({ arm: d.result.arm, chapters })
-  const w3 = scoreW3(d.result)
+  const w3 = scoreW3(d.result, TASK)
   if (write) writeFileSync(path, JSON.stringify({ ...d, w1, w3, rescored: true }, null, 2))
   rows.push({
     arm: f.slice(0, 2).toUpperCase(),
-    rep: Number(f.match(/rep(\d+)/)[1]),
+    rep: Number(f.match(/rep(\d+)/)?.[1] ?? 0), // 单次跑用 -clean 后缀，没有 rep 编号
     done: chapters.length,
     review: (d.result.gate?.needsReview ?? []).length,
     errOld: d.w1.errors,

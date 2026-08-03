@@ -161,6 +161,9 @@ async function completeViaHttp(cfg, modelOverride, prompt, maxTokens, timeoutMs)
     return {
       raw,
       parsed,
+      // 空 raw 时唯一能区分「被截断」与「模型真没说话」的线索：length 表示配额耗尽，
+      // 对带思维链的模型意味着 reasoning 吃光了 max_tokens，正文根本没开始写
+      finishReason: data.choices?.[0]?.finish_reason ?? null,
       usage: {
         inputTokens: data.usage?.prompt_tokens ?? estTokens(prompt),
         outputTokens: data.usage?.completion_tokens ?? estTokens(raw),

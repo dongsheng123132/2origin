@@ -8,7 +8,7 @@
 // 纯新增、无删除，`git diff --stat` 看着人畜无害，问题却出在「新增的位置在评测区间内」。
 // 所以不能靠人眼看 diff，必须让判分器自己发现口径变了。
 
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 
@@ -35,6 +35,30 @@ export function specHash(here, taskFile = 'continuation.json') {
     h.update(readFileSync(f))
   }
   h.update('task:' + taskFile)
+  return h.digest('hex').slice(0, 12)
+}
+
+/**
+ * 判分器指纹 = eval/ 下参与判分的代码文件内容。
+ *
+ * 第四起同类事故（2026-08-03，补语料时暴露）：specHash 只覆盖 ground truth，不覆盖
+ * **判分器本身**。ced.mjs 的 custody / left-hand 两条规则原先完全没做否定与转述过滤
+ *（「钥匙不在赵七处」被判成钥匙归赵七、「左手垂在身侧，未抬」被判成伤手挥抬），
+ * 修完 W1 的 findings 从 18 条降到 12 条——同一批正文、同一版规格，分数却变了。
+ * 而 specHash 纹丝不动，provenance 会理直气壮地声称「同一口径」。
+ *
+ * 规格与判分器是 ground truth 的两半：一半定义「对错是什么」，一半定义「怎么判」。
+ * 少记任何一半，跨批次的分数都不能并列。
+ */
+export function judgeHash(here) {
+  const h = createHash('sha1')
+  const dir = join(here, 'eval')
+  // 只取真正参与判分的模块——selftest/rescore/calibrate 是工具，改它们不影响分数
+  const SCORERS = ['ced.mjs', 'state-diff.mjs', 'detect-score.mjs', 'judge.mjs', 'replay.mjs', 'engagement.mjs']
+  for (const name of SCORERS.filter((n) => existsSync(join(dir, n))).sort()) {
+    h.update(name)
+    h.update(readFileSync(join(dir, name)))
+  }
   return h.digest('hex').slice(0, 12)
 }
 

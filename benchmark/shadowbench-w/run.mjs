@@ -15,7 +15,7 @@ import { dirname, join } from 'node:path'
 import { loadSpec, replay } from './eval/replay.mjs'
 import { scoreW1 } from './eval/ced.mjs'
 import { scoreW3 } from './eval/state-diff.mjs'
-import { specHash } from './eval/spec-hash.mjs'
+import { specHash, judgeHash } from './eval/spec-hash.mjs'
 import { createModel } from './arms/lib/model.mjs'
 import * as A0 from './arms/a0-naive/index.mjs'
 import * as A1 from './arms/a1-rag/index.mjs'
@@ -37,6 +37,9 @@ const outDir = arg('out', join(HERE, 'results'))
 const spec = loadSpec()
 // 任务文件可切换：S 级 continuation.json，M-lite continuation-m.json（--task 指定）
 const taskFile = arg('task', 'continuation.json')
+// 结果文件名必须带任务级别，否则不同级别的同名结果会互相覆盖（第五起事故）。
+// S 级不加标记，保持与历史结果文件名兼容；其余级别取任务文件名里的后缀（-m → "-m"）。
+const levelTag = taskFile === 'continuation.json' ? '' : '-' + taskFile.replace(/^continuation-?/, '').replace(/\.json$/, '')
 const task = JSON.parse(readFileSync(join(HERE, 'world/spec.origin/tasks', taskFile), 'utf8'))
 // 基线长度由任务文件声明，不再写死
 const baselineThrough = task.baseline_through ?? 10
@@ -121,6 +124,8 @@ const provenance = {
   gitCommit,
   // 规格指纹：ground truth 变了就必须重跑，不能拿旧正文对新标准答案打分
   specHash: specHash(HERE, taskFile),
+  // 判分器指纹：规格没变、判分逻辑变了，分数一样会动（ced.mjs 修否定误报后 findings 18→12）
+  judgeHash: judgeHash(HERE),
   taskFile,
   provider,
   model: modelName ?? '(默认)',
@@ -141,14 +146,19 @@ for (const key of selected) {
     const result = await mod.run({ spec, task, state0, chapters, model, budget, corpusTail })
 
     const w1 = scoreW1({ arm: result.arm, chapters: result.chapters.filter((c) => c.text) })
-    const w3 = scoreW3(result)
+    // 答案集显式传入——判分器不会自己知道这轮跑的是哪一级考题（第六起事故）
+    const w3 = scoreW3(result, task)
     report.push({ meta: mod.meta, result, w1, w3, rep })
 
     const n = rep + repOffset
     const suffix = repeat > 1 || repOffset ? `-rep${n}` : `-${scenario}`
-    const path = join(outDir, `${key}-${provider}${suffix}.json`)
-    // 不静默覆盖：已有同名结果就报错退出，要么换 --rep-offset，要么明确 --force
-    if (existsSync(path) && !force && suffix.startsWith('-rep')) {
+    const path = join(outDir, `${key}${levelTag}-${provider}${suffix}.json`)
+    // 不静默覆盖：已有同名结果就报错退出，要么换 --rep-offset，要么明确 --force。
+    // 第五起同类事故（2026-08-03）：原先这里限定 suffix.startsWith('-rep')，于是 --repeat 1
+    // 走的 `-clean` 后缀完全不受保护；又因文件名不含任务级别，M-lite 单次跑把 S 级的
+    // a0/a1/a3-bailian-clean.json 静默覆盖，results/ 不在 git 里，覆盖即不可恢复。
+    // 两处都堵：文件名带级别（见 levelTag），且任何后缀都不许静默覆盖。
+    if (existsSync(path) && !force) {
       console.error(`✗ ${path} 已存在，拒绝覆盖。改 --rep-offset 续编号，或确认要重跑再加 --force。`)
       process.exit(1)
     }

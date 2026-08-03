@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
+// 兜底任务：调用方没显式传 task 时用。**环境变量这条路是坏的**——见 scoreW3 的注释。
 const TASK = JSON.parse(readFileSync(join(HERE, '..', 'world', 'spec.origin', 'tasks', process.env.SBW_TASK ?? 'continuation.json'), 'utf8'))
 
 /** "char:lin-zheng.knows.not_contains" → { id, field, op } */
@@ -26,8 +27,20 @@ function lookup(reported, id, field) {
   return reported.state?.[id]?.[field]
 }
 
-export function scoreW3(reported) {
-  const expected = TASK.expected_state_after.must_hold
+/**
+ * 第六起事故（2026-08-03）：答案集必须由调用方显式传入，不能靠环境变量。
+ *
+ * 原先 TASK 在模块顶层按 `process.env.SBW_TASK` 加载，而 run.mjs 用 `--task` 参数切换级别、
+ * 从不设置该环境变量——更要命的是**即便设了也没用**：ES module 的 import 是提升的，
+ * state-diff.mjs 的顶层代码在 run.mjs 的第一行执行之前就跑完了，那时 env 还没写。
+ * 一条永远不会生效的切换路径，看代码却像是支持切换的。
+ *
+ * 后果：M-lite 首跑（Run #13）用 S 级的答案集判了 M 级的答卷。M 级要求把黑钥匙交回沈砚，
+ * S 级要求交给林峥；A3 答沈砚——**正确答案**——被判成错，还被写进 log 当成「A3 的护城河
+ * 在长基线上消失了」。判分器拿着错的答案集，把对的答案判成错的，没有任何环节会报错。
+ */
+export function scoreW3(reported, task = TASK) {
+  const expected = task.expected_state_after.must_hold
   const rows = []
 
   for (const [key, want] of Object.entries(expected)) {

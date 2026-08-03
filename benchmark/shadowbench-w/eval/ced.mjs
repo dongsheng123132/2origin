@@ -26,7 +26,12 @@ const BELL_NOT_NOW = /记得|想起|回想|响过|那年|那夜|第[一二三四
 // 「闩死」「锁死」这类是把门关紧，不是人死；判死亡前须先排除
 const DEATH_COMPOUND = /(闩|锁|关|钉|堵|封|掩|咬|盯|attach|死死)死/
 const OPEN_GATE = /(月台|空间门)[^。！？]{0,20}(开启|开了|洞开|启开)|(开启|推开)[^。！？]{0,10}(月台|空间门)/
-const LEFT_HAND_ACT = /左手[^。！？]{0,12}(持|握|挥|提|抬|按|抓|接过|拔|扬)/
+// 动作词前紧跟否定的不算「作此举」——「左手垂在身侧，未抬」写的恰恰是伤，却曾被判成违规
+const LEFT_HAND_ACT = /左手[^。！？]{0,12}(?<![不未没无莫勿])(持|握|挥|提|抬|按|抓|接过|拔|扬)/
+// 保管链：带时间回指的陈述说的是旧事，不是当下归属。
+// 注意不能把「说|道」本身排除掉——「赵七摇头道：那钥匙在老陶手里」是角色当下的错误陈述，
+// 属于要抓的矛盾；真正的分界是「当初/曾/原先」这类把话锚回过去的词。
+const CUSTODY_NOT_NOW = /当初|当年|那时|彼时|曾|原(先|本|以为)|旧话|从前|早先|昔/
 
 /** 句子级切分，便于定位 */
 const sentences = (t) => t.split(/(?<=[。！？…\n])/).filter((s) => s.trim())
@@ -77,8 +82,12 @@ export const RULES = [
       const out = []
       for (const s of sentences(text)) {
         if (!/钥匙/.test(s)) continue
+        // 回指旧事的陈述不反映当下保管链
+        if (CUSTODY_NOT_NOW.test(s)) continue
         for (const c of spec.characters) {
           if (legal.has(c.id)) continue
+          // 否定归属恰恰与规格一致：「钥匙不在赵七处」说的是钥匙不归赵七，不是矛盾
+          if (new RegExp(`(不|未|没|非)在${c.name}|钥匙[^。！？]{0,8}(不|未|没|非)在`).test(s)) continue
           // 「钥匙在X手」「X手里的钥匙」形式的错误归属
           if (new RegExp(`钥匙[^。！？]{0,8}在${c.name}|${c.name}[^。！？]{0,6}手(中|里|上)[^。！？]{0,8}钥匙`).test(s))
             out.push({ quote: s.trim(), why: `保管链错误：黑钥匙应在${names[holder] ?? holder}处，文中归于${c.name}` })
@@ -96,7 +105,8 @@ export const RULES = [
       for (const [i, s] of ss.entries()) {
         if (!/铜铃[^。！？]{0,10}(响|鸣|作声)/.test(s)) continue
         // ① 否定句不算铃响：「铜铃仍不响」「未闻其响」「未响」
-        if (/(不|没|未|无)\s*(响|鸣|闻|见)|寂然|默然/.test(s)) continue
+        //   否定词与动词之间允许隔几个字——原先要求紧邻，「无人听见铜铃响」中间夹了个「人」就漏了过去
+        if (/(不|没|未|无)[^。！？]{0,3}(响|鸣|闻|见|听)|寂然|默然/.test(s)) continue
         // ② 回忆/记载/转述/假设都不是当下发生（实测这类误报最多）
         if (BELL_NOT_NOW.test(s)) continue
         // ③ 禽鸟异动往往写在铃响之后隔几句（先写声音、再写人物反应、最后才写鸟）

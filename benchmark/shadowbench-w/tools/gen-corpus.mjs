@@ -30,6 +30,14 @@ const model = createModel({ provider: arg('provider', 'hermes'), model: arg('mod
 const only = arg('only') ? [Number(arg('only'))] : null
 const force = process.argv.includes('--force')
 
+// 生成正文必须给足输出配额——deepseek-v4-flash 这类带思维链的模型会先推演再落笔，
+// 而 reasoning 与正文共享 max_tokens。8192（model.mjs 的默认值）在约束密的章节根本不够：
+// ch48 实测烧掉 19400-22162 个 reasoning token，配额耗尽时正文一个字都没写出来，
+// 端点返回 finish_reason=length + content 空串——表面症状是「未能解析出 text 字段：」
+// 后面空空如也，看不出是被截断的。ch48/49/50 曾因此连续两轮生成失败。
+// 32768 下同样三章一次通过。走 bailian 等输出上限较低的通道时用 --max-tokens 调低。
+const maxTokens = Number(arg('max-tokens', 32768))
+
 const nameOf = Object.fromEntries([...spec.characters, ...spec.objects].map((e) => [e.id, e.name]))
 
 // 中性改写层：规格用精确词汇（ground truth 需要），提问用中性表达。
@@ -133,9 +141,15 @@ for (const ch of targets) {
   }
   process.stdout.write(`→ 第 ${ch.chapter} 章《${ch.title}》生成中… `)
   try {
-    const res = await model.complete({ prompt: buildPrompt(ch), chapter: ch.chapter })
+    const res = await model.complete({ prompt: buildPrompt(ch), chapter: ch.chapter, maxTokens })
     const text = res.parsed?.text
-    if (!text) throw new Error('未能解析出 text 字段：' + res.raw.slice(0, 200))
+    if (!text)
+      throw new Error(
+        res.raw
+          ? '未能解析出 text 字段：' + res.raw.slice(0, 200)
+          : `端点返回空正文（finish_reason=${res.finishReason ?? '未知'}，reasoning ${res.usage?.reasoningTokens ?? '?'} tok）` +
+            `——配额被思维链吃光了，当前 --max-tokens ${maxTokens}，调大重试`,
+      )
     writeFileSync(file, text, 'utf8')
     console.log(`${text.replace(/\s/g, '').length} 字，${(res.usage.ms / 1000).toFixed(1)}s`)
   } catch (e) {
