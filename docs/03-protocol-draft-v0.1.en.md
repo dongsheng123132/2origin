@@ -167,8 +167,8 @@ example.origin/
 Notes:
 
 - `atlas / graph / exact` are the three context layers (see
-  [02 · Concept system](02-概念体系.md) §5 — Chinese only for now; the short version is
-  *atlas finds, graph understands, exact gets it right*)
+  [02 · Concept system](02-concept-system.en.md) §5 — *the map finds, the structure understands,
+  the source text gets it right*)
 - All directories are optional. The minimal legal package is `manifest.yaml` plus at least one of
   `payloads/` or `graph/`
 - Domain dialects extend this layout (the Story dialect, for instance, adds
