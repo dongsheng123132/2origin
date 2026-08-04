@@ -2,30 +2,58 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://benxiang.dev/schemas/transaction.schema.json",
   "title": "Semantic Transaction",
-  "description": "语义事务——AI 的标准输出单元（v0.1 草案）。对应 docs/03-协议草案-v0.1.md 第六节。AI 不输出终态全文，只提交：操作+目标+依赖+内容+状态变化+断言。",
+  "description": "语义事务——AI 的标准输出单元。对应 docs/03-协议草案-v0.1.md 第六节。AI 不输出终态全文，只提交：要改什么、从什么改成什么、以及自己声明不违反的边界。\n\n本 Schema 描述**形状**；语义判定（未知对象、快照隔离、约束、断言复核）由校验器负责，其行为由 spec/conformance/ 的向量钉死。两者不一致时以向量为准。\n\nrequired 为空是**有意的**：校验器不强制任何字段存在——空事务合法，只带 state_changes 的事务也合法。曾把 transaction_id/operation/target 写成必填，而校验器从不检查，Schema 与实现就此各说各话。宁可 Schema 弱一点，也不要写下没人执行的要求。",
   "type": "object",
-  "required": ["transaction_id", "operation", "target"],
+  "required": [],
   "properties": {
     "transaction_id": {
       "type": "string",
-      "description": "事务唯一 ID，建议 tx-<日期>-<序号>",
+      "description": "事务 ID。建议提供：它会被记进证据链的每条变更（journal 的 tx 字段），缺失则该批改动无法按事务回溯。不提供时记为 null。",
       "examples": ["tx-20260802-001"]
     },
     "operation": {
       "type": "string",
-      "description": "语义操作名。各方言在统一动作面之上登记自己的操作。",
+      "description": "语义操作名。各方言在统一动作面之上登记自己的操作。仅供人读与审计，校验器不据此分派。",
       "examples": ["append_scene", "replace_image", "set_cell_formula", "update_canon", "patch_projection"]
     },
     "target": {
       "type": "string",
-      "description": "目标对象的稳定路径/ID",
+      "description": "目标对象的稳定路径/ID。真正被改动的对象由 state_changes 逐条给出，本字段只表达「这次主要在动哪儿」。",
       "examples": ["volume-07/chapter-823/scene-004", "slide-17/chart-2"]
+    },
+    "creates": {
+      "type": "array",
+      "description": "本次要**新建**的对象。未在此声明就去改一个不存在的对象会被判 unknown-object。\n\n为什么创建必须显式声明：不允许创建，则「新建一个决策/待办」根本无法表达（Memory 方言首次实跑因此全军覆没）；但直接放开更糟——ID 打错一个字母就会静默造出幽灵对象，而幽灵对象永远不被任何约束管到。创建必须是声明出来的意图，不能是打字失误的副作用。\n\n带 type 的形式会被记进日志，重放后该对象仍知道自己是什么类型。",
+      "items": {
+        "oneOf": [
+          { "type": "string", "description": "裸 ID" },
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string", "examples": ["decision", "task", "risk", "fact", "module"] }
+            }
+          }
+        ]
+      },
+      "examples": [["task:write-spec"], [{ "id": "decision:mvp", "type": "decision" }]]
     },
     "depends_on": {
       "type": "array",
-      "description": "本事务依赖的对象与状态版本（object-id 或 object-id@state-version）。运行时据此做冲突检查。",
+      "description": "本事务依赖的对象与状态版本。落地时作为 derived 类改动的 basis 记入证据链——撤回级联将沿这条边回溯。",
       "items": { "type": "string" },
       "examples": [["scene:volume-07/chapter-823/scene-003", "character:lin-zheng@state-822"]]
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["observed", "derived", "asserted"],
+      "default": "observed",
+      "description": "整个事务的默认来源类型，可被单条变更的 kind 覆盖。observed 事务直写 / derived 由他字段推出 / asserted 人工断言。"
+    },
+    "text": {
+      "type": "string",
+      "description": "本次提交的正文载荷（写作类方言使用）。是否必填由方言决定——协议核心不认识「正文」这个概念。"
     },
     "content": {
       "type": "object",
@@ -39,15 +67,25 @@
     },
     "state_changes": {
       "type": "array",
-      "description": "显式的状态变更（from→to），可校验、可回滚",
+      "description": "显式的状态变更，可校验、可回滚。校验器只认这里，其余字段都不改状态。",
       "items": {
         "type": "object",
         "required": ["object", "field", "to"],
         "properties": {
-          "object": { "type": "string" },
+          "object": { "type": "string", "description": "对象 ID。可省略命名空间前缀，由归一化层补回（§一.7）" },
           "field": { "type": "string" },
-          "from": { "description": "变更前值；省略表示新建字段" },
-          "to": { "description": "变更后值" }
+          "op": {
+            "type": "string",
+            "enum": ["set", "append"],
+            "default": "set",
+            "description": "set 整体替换；append 按**集合语义**追加（已在其中则不重复添加）。append 不适用前值比对——追加没有「整体前值」可言。"
+          },
+          "from": {
+            "description": "变更前值。**省略即表示不声明**，不等于声明了空值——省略时不做前值比对。声明了但接不上当前值只降级为警告（stale-write）并记入 claimed_from，不拦截提交：运行时本就知道当前值，要求模型精确复述旧值是接口刁难。"
+          },
+          "to": { "description": "变更后值" },
+          "kind": { "type": "string", "enum": ["observed", "derived", "asserted"] },
+          "basis": { "type": "array", "items": { "type": "string" }, "description": "derived 时的依据字段引用" }
         }
       }
     },
@@ -61,13 +99,13 @@
     },
     "assertions": {
       "type": "array",
-      "description": "AI 声明本次修改不违反的边界，由验证器复核；任一断言不成立则事务拒绝",
+      "description": "AI 声明本次修改不违反的边界，由校验器逐条复核。已登记的断言不成立则整个事务拒绝；未登记的断言无法复核，报警告但不拦截——协议不预设任何具体断言，宿主没登记不是模型的错。",
       "items": { "type": "string" },
       "examples": [["bai-yao-betrayal-remains-secret", "zhao-qi-remains-alive"]]
     },
     "patch": {
       "type": "object",
-      "description": "纯投影修改的退化形态（不动源数据），如 { target: 'projections[0]', set: { chart: 'Grouped Bar Chart' } }",
+      "description": "纯投影修改的退化形态（不动源数据）",
       "required": ["target", "set"],
       "properties": {
         "target": { "type": "string" },

@@ -1,0 +1,161 @@
+{
+  "title": "三 · 约束谓词",
+  "rationale": "协议里唯一「判对错」的地方，必须领域无关。若每个域各写各的校验器，那就不是协议，只是若干个碰巧长得像的程序。这一组小而完备的谓词——字段等于/不等于/含/不含/在范围内/在取值集内/必填/唯一/数量对账/未改动——要能同时表达小说的禁区、图纸的制图规范和销售数据的非负约束，且都不需要改代码。",
+  "cases": [
+    {
+      "id": "constraints/equals-holds",
+      "spec": "§二",
+      "why": "字段等于期望值时不报违规",
+      "op": "constraints",
+      "input": { "state": { "obj:key": { "used": false } }, "constraints": [{ "id": "c1", "check": { "type": "equals", "object": "obj:key", "field": "used", "value": false } }] },
+      "expect": { "codes": [], "ids": [] }
+    },
+    {
+      "id": "constraints/equals-violated",
+      "spec": "§二",
+      "why": "字段偏离期望值即违规，并报出是哪一条约束",
+      "op": "constraints",
+      "input": { "state": { "obj:key": { "used": true } }, "constraints": [{ "id": "c1", "check": { "type": "equals", "object": "obj:key", "field": "used", "value": false } }] },
+      "expect": { "codes": ["constraint"], "ids": ["c1"] }
+    },
+    {
+      "id": "constraints/not-equals",
+      "spec": "§二",
+      "why": "不等于谓词：取值撞上禁止值即违规",
+      "op": "constraints",
+      "input": { "state": { "task:a": { "status": "dropped" } }, "constraints": [{ "id": "c-ne", "check": { "type": "not_equals", "object": "task:a", "field": "status", "value": "dropped" } }] },
+      "expect": { "codes": ["constraint"], "ids": ["c-ne"] }
+    },
+    {
+      "id": "constraints/not-contains-catches-knowledge-leak",
+      "spec": "§二",
+      "why": "数组字段不得获得某个值。「主角不得知道这个秘密」与「清单不得混入该项」是同一个谓词",
+      "op": "constraints",
+      "input": { "state": { "char:lin-zheng": { "knows": ["k:a", "k:betrayal"] } }, "constraints": [{ "id": "fz:secret", "check": { "type": "not_contains", "object": "char:lin-zheng", "field": "knows", "value": "k:betrayal" } }] },
+      "expect": { "codes": ["constraint"], "ids": ["fz:secret"] }
+    },
+    {
+      "id": "constraints/contains-requires-presence",
+      "spec": "§二",
+      "why": "contains 要求数组必须含有某值，缺了即违规",
+      "op": "constraints",
+      "input": { "state": { "doc:a": { "tags": ["x"] } }, "constraints": [{ "id": "c-has", "check": { "type": "contains", "object": "doc:a", "field": "tags", "value": "required" } }] },
+      "expect": { "codes": ["constraint"], "ids": ["c-has"] }
+    },
+    {
+      "id": "constraints/range-min",
+      "spec": "§二",
+      "why": "数值下限：销售额不得为负、构件净高不得低于 2.6m 是同一个谓词",
+      "op": "constraints",
+      "input": { "state": { "row:1": { "revenue": -5 } }, "constraints": [{ "id": "c-nonneg", "check": { "type": "range", "object": "row:1", "field": "revenue", "min": 0 } }] },
+      "expect": { "codes": ["constraint"], "ids": ["c-nonneg"] }
+    },
+    {
+      "id": "constraints/range-skips-non-number",
+      "spec": "§二",
+      "why": "字段不存在或非数值时不判——避免把「没写」误判成「写错」。必填由 exists 各司其职",
+      "op": "constraints",
+      "input": { "state": { "row:1": {} }, "constraints": [{ "id": "c-nonneg", "check": { "type": "range", "object": "row:1", "field": "revenue", "min": 0 } }] },
+      "expect": { "codes": [], "ids": [] }
+    },
+    {
+      "id": "constraints/in-allowed-values",
+      "spec": "§二",
+      "why": "状态机的合法取值。图纸版次∈{A,B,C}、待办∈{open,doing,done} 都是它",
+      "op": "constraints",
+      "input": { "state": { "task:a": { "status": "在飞" } }, "constraints": [{ "id": "c-in", "check": { "type": "in", "object": "task:a", "field": "status", "values": ["open", "doing", "done", "dropped"] } }] },
+      "expect": { "codes": ["constraint"], "ids": ["c-in"] }
+    },
+    {
+      "id": "constraints/exists-catches-empty",
+      "spec": "§二",
+      "why": "必填字段为空即违规。空字符串、空数组、null 一律算空",
+      "op": "constraints",
+      "input": {
+        "state": { "task:a": { "owner": "" }, "task:b": { "owner": [] }, "task:c": { "owner": null } },
+        "constraints": [{ "id": "c-owner", "check": { "type": "exists", "object": "task:*", "field": "owner" } }]
+      },
+      "expect": { "codes": ["constraint", "constraint", "constraint"], "ids": ["c-owner", "c-owner", "c-owner"] }
+    },
+    {
+      "id": "constraints/unique-detects-duplicate-numbering",
+      "spec": "§二",
+      "why": "同类对象的某字段不得重复。图纸编号 C2 重复正是真实图纸首跑抓出的三类缺陷之一",
+      "op": "constraints",
+      "input": {
+        "state": { "ent:1": { "tag": "C2" }, "ent:2": { "tag": "C2" }, "ent:3": { "tag": "C1" } },
+        "constraints": [{ "id": "c-uniq", "check": { "type": "unique", "object": "ent:*", "field": "tag" } }]
+      },
+      "expect": { "codes": ["constraint"], "ids": ["c-uniq"] }
+    },
+    {
+      "id": "constraints/count-cross-checks-two-tellings",
+      "spec": "§二",
+      "why": "同一件事在两处表述必须对上——门窗表 5 樘、平面图只画 4 樘。跨域同构：待办数=计划条目数、章节数=目录条目数",
+      "op": "constraints",
+      "input": {
+        "state": { "door:1": {}, "door:2": {}, "door:3": {}, "label:1": {}, "label:2": {} },
+        "constraints": [{ "id": "c-count", "check": { "type": "count", "object": "door:*", "equals_count_of": "label:*" } }]
+      },
+      "expect": { "codes": ["constraint"], "ids": ["c-count"] }
+    },
+    {
+      "id": "constraints/count-against-declared-number",
+      "spec": "§二",
+      "why": "实有数量必须对上别处声称的数字",
+      "op": "constraints",
+      "input": {
+        "state": { "part:1": {}, "part:2": {}, "sheet:1": { "partCount": 5 } },
+        "constraints": [{ "id": "c-ref", "check": { "type": "count", "object": "part:*", "equals_ref": "sheet:1.partCount" } }]
+      },
+      "expect": { "codes": ["constraint"], "ids": ["c-ref"] }
+    },
+    {
+      "id": "constraints/unchanged-uses-state-before",
+      "spec": "§二",
+      "why": "与 equals 的区别：不需要预先知道该等于什么，只要求这次事务没动它",
+      "op": "constraints",
+      "input": {
+        "stateBefore": { "obj:key": { "intact": true } },
+        "state": { "obj:key": { "intact": false } },
+        "constraints": [{ "id": "c-frozen", "check": { "type": "unchanged", "object": "obj:key", "field": "intact" } }]
+      },
+      "expect": { "codes": ["constraint"], "ids": ["c-frozen"] }
+    },
+    {
+      "id": "constraints/wildcard-covers-every-match",
+      "spec": "§二",
+      "why": "「**所有**构件净高不得低于 2.6m」必须自动扫过全部同类对象。没有通配就得给几千个构件各写一条，且新增构件不被覆盖——这正是「加了状态管理反而更差」的典型来源",
+      "op": "constraints",
+      "input": {
+        "state": { "part:1": { "level": 2.9 }, "part:2": { "level": 2.1 }, "part:3": { "level": 2.0 } },
+        "constraints": [{ "id": "c-level", "check": { "type": "range", "object": "part:*", "field": "level", "min": 2.6 } }]
+      },
+      "expect": { "codes": ["constraint", "constraint"], "ids": ["c-level", "c-level"] }
+    },
+    {
+      "id": "constraints/wildcard-no-match-is-not-a-violation",
+      "spec": "§二",
+      "why": "约束是对未来的承诺，不是对当下的断言。匹配不到对象时不报违规",
+      "op": "constraints",
+      "input": { "state": { "char:a": {} }, "constraints": [{ "id": "c-none", "check": { "type": "exists", "object": "part:*", "field": "level" } }] },
+      "expect": { "codes": [], "ids": [] }
+    },
+    {
+      "id": "constraints/unenforceable-is-reported-not-skipped",
+      "spec": "§二",
+      "why": "没有机器判定的约束是人类可读的意图声明。**静默跳过是危险的**——会让「有约束」的假象掩盖「没校验」的事实，必须显式报为警告",
+      "op": "constraints",
+      "input": { "state": {}, "constraints": [{ "id": "c-prose", "rule": "行文不得暗示主角已察觉" }] },
+      "expect": { "codes": [], "warnings": ["unenforceable"] }
+    },
+    {
+      "id": "constraints/unknown-predicate-is-reported",
+      "spec": "§二",
+      "why": "认不出的谓词同样不得沉默——实现之间谓词集有差异时，缺口必须可见",
+      "op": "constraints",
+      "input": { "state": {}, "constraints": [{ "id": "c-x", "check": { "type": "还没发明的谓词", "object": "a", "field": "b" } }] },
+      "expect": { "codes": [], "warnings": ["unknown-predicate"] }
+    }
+  ]
+}

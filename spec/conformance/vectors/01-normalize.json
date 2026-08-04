@@ -1,0 +1,131 @@
+{
+  "title": "一 · ID 归一化",
+  "rationale": "协议设计原则 §一.7：基于 ID 的协议若要求模型精确复现命名空间前缀，实践中必然大面积失败。首次真实实验中模型把 char:zhao-qi 写成 zhao-qi，5 章正文全部作废——语义上毫无歧义却被严格匹配拒之门外，这是接口刁难而非模型缺陷。归一化因此是协议的强制部分，不是实现的善意加分。",
+  "cases": [
+    {
+      "id": "normalize/adds-missing-prefix",
+      "spec": "§一.7",
+      "why": "裸 ID 必须补回命名空间前缀",
+      "op": "normalize",
+      "input": {
+        "ids": ["char:lin-zheng", "char:zhao-qi"],
+        "transaction": { "state_changes": [{ "object": "lin-zheng", "field": "location", "to": "somewhere" }] }
+      },
+      "expect": {
+        "transaction": { "state_changes": [{ "object": "char:lin-zheng", "field": "location", "to": "somewhere" }] }
+      }
+    },
+    {
+      "id": "normalize/normalizes-values-too",
+      "spec": "§一.7",
+      "why": "取值侧同样要补前缀——模型照抄投影里的写法，两侧都会漏",
+      "op": "normalize",
+      "input": {
+        "ids": ["obj:black-key", "char:lin-zheng"],
+        "transaction": { "state_changes": [{ "object": "black-key", "field": "holder", "to": "lin-zheng" }] }
+      },
+      "expect": {
+        "transaction": { "state_changes": [{ "object": "obj:black-key", "field": "holder", "to": "char:lin-zheng" }] }
+      }
+    },
+    {
+      "id": "normalize/prefix-not-hardcoded",
+      "spec": "§一.7",
+      "why": "前缀必须从已知 ID 现推。写死一张 char:/obj:/loc: 表的实现换个领域就废了——协议是跨域的",
+      "op": "normalize",
+      "input": {
+        "ids": ["part:beam-A1", "decision:mvp", "dataset:sales-2026"],
+        "transaction": {
+          "state_changes": [
+            { "object": "beam-A1", "field": "level", "to": 2.9 },
+            { "object": "mvp", "field": "status", "to": "decided" },
+            { "object": "sales-2026", "field": "rows", "to": 120 }
+          ]
+        }
+      },
+      "expect": {
+        "transaction": {
+          "state_changes": [
+            { "object": "part:beam-A1", "field": "level", "to": 2.9 },
+            { "object": "decision:mvp", "field": "status", "to": "decided" },
+            { "object": "dataset:sales-2026", "field": "rows", "to": 120 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "normalize/qualified-id-untouched",
+      "spec": "§一.7",
+      "why": "已经带前缀的 ID 原样保留，不得叠加",
+      "op": "normalize",
+      "input": {
+        "ids": ["char:lin-zheng"],
+        "transaction": { "state_changes": [{ "object": "char:lin-zheng", "field": "alive", "to": true }] }
+      },
+      "expect": {
+        "transaction": { "state_changes": [{ "object": "char:lin-zheng", "field": "alive", "to": true }] }
+      }
+    },
+    {
+      "id": "normalize/unknown-id-not-invented",
+      "spec": "§一.7",
+      "why": "补不出前缀就原样留着，交给校验器判未知对象。归一化不许猜——猜错会静默造出幽灵对象",
+      "op": "normalize",
+      "input": {
+        "ids": ["char:lin-zheng"],
+        "transaction": { "state_changes": [{ "object": "nobody", "field": "alive", "to": true }] }
+      },
+      "expect": {
+        "transaction": { "state_changes": [{ "object": "nobody", "field": "alive", "to": true }] }
+      }
+    },
+    {
+      "id": "normalize/absent-from-stays-absent",
+      "spec": "§六",
+      "why": "未声明前值的变更**不得**因归一化而凭空长出一个 from 键。带着 from:undefined 往下走，前值检查就会对一个并不存在的声明较真——参考实现曾因此在事务新建对象时当场崩溃",
+      "op": "normalize",
+      "input": {
+        "ids": ["char:zhao-qi"],
+        "transaction": { "state_changes": [{ "object": "zhao-qi", "field": "location", "to": "loc:teahouse" }] }
+      },
+      "expect": {
+        "changeKeys": [["field", "object", "to"]]
+      }
+    },
+    {
+      "id": "normalize/declared-from-is-normalized",
+      "spec": "§六",
+      "why": "真的写了 from 就要跟着归一化，否则前值比对会因前缀差异误判",
+      "op": "normalize",
+      "input": {
+        "ids": ["obj:black-key", "char:zhao-qi", "char:lin-zheng"],
+        "transaction": { "state_changes": [{ "object": "black-key", "field": "holder", "from": "zhao-qi", "to": "lin-zheng" }] }
+      },
+      "expect": {
+        "transaction": { "state_changes": [{ "object": "obj:black-key", "field": "holder", "from": "char:zhao-qi", "to": "char:lin-zheng" }] },
+        "changeKeys": [["field", "from", "object", "to"]]
+      }
+    },
+    {
+      "id": "normalize/non-string-values-untouched",
+      "spec": "§一.7",
+      "why": "数值与布尔不是 ID，不得被当作待补前缀的字符串处理",
+      "op": "normalize",
+      "input": {
+        "ids": ["part:beam-A1"],
+        "transaction": { "state_changes": [{ "object": "beam-A1", "field": "level", "from": 3.2, "to": 2.9 }, { "object": "beam-A1", "field": "checked", "to": false }] }
+      },
+      "expect": {
+        "transaction": { "state_changes": [{ "object": "part:beam-A1", "field": "level", "from": 3.2, "to": 2.9 }, { "object": "part:beam-A1", "field": "checked", "to": false }] }
+      }
+    },
+    {
+      "id": "normalize/no-state-changes-passthrough",
+      "spec": "§六",
+      "why": "没有 state_changes 的事务原样返回，不得报错",
+      "op": "normalize",
+      "input": { "ids": ["char:lin-zheng"], "transaction": { "transaction_id": "tx-1", "operation": "noop" } },
+      "expect": { "transaction": { "transaction_id": "tx-1", "operation": "noop" } }
+    }
+  ]
+}

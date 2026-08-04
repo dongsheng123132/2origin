@@ -1,0 +1,199 @@
+{
+  "title": "二 · 语义事务校验",
+  "rationale": "协议 §六：AI 不输出终态，只提交语义事务；事务须通过校验才允许落地。这一章是本象协议的心脏——校验的松紧决定了「护栏」是真栏杆还是装饰。三条实证教训直接写成了向量：快照隔离必须是警告而非错误（曾废掉 3 章正文）、未声明的新建必须拒绝（幽灵对象防护）、模型自报的断言必须复核（AI 自己立的字据由校验器验收）。",
+  "cases": [
+    {
+      "id": "validate/clean-transaction-accepted",
+      "spec": "§六",
+      "why": "合规事务必须通过。一个把所有提交都拒掉的系统在错误率上永远完美——§一.8",
+      "op": "validate",
+      "input": {
+        "state": { "char:lin-zheng": { "location": "loc:a" }, "obj:black-key": { "holder": "char:zhao-qi" } },
+        "transaction": {
+          "state_changes": [
+            { "object": "char:lin-zheng", "field": "location", "from": "loc:a", "to": "loc:b" },
+            { "object": "obj:black-key", "field": "holder", "from": "char:zhao-qi", "to": "char:lin-zheng" }
+          ]
+        }
+      },
+      "expect": { "ok": true, "codes": [], "warnings": [] }
+    },
+    {
+      "id": "validate/unknown-object-rejected",
+      "spec": "§六",
+      "why": "改一个不存在的对象必须当场拒绝——ID 打错一个字母若能静默通过，就会造出永远没人管的幽灵对象",
+      "op": "validate",
+      "input": {
+        "state": { "char:lin-zheng": { "alive": true } },
+        "transaction": { "state_changes": [{ "object": "char:lin-zhen", "field": "alive", "to": false }] }
+      },
+      "expect": { "ok": false, "codes": ["unknown-object"] }
+    },
+    {
+      "id": "validate/creates-allows-new-object",
+      "spec": "§六",
+      "why": "事务显式声明 creates 后方可新建。不放开则「新建一个决策/待办」根本无法表达——Memory 方言首次实跑因此全军覆没",
+      "op": "validate",
+      "input": {
+        "state": {},
+        "transaction": {
+          "creates": [{ "id": "decision:mvp", "type": "decision" }],
+          "state_changes": [{ "object": "decision:mvp", "field": "status", "to": "proposed" }]
+        }
+      },
+      "expect": { "ok": true, "codes": [] }
+    },
+    {
+      "id": "validate/creates-accepts-bare-id",
+      "spec": "§六",
+      "why": "creates 允许写成裸 ID 数组；带 type 的形式额外让重放后仍知道对象是什么类型",
+      "op": "validate",
+      "input": {
+        "state": {},
+        "transaction": { "creates": ["task:write-spec"], "state_changes": [{ "object": "task:write-spec", "field": "owner", "to": "claude" }] }
+      },
+      "expect": { "ok": true, "codes": [] }
+    },
+    {
+      "id": "validate/creates-does-not-cover-typo",
+      "spec": "§六",
+      "why": "声明了 A 却去改 B，B 照旧拒绝。创建必须是声明出来的意图，不能是打字失误的副作用",
+      "op": "validate",
+      "input": {
+        "state": {},
+        "transaction": {
+          "creates": [{ "id": "decision:mvp", "type": "decision" }],
+          "state_changes": [{ "object": "decision:mvq", "field": "status", "to": "proposed" }]
+        }
+      },
+      "expect": { "ok": false, "codes": ["unknown-object"] }
+    },
+    {
+      "id": "validate/stale-write-is-warning-not-error",
+      "spec": "§六",
+      "why": "声明的前值接不上当前值**不得拦截提交**。运行时本就知道当前值，要求模型精确复述旧值是接口刁难——曾按错误处理，一次运行 10 次全拒、废掉 3 章正文。降级为警告并计入指标才是正解",
+      "op": "validate",
+      "input": {
+        "state": { "char:zhao-qi": { "alive": true } },
+        "transaction": { "state_changes": [{ "object": "char:zhao-qi", "field": "alive", "from": false, "to": true }] }
+      },
+      "expect": { "ok": true, "codes": [], "warnings": ["stale-write"] }
+    },
+    {
+      "id": "validate/absent-from-is-not-stale",
+      "spec": "§六",
+      "why": "压根没声明前值就不该有前值不符。把「没写」当成「写了 undefined」会虚报偏差率",
+      "op": "validate",
+      "input": {
+        "state": { "char:zhao-qi": { "alive": true } },
+        "transaction": { "state_changes": [{ "object": "char:zhao-qi", "field": "alive", "to": false }] }
+      },
+      "expect": { "ok": true, "codes": [], "warnings": [] }
+    },
+    {
+      "id": "validate/append-op-skips-prior-value-check",
+      "spec": "§六",
+      "why": "追加是集合语义，没有「整体前值」可言，不适用前值比对",
+      "op": "validate",
+      "input": {
+        "state": { "char:lin-zheng": { "knows": ["k:a"] } },
+        "transaction": { "state_changes": [{ "object": "char:lin-zheng", "field": "knows", "op": "append", "from": "对不上的东西", "to": "k:b" }] }
+      },
+      "expect": { "ok": true, "codes": [], "warnings": [] }
+    },
+    {
+      "id": "validate/missing-object-or-field-is-schema-error",
+      "spec": "§六",
+      "why": "缺 object 或 field 的变更是结构错误，且到此为止——不再追加报未知对象，一处毛病只报一次",
+      "op": "validate",
+      "input": {
+        "state": { "char:lin-zheng": { "alive": true } },
+        "transaction": { "state_changes": [{ "object": "char:nobody", "to": false }] }
+      },
+      "expect": { "ok": false, "codes": ["schema"] }
+    },
+    {
+      "id": "validate/non-object-transaction-rejected",
+      "spec": "§六",
+      "why": "事务本身不是对象时必须拒绝，且不得抛异常——协议的错误必须是可回传给模型的判定，不是崩溃",
+      "op": "validate",
+      "input": { "state": {}, "transaction": "这不是一个事务" },
+      "expect": { "ok": false, "codes": ["schema"] }
+    },
+    {
+      "id": "validate/state-changes-must-be-array",
+      "spec": "§六",
+      "why": "state_changes 不是数组时同样是可回传的判定，不是崩溃",
+      "op": "validate",
+      "input": { "state": {}, "transaction": { "state_changes": "不是数组" } },
+      "expect": { "ok": false, "codes": ["schema"] }
+    },
+    {
+      "id": "validate/constraint-violation-rejected",
+      "spec": "§六",
+      "why": "约束是数据驱动的硬边界，折叠后不成立即拒绝",
+      "op": "validate",
+      "input": {
+        "state": { "obj:black-key": { "used": false } },
+        "constraints": [{ "id": "fz:gate-closed", "rule": "空间门不得开启", "check": { "type": "equals", "object": "obj:black-key", "field": "used", "value": false } }],
+        "transaction": { "state_changes": [{ "object": "obj:black-key", "field": "used", "to": true }] }
+      },
+      "expect": { "ok": false, "codes": ["constraint"] }
+    },
+    {
+      "id": "validate/constraint-checked-against-state-after",
+      "spec": "§六",
+      "why": "约束判的是折叠**之后**的状态。判在折叠前等于没判",
+      "op": "validate",
+      "input": {
+        "state": { "obj:black-key": { "used": true } },
+        "constraints": [{ "id": "fz:gate-closed", "rule": "空间门不得开启", "check": { "type": "equals", "object": "obj:black-key", "field": "used", "value": false } }],
+        "transaction": { "state_changes": [{ "object": "obj:black-key", "field": "used", "to": false }] }
+      },
+      "expect": { "ok": true, "codes": [] }
+    },
+    {
+      "id": "validate/failed-assertion-rejected",
+      "spec": "§六",
+      "why": "AI 自己立的字据由校验器验收。写了做不到必须判失败，否则 assertions 只是一句漂亮话",
+      "op": "validate",
+      "input": {
+        "state": { "char:zhao-qi": { "alive": true } },
+        "assertions": { "zhao-qi-alive": { "type": "equals", "object": "char:zhao-qi", "field": "alive", "value": true } },
+        "transaction": { "state_changes": [{ "object": "char:zhao-qi", "field": "alive", "to": false }], "assertions": ["zhao-qi-alive"] }
+      },
+      "expect": { "ok": false, "codes": ["assertion-failed"] }
+    },
+    {
+      "id": "validate/assertion-evaluated-on-state-after",
+      "spec": "§六",
+      "why": "断言同样判折叠后的状态：事务把它修复了就该通过",
+      "op": "validate",
+      "input": {
+        "state": { "char:zhao-qi": { "alive": false } },
+        "assertions": { "zhao-qi-alive": { "type": "equals", "object": "char:zhao-qi", "field": "alive", "value": true } },
+        "transaction": { "state_changes": [{ "object": "char:zhao-qi", "field": "alive", "to": true }], "assertions": ["zhao-qi-alive"] }
+      },
+      "expect": { "ok": true, "codes": [] }
+    },
+    {
+      "id": "validate/unknown-assertion-is-warning",
+      "spec": "§六",
+      "why": "未登记的断言无法复核，报警告但不拦截——协议不预设任何具体断言，宿主没登记不是模型的错。但也不能沉默：不可复核这件事本身要被看见",
+      "op": "validate",
+      "input": {
+        "state": { "char:zhao-qi": { "alive": true } },
+        "transaction": { "state_changes": [], "assertions": ["从未登记过的断言"] }
+      },
+      "expect": { "ok": true, "codes": [], "warnings": ["unknown-assertion"] }
+    },
+    {
+      "id": "validate/empty-transaction-accepted",
+      "spec": "§六",
+      "why": "空事务合法：没有状态变化不是错误",
+      "op": "validate",
+      "input": { "state": { "char:lin-zheng": { "alive": true } }, "transaction": { "state_changes": [] } },
+      "expect": { "ok": true, "codes": [], "warnings": [] }
+    }
+  ]
+}

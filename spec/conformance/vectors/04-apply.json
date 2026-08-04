@@ -1,0 +1,144 @@
+{
+  "title": "四 · 折叠与证据链",
+  "rationale": "协议 §四之二。落地不只是改状态，还要逐条记下「谁在什么时候把它从什么改成了什么」。关键是 from 记的必须是**落地那一刻的真实前值**，而不是模型声称的前值——模型说错了另记 claimed_from。没有这条区分，「这个值凭什么是这个值」就答不了，累计的模型记忆偏差率也无从统计。",
+  "cases": [
+    {
+      "id": "fold/set-replaces",
+      "spec": "§四之二",
+      "why": "缺省语义是整体替换",
+      "op": "fold",
+      "input": { "state": { "char:a": { "loc": "x" } }, "changes": [{ "object": "char:a", "field": "loc", "to": "y" }] },
+      "expect": { "state": { "char:a": { "loc": "y" } } }
+    },
+    {
+      "id": "fold/append-is-set-semantics",
+      "spec": "§四之二",
+      "why": "追加按集合语义：已在其中则不重复添加。知识、标签这类字段重复追加会让计数失真",
+      "op": "fold",
+      "input": { "state": { "char:a": { "knows": ["k:1"] } }, "changes": [{ "object": "char:a", "field": "knows", "op": "append", "to": "k:2" }, { "object": "char:a", "field": "knows", "op": "append", "to": "k:1" }] },
+      "expect": { "state": { "char:a": { "knows": ["k:1", "k:2"] } } }
+    },
+    {
+      "id": "fold/append-initializes-array",
+      "spec": "§四之二",
+      "why": "字段还不是数组时，追加要先把它建成数组",
+      "op": "fold",
+      "input": { "state": { "char:a": {} }, "changes": [{ "object": "char:a", "field": "knows", "op": "append", "to": "k:1" }] },
+      "expect": { "state": { "char:a": { "knows": ["k:1"] } } }
+    },
+    {
+      "id": "fold/skips-malformed-change",
+      "spec": "§四之二",
+      "why": "缺 object 或 field 的变更不得落地，更不得造出一个名为 undefined 的对象",
+      "op": "fold",
+      "input": { "state": { "char:a": { "loc": "x" } }, "changes": [{ "field": "loc", "to": "y" }, { "object": "char:a", "to": "z" }] },
+      "expect": { "state": { "char:a": { "loc": "x" } } }
+    },
+    {
+      "id": "apply/journal-records-true-prior-value",
+      "spec": "§四之二",
+      "why": "**协议的核心承诺**：from 记落地那一刻的真实前值，模型说错了另记 claimed_from。两者混为一谈，证据链就成了模型的一面之词",
+      "op": "apply",
+      "input": {
+        "state": { "char:a": { "loc": "真实前值" } },
+        "by": "设计-张",
+        "at": "2026-08-04T09:12:00Z",
+        "transaction": { "transaction_id": "tx-1", "state_changes": [{ "object": "char:a", "field": "loc", "from": "模型以为的前值", "to": "新值" }] }
+      },
+      "expect": {
+        "state": { "char:a": { "loc": "新值" } },
+        "journal": [{ "event": "state_change", "seq": 1, "object": "char:a", "field": "loc", "from": "真实前值", "claimed_from": "模型以为的前值", "to": "新值", "kind": "observed", "tx": "tx-1", "by": "设计-张", "at": "2026-08-04T09:12:00Z" }]
+      }
+    },
+    {
+      "id": "apply/no-claimed-from-when-model-was-right",
+      "spec": "§四之二",
+      "why": "模型说对了就不留 claimed_from——偏差率统计的是分歧，不是全部",
+      "op": "apply",
+      "input": {
+        "state": { "char:a": { "loc": "x" } },
+        "by": "tester",
+        "at": null,
+        "transaction": { "transaction_id": "tx-1", "state_changes": [{ "object": "char:a", "field": "loc", "from": "x", "to": "y" }] }
+      },
+      "expect": {
+        "journal": [{ "event": "state_change", "seq": 1, "object": "char:a", "field": "loc", "from": "x", "to": "y", "kind": "observed", "tx": "tx-1", "by": "tester", "at": null }]
+      }
+    },
+    {
+      "id": "apply/seq-continues-from-history",
+      "spec": "§四之二",
+      "why": "seq 是单调递增水位，必须接着已有历史往下编，不能从 1 重来——重号会让「谁先谁后」失效",
+      "op": "apply",
+      "input": {
+        "state": { "char:a": { "loc": "x" } },
+        "history": [{ "event": "state_change", "seq": 7, "object": "char:a", "field": "loc", "to": "x" }],
+        "by": "tester",
+        "at": null,
+        "transaction": { "transaction_id": "tx-2", "state_changes": [{ "object": "char:a", "field": "loc", "to": "y" }] }
+      },
+      "expect": {
+        "journal": [{ "event": "state_change", "seq": 8, "object": "char:a", "field": "loc", "from": "x", "to": "y", "kind": "observed", "tx": "tx-2", "by": "tester", "at": null }]
+      }
+    },
+    {
+      "id": "apply/creation-recorded-as-type-change",
+      "spec": "§六",
+      "why": "新建走同一条落地路径，记成一条 _type 变更即可——重放就能重建类型，不另开机制。创建记录排在字段变更之前",
+      "op": "apply",
+      "input": {
+        "state": {},
+        "by": "tester",
+        "at": null,
+        "transaction": {
+          "transaction_id": "tx-3",
+          "creates": [{ "id": "decision:mvp", "type": "decision" }],
+          "state_changes": [{ "object": "decision:mvp", "field": "status", "to": "proposed" }]
+        }
+      },
+      "expect": {
+        "state": { "decision:mvp": { "_type": "decision", "status": "proposed" } },
+        "journal": [
+          { "event": "state_change", "seq": 1, "object": "decision:mvp", "field": "_type", "to": "decision", "kind": "observed", "tx": "tx-3", "by": "tester", "at": null },
+          { "event": "state_change", "seq": 2, "object": "decision:mvp", "field": "status", "to": "proposed", "kind": "observed", "tx": "tx-3", "by": "tester", "at": null }
+        ]
+      }
+    },
+    {
+      "id": "apply/kind-and-basis-recorded",
+      "spec": "§四之二",
+      "why": "kind 区分 observed/derived/asserted；derived 的依据字段记进 basis。撤回级联要沿这条边回溯，位置先留出来",
+      "op": "apply",
+      "input": {
+        "state": { "row:1": { "total": 0 } },
+        "by": "tester",
+        "at": null,
+        "transaction": {
+          "transaction_id": "tx-4",
+          "kind": "derived",
+          "depends_on": ["row:1.qty", "row:1.price"],
+          "state_changes": [{ "object": "row:1", "field": "total", "to": 100 }]
+        }
+      },
+      "expect": {
+        "journal": [{ "event": "state_change", "seq": 1, "object": "row:1", "field": "total", "from": 0, "to": 100, "kind": "derived", "basis": ["row:1.qty", "row:1.price"], "tx": "tx-4", "by": "tester", "at": null }]
+      }
+    },
+    {
+      "id": "apply/append-op-preserved-in-journal",
+      "spec": "§四之二",
+      "why": "追加语义必须记进日志，否则重放时会退化成整体替换，历史就重放不出当前状态",
+      "op": "apply",
+      "input": {
+        "state": { "char:a": { "knows": ["k:1"] } },
+        "by": "tester",
+        "at": null,
+        "transaction": { "transaction_id": "tx-5", "state_changes": [{ "object": "char:a", "field": "knows", "op": "append", "to": "k:2" }] }
+      },
+      "expect": {
+        "state": { "char:a": { "knows": ["k:1", "k:2"] } },
+        "journal": [{ "event": "state_change", "seq": 1, "object": "char:a", "field": "knows", "op": "append", "from": ["k:1"], "to": "k:2", "kind": "observed", "tx": "tx-5", "by": "tester", "at": null }]
+      }
+    }
+  ]
+}

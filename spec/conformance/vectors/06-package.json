@@ -1,0 +1,113 @@
+{
+  "title": "六 · 包与提交（full 级）",
+  "level": "full",
+  "rationale": "协议 §三与 §四之二。前五章测的是内存里的语义，这一章测它落到盘上还成不成立——这是两回事。§四之二 的三条硬规矩全在这里验收：只追加不覆写、不通过零字节写入、写入时水位对不上则拒绝。只做内存语义的实现可以如实回 unsupported，声明 core 级合规；但不得据此声称 full 级。",
+  "cases": [
+    {
+      "id": "package/state-is-replayed-from-disk",
+      "spec": "§四之二",
+      "why": "落盘层面同样成立：objects.jsonl 是出生证明，当前状态由它折叠 history 得出。把当前值写回 objects 的实现会在这里露馅",
+      "op": "load",
+      "input": {
+        "objects": [{ "id": "char:a", "type": "character", "loc": "起点" }],
+        "history": [{ "event": "state_change", "seq": 1, "object": "char:a", "field": "loc", "from": "起点", "to": "终点" }]
+      },
+      "expect": { "state": { "char:a": { "_type": "character", "loc": "终点" } }, "ids": ["char:a"], "seq": 1 }
+    },
+    {
+      "id": "package/empty-history-yields-birth-state",
+      "spec": "§三",
+      "why": "最小合法包：只有出生证明、履历为空时，当前状态就是出生状态，水位为 0",
+      "op": "load",
+      "input": { "objects": [{ "id": "task:x", "type": "task", "owner": "claude" }], "history": [] },
+      "expect": { "state": { "task:x": { "_type": "task", "owner": "claude" } }, "seq": 0 }
+    },
+    {
+      "id": "package/commit-appends-and-leaves-objects-untouched",
+      "spec": "§四之二 硬规矩一",
+      "why": "**只追加，不覆写**。一旦允许把当前值写回 objects，历史就降级成一份说明文档，对不上账时无从追责",
+      "op": "commit",
+      "input": {
+        "objects": [{ "id": "char:a", "type": "character", "loc": "起点" }],
+        "by": "tester",
+        "at": "2026-08-04T00:00:00Z",
+        "transaction": { "transaction_id": "tx-1", "state_changes": [{ "object": "char:a", "field": "loc", "to": "终点" }] }
+      },
+      "expect": { "ok": true, "seq": 1, "objectsUntouched": true, "state": { "char:a": { "_type": "character", "loc": "终点" } } }
+    },
+    {
+      "id": "package/rejected-transaction-writes-nothing",
+      "spec": "§四之二 硬规矩二",
+      "why": "**不通过就不落盘**——零字节写入，违规理由原样返回供重写。半落地的事务会让状态和历史各说各话",
+      "op": "commit",
+      "input": {
+        "objects": [{ "id": "char:a", "type": "character", "loc": "起点" }],
+        "by": "tester",
+        "at": "2026-08-04T00:00:00Z",
+        "transaction": { "transaction_id": "tx-bad", "state_changes": [{ "object": "char:不存在", "field": "loc", "to": "终点" }] }
+      },
+      "expect": { "ok": false, "codes": ["unknown-object"], "seq": 0, "objectsUntouched": true, "state": { "char:a": { "_type": "character", "loc": "起点" } } }
+    },
+    {
+      "id": "package/constraint-violation-writes-nothing",
+      "spec": "§四之二 硬规矩二",
+      "why": "约束不过同样零字节写入。包里的 constraints.json 必须在提交路径上真的生效，不能只在内存 API 里生效",
+      "op": "commit",
+      "input": {
+        "objects": [{ "id": "obj:key", "type": "object", "used": false }],
+        "constraints": [{ "id": "c-gate", "rule": "空间门不得开启", "check": { "type": "equals", "object": "obj:key", "field": "used", "value": false } }],
+        "by": "tester",
+        "at": "2026-08-04T00:00:00Z",
+        "transaction": { "transaction_id": "tx-bad", "state_changes": [{ "object": "obj:key", "field": "used", "to": true }] }
+      },
+      "expect": { "ok": false, "codes": ["constraint"], "seq": 0 }
+    },
+    {
+      "id": "package/stale-watermark-is-rejected",
+      "spec": "§四之二 硬规矩三",
+      "why": "**读时是第 N 号、写时已是第 M 号就拒绝**（首个写者胜）。两个 agent 同时改一个包时，后者必须携最新状态重来，而不是把前者的改动覆盖掉",
+      "op": "commit",
+      "input": {
+        "objects": [{ "id": "char:a", "type": "character", "loc": "起点" }],
+        "history": [{ "event": "state_change", "seq": 1, "object": "char:a", "field": "loc", "to": "中途" }],
+        "expectSeq": 0,
+        "by": "tester",
+        "at": "2026-08-04T00:00:00Z",
+        "transaction": { "transaction_id": "tx-late", "state_changes": [{ "object": "char:a", "field": "loc", "to": "终点" }] }
+      },
+      "expect": { "ok": false, "codes": ["write-conflict"], "seq": 1 }
+    },
+    {
+      "id": "package/matching-watermark-proceeds",
+      "spec": "§四之二 硬规矩三",
+      "why": "水位对得上就照常提交——冲突检测不能严到把正常提交也拦下",
+      "op": "commit",
+      "input": {
+        "objects": [{ "id": "char:a", "type": "character", "loc": "起点" }],
+        "history": [{ "event": "state_change", "seq": 1, "object": "char:a", "field": "loc", "to": "中途" }],
+        "expectSeq": 1,
+        "by": "tester",
+        "at": "2026-08-04T00:00:00Z",
+        "transaction": { "transaction_id": "tx-ok", "state_changes": [{ "object": "char:a", "field": "loc", "to": "终点" }] }
+      },
+      "expect": { "ok": true, "seq": 2, "state": { "char:a": { "_type": "character", "loc": "终点" } } }
+    },
+    {
+      "id": "package/commit-can-create-declared-object",
+      "spec": "§六",
+      "why": "事务新建的对象只活在履历里，出生证明上没有它。装载后必须能把它连同类型一起重建出来",
+      "op": "commit",
+      "input": {
+        "objects": [],
+        "by": "tester",
+        "at": "2026-08-04T00:00:00Z",
+        "transaction": {
+          "transaction_id": "tx-new",
+          "creates": [{ "id": "decision:mvp", "type": "decision" }],
+          "state_changes": [{ "object": "decision:mvp", "field": "status", "to": "decided" }]
+        }
+      },
+      "expect": { "ok": true, "objectsUntouched": true, "state": { "decision:mvp": { "_type": "decision", "status": "decided" } } }
+    }
+  ]
+}

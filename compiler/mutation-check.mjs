@@ -127,7 +127,19 @@ function selftestPasses() {
   return true
 }
 
-console.log('# 变异检查 —— 故意打坏承诺，看自测抓不抓得到\n')
+/**
+ * 跑一致性向量。与自测的区别是本质性的：
+ * 自测是**这份实现**给自己立的规矩，向量是**协议**对所有实现的要求。
+ * 一条变异只被自测抓到、向量放过，说明那条承诺协议根本没约束住——
+ * 换个人照着规范写一份实现，可以合法地把它做丢。那是规范的洞，不是实现的洞。
+ */
+function conformancePasses() {
+  try { execFileSync(process.execPath, [join(LAB, 'spec', 'conformance', 'run.mjs')], { stdio: 'pipe' }) }
+  catch { return false }
+  return true
+}
+
+console.log('# 变异检查 —— 故意打坏承诺，看自测与一致性向量抓不抓得到\n')
 
 // 先确认未变异时是全绿的，否则后面的结论全部无意义
 if (!selftestPasses()) {
@@ -135,9 +147,14 @@ if (!selftestPasses()) {
   rmSync(LAB, { recursive: true, force: true })
   process.exit(1)
 }
-console.log('基线：未变异副本自测通过 ✓\n')
+if (!conformancePasses()) {
+  console.error('✗ 未变异的副本跑一致性向量就没过——先修好再来做变异检查')
+  rmSync(LAB, { recursive: true, force: true })
+  process.exit(1)
+}
+console.log('基线：未变异副本自测通过 ✓　一致性向量通过 ✓\n')
 
-let killed = 0, survived = 0, broken = 0
+let killed = 0, survived = 0, broken = 0, selftestOnly = 0
 for (const [i, m] of MUTATIONS.entries()) {
   const path = join(LAB, m.file)
   const src = pristine.get(m.file)
@@ -152,11 +169,22 @@ for (const [i, m] of MUTATIONS.entries()) {
   }
 
   writeFileSync(path, src.replace(m.find, m.to), 'utf8')
-  const stillPasses = selftestPasses()
+  const caughtBySelftest = !selftestPasses()
+  const caughtByVectors = !conformancePasses()
   writeFileSync(path, src, 'utf8') // 立刻还原，避免变异叠加
 
-  if (stillPasses) { survived++; console.log(`  ✗ SURVIVED  #${i + 1} ${m.claim}\n      打坏了也没测试报警——这条承诺其实没被验证`) }
-  else { killed++; console.log(`  ✓ KILLED    #${i + 1} ${m.claim}`) }
+  if (!caughtBySelftest && !caughtByVectors) {
+    survived++
+    console.log(`  ✗ SURVIVED  #${i + 1} ${m.claim}\n      打坏了也没人报警——这条承诺其实没被验证`)
+    continue
+  }
+  killed++
+  const tag = caughtBySelftest && caughtByVectors ? '自测+向量' : caughtByVectors ? '仅向量' : '仅自测'
+  console.log(`  ✓ KILLED    #${i + 1} ${m.claim}　[${tag}]`)
+  if (!caughtByVectors) {
+    selftestOnly++
+    console.log('      ⚠ 一致性向量放过了它：协议没把这条钉死，别人照规范另写一份可以合法做丢')
+  }
 }
 
 rmSync(LAB, { recursive: true, force: true })
@@ -167,3 +195,8 @@ if (survived || broken) {
   process.exit(1)
 }
 console.log('全部被抓出——自测确实守着这些承诺，不是摆设。')
+if (selftestOnly) {
+  console.log(`\n其中 ${selftestOnly} 条只有自测抓到、一致性向量放过。这不是实现的毛病，`)
+  console.log('是**协议的覆盖缺口**：这些承诺目前只约束得了这一份实现，约束不了第二份。')
+  console.log('补法要么给 spec/conformance/vectors/ 加向量，要么承认它本就属于实现自由。')
+}

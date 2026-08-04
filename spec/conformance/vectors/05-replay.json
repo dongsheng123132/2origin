@@ -1,0 +1,101 @@
+{
+  "title": "五 · 重放（append-only 的兑现）",
+  "rationale": "协议 §四之二：graph/objects.jsonl 是出生证明，provenance/history.jsonl 是履历，当前状态 = 出生状态重放全部变更。这一章测的是这句话是否真的成立。一旦某个实现图省事把当前值写回 objects，历史就降级成一份说明文档——对不上账时无从判断是谁错了。重放能力是 append-only 唯一的验收方式。",
+  "cases": [
+    {
+      "id": "replay/state-is-derived-not-stored",
+      "spec": "§四之二",
+      "why": "当前状态由出生状态折叠全部历史得出，不是从某处读出来的",
+      "op": "replay",
+      "input": {
+        "objects": [{ "id": "char:a", "type": "character", "loc": "起点" }],
+        "history": [
+          { "event": "state_change", "seq": 1, "object": "char:a", "field": "loc", "from": "起点", "to": "中途" },
+          { "event": "state_change", "seq": 2, "object": "char:a", "field": "loc", "from": "中途", "to": "终点" }
+        ]
+      },
+      "expect": { "state": { "char:a": { "_type": "character", "loc": "终点" } } }
+    },
+    {
+      "id": "replay/objects-carry-birth-state-only",
+      "spec": "§四之二",
+      "why": "没有任何历史时，当前状态就等于出生状态；type 归一成 _type 字段",
+      "op": "replay",
+      "input": { "objects": [{ "id": "task:x", "type": "task", "owner": "claude", "status": "open" }], "history": [] },
+      "expect": { "state": { "task:x": { "_type": "task", "owner": "claude", "status": "open" } } }
+    },
+    {
+      "id": "replay/until-seq-rewinds",
+      "spec": "§四之二",
+      "why": "能重放到任一水位，才谈得上「回到出事之前看一眼」",
+      "op": "replay",
+      "input": {
+        "objects": [{ "id": "char:a", "loc": "起点" }],
+        "history": [
+          { "event": "state_change", "seq": 1, "object": "char:a", "field": "loc", "to": "中途" },
+          { "event": "state_change", "seq": 2, "object": "char:a", "field": "loc", "to": "终点" }
+        ],
+        "until": 1
+      },
+      "expect": { "state": { "char:a": { "loc": "中途" } } }
+    },
+    {
+      "id": "replay/until-transaction-id",
+      "spec": "§四之二",
+      "why": "也能按事务重放到「某次提交刚落地」那一刻——排查时找的往往是事务，不是序号",
+      "op": "replay",
+      "input": {
+        "objects": [{ "id": "char:a", "loc": "起点" }],
+        "history": [
+          { "event": "state_change", "seq": 1, "object": "char:a", "field": "loc", "to": "中途", "tx": "tx-1" },
+          { "event": "state_change", "seq": 2, "object": "char:a", "field": "loc", "to": "终点", "tx": "tx-2" }
+        ],
+        "until": "tx-1"
+      },
+      "expect": { "state": { "char:a": { "loc": "中途" } } }
+    },
+    {
+      "id": "replay/append-ops-replayed-as-append",
+      "spec": "§四之二",
+      "why": "追加必须按追加重放。当成替换会把一路积累的集合压成最后一个元素——历史就重放不出当前状态了",
+      "op": "replay",
+      "input": {
+        "objects": [{ "id": "char:a", "knows": [] }],
+        "history": [
+          { "event": "state_change", "seq": 1, "object": "char:a", "field": "knows", "op": "append", "to": "k:1" },
+          { "event": "state_change", "seq": 2, "object": "char:a", "field": "knows", "op": "append", "to": "k:2" }
+        ]
+      },
+      "expect": { "state": { "char:a": { "knows": ["k:1", "k:2"] } } }
+    },
+    {
+      "id": "replay/ignores-non-state-events",
+      "spec": "§四之二",
+      "why": "履历里还有导入、投影登记等别的事件，重放只认状态变更，不得被其他事件带偏",
+      "op": "replay",
+      "input": {
+        "objects": [{ "id": "char:a", "loc": "起点" }],
+        "history": [
+          { "event": "imported", "seq": 1, "source": "sales.xlsx" },
+          { "event": "state_change", "seq": 2, "object": "char:a", "field": "loc", "to": "终点" },
+          { "event": "projection_registered", "seq": 3, "engine": "flint" }
+        ]
+      },
+      "expect": { "state": { "char:a": { "loc": "终点" } } }
+    },
+    {
+      "id": "replay/creation-in-history-rebuilds-object",
+      "spec": "§六",
+      "why": "事务新建的对象只存在于履历里（出生证明上没有它）。重放必须能把它连同类型一起重建出来，否则「新建」这件事在协议里就不闭环",
+      "op": "replay",
+      "input": {
+        "objects": [],
+        "history": [
+          { "event": "state_change", "seq": 1, "object": "decision:mvp", "field": "_type", "to": "decision" },
+          { "event": "state_change", "seq": 2, "object": "decision:mvp", "field": "status", "to": "decided" }
+        ]
+      },
+      "expect": { "state": { "decision:mvp": { "_type": "decision", "status": "decided" } } }
+    }
+  ]
+}

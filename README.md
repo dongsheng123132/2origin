@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
 [![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
+[![conformance](https://img.shields.io/badge/conformance-68%2F68%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
 
@@ -129,7 +130,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ```text
 本象协议/
 ├── docs/        # 创始文档集（本轮产出）
-├── spec/        # JSON Schema 草稿 + 示例 .origin 包
+├── spec/        # JSON Schema + 示例 .origin 包 + **一致性测试集**（68 条语言无关向量）
 ├── compiler/    # 双向编译器 + 证据链 + 落盘 + `origin` CLI（可运行，81 项跨域自测）
 ├── adapters/    # 领域方言
 │   ├── memory/  #   项目状态：MCP Server（零依赖）+ 回填工具
@@ -143,7 +144,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ## 快速上手
 
 ```bash
-npm run verify   # 自测 81 + CAD 44 + MCP 端到端 18 + 变异检查 13/13
+npm run verify   # 自测 81 + CAD 44 + MCP 端到端 18 + 一致性 68 + 变异检查 13/13
 
 
 P=spec/examples/sales-2026.origin
@@ -176,8 +177,28 @@ node compiler/cli.mjs status project.origin        # 本仓库自己的世界状
 claude mcp add -s local benxiang -- node <绝对路径>/adapters/memory/mcp-server.mjs <包路径>
 ```
 
-`compiler/mutation-check.mjs` 是验证里最关键的一环：它故意打坏每一条协议承诺，看自测抓不抓得到。
-抓不到的地方就是那条承诺其实没人守——首次运行即查出「正文与状态对照门禁」零覆盖。
+### 凭什么说这是「协议」而不是「一个库」
+
+一份实现自己跑通自己的测试，证明不了协议存在。分界线在
+[一致性测试集](spec/conformance/README.md)：**68 条测试向量是数据不是代码**，
+不依赖任何宿主语言。任何实现只要写一个几十行的适配器（stdin 收 case、stdout 出结果），
+就能当场自证合规。
+
+```bash
+npm run test:conformance                       # JavaScript 参考实现：68/68（core + full）
+node spec/conformance/run.mjs --level core \
+  --adapter "python spec/conformance/implementations/python/adapter.py"   # Python 第二实现：60/60
+```
+
+[Python 第二实现](spec/conformance/implementations/python/benxiang.py) 约 250 行、零依赖，
+跑同一套向量全绿——证明这套语义在另一门语言里独立成立。诚实的边界：两份实现出自同一作者，
+所以它证明的是「向量确实是语言中立的契约」，**不**证明「任何人只读规范就能写对」。
+
+`compiler/mutation-check.mjs` 是验证里最关键的一环：它故意打坏每一条协议承诺，
+同时跑自测与一致性向量，看**谁**抓得到。只被自测抓到的，是**协议的覆盖缺口**——
+那条承诺只约束得了这一份实现，换个人照规范另写一份可以合法做丢。
+当前 13 条变异全部被抓出，其中 2 条属于覆盖缺口，已列在
+[conformance/README §五](spec/conformance/README.md)，未掩盖。**协议只保证向量钉住的部分。**
 
 ## 三条候选 MVP（待定）
 
