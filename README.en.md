@@ -12,8 +12,8 @@
 
 **Benxiang** (pronounced *bun-SHYAHNG*): Ben (本) = origin, Xiang (象) = archetypal image. From the *Book of Changes* — «the sage establishes images to exhaust meaning» — and the *Tao Te Ching* — «the great image has no form», and therefore can be projected into any form. The technical core is called **Origin IR**.
 
-**Status: v0.1 — protocol draft + working reference implementation + two-tier experimental data**
-([reference implementation](compiler/) · [experiment log](benchmark/shadowbench-w/results-log.md), in Chinese)
+**Status: v0.1 — protocol draft + working reference implementation + two dialects + two-tier experimental data**
+([reference implementation](compiler/) · [CAD dialect](adapters/cad/) · [Memory dialect](adapters/memory/) · [experiment log](benchmark/shadowbench-w/results-log.md), in Chinese)
 
 ---
 
@@ -69,10 +69,32 @@ PDFs, images, Markdown and EPUB are **not source files** — they are **projecti
 ## Try it
 
 ```bash
-node compiler/selftest.mjs     # 27 checks across two unrelated domains
+npm run verify   # self-test 81 + CAD 20 + MCP end-to-end 18 + mutation 13/13
 ```
 
-One full round trip:
+No build step, no dependencies. `mutation-check` is the important one: it deliberately
+breaks each promise the protocol makes and checks that the test suite notices. Anything it
+fails to kill is a promise nobody was actually enforcing — its first run found exactly that
+(zero coverage on the prose-vs-state gate).
+
+A `.origin` package is inspectable from the command line:
+
+```bash
+P=spec/examples/sales-2026.origin
+node compiler/cli.mjs status   $P                        # what is in this package
+node compiler/cli.mjs why      $P revenue-trend.chart    # why does this value hold this value
+node compiler/cli.mjs diagnose $P                        # constraints, dangling refs, drift
+
+S=$(node compiler/cli.mjs seq $P -q)                     # watermark
+node compiler/cli.mjs commit $P tx.json --expect $S      # the only write path
+```
+
+`commit` writes **nothing at all** if validation fails, and returns the violations on stdout
+for the model to rewrite against. On success it only *appends* to `provenance/history.jsonl` —
+`graph/objects.jsonl` is a birth certificate, never overwritten. Current state is the replay of
+both, which is why every field can answer "why". Add `--json` to use it as a local API.
+
+One full round trip in code:
 
 ```js
 import { loadOrigin, compileContext, buildPrompt,
@@ -94,7 +116,7 @@ This is the line between *a protocol* and *a program that happens to work once*.
 
 In the benchmark arm, constraints were three hard-coded types — `field_must_stay`, `knows_must_not_gain`, `hook_must_stay`. The names give it away: `knows` and `hook` are narrative concepts. The sales-data example needed something else entirely (`revenue must_not_be_negative`). If every domain writes its own validator, that is not a protocol — it is several programs that resemble one another.
 
-They collapse into six general predicates — `equals`, `not_equals`, `contains`, `not_contains`, `range`, `unchanged` — and all three narrative types are expressible **without a line of new code**:
+They collapse into ten general predicates — `equals`, `not_equals`, `contains`, `not_contains`, `range`, `in`, `exists`, `unique`, `count`, `unchanged` — and all three narrative types are expressible **without a line of new code**:
 
 | Domain-specific type | General predicate |
 |---|---|
@@ -104,6 +126,20 @@ They collapse into six general predicates — `equals`, `not_equals`, `contains`
 | revenue non-negative | `{ type: 'range', object, field, min: 0 }` |
 
 `selftest.mjs` runs **the same code, unmodified**, over a sales dataset (no characters, no plot, no foreshadowing) and a narrative world. That test *is* the claim.
+
+Two of the predicates are **aggregate** — `unique` and `count` judge a *set* of objects rather than one field, and that turned out to be where real defects live. `count` with `equals_count_of` is the general shape of "the same fact is stated in two places and they must agree": a door schedule listing 5 windows while the floor plan draws 4, a table of contents that outnumbers the chapters, a plan with more line items than todos. Same predicate, three domains.
+
+Two dialects are wired up and tested:
+
+```bash
+# CAD drawing consistency (adapters/cad/)
+node adapters/cad/import.mjs adapters/cad/fixtures/A-101.dxf /tmp/A-101.origin
+node compiler/cli.mjs diagnose /tmp/A-101.origin
+#   → catches: geometry left on layer 0 / duplicate tag C2 / 4 windows drawn, only 3 tagged
+
+# Project state as an MCP server (adapters/memory/)
+claude mcp add -s local benxiang -- node <abs-path>/adapters/memory/mcp-server.mjs <package>
+```
 
 Constraints that carry only prose and no machine check are reported as `unenforceable` warnings rather than silently passing — silence would let "we have constraints" hide "nobody checks them".
 
