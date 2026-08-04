@@ -1,5 +1,11 @@
 # Benxiang · 本象协议
 
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
+[![verify](https://img.shields.io/badge/verify-81%20%2B%2020%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
+[![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
+[![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
+
 > **一源万影：保存本象，按需投影。**
 > Save the origin, project on demand.
 >

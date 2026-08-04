@@ -1,5 +1,11 @@
 # Benxiang · 本象协议
 
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
+[![verify](https://img.shields.io/badge/verify-81%20%2B%2020%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#try-it)
+[![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
+[![中文](https://img.shields.io/badge/docs-%E4%B8%AD%E6%96%87-lightgrey.svg)](README.md)
+
 > **Save the origin, project on demand.** 一源万影：保存本象，按需投影。
 >
 > 「立象以尽意」——《易传·系辞》 · *Establish the image to exhaust the meaning.*
