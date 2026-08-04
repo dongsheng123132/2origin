@@ -161,13 +161,45 @@ Constraints that carry only prose and no machine check are reported as `unenforc
 
 ---
 
+## Why this is a protocol and not just a library
+
+One implementation passing its own tests proves nothing about a protocol. The line is drawn by the
+[conformance suite](spec/conformance/README.en.md): **68 test vectors that are data, not code.**
+They depend on no host language. Any implementation that writes an adapter of a few dozen lines —
+read cases on stdin, write results on stdout — can certify itself on the spot.
+
+```bash
+npm run test:conformance                       # JavaScript reference: 68/68 (core + full)
+node spec/conformance/run.mjs --level core \
+  --adapter "python spec/conformance/implementations/python/adapter.py"   # second impl: 60/60
+```
+
+The [Python second implementation](spec/conformance/implementations/python/benxiang.py) is about
+250 lines with zero dependencies and passes the same vectors. The honest boundary: both
+implementations were written by the same author, so what it demonstrates is that **the vectors are
+genuinely a language-neutral contract** — it does **not** demonstrate that anyone can read the spec
+and get it right.
+
+`compiler/mutation-check.mjs` is the part that matters most. It deliberately breaks each promise the
+protocol makes, one at a time, and runs both the self-tests and the conformance vectors against every
+mutant to see **which of the two catches it**. A mutant caught only by the self-tests marks a
+**coverage gap in the protocol** — that promise constrains this one implementation and nothing else.
+All 13 mutants are currently caught; 2 of them are coverage gaps, listed openly in
+[conformance/README §5](spec/conformance/README.en.md). **The protocol guarantees exactly what the
+vectors pin down, and nothing more.**
+
+> **A third-party implementation is the most useful contribution this project can receive** —
+> not because it adds a feature, but because it is the only thing that can falsify the claim above.
+
+---
+
 ## Honest boundaries
 
 What exists: a protocol draft, a working reference implementation with cross-domain tests, and two tiers of controlled experimental data with a permutation test.
 
 **What does not exist yet:**
 
-1. **Multi-run cross-model validation** — the second model (deepseek-v4-flash) has been run **once**, as a smoke test. The result is unambiguous (zero errors, 8/8 state fields) but a single run is not a statistical claim. Treat the qwen numbers as measured (n=10–11) and the deepseek row as indicative (n=1).
+1. **Multi-run cross-model validation** — on the second model (deepseek-v4-flash) the Benxiang arm is mid-run toward a planned n=10, with the control arms already at n=10 / n=7. The [experiment log](benchmark/shadowbench-w/results-log.md) carries the current count and every raw result; this page is not updated per run, because a number that expires every twenty minutes does not belong on a front page. Until the run is full, treat the qwen numbers as measured (n=10–11) and the deepseek row as unsettled — and note that a run of clean results is worth no more than one clean result was, a mistake already made once here and recorded as incident #7.
 2. Production-grade adapters for real formats.
 3. Any real user.
 
