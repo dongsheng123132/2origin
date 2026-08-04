@@ -14,7 +14,7 @@ import { dirname, join } from 'node:path'
 import { readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { execFileSync } from 'node:child_process'
-import { parseDxf, geometryOf, textOf, toPairs } from './dxf.mjs'
+import { parseDxf, geometryOf, textOf, toPairs, insertOf, insertBBox, blockBBox } from './dxf.mjs'
 import { dxfToObjects } from './import.mjs'
 import { loadOrigin } from '../../compiler/origin.mjs'
 import { diagnose } from '../../compiler/provenance.mjs'
@@ -79,6 +79,47 @@ check(codes.some((m) => m.includes('两处对不上')), '抓出「4 樘窗只标
 check(codes.length === 3, `恰好 3 条 error，不多报`, `实际 ${codes.length}：${JSON.stringify(codes)}`)
 check(!d.ok, '体检整体不通过（退出码将为 1，可直接串进出图前的检查）')
 rmSync(PKG, { recursive: true, force: true })
+
+// ── 块引用：真图纸的主体 ────────────────────────────────────────
+// 门窗、设备在真图纸里几乎全是块（INSERT），编号存在块属性里而不是散落的文字。
+// fixtures/B-201.dxf 按 DXF R12 规范手写（见 make-blocks-fixture.mjs），
+// **未经 AutoCAD 往返验证**——只证明解析器对得上规范，不证明对得上真软件输出。
+console.log('\n[块引用] BLOCK / INSERT / ATTRIB')
+
+const BDXF = join(HERE, 'fixtures', 'B-201.dxf')
+const b = parseDxf(readFileSync(BDXF, 'utf8'))
+check(b.blocks.size === 1 && b.blocks.has('C-1500'), '读出 BLOCKS 段里的块定义', [...b.blocks.keys()].join())
+check(b.blocks.get('C-1500').entities.length === 1, '  └ 块内 1 个图形（ATTDEF 不算图形）')
+
+const inserts = b.entities.filter((e) => e.type === 'INSERT')
+check(inserts.length === 4, 'INSERT 被识别为图元而不是被跳过', `实际 ${inserts.length}`)
+check(inserts[0].attrs.NUMBER === 'C1', 'ATTRIB 被归到它所属的 INSERT 上（组码 2=标签、1=值）', JSON.stringify(inserts[0].attrs))
+check(inserts.map((e) => e.attrs.NUMBER).join() === 'C1,C2,C3,C1', '  └ 四个实例的属性各归各家，没串位')
+
+const bb = insertBBox(inserts[0], b.blocks)
+check(JSON.stringify(bb) === JSON.stringify([800, 7100, 2300, 7300]), '块的包围盒按插入点变换到世界坐标', JSON.stringify(bb))
+check(JSON.stringify(blockBBox(b.blocks.get('C-1500'))) === JSON.stringify([0, 0, 1500, 200]), '  └ 块自身坐标系里是 1500×200')
+check(insertOf(inserts[3]).at[0] === 9000, '  └ 第四樘的插入点读得出')
+
+const bObjects = dxfToObjects(b, { name: 'B-201' })
+check(bObjects.some((o) => o.id === 'block:C-1500' && o.width === 1500), '块定义本身成为对象（换型号时要能查谁用了它）')
+const w0 = bObjects.find((o) => o.id.startsWith('ent:门窗/'))
+check(w0.attr_NUMBER === 'C1' && w0.block === 'block:C-1500', '属性摊平成 attr_NUMBER，谓词才判得到（嵌套对象判不了）')
+check(bObjects.filter((o) => o.id.startsWith('ent:门窗/')).length === 4, '几何完全相同的四樘窗没有互相吞掉（块名与属性进了内容哈希）')
+
+console.log('\n[规则集] 按图纸实际用法选，不硬套')
+const BPKG = join(tmpdir(), `cad-blocks-${process.pid}.origin`)
+rmSync(BPKG, { recursive: true, force: true })
+execFileSync(process.execPath, [join(HERE, 'import.mjs'), BDXF, BPKG, '--name', 'B-201'], { stdio: ['ignore', 'pipe', 'pipe'] })
+const bo = loadOrigin(BPKG)
+check(bo.state['dwg:B-201'].numbering === 'block', '自动认出这份图纸用块属性编号')
+
+const bd = diagnose(bo)
+const bErrors = bd.findings.filter((f) => f.severity === 'error')
+check(bErrors.some((f) => f.msg.includes('C1')), '抓出重号 C1（第 1 樘与第 4 樘）')
+check(!bErrors.some((f) => f.msg.includes('两处对不上')), '  └ 不套「构件数=标注数」——该图无标注文字，硬套会是假警报')
+check(bErrors.length === 1, '恰好 1 条 error', `实际 ${bErrors.length}：${JSON.stringify(bErrors.map((f) => f.msg))}`)
+rmSync(BPKG, { recursive: true, force: true })
 
 console.log(`\n${fail ? '✗' : '✓'} ${pass} 通过，${fail} 失败`)
 process.exit(fail ? 1 : 0)

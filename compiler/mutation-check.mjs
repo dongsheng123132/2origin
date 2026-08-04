@@ -108,17 +108,23 @@ const MUTATIONS = [
 rmSync(LAB, { recursive: true, force: true })
 cpSync(join(ROOT, 'compiler'), join(LAB, 'compiler'), { recursive: true })
 cpSync(join(ROOT, 'spec'), join(LAB, 'spec'), { recursive: true })
+// 方言的自测也要跑：核心里有些承诺只有 CAD 那边覆盖得到，
+// 只跑 compiler 自测的话，打坏它们会显示成 SURVIVED——那是假的漏网。
+cpSync(join(ROOT, 'adapters'), join(LAB, 'adapters'), { recursive: true })
 
 const pristine = new Map()
 for (const m of new Set(MUTATIONS.map((x) => x.file)))
   pristine.set(m, readFileSync(join(LAB, m), 'utf8'))
 
-/** 跑一遍自测，返回是否通过。 */
+const SUITES = [join(LAB, 'compiler', 'selftest.mjs'), join(LAB, 'adapters', 'cad', 'selftest.mjs')]
+
+/** 跑全部自测，任何一套挂了就算「抓到了」。 */
 function selftestPasses() {
-  try {
-    execFileSync(process.execPath, [join(LAB, 'compiler', 'selftest.mjs')], { stdio: 'pipe' })
-    return true
-  } catch { return false }
+  for (const s of SUITES) {
+    try { execFileSync(process.execPath, [s], { stdio: 'pipe' }) }
+    catch { return false }
+  }
+  return true
 }
 
 console.log('# 变异检查 —— 故意打坏承诺，看自测抓不抓得到\n')

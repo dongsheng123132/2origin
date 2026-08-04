@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-81%20%2B%2020%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
+[![verify](https://img.shields.io/badge/verify-81%20%2B%2035%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
 
@@ -130,7 +130,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 本象协议/
 ├── docs/        # 创始文档集（本轮产出）
 ├── spec/        # JSON Schema 草稿 + 示例 .origin 包
-├── compiler/    # 双向编译器 + 证据链 + 落盘 + `origin` CLI（可运行，60 项跨域自测）
+├── compiler/    # 双向编译器 + 证据链 + 落盘 + `origin` CLI（可运行，81 项跨域自测）
 ├── adapters/    # 领域方言
 │   ├── memory/  #   项目状态：MCP Server（零依赖）+ 回填工具
 │   └── cad/     #   图纸一致性：DXF 导入器 + 制图规范校验
@@ -143,7 +143,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ## 快速上手
 
 ```bash
-npm run verify   # 自测 81 + CAD 20 + MCP 端到端 18 + 变异检查 13/13
+npm run verify   # 自测 81 + CAD 35 + MCP 端到端 18 + 变异检查 13/13
 
 
 P=spec/examples/sales-2026.origin
@@ -167,6 +167,10 @@ node adapters/cad/import.mjs adapters/cad/fixtures/A-101.dxf /tmp/A-101.origin
 node compiler/cli.mjs diagnose /tmp/A-101.origin
 #   → 自动抓出：图元留在 0 层 / 编号 C2 重复 / 画了 4 樘窗只标 3 个编号
 
+node adapters/cad/import.mjs adapters/cad/fixtures/B-201.dxf /tmp/B-201.origin
+node compiler/cli.mjs diagnose /tmp/B-201.origin
+#   → 块引用图纸：读出块定义与块属性，抓出门窗重号 C1
+
 # 项目状态（详见 adapters/memory/README.md）
 node compiler/cli.mjs status project.origin        # 本仓库自己的世界状态就在这里
 claude mcp add -s local benxiang -- node <绝对路径>/adapters/memory/mcp-server.mjs <包路径>
@@ -189,7 +193,7 @@ claude mcp add -s local benxiang -- node <绝对路径>/adapters/memory/mcp-serv
 
 **Benxiang** (本象, "origin-image"; *Ben* = origin, *Xiang* = the archetypal image, after the I Ching's "the sages established images to exhaust the meaning") is a persistent, AI-native object representation layer. Its technical core is the **Origin IR** spec. (Earlier drafts used the name "Origin Protocol"; renamed to avoid collision with the OGN crypto project.) Instead of feeding AI flattened projections (screenshots, OCR text, lossy summaries), it preserves the *origin* of a digital artifact — objects, relations, payloads, states, constraints and provenance — then compiles task-specific projections for the model on demand ("one origin, many shadows"). The AI writes back not full documents but compact **semantic transactions**, which a deterministic compiler validates, applies and re-projects, with evidence retained at every step. Think of it as an LLVM-style IR for AI work: renderers become projection backends, actions become a portable instruction set, and chat context becomes a disposable cache over a durable world state.
 
-Status: v0.1 — draft spec **plus a runnable reference implementation** (`compiler/`, 27 self-tests across two unrelated domains) and two tiers of controlled experimental data with raw results committed.
+Status: v0.1 — draft spec **plus a runnable reference implementation** (`compiler/`, 81 self-tests across two unrelated domains) and two tiers of controlled experimental data with raw results committed.
 
 **Measured result:** on long-form narrative state tracking, Benxiang reaches 98.9–100% state accuracy where a naive LLM and vector RAG sit at 75.0% and 37.5% respectively — lifting two models of very different strength to the same height. State correctness comes from the architecture, not the model. Full numbers, limitations and six self-caught instrumentation accidents: [README.en.md](README.en.md) · [MANIFESTO.en.md](MANIFESTO.en.md) · [CONTRIBUTING.md](CONTRIBUTING.md).
 

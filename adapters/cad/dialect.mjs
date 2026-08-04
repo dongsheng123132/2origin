@@ -22,7 +22,15 @@ export const CAD_TYPES = ['dwg', 'layer', 'ent', 'text']
  * @param opts.countedLayer    需要与编号一一对应的构件图层（默认「门窗」）
  * @param opts.minTextHeight   最小字高，按图幅给（默认 200，适用于毫米制建筑图）
  */
-export const cadConstraints = ({ annotationLayer = '标注', countedLayer = '门窗', minTextHeight = 200 } = {}) => [
+export const cadConstraints = ({ annotationLayer = '标注', countedLayer = '门窗', minTextHeight = 200, numberAttr = 'NUMBER', numbering = 'text' } = {}) => [
+  {
+    // 真图纸里门窗编号几乎都是**块属性**，不是散落的文字。
+    // 属性被摊平成 attr_NUMBER，所以同一条 unique 谓词照样管得到。
+    // 图纸没用块属性时该字段全缺失，谓词自动跳过，不会误报。
+    id: 'unique-block-number',
+    rule: `${countedLayer}层构件的 ${numberAttr} 属性不得重复`,
+    check: { type: 'unique', object: `ent:${countedLayer}/*`, field: `attr_${numberAttr}` },
+  },
   {
     id: 'no-layer-zero',
     rule: '图元不得留在 0 层（制图规范；0 层图元无法被关层管理，出图时关不掉）',
@@ -38,13 +46,18 @@ export const cadConstraints = ({ annotationLayer = '标注', countedLayer = '门
     rule: `${annotationLayer}层的编号不得重复`,
     check: { type: 'unique', object: `text:${annotationLayer}/*`, field: 'content' },
   },
-  {
-    // 「图上画了 4 樘窗，门窗表写 5 樘」是最典型的图纸不一致，
-    // 今天全靠人一个个数。它的通用形状是：同一件事有两处表述，两处必须对得上。
+  // 「图上画了 4 樘窗，门窗表写 5 樘」是最典型的图纸不一致，今天全靠人一个个数。
+  // 它的通用形状是：同一件事有两处表述，两处必须对得上。
+  //
+  // **但这条只在「编号用独立文字标注」的图纸上成立。** 用块属性编号的图纸根本没有
+  // 标注层文字，硬套会得到「4 樘窗 vs 0 个编号」的假警报——比不查更糟，
+  // 因为几次误报之后没人会再看这个体检结果。所以由导入器按图纸实际用法选规则集，
+  // 并把选了哪套写进包里（dwg 的 numbering 字段），让人看得见而不是猜。
+  ...(numbering === 'text' ? [{
     id: 'label-count-matches',
     rule: `${countedLayer}层的构件数量必须等于${annotationLayer}层的编号数量（每樘有且仅有一个编号）`,
     check: { type: 'count', object: `ent:${countedLayer}/*`, equals_count_of: `text:${annotationLayer}/*` },
-  },
+  }] : []),
   {
     id: 'min-text-height',
     rule: `字高不得小于 ${minTextHeight}（小于图幅 1/300 等于没标）`,
