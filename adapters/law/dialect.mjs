@@ -87,12 +87,24 @@ export function lawConstraints({ caseId, caseType = '刑事', mentions = [], fac
     {
       id: 'basis-citation-ok',
       rule: `${caseType}裁判文书的裁判依据只能引用现行有效的${whitelist.map((k) => KIND_CN[k]).join(' / ')}（法释〔2009〕14号）`,
-      check: { type: 'in', object: 'cite:裁判依据/*', field: 'status', values: ['ok'] },
+      // uncovered 放行：条文库没覆盖到，不等于这处引用有问题。把「没查」判成「有问题」，
+      // 在真文书上会制造大片假阳性——而假阳性率正是这套东西唯一要量的指标。
+      // 它不会被静默吞掉，下面 citation-coverage 会把它作为**警告**单独报出来。
+      check: { type: 'in', object: 'cite:裁判依据/*', field: 'status', values: ['ok', 'uncovered'] },
     },
     {
       id: 'reasoning-citation-ok',
       rule: '说理引用的规范性文件必须真实存在且现行有效（法释〔2009〕14号第六条：经审查认定为合法有效的方可引用）',
-      check: { type: 'in', object: 'cite:说理/*', field: 'status', values: ['ok'] },
+      check: { type: 'in', object: 'cite:说理/*', field: 'status', values: ['ok', 'uncovered'] },
+    },
+    {
+      id: 'citation-coverage',
+      // 警告级：报的不是文书的毛病，是**我们的覆盖缺口**。沉默才是最坏的选择——
+      // 那会让「零 error」被读成「这份判决的引用都没问题」，而真相可能是一条都没查。
+      // 与 compiler 把无机器判定的约束报成 unenforceable 是同一条规矩。
+      severity: 'warning',
+      rule: '条文库未覆盖的引用（未校验，不代表有问题；覆盖率低时上面那条「引用体检」的结论不可当作通过）',
+      check: { type: 'in', object: 'cite:*', field: 'status', values: ['ok', 'not-found', 'expired', 'not-citable'] },
     },
     {
       id: 'factor-must-have-evidence',

@@ -44,7 +44,9 @@ export function inspectIntake(text, { db } = {}) {
   let 命中 = 0
   for (const c of [...basisCites, ...proseCites]) {
     const v = db ? judgeCitation(c, { db, at: judgedAt, whitelist, position: '裁判依据' }) : { status: 'not-found' }
-    if (v.status === 'not-found') 未命中.push(c.raw)
+    // uncovered 也要收——真实部署的部分库返回的正是它。只收 not-found 的话，
+    // 收料体检会在覆盖率为零时报「一条都不缺」，把最该暴露的问题藏起来。
+    if (v.status === 'not-found' || v.status === 'uncovered') 未命中.push(c.raw)
     else 命中++
   }
   const ws = parseWorksheet(sec.评议)
@@ -58,14 +60,25 @@ export function inspectIntake(text, { db } = {}) {
     { key: '查明段', ok: !!sec.查明, detail: sec.查明 ? `${sec.查明.replace(/\s/g, '').length} 字，识别金额 ${查明金额.length} 处${查明金额[0] ? '：' + 查明金额[0].value : ''}` : '未识别——需保留「经审理查明」这句' },
     { key: '证据段', ok: evidence.length > 0, detail: evidence.length ? `${evidence.length} 项（编号列举）` : '未识别——证据需按「1. 2. 3.」逐项编号列举' },
     { key: '说理段', ok: !!sec.说理, detail: sec.说理 ? `${sec.说理.replace(/\s/g, '').length} 字，识别金额 ${说理金额.length} 处` : '未识别——需保留「本院认为」这句' },
-    { key: '裁判依据段', ok: basisCites.length > 0, detail: basisCites.length ? `${basisCites.length} 处引用，条文库命中 ${命中}，查无 ${未命中.length}` : '未识别——需保留「依照《…》第…条…之规定，判决如下」整句' },
+    { key: '裁判依据段', ok: basisCites.length > 0, detail: basisCites.length ? `${basisCites.length} 处引用，条文库命中 ${命中}，未覆盖 ${未命中.length}` : '未识别——需保留「依照《…》第…条…之规定，判决如下」整句' },
     { key: '判决主文', ok: 主文刑期.length > 0 || !!sec.主文, detail: sec.主文 ? `识别刑期 ${主文刑期.length} 处${主文刑期[0] ? '：' + 主文刑期[0].value + ' 月' : ''}` : '未识别——需保留「判决如下：」及其后的主文' },
     { key: '量刑评议表', ok: !!ws && Number.isFinite(ws.基准刑), detail: ws && Number.isFinite(ws.基准刑) ? `基准刑 ${ws.基准刑} 月，${ws.factors.length} 个情节` : '缺失（判决书正文里本来就没有，不是材料的错）' },
   ]
 
   const 可做 = []
   const 不可做 = []
-  ;(basisCites.length ? 可做 : 不可做).push('A 引用体检（存在 / 有效 / 可否作裁判依据）')
+  // 认得出引用还不够，条文库得真覆盖到才谈得上「能查」。过半未覆盖时这一项降级为不可做——
+  // 否则「可做：A 引用体检」+「✓ 无 error」两句连起来读，就是「这份文书的引用都合规」，
+  // 而真相是一条都没查。这与 intake 存在的理由是同一条：解析/覆盖的失败不许伪装成体检通过。
+  // 分母必须是**参与判定的全部引用**（裁判依据位 + 说理位），与上面那个循环同口径。
+  // 拿 basisCites 当分母会算出「6 处里 7 处没覆盖」这种比 1 还大的比例。
+  const 引用总数 = basisCites.length + proseCites.length
+  const 引用可查 = basisCites.length > 0 && 引用总数 > 0 && 未命中.length / 引用总数 <= 0.5
+  ;(引用可查 ? 可做 : 不可做).push(
+    basisCites.length && !引用可查
+      ? `A 引用体检（识别出 ${引用总数} 处引用，其中 ${未命中.length} 处条文库未覆盖——先补库）`
+      : 'A 引用体检（存在 / 有效 / 可否作裁判依据）'
+  )
   ;(evidence.length && ws?.factors?.length ? 可做 : 不可做).push('C 证据支撑（情节是否挂证据、是否重复评价）')
   ;(ws && Number.isFinite(ws.基准刑) ? 可做 : 不可做).push('D 数字可复算（区间 / 复算 / 20% 幅度）')
   ;(查明金额.length && 说理金额.length ? 可做 : 不可做).push('D 正文对照（说理段与认定事实的数字是否一致）')
@@ -118,8 +131,15 @@ if (process.argv[1]?.endsWith('intake.mjs')) {
     process.stderr.write(`\n可做：${r.可做.length ? r.可做.join('　/　') : '（无）'}\n`)
     if (r.不可做.length) process.stderr.write(`不可做：${r.不可做.join('　/　')}\n`)
     if (r.未命中引用.length) {
-      process.stderr.write(`条文库缺这些（要补进 lawdb.json 才能判有效性）：\n`)
+      // 覆盖率必须在判定之前就摆出来。库没覆盖到的引用是**没查**，既不是「查过没问题」
+      // 也不是「有问题」——不先说清楚，后面那句「✓ 无 error」会被读成「引用都合规」。
+      process.stderr.write(`条文库未覆盖（这些引用**未校验**，补进 lawdb.json 才能判有效性）：\n`)
       for (const c of r.未命中引用) process.stderr.write(`  · ${c}\n`)
+      // 同口径：分母取「命中 + 未覆盖」，即真正参与判定的全部引用
+      const 命中数 = Number(r.items.find((i) => i.key === '裁判依据段')?.detail?.match(/命中 (\d+)/)?.[1] ?? 0)
+      const 总引用 = 命中数 + r.未命中引用.length
+      if (总引用 > 0 && r.未命中引用.length / 总引用 > 0.5)
+        process.stderr.write(`  ⚠ 过半引用未覆盖——本份材料的「引用体检」结论不可采信，先补库\n`)
     }
     process.stderr.write(`可用度 ${r.score}/${r.max}\n`)
     // 前 6 项是判决书正文里本该有的；量刑评议表缺失不算材料不合格

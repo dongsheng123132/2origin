@@ -44,7 +44,8 @@ export function loadLawDb(path = join(HERE, 'lawdb.json')) {
     const short = e.title.replace(/^中华人民共和国/, '')
     if (short !== e.title) byTitle.set(`${short}|${e.article}`, e)
   }
-  return { byId, byTitle, kinds: raw._kinds ?? {} }
+  // closedWorld 缺省 false：**不敢自称完备的库，不许说别人伪造**。
+  return { byId, byTitle, kinds: raw._kinds ?? {}, closedWorld: raw.closed_world === true }
 }
 
 const slug = (s) => String(s ?? '').replace(/[\s:/*《》（）()]+/g, '').slice(0, 24)
@@ -56,7 +57,16 @@ const slug = (s) => String(s ?? '').replace(/[\s:/*《》（）()]+/g, '').slice
  */
 export function judgeCitation(c, { db, at, whitelist, position }) {
   const hit = db.byTitle.get(`${c.title}|${c.article}`)
-  if (!hit) return { status: 'not-found', target: null, kind: 'unknown', note: `条文库中查无《${c.title}》第${c.article_cn}条` }
+  // 「我们库里没有」和「这条法条不存在」是两件事，判成同一件事就是诬告。
+  // 刑法第二百六十四条当然存在，只是不在这份 20 条的样本库里。
+  // 只有**自称完备**的库（closed_world）才有资格把「查不到」读成「伪造」；
+  // 部分覆盖的库只能如实说「没查」——同 conformance 的 unsupported、
+  // 同 intake 的「解析失败不许被读成体检通过」，都是一个形状：
+  // **没查 ≠ 查过没问题，也 ≠ 有问题。**
+  if (!hit)
+    return db.closedWorld
+      ? { status: 'not-found', target: null, kind: 'unknown', note: `条文库中查无《${c.title}》第${c.article_cn}条` }
+      : { status: 'uncovered', target: null, kind: 'unknown', note: `条文库未覆盖《${c.title}》第${c.article_cn}条——**未校验**，不代表它有问题` }
   const expired = hit.effective_to && at && at >= hit.effective_to
   if (expired) return { status: 'expired', target: hit.id, kind: hit.kind, note: `该文件已于 ${hit.effective_to} 失效` }
   if (hit.effective_from && at && at < hit.effective_from)

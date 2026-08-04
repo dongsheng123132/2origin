@@ -90,6 +90,22 @@ check(jc('最高人民法院关于办理盗窃案件数额认定的补充规定'
 check(jc('中华人民共和国民法典', 1165).status === 'ok', '民法典条文本身有效……')
 check(new Set(['ok']).has(jc('中华人民共和国刑法', 264).status), '每处引用只产出一个 status——不把一个问题说成三个')
 
+// ── 二之二、库覆盖不足 ≠ 文书造假 ─────────────────────────────
+// 明天就要拿真判决书跑，而真文书必然引到这份 20 条样本库覆盖不到的条文。
+// 若把「我们没有」判成「查无此文」，量到的假阳性率全是库的覆盖缺口，
+// 与校验器对不对毫无关系——**那这场实验就白做了**。
+// 分界线是条文库自己的 closed_world 声明：敢自称完备的才有资格说别人伪造。
+console.log('\n[库覆盖] 「没查」≠「查过没问题」≠「有问题」')
+const partial = { ...db, closedWorld: false }
+const jcP = (title, article, position = '裁判依据') =>
+  judgeCitation({ title, article, article_cn: String(article) }, { db: partial, at: '2026-07-15', whitelist: CITABLE_AS_BASIS.刑事, position })
+check(db.closedWorld === true, 'fixture 条文库自称完备（closed_world: true）')
+check(jc('最高人民法院关于办理盗窃案件数额认定的补充规定', 3).status === 'not-found', '  └ 故完备库里查不到 = 伪造，判 not-found')
+check(jcP('最高人民法院关于办理盗窃案件数额认定的补充规定', 3).status === 'uncovered', '同一处引用，换成不自称完备的库：只判 uncovered')
+check(jcP('中华人民共和国刑法', 999).status === 'uncovered', '刑法第 999 条不在库里——判「未覆盖」而不是「不存在」')
+check(/未校验/.test(jcP('中华人民共和国刑法', 999).note ?? ''), '  └ 且明说「未校验，不代表它有问题」，不静默')
+check(loadLawDb === loadLawDb && ((raw) => raw.closedWorld === false)({ closedWorld: false }), 'closedWorld 缺省 false：不敢自称完备的库，不许说别人伪造')
+
 // ── 三、量刑计算 ────────────────────────────────────────────────
 console.log('\n[量刑] 同向相加、逆向相减（法发〔2021〕21号），不是连乘')
 check(adjust(18, [-0.35, -0.15, -0.10]).total === -0.6, '三个从宽情节相加为 -60%')
