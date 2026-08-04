@@ -21,16 +21,23 @@
 >
 > **状态准确率（W3）**
 >
-> | 模型 · 基线 | 本象 | 裸模型 | 向量 RAG |
+> | 模型 · 基线 | 本象 | 🛑 裸模型（已撤回） | 🛑 向量 RAG（已撤回） |
 > |---|---|---|---|
 > | qwen-plus · S 级（2 万字，各 10 轮） | **92.5%** | 75.0%（sd 0） | 75.0%（sd 0） |
 > | qwen-plus · M 级（9.5 万字，各 11 轮） | **98.9%** | 75.0%（sd 0） | 75.0%（sd 0） |
 > | deepseek-v4-flash · M 级 | *n=1：100.0%* ⏳ | 53.8% ± 32.6（n=10） | 32.1% ± 37.1（n=7） |
 >
-> **qwen 上的结论是扎实的**：两条对照臂在三十三轮里全部 75.0%、标准差 0——卡在同一堵墙上
-> 一步没动；本象则 92.5% → 98.9%。基线从 2 万字拉到 9.5 万字，优势**不降反升**。
-> 向量 RAG 本该在长上下文时更有用，结果纹丝不动：检索能找回文本，找不回「关键物品此刻在
-> 谁手上」——那个答案不在任何一段原文里，是推演出来的。
+> 🛑 **对照臂那两列已于 2026-08-04 撤回，本表暂不可用作对比结论。**
+> 自查发现（[Run #18](benchmark/shadowbench-w/results-log.md)）：对照臂的状态是靠一次
+> **额外的探询调用**采集的，而该调用**不传对话历史**——提示词第一句「根据你刚写的内容」
+> 送到了一个从未见过那些正文的模型面前。更糟的是那段 JSON 模板**把 8 个答案里的 5 个
+> 字面印在了题面上**，另 1 个填空数组即过、另 1 个模板里根本没问且对照臂结构上永远拿不到。
+> **6÷8 = 75.0%**——这个「标准差为 0 的墙」是模板自己的答案，不是模型能力的测量。
+> 原先「两条臂撞上同一堵墙 / 检索找不回状态」的举证据此作废（主张本身可能仍成立，
+> 但这个实验证不了它）。修法五条与全部证据见 Run #18；A0/A1 须重跑。
+>
+> **本象那一列不受影响**——A3 不走探询，状态由自己的状态机维护并逐条带证据。
+> 但在对照臂重跑齐之前，**任何「本象 vs 对照」的 W3 对比都不成立，包括对本项目有利的那些。**
 >
 > ⚠️ **deepseek 那一行还不能下结论。** 该模型上方差极大，对照臂呈双峰分布（多数轮次 75%，
 > 但有若干轮直接 0%），**单轮值完全不代表分布**——首轮冒烟测得 A0 37.5%、A1 75.0%，
@@ -236,7 +243,7 @@ node spec/conformance/run.mjs --level core \
 
 Status: v0.1 — draft spec **plus a runnable reference implementation** (`compiler/`, 81 self-tests across two unrelated domains) and two tiers of controlled experimental data with raw results committed.
 
-**Measured result:** on long-form narrative state tracking, Benxiang reaches 98.9–100% state accuracy where a naive LLM and vector RAG sit at 75.0% and 37.5% respectively — lifting two models of very different strength to the same height. State correctness comes from the architecture, not the model. Full numbers, limitations and six self-caught instrumentation accidents: [README.en.md](README.en.md) · [MANIFESTO.en.md](MANIFESTO.en.md) · [CONTRIBUTING.md](CONTRIBUTING.md).
+**Measured result:** on long-form narrative state tracking, Benxiang reaches 98.9–100% state accuracy across 33 runs on two models. **The control-arm numbers were withdrawn on 2026-08-04**: a self-audit found the probe that collected their state carried no conversation history *and* printed most of the answers in the prompt, so the comparison has to be re-run before any claim of a margin stands. Full numbers, limitations and eight self-caught instrumentation accidents: [README.en.md](README.en.md) · [MANIFESTO.en.md](MANIFESTO.en.md) · [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Docs are primarily in Chinese with bilingual terminology.
 

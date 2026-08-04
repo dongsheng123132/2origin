@@ -63,24 +63,36 @@ Enough philosophy. Here are numbers you can check — [full log](benchmark/shado
 
 The task is state tracking across long-form narrative: *who holds the key right now, who learned the secret, which planted threads are still open.*
 
-| Model · baseline | Benxiang | Naive LLM | Vector RAG |
+| Model · baseline | Benxiang | 🛑 Naive LLM (withdrawn) | 🛑 Vector RAG (withdrawn) |
 |---|---|---|---|
 | qwen-plus · 20k chars (10 runs each) | **92.5%** | 75.0% (sd 0) | 75.0% (sd 0) |
 | qwen-plus · 95k chars (11 runs each) | **98.9%** | 75.0% (sd 0) | 75.0% (sd 0) |
 | deepseek-v4-flash · 95k chars | *n=1: 100.0%* ⏳ | 53.8% ± 32.6 (n=10) | 32.1% ± 37.1 (n=7) |
 
-**The qwen rows are solid.** Both control arms sat at exactly 75.0% with zero standard deviation across 33 runs — stuck against the same wall, not merely worse on average. Benxiang went 92.5% → 98.9%, and the gap widened as the baseline grew.
+🛑 **The two control columns were withdrawn on 2026-08-04. This table cannot currently be used as a comparison.**
+
+What I originally wrote here was: *"Both control arms sat at exactly 75.0% with zero standard deviation across 33 runs — stuck against the same wall."* That sentence is wrong, and wrong in an ugly way.
+
+Self-audit ([Run #18](benchmark/shadowbench-w/results-log.md)): the control arms' state is collected via one **extra probe call** that **carries no conversation history** — its opening line, "based on what you just wrote," reaches a model that has never seen that prose. And the JSON template in that prompt **prints 5 of the 8 correct answers literally in the question**; a 6th passes trivially on an empty array; a 7th (foreshadowing status) is never asked for and is structurally unreachable for the control arms. Exactly one field actually tests anything.
+
+**6 ÷ 8 = 75.0%.** That wall is the template's own answer key.
+
+**The beautiful zero variance should have been the loudest alarm.** A real model, on a real task, returning the identical number twenty times running has only one explanation: it isn't doing the task. I treated it as my strongest evidence instead.
+
+**The Benxiang column is unaffected** (A3 never uses the probe). But until the control arms are re-run, **no comparison stands — including the ones that favour this project.**
 
 **The deepseek row has to be held back.** The smoke run measured the bare model at 37.5% and RAG at 75.0%, and on that basis I wrote *"Benxiang lifts two models of very different strength to the same height."* Ten runs later those numbers are 53.8% and 32.1%. **A single run tells you nothing about the distribution.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%.
 
-The Benxiang arm is still at n=1 — the first multi-run was interrupted on 2026-08-03 and resumed on 2026-08-04 (see [results-log](benchmark/shadowbench-w/results-log.md) Run #16). Until it is full, *"state correctness comes from the architecture, not the model"* is supported **only on qwen**; the cross-model half is not established.
+The Benxiang arm is running toward n=10 (first attempt interrupted at 17/30 on 2026-08-03, resumed from rep2 on 2026-08-04; the live count is in the [results-log](benchmark/shadowbench-w/results-log.md), which this page does not mirror per run). Until it is full, *"state correctness comes from the architecture, not the model"* is supported **only on qwen**; the cross-model half is not established.
 
 The correction is worth keeping in the manifesto: **an n=1 result that flatters you is exactly as worthless as an n=1 result that doesn't.** The mistake in the previous version was not fabrication — it was treating "this leaves no room for interpretation" as a substitute for sample size.
 
 Two more findings worth stating plainly:
 
-- **The longer the baseline, the bigger the gap** (20k chars: 92.5% → 95k chars: 98.9%). Vector RAG is exactly the technique that ought to shine as context grows — across thirty-three runs it did not move once. Retrieval finds text. It cannot find *who holds the key right now*, because that fact appears in no passage; it is derived.
+- **The longer the baseline, the higher Benxiang's own score** (20k chars: 92.5% → 95k chars: 98.9%). This is a within-arm comparison that never touches the control arms, so it is **unaffected by Run #18**. But "the *gap* widens" has to wait for the control arms to be re-run — the other half of that difference is currently void.
+- ~~**Vector RAG did not move across thirty-three runs; retrieval cannot find state.**~~ **Withdrawn (Run #18)**, and for a reason uglier than "RAG doesn't help": the retrieved passages went into the *chapter-writing* calls, while state was collected by a separate probe call **carrying no history** — so **the retrieval never reached the moment being measured.** Retrieval did not fail the exam; it never sat it. The claim may still be true, but this experiment cannot show it.
 - **RAG's effect is model-dependent, and can be negative.** On qwen it changed nothing (75.0% → 75.0%). On deepseek, across 10 and 7 runs, it came out **worse than the bare model** (53.8% → 32.1%): retrieved passages are one more source of distraction for a model that is already unstable. The earlier line — "RAG carries a weak model to the 75% wall" — also came from a single run, and is withdrawn.
+  > 🛑 **This whole bullet was withdrawn with Run #18.** "RAG changed nothing" has a far more boring explanation: the retrieved passages go into the *chapter-writing* calls, while W3 is measured by a separate probe call **with no history** — the retrieval never reaches the moment of measurement. It isn't that retrieval doesn't help; it never sat the exam. Re-run required.
 
 ## V. Why this is not a novel-writing tool
 

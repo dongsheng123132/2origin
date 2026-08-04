@@ -2,7 +2,8 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-81%20%2B%2020%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#try-it)
+[![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%2095%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#try-it)
+[![conformance](https://img.shields.io/badge/conformance-68%2F68%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.en.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![中文](https://img.shields.io/badge/docs-%E4%B8%AD%E6%96%87-lightgrey.svg)](README.md)
 
@@ -23,17 +24,23 @@ The claim has been **narrowed by experiment** to exactly one dimension: **state 
 
 **State accuracy (W3)**
 
-| Model · baseline | Benxiang | Naive LLM | Vector RAG |
+| Model · baseline | Benxiang | 🛑 Naive LLM (withdrawn) | 🛑 Vector RAG (withdrawn) |
 |---|---|---|---|
 | qwen-plus · S-tier (20k chars, 10 runs each) | **92.5%** | 75.0% (sd 0) | 75.0% (sd 0) |
 | qwen-plus · M-tier (95k chars, 11 runs each) | **98.9%** | 75.0% (sd 0) | 75.0% (sd 0) |
 | deepseek-v4-flash · M-tier | *n=1: 100.0%* ⏳ | 53.8% ± 32.6 (n=10) | 32.1% ± 37.1 (n=7) |
 
-**The qwen rows are solid.** Both control arms sat at exactly 75.0% with zero standard deviation across all 33 runs — not "slightly worse on average", but stuck against the same wall without moving once. Benxiang went 92.5% → 98.9%.
+🛑 **The two control columns were withdrawn on 2026-08-04. This table cannot currently be used as a comparison.**
 
-Stretching the baseline from 20k to 95k characters made the gap **wider**, not narrower. Vector RAG is exactly the technique that should benefit from a longer context — it didn't move at all. Retrieval can find text; it cannot find *who is holding the key right now*. That answer appears in no passage — it is derived.
+Self-audit ([Run #18](benchmark/shadowbench-w/results-log.md)) found that the control arms' state is collected via one **extra probe call** that **carries no conversation history** — its opening line, "based on what you just wrote," reaches a model that has never seen that prose. Worse, the JSON template in that prompt **prints 5 of the 8 correct answers literally in the question**; a 6th passes trivially on an empty array; a 7th (foreshadowing status) is never asked for at all and is structurally unreachable for the control arms. Exactly one field actually tests anything.
 
-⚠️ **The deepseek row is not a result yet.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%. **A single run tells you nothing about the distribution**: the smoke test measured A0 at 37.5% and A1 at 75.0%; ten runs later those are 53.8% and 32.1%. The Benxiang arm is **still at n=1**: the first multi-run was interrupted at 17/30 on 2026-08-03 and was resumed from rep2 for 9 more runs on 2026-08-04 (spec hash, judge hash, task tier and provider all identical to rep1 and to both control arms, so the runs are poolable). This row will be updated when it lands. Until then, treat only the qwen rows as findings.
+**6 ÷ 8 = 75.0%.** That "wall with zero standard deviation" is the template's own answer key, not a measurement of model capability. The zero variance should have been the loudest alarm, not the strongest evidence.
+
+**The Benxiang column is unaffected** — A3 never uses the probe; its state comes from its own state machine with per-field evidence. But until the control arms are re-run, **no Benxiang-vs-control comparison stands, including the ones that favour this project.**
+
+Stretching the baseline from 20k to 95k characters raised Benxiang's **own** score (92.5% → 98.9%) — a within-arm comparison that never touches the probe, and therefore unaffected. The claim that "vector RAG didn't move at all" is **withdrawn along with the control columns**: the retrieved passages went into the chapter-writing calls, while state was collected by a separate probe carrying no history, so retrieval never reached the moment being measured. It did not fail the exam; it never sat it.
+
+⚠️ **The deepseek row is not a result yet.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%. **A single run tells you nothing about the distribution**: the smoke test measured A0 at 37.5% and A1 at 75.0%; ten runs later those are 53.8% and 32.1%. The Benxiang arm is **mid-run toward n=10** (first attempt interrupted at 17/30 on 2026-08-03, resumed from rep2 on 2026-08-04; spec hash, judge hash, task tier and provider all identical to rep1, so the runs are poolable). The [experiment log](benchmark/shadowbench-w/results-log.md) carries the live count — this page is not updated per run. The row above will be rewritten when the run is full. Until then, treat only the qwen rows as findings.
 
 **What we do *not* claim:** prose consistency shows **no significant difference** from RAG (S-tier p=0.9905, M-tier p=0.3361). Benxiang costs **more** tokens, and how much more depends on the model: **+25% on qwen, +149% on the long-reasoning deepseek**. Earlier claims of "writes more consistently" and "saves tokens" have been withdrawn — the data does not support the first and contradicts the second.
 

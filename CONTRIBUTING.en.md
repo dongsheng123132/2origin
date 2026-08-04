@@ -5,15 +5,21 @@
 **The contribution we want most is not a feature. It is a refutation.**
 
 Everything this project claims rests on a set of checkable numbers. If a number is wrong, the sooner
-we know the better — the record of seven self-caught incidents is in
-[results-log.md](benchmark/shadowbench-w/results-log.md), and we do not assume there is no eighth.
+we know the better — the record of eight self-caught incidents is in
+[results-log.md](benchmark/shadowbench-w/results-log.md), and we do not assume there is no ninth.
 
-**The seventh is worth reading on its own.** The first six were the *instrument* lying: concurrent
+**The last two are worth reading on their own.** The first six were the *instrument* lying: concurrent
 overwrites, spec drift, corpus leakage, an unfingerprinted scorer, results clobbered by a same-named
-file, the wrong answer key. Every one of those can be fixed with a guardrail. The seventh had no
-instrument failure at all — the scorer, the answer key, the fingerprints and the result files were
-all correct. What was wrong was reading an n=1 result as a conclusion.
-**A flattering n=1 result is exactly as untrustworthy as an unflattering one.**
+file, the wrong answer key. Every one of those can be fixed with a guardrail. The seventh and eighth
+had no instrument failure at all — scorer, answer key, fingerprints and result files were all
+correct. **What was wrong was the person reading the numbers.**
+
+- **Seventh:** an n=1 result was read as a conclusion. *A flattering n=1 result is exactly as
+  untrustworthy as an unflattering one.*
+- **Eighth:** the strongest evidence on the front page — "both control arms at exactly 75.0% with
+  zero standard deviation across twenty runs" — turned out to be the probe prompt's JSON template
+  printing 5 of the 8 answers into the question. 6÷8 = 75.0%. *A number too clean to vary should
+  have been an alarm, not evidence.*
 
 ---
 
@@ -95,6 +101,6 @@ model name. If the scorer misjudged something, quote the offending sentence dire
 
 ---
 
-> We put seven incidents on the front page because, for a benchmark,
+> We put eight incidents on the front page because, for a benchmark,
 > **the honesty of the instrument is the entire asset.**
-> Helping us find the eighth is the most valuable thing you can do here.
+> Helping us find the ninth is the most valuable thing you can do here.
