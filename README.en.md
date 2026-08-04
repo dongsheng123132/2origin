@@ -212,7 +212,8 @@ An erroneous negative result is harder to question than an erroneous positive on
 ## Layout
 
 📜 **[The Benxiang Manifesto](MANIFESTO.en.md)** — why this exists, what has been demonstrated, where it goes next.
-🔬 **[Contributing / Reproducing](CONTRIBUTING.md)** — the most welcome contribution is not a feature. It is refuting our results.
+🔬 **[Contributing / Reproducing](CONTRIBUTING.en.md)** — the most welcome contribution is not a feature. It is refuting our results.
+📐 **[Protocol spec](docs/03-protocol-draft-v0.1.en.md)** · **[Conformance suite](spec/conformance/README.en.md)** — everything needed to write an independent implementation.
 
 ```text
 spec/        protocol schemas + example .origin packages
