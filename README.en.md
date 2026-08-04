@@ -28,7 +28,7 @@ The claim has been **narrowed by experiment** to exactly one dimension: **state 
 |---|---|---|---|
 | qwen-plus · S-tier (20k chars, 10 runs each) | **92.5%** | 75.0% (sd 0) | 75.0% (sd 0) |
 | qwen-plus · M-tier (95k chars, 11 runs each) | **98.9%** | 75.0% (sd 0) | 75.0% (sd 0) |
-| deepseek-v4-flash · M-tier | *n=1: 100.0%* ⏳ | 53.8% ± 32.6 (n=10) | 32.1% ± 37.1 (n=7) |
+| deepseek-v4-flash · M-tier | **98.8% ± 3.95** (n=10) | 53.8% ± 32.6 (n=10) | 32.1% ± 37.1 (n=7) |
 
 🛑 **The two control columns were withdrawn on 2026-08-04. This table cannot currently be used as a comparison.**
 
@@ -40,7 +40,7 @@ Self-audit ([Run #18](benchmark/shadowbench-w/results-log.md)) found that the co
 
 Stretching the baseline from 20k to 95k characters raised Benxiang's **own** score (92.5% → 98.9%) — a within-arm comparison that never touches the probe, and therefore unaffected. The claim that "vector RAG didn't move at all" is **withdrawn along with the control columns**: the retrieved passages went into the chapter-writing calls, while state was collected by a separate probe carrying no history, so retrieval never reached the moment being measured. It did not fail the exam; it never sat it.
 
-⚠️ **The deepseek row is not a result yet.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%. **A single run tells you nothing about the distribution**: the smoke test measured A0 at 37.5% and A1 at 75.0%; ten runs later those are 53.8% and 32.1%. The Benxiang arm is **mid-run toward n=10** (first attempt interrupted at 17/30 on 2026-08-03, resumed from rep2 on 2026-08-04; spec hash, judge hash, task tier and provider all identical to rep1, so the runs are poolable). The [experiment log](benchmark/shadowbench-w/results-log.md) carries the live count — this page is not updated per run. The row above will be rewritten when the run is full. Until then, treat only the qwen rows as findings.
+⚠️ **The deepseek row is not a result yet.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%. **A single run tells you nothing about the distribution**: the smoke test measured A0 at 37.5% and A1 at 75.0%; ten runs later those are 53.8% and 32.1%. The Benxiang arm is now full at n=10 ([Run #19](benchmark/shadowbench-w/results-log.md)): **98.8% ± 3.95**, ten of ten runs completing 5/5. Nine perfect, one at 87.5% — missing `obj:black-key.holder`, precisely the one field Run #18 showed to be the only genuinely discriminating one. **That miss is reassuring**: after Run #18, a zero-variance perfect score would have to be treated as a suspect first and a result second. But the control columns remain withdrawn, so this is A3's own distribution — not a comparison.
 
 **What we do *not* claim:** prose consistency shows **no significant difference** from RAG (S-tier p=0.9905, M-tier p=0.3361). Benxiang costs **more** tokens, and how much more depends on the model: **+25% on qwen, +149% on the long-reasoning deepseek**. Earlier claims of "writes more consistently" and "saves tokens" have been withdrawn — the data does not support the first and contradicts the second.
 

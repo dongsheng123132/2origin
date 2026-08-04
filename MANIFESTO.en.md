@@ -67,7 +67,7 @@ The task is state tracking across long-form narrative: *who holds the key right 
 |---|---|---|---|
 | qwen-plus · 20k chars (10 runs each) | **92.5%** | 75.0% (sd 0) | 75.0% (sd 0) |
 | qwen-plus · 95k chars (11 runs each) | **98.9%** | 75.0% (sd 0) | 75.0% (sd 0) |
-| deepseek-v4-flash · 95k chars | *n=1: 100.0%* ⏳ | 53.8% ± 32.6 (n=10) | 32.1% ± 37.1 (n=7) |
+| deepseek-v4-flash · 95k chars | **98.8% ± 3.95** (n=10) | 53.8% ± 32.6 (n=10) | 32.1% ± 37.1 (n=7) |
 
 🛑 **The two control columns were withdrawn on 2026-08-04. This table cannot currently be used as a comparison.**
 
@@ -83,7 +83,11 @@ Self-audit ([Run #18](benchmark/shadowbench-w/results-log.md)): the control arms
 
 **The deepseek row has to be held back.** The smoke run measured the bare model at 37.5% and RAG at 75.0%, and on that basis I wrote *"Benxiang lifts two models of very different strength to the same height."* Ten runs later those numbers are 53.8% and 32.1%. **A single run tells you nothing about the distribution.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%.
 
-The Benxiang arm is running toward n=10 (first attempt interrupted at 17/30 on 2026-08-03, resumed from rep2 on 2026-08-04; the live count is in the [results-log](benchmark/shadowbench-w/results-log.md), which this page does not mirror per run). Until it is full, *"state correctness comes from the architecture, not the model"* is supported **only on qwen**; the cross-model half is not established.
+The Benxiang arm is now full at n=10 ([Run #19](benchmark/shadowbench-w/results-log.md)): **98.8% ± 3.95**, all ten runs completing 5/5. Nine were perfect; one scored 87.5% — and the field it missed was `obj:black-key.holder`, precisely the one field Run #18 identified as the only one that actually tests anything.
+
+**That imperfect run is the good news.** A flat ten-out-of-ten with zero variance would, under the rule established the previous day, have to be treated as a suspect rather than a triumph. A real model producing a distribution that occasionally errs is evidence that what was measured is capability, not a template.
+
+It is still **not** a cross-model finding: the control arms were withdrawn with Run #18 and must be re-run, so this is A3's own distribution and nothing more. *"State correctness comes from the architecture, not the model"* needs a three-arm comparison with the probe fixed — not one arm looking good on two models.
 
 The correction is worth keeping in the manifesto: **an n=1 result that flatters you is exactly as worthless as an n=1 result that doesn't.** The mistake in the previous version was not fabrication — it was treating "this leaves no room for interpretation" as a substitute for sample size.
 
