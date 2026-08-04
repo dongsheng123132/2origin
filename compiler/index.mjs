@@ -20,3 +20,5 @@ export { commit, appendHistory, initPackage, seqOf } from './store.mjs'
 // 投影侧（一源万影的「影」）。format 层交给方言，核心只管选取、披露、溯源。
 // ⚠️ 一致性向量尚未覆盖它——见 spec/conformance/README.md 五
 export { planProjection, disclosure, projectionRecord } from './project.mjs'
+// 第七要素：这份表示保证不了什么。接手一个陌生包时应当先问它。
+export { checkLimits, relevantLimits, renderLimits, limit, LIMIT_KINDS } from './limits.mjs'

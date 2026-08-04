@@ -9,6 +9,7 @@
 //   origin history  <pkg> [过滤]       都改过什么、谁改的？
 //   origin replay   <pkg> [--until]    某一刻的世界长什么样？
 //   origin diagnose <pkg>              这个包现在健不健康？
+//   origin limits   <pkg>              这个包保证不了什么？
 //   origin commit   <pkg> <tx.json>    把一个语义事务落进去（唯一的写入口）
 //
 // **写入只有 commit 一条路**：校验不过则一字节不写，理由原样返回给调用方重写；
@@ -23,6 +24,7 @@ import { dirname, join } from 'node:path'
 import { loadOrigin } from './origin.mjs'
 import { normalizeId } from './commit-compiler.mjs'
 import { why, historyOf, diagnose, replay, parseRef } from './provenance.mjs'
+import { checkLimits, relevantLimits, renderLimits } from './limits.mjs'
 import { commit, seqOf } from './store.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -39,6 +41,7 @@ const USAGE = `origin ${VERSION} —— 本象包检视与提交
   origin history  <pkg> [--object ID] [--field F] [--tx ID] [--by WHO] [--limit N]
   origin replay   <pkg> [--until <seq|tx>]  重放到某一刻的完整状态
   origin diagnose <pkg>                     包体检（有 error 时退出码 1）
+  origin limits   <pkg> [--scope 前缀*]     这个包保证不了什么（接手陌生包先问它）
   origin seq      <pkg>                     当前 seq 水位
 
 写（唯一）：
@@ -63,7 +66,7 @@ const opts = {}
 const args = []
 for (let i = 2; i < process.argv.length; i++) {
   const a = process.argv[i]
-  if (['--object', '--field', '--tx', '--by', '--limit', '--until', '--expect'].includes(a)) opts[a.slice(2)] = process.argv[++i]
+  if (['--object', '--field', '--tx', '--by', '--limit', '--until', '--expect', '--scope'].includes(a)) opts[a.slice(2)] = process.argv[++i]
   else if (a.startsWith('-')) flags.add(a)
   else args.push(a)
 }
@@ -186,6 +189,22 @@ const COMMANDS = {
       note(`✓ 已落盘 seq ${r.receipt.seq_from}–${r.receipt.seq_to}，责任者 ${r.receipt.by}`)
       for (const ref of r.receipt.changed) row('changed', ref)
       for (const w of r.receipt.warnings) row('warning', w.code ?? '-', w.msg)
+    })
+  },
+
+  /**
+   * 第七要素：这个包保证不了什么。
+   *
+   * 单列成一条命令而不是塞进 status，是因为它的读者不一样：status 回答
+   * 「这里面有什么」，limits 回答「哪些地方别信我」。**接一个陌生包时应当先问后者。**
+   * `--scope` 按范围过滤，省得把全部边界塞进模型上下文挤掉正事。
+   */
+  limits(origin) {
+    const list = relevantLimits(origin.limits ?? [], opts.scope ?? null)
+    const bad = checkLimits(origin.limits ?? [])
+    emit({ limits: list, total: (origin.limits ?? []).length, malformed: bad }, () => {
+      process.stdout.write(renderLimits(list) + '\n')
+      for (const b of bad) row(b.severity, b.code, b.msg)
     })
   },
 

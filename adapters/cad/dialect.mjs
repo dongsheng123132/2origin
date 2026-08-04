@@ -15,6 +15,8 @@
 // 图元不许留在 0 层、构件编号不许重复、图上画的数量要和编号对得上、字高不能小到看不清。
 // 这些今天靠人拿放大镜核对，错了往往到施工现场才发现。
 
+import { limit } from '../../compiler/limits.mjs'
+
 export const CAD_TYPES = ['dwg', 'layer', 'ent', 'text']
 
 /**
@@ -63,6 +65,33 @@ export const cadConstraints = ({ annotationLayer = '标注', countedLayer = '门
     rule: `字高不得小于 ${minTextHeight}（小于图幅 1/300 等于没标）`,
     check: { type: 'range', object: 'text:*', field: 'height', min: minTextHeight },
   },
+]
+
+/**
+ * 第七要素：这份 CAD 本象包**保证不了什么**。
+ * 此前这些话只存在于 import.mjs 的注释、id_basis 字段和 stderr 警告里——
+ * 读源码的人知道，拿到包的 AI 不知道。
+ */
+export const cadLimits = ({ hasHandles = true, numbering = 'text' } = {}) => [
+  ...(hasHandles ? [] : [limit('cad-id-degraded', 'degraded', 'ent:* / text:*',
+    'DXF 无实体句柄（R12 或更早），对象 ID 退化为几何内容哈希：图元一移动，ID 就变了。',
+    '版本对比会把「移动了一根梁」看成「删一根、加一根」。导出时选 R13 以上——这是对出图流程的硬要求，不是建议。')]),
+
+  ...(numbering === 'block' ? [limit('cad-count-rule-off', 'uncovered', 'label-count-matches',
+    '本图用块属性编号，没有独立标注层文字，故「构件数必须等于编号数」这条规则未启用。',
+    '这是有意的：对块属性图纸硬套该规则会得到「4 樘窗 vs 0 个编号」的假警报，比不查更糟。要覆盖这类图纸需另写一条按块属性计数的规则。')] : []),
+
+  limit('cad-styles-not-carried', 'lossy', 'drawing',
+    '线型、线宽、颜色映射、图框、打印样式不进包——那些是出图表现，不是图纸的本源结构。',
+    '需要还原出图效果的场景请回到原 DXF。'),
+
+  limit('cad-fixture-handwritten', 'unverified', 'block-parsing',
+    'B-201.dxf 块夹具按 R12 规范手写，未经 AutoCAD 往返验证——证明解析器对得上规范，不证明对得上真软件的输出。',
+    '拿真实图纸重验一次。A-101.dxf 由外部工具生成，是独立样本。'),
+
+  limit('cad-semantic-undetectable', 'undetectable', 'diagnose',
+    '「画对了但设计错了」查不到：构件尺寸不合规范、荷载算错、做法与说明不符——这些需要专业判断，不是一致性检查。',
+    '交给设计复核。本方言只管「图纸自己跟自己对不对得上」。'),
 ]
 
 export const CAD_MANIFEST = (id, title, source) => `# 本象包（CAD 方言）

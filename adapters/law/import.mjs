@@ -24,7 +24,7 @@ import { readFileSync, existsSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { initPackage, appendHistory } from '../../compiler/store.mjs'
-import { lawConstraints, LAW_MANIFEST, adjust, KIND_CN } from './dialect.mjs'
+import { lawConstraints, LAW_MANIFEST, adjust, KIND_CN, lawLimits } from './dialect.mjs'
 import { splitSections, parseCaseNo, cnDate, extractCitations, parseWorksheet, extractAmounts, extractTerms } from './parse.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -228,7 +228,10 @@ if (process.argv[1]?.endsWith('import.mjs') && process.argv[1]?.includes('law'))
   const staged = process.argv.includes('--staged')
   const r = judgmentToPackage(text, { db, name, staged })
 
-  initPackage(dir, { manifest: LAW_MANIFEST(r.caseId, r.head.案号, src), objects: r.objects, relations: r.relations, constraints: r.constraints })
+  initPackage(dir, { manifest: LAW_MANIFEST(r.caseId, r.head.案号, src), objects: r.objects, relations: r.relations, constraints: r.constraints,
+    // 第七要素：这个域里边界声明分量最重——说不清边界的法律工具会被当成「AI 审过了」
+    limits: lawLimits({ closedWorld: db.closedWorld, dbSize: db.byId.size,
+      uncovered: r.objects.filter((o) => o.citation_status === 'uncovered').length }) })
   appendHistory(dir, [{ event: 'imported', source: src, 案号: r.head.案号, 裁判日期: r.judgedAt, at: new Date().toISOString(), by: 'law-import' }])
 
   const n = (t) => r.objects.filter((o) => o.type === t).length

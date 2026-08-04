@@ -19,6 +19,8 @@
 // 这些今天靠人逐条核对，且量刑的中间量根本不写进判决书——错了没人看得见。
 
 /** 各类规范性文件在各类案件中能否作为**裁判依据**引用（法释〔2009〕14号）。 */
+import { limit } from '../../compiler/limits.mjs'
+
 export const CITABLE_AS_BASIS = {
   刑事: ['law', 'interp'],
   民事: ['law', 'interp', 'adminreg', 'localreg'],
@@ -166,6 +168,44 @@ export const KIND_CN = {
   law: '法律', interp: '司法解释', adminreg: '行政法规', localreg: '地方性法规',
   adminrule: '规章', guide: '司法文件', unknown: '未知/查无此文',
 }
+
+/**
+ * 第七要素：这份法律本象包**保证不了什么**。
+ *
+ * 这个域里边界声明的分量最重：一份说不清自己边界的法律辅助工具，
+ * 会被当成「AI 审过了」——而法发〔2022〕33号 明确规定 AI 结果不得代替法官裁判。
+ * 把边界写进包，是这条红线在技术上的落实方式，不是免责声明。
+ */
+export const lawLimits = ({ closedWorld = false, dbSize = 0, uncovered = 0 } = {}) => [
+  limit('law-assist-only', 'undetectable', 'case:*',
+    '本方言管「结论到依据的可追溯性」，不管「结论对不对」。它不判断量刑是否适当、事实认定是否正确、证据是否充分。',
+    '法发〔2022〕33号：AI 结果不得代替法官裁判。本包是留痕工具，不是裁判工具。'),
+
+  // 两种配置都必须出话——没有哪一种设置可以让这个包对自己的覆盖范围保持沉默。
+  ...(closedWorld
+    ? [limit('law-db-claims-closed', 'unverified', 'citation-*',
+        `条文库自称完备（closed_world=true）且仅 ${dbSize} 条，因此库里查不到的一律判「查无此文」。**这只对自造夹具这种封闭世界成立。**`,
+        '真实部署接权威法规库前必须设 false，否则律师给来的每一条库外法条都会变成假阳性——而假阳性率恰恰是要量的东西。')]
+    : [limit('law-db-open-world', 'uncovered', 'citation-*',
+        `条文库仅 ${dbSize} 条且未声明完备（closed_world=false），查不到的条文只判 uncovered 警告，不判 not-found 错误。`,
+        '接权威法规库后置 true；在那之前，「引用体检通过」只等于「库内的都对」，不等于「引用都合规」。')]),
+
+  ...(uncovered > 0 ? [limit('law-uncovered-citations', 'uncovered', 'citation-*',
+    `本案有 ${uncovered} 条引用不在条文库内，未经核验。`,
+    '把这些条文补进 lawdb.json 后重跑。覆盖率过半未命中时，引用体检应视为不可做。')] : []),
+
+  limit('law-misgrounded-undetectable', 'undetectable', 'diagnose',
+    '两类确定性检查抓不到：①认定累犯但查明段无前科事实（需语义推理）；②条文真实、有效、类型合规，但不支持所述命题（Stanford 所谓 misgrounded citation）。',
+    '准确表述是：把 Stanford 报告里那 17%–34% 的错误从四类压到一类，剩下那一类交给人——不是「AI 不会再错」，是「错在哪一类现在是确定的」。'),
+
+  limit('law-fixtures-selfmade', 'unverified', 'false-positive-rate',
+    '「合规卷假阳性为 0」出自自己造的三份 fixture。自己出的卷子考满分不算能力证据——它只保证改代码不会让检出变差。',
+    '拿 3–5 份已公开的真实刑事判决书跑一遍。话术与给对方 AI 的提示词在 adapters/law/intake/。'),
+
+  limit('law-temporal-validity', 'degraded', 'lawdb',
+    '条文的时间效力、修正案沿革、司法解释废止关系需要人工维护。库里的「有效/失效」是某个时点的快照。',
+    '这是本方案最大的隐性成本，本象不消灭它。定期核对，或接一个带效力区间的权威源。'),
+]
 
 export const LAW_MANIFEST = (id, title, source) => `# 本象包（法律方言）
 artifact:

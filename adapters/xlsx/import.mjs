@@ -26,7 +26,7 @@ import { readFileSync } from 'node:fs'
 import { basename } from 'node:path'
 import { parseXlsx, toR1C1, numToCol, colToNum } from './xlsx.mjs'
 import { initPackage, appendHistory } from '../../compiler/store.mjs'
-import { xlsxConstraints, XLSX_MANIFEST } from './dialect.mjs'
+import { xlsxConstraints, xlsxLimits, XLSX_MANIFEST } from './dialect.mjs'
 
 /** 表名进 ID：去掉会破坏引用语法的字符，保留中文。与 CAD 方言的 slug 同规矩。 */
 const slug = (s) => String(s ?? 'Sheet1').replace(/[\s:/*!]+/g, '_')
@@ -319,7 +319,9 @@ if (process.argv[1]?.endsWith('import.mjs') && process.argv[1]?.includes('xlsx')
   const { objects, relations, truncated } = toObjects(wb, { name, source: src, maxCells })
   const constraints = xlsxConstraints(profiles)
 
-  initPackage(dir, { manifest: XLSX_MANIFEST(slug(name), name, src), objects, relations, constraints })
+  initPackage(dir, { manifest: XLSX_MANIFEST(slug(name), name, src), objects, relations, constraints,
+    // 第七要素：这个包保证不了什么。截断只要发生就必然出现在这里。
+    limits: xlsxLimits({ truncated }) })
   appendHistory(dir, [{
     event: 'imported', source: src, sheets: wb.sheets.length,
     cells: objects.filter((o) => o.type === 'cell').length,

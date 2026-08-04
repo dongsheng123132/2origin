@@ -85,6 +85,10 @@ export function loadOrigin(dir, { manifest: manifestOverride } = {}) {
   const objects = readJsonl(join(dir, 'graph', 'objects.jsonl'))
   const relations = readJsonl(join(dir, 'graph', 'relations.jsonl'))
   const constraints = readJson(join(dir, 'graph', 'constraints.json'), [])
+  // 第七要素：这份表示保证不了什么（见 limits.mjs）。
+  // 缺省为空数组而不是报错——旧包读得进来；但「未声明边界」不等于「没有边界」，
+  // renderLimits 对空清单会明确说这一点。
+  const limits = readJson(join(dir, 'graph', 'limits.json'), [])
   const history = readJsonl(join(dir, 'provenance', 'history.jsonl'))
   const initial = stateFromObjects(objects)
   const state = replay(initial, history)
@@ -95,6 +99,7 @@ export function loadOrigin(dir, { manifest: manifestOverride } = {}) {
     objects,
     relations,
     constraints,
+    limits,
     history,
     initial,
     state,

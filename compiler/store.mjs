@@ -100,7 +100,7 @@ export function commit(dir, tx, { by = 'unknown', at = null, expectedSeq = null,
 }
 
 /** 建一个空包。objects 写进出生证明，此后只能由事务改动。 */
-export function initPackage(dir, { manifest = '', objects = [], relations = [], constraints = [] } = {}) {
+export function initPackage(dir, { manifest = '', objects = [], relations = [], constraints = [], limits = [] } = {}) {
   mkdirSync(join(dir, 'graph'), { recursive: true })
   mkdirSync(join(dir, 'provenance'), { recursive: true })
   const jsonl = (rows) => rows.map((r) => JSON.stringify(r)).join('\n') + (rows.length ? '\n' : '')
@@ -108,6 +108,9 @@ export function initPackage(dir, { manifest = '', objects = [], relations = [], 
   writeFileSync(join(dir, 'graph', 'objects.jsonl'), jsonl(objects), 'utf8')
   writeFileSync(join(dir, 'graph', 'relations.jsonl'), jsonl(relations), 'utf8')
   writeFileSync(join(dir, 'graph', 'constraints.json'), JSON.stringify(constraints, null, 2) + '\n', 'utf8')
+  // 第七要素：这份表示保证不了什么。空清单也要落盘——
+  // 有一个空文件，和根本没这个文件，对下游是两回事。
+  writeFileSync(join(dir, 'graph', 'limits.json'), JSON.stringify(limits, null, 2) + '\n', 'utf8')
   if (!existsSync(join(dir, ...HISTORY))) writeFileSync(join(dir, ...HISTORY), '', 'utf8')
   return loadOrigin(dir)
 }

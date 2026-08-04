@@ -28,6 +28,8 @@
 //
 // 五条全部用现有谓词表达（in / not_equals），没有为它们新增任何谓词。
 
+import { limit } from '../../compiler/limits.mjs'
+
 export const XLSX_TYPES = ['book', 'sheet', 'cell']
 
 /**
@@ -96,6 +98,45 @@ export const xlsxConstraints = (profiles = []) => [
     }]
     return []
   }),
+]
+
+/**
+ * 第七要素：这份 xlsx 本象包**保证不了什么**。
+ *
+ * 这些话此前散落在 README、代码注释、selftest 的 DEFECTS 目录和 stderr 警告里——
+ * 也就是说，**只有读源码的人知道**。可这个包的主要消费方是 AI，AI 不读 README。
+ * 边界不进包，边界就不存在，下游会拿一个已知有损的东西当本体用。
+ *
+ * @param opts.truncated  超出 --max-cells 被丢掉的格子数（0 则不声明这一条）
+ */
+export const xlsxLimits = ({ truncated = 0 } = {}) => [
+  limit('xlsx-address-not-stable', 'degraded', 'cell:*',
+    '单元格地址不是稳定 ID：在上面插一行，原来的 D5 就变成 D6。xlsx 在「同一个东西改了值」与「东西还在原地但地址变了」之间无法区分。',
+    '跨版本对比会把「插了一行」看成「往下每一格都改了」。要真正的版本对比，需要源端提供稳定标识（表格格式本身不提供）。'),
+
+  limit('xlsx-no-recalc', 'degraded', 'cell:*.value',
+    '本象不重算公式。事务改了输入格之后，依赖它的公式格存的仍是旧的缓存值——Excel 打开会重算，但程序直接读到的是旧值。',
+    '投影时顺 depends_on 反向传播标出全部失效格（已实现，见 project.mjs 的 staleCells）；要真值需接一个公式引擎（如 pycel）。'),
+
+  limit('xlsx-styles-not-carried', 'lossy', 'workbook',
+    '样式、图表、透视表、合并单元格、条件格式一概不读入包——那些是给人看的装饰，本象里没有对应表示。',
+    '投影回 xlsx 时它们不会出现。需要保留排版的场景不要走「导入→投影」这条路，直接改原文件。'),
+
+  limit('xlsx-semantic-errors', 'undetectable', 'diagnose',
+    '两类错误确定性检查抓不到：①整列用错了列（本该乘税率却整列乘了折扣率）——形状一致、无错误值、数值合法；②数量级错误（单价 10.00 填成 1000）——值本身完全合法。',
+    '交给懂这门生意的人，或换非确定性手段。准确的表述是「把错误压到语义那一类」，不是「不会再错」。'),
+
+  limit('xlsx-text-paste-undetectable', 'undetectable', 'formula-column-purity',
+    '把**文本**粘贴到公式格上查不到——本规则只报数字。这是为压假阳性主动付的代价：真表大量使用分段小表（段标题与公式在同一列交替出现），判 text 会把每个段标题都报成缺陷。',
+    '51 份真表实测，这一条让假阳性从 310 降到 20。要同时覆盖文本粘贴，需要先能区分「段标题」与「被粘贴的文本」。'),
+
+  limit('xlsx-formula-rules-unverified', 'unverified', 'formula-column-purity / formula-column-consistency / aggregate-covers-data',
+    '三条公式类规则**未在真实财务模型上验过假阳性**。已跑过的 51 份真表全是物流/报价/清单类，不含多层引用与情景假设的财务模型。',
+    '找手工搭的预算表/估值模型/现金流预测跑一遍。已排除 Enron 语料（是 BIFF/.xls，公式以 RPN token 存储而非文本）。'),
+
+  ...(truncated > 0 ? [limit('xlsx-truncated', 'lossy', 'cell:*',
+    `超出 --max-cells，有 ${truncated} 格未入包，体检结果只覆盖入包的那部分。`,
+    '调大 --max-cells 重新导入。悄悄少算等于假装全查了，所以这一条只要发生就必然出现在这里。')] : []),
 ]
 
 export const XLSX_MANIFEST = (id, title, source) => `# 本象包（xlsx 方言）

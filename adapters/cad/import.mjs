@@ -24,7 +24,7 @@ import { readFileSync } from 'node:fs'
 import { basename } from 'node:path'
 import { parseDxf, geometryOf, textOf, insertOf, blockBBox } from './dxf.mjs'
 import { initPackage, appendHistory } from '../../compiler/store.mjs'
-import { cadConstraints, CAD_MANIFEST } from './dialect.mjs'
+import { cadConstraints, cadLimits, CAD_MANIFEST } from './dialect.mjs'
 
 const GEOMETRY_TYPES = new Set(['LINE', 'POLYLINE', 'LWPOLYLINE', 'CIRCLE', 'ARC', 'ELLIPSE', 'SPLINE', 'SOLID', 'INSERT'])
 const TEXT_TYPES = new Set(['TEXT', 'MTEXT'])
@@ -173,7 +173,8 @@ if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}` || proc
     numberAttr, numbering,
   })
 
-  initPackage(dir, { manifest: CAD_MANIFEST(name, name, src), objects, constraints })
+  initPackage(dir, { manifest: CAD_MANIFEST(name, name, src), objects, constraints,
+    limits: cadLimits({ hasHandles: dxf.hasHandles, numbering }) })
   appendHistory(dir, [{ event: 'imported', source: src, dxf_version: dxf.version, has_handles: dxf.hasHandles, entities: objects.length - 1, at: new Date().toISOString(), by: 'dxf-import' }])
 
   const ents = objects.filter((o) => o.type === 'ent').length
