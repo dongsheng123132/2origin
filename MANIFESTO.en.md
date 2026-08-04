@@ -87,7 +87,24 @@ The Benxiang arm is now full at n=10 ([Run #19](benchmark/shadowbench-w/results-
 
 **That imperfect run is the good news.** A flat ten-out-of-ten with zero variance would, under the rule established the previous day, have to be treated as a suspect rather than a triumph. A real model producing a distribution that occasionally errs is evidence that what was measured is capability, not a template.
 
-It is still **not** a cross-model finding: the control arms were withdrawn with Run #18 and must be re-run, so this is A3's own distribution and nothing more. *"State correctness comes from the architecture, not the model"* needs a three-arm comparison with the probe fixed — not one arm looking good on two models.
+The same thing happened once on qwen: each model's single imperfect run missed the **same field**, in different ways — deepseek left the key with Lin Zheng (never executed the handover), qwen filled in `loc:moon-platform`, a location in a character field.
+
+**Half the cross-model claim now holds. The other half does not.**
+
+The half that holds is the **within-arm** comparison — A3 against itself on two models, which never touches the probe and is therefore unaffected by Run #18. After a uniform rescore, 11 runs against 11:
+
+| | qwen-plus (n=11) | deepseek-v4-flash (n=11) | Permutation test |
+|---|---|---|---|
+| **W3 state accuracy** | **98.9%** | **98.9%** | diff 0.0000, **p = 1.0000** |
+| **W1 EPC** (prose, lower is better) | **0.20** | **0.55** | diff −0.35, **p = 0.0392** |
+
+The W3 distributions are **identical run for run** (10 perfect + 1 at 87.5% each), while prose quality differs by nearly 3×.
+
+> **State-layer correctness is independent of the base model; prose-layer quality is not.**
+
+That is exactly the property a *protocol* ought to have: **it does not depend on how strong the machine underneath is.** And this time it is not the n=1 flattery of Run #15 — it is 11 against 11.
+
+The half that does not hold is the **comparison**. *"Benxiang lifts two models of very different strength to the same height"* still cannot be used: "to the same height" is a statement about the control arms, which are void — and even the premise that the two models differ greatly in strength rested on A0's 37.5%/75%, void for the same reason. **I can say the first half of that sentence and not the second.**
 
 The correction is worth keeping in the manifesto: **an n=1 result that flatters you is exactly as worthless as an n=1 result that doesn't.** The mistake in the previous version was not fabrication — it was treating "this leaves no room for interpretation" as a substitute for sample size.
 
@@ -139,9 +156,10 @@ CAD deserves a special mention: irreversibility is most obvious there — **a dr
 
 The credibility of this project rests on stating its limits precisely.
 
-- **Not "writes more consistently."** Prose consistency shows **no significant difference** from vector RAG (p=0.9905 / p=0.3361). Cheap RAG already owns that half.
-- **Not "saves tokens."** The opposite — **more expensive**: +25% on qwen, +149% on the long-reasoning deepseek.
-- **Cross-model is not established.** On the second model the control arms have reached n=10 / n=7; the Benxiang arm is still at n=1 — the first multi-run was interrupted on 08-03 and resumed from rep2 for 9 runs on 08-04, with all four provenance fingerprints matching rep1 and the control arms. That model shows huge variance and bimodal control arms, so single-run figures were withdrawn and restated.
+- **Not "writes more consistently."** Prose consistency shows **no significant difference** from vector RAG — after a uniform M-tier rescore, qwen p=0.1852 and deepseek p=0.3341. Cheap RAG already owns that half.
+  > On deepseek, A3 does beat the **bare** model significantly (p=0.0278). That is not enough to claim: A0 is the weak baseline, and beating it is a different sentence from beating RAG; four tests were run this round, so the Bonferroni threshold is 0.0125, which it does not clear; and the same comparison on qwen gives p=0.3386. Recorded in Run #19, kept out of the claims.
+- **Not "saves tokens."** The opposite — **more expensive**: +25% on qwen, **+75%** on deepseek (n=11 measured; the "+149%" published earlier came from a single run and is corrected). Provisional as well: fixing the probe will lengthen the control arms' calls and shrink the premium.
+- **Cross-model holds only halfway.** What holds is **within-arm**: Benxiang's own W3 is identical on both models (98.9% vs 98.9%, n=11 vs 11, p=1.0000) while its prose layer differs significantly (p=0.0392). What does not hold is the **comparison**: the control arms on the second model were withdrawn with Run #18 and must be re-run, so *"lifts two models of very different strength to the same height"* remains unusable — both halves of that sentence depend on the control arms.
 - **No production adapters, no real users.** CAD and Office are, today, a line in a table.
 
 The [experiment log](benchmark/shadowbench-w/results-log.md) records **six instrumentation accidents in a single day** — all self-caught, each with the guardrail that now prevents it. Including the one where the judge graded M-tier answers against the S-tier answer key, marked a **correct answer wrong**, and handed back a *more flattering-sounding negative result* ("the advantage vanishes as the baseline grows"), which was written into the log before the cause was found.

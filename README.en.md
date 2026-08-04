@@ -40,9 +40,22 @@ Self-audit ([Run #18](benchmark/shadowbench-w/results-log.md)) found that the co
 
 Stretching the baseline from 20k to 95k characters raised Benxiang's **own** score (92.5% → 98.9%) — a within-arm comparison that never touches the probe, and therefore unaffected. The claim that "vector RAG didn't move at all" is **withdrawn along with the control columns**: the retrieved passages went into the chapter-writing calls, while state was collected by a separate probe carrying no history, so retrieval never reached the moment being measured. It did not fail the exam; it never sat it.
 
-⚠️ **The deepseek row is not a result yet.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%. **A single run tells you nothing about the distribution**: the smoke test measured A0 at 37.5% and A1 at 75.0%; ten runs later those are 53.8% and 32.1%. The Benxiang arm is now full at n=10 ([Run #19](benchmark/shadowbench-w/results-log.md)): **98.8% ± 3.95**, ten of ten runs completing 5/5. Nine perfect, one at 87.5% — missing `obj:black-key.holder`, precisely the one field Run #18 showed to be the only genuinely discriminating one. **That miss is reassuring**: after Run #18, a zero-variance perfect score would have to be treated as a suspect first and a result second. But the control columns remain withdrawn, so this is A3's own distribution — not a comparison.
+**The deepseek row is now complete for the Benxiang arm.** Variance on that model is enormous *for the control arms*, which are bimodal — most of their runs land at 75%, several collapse to 0%. **A single run tells you nothing about the distribution**: the smoke test measured A0 at 37.5% and A1 at 75.0%; ten runs later those are 53.8% and 32.1%. The Benxiang arm is now full at n=10 ([Run #19](benchmark/shadowbench-w/results-log.md)): **98.8% ± 3.95**, ten of ten runs completing 5/5. Nine perfect, one at 87.5% — missing `obj:black-key.holder`, precisely the one field Run #18 showed to be the only genuinely discriminating one. **That miss is reassuring**: after Run #18, a zero-variance perfect score would have to be treated as a suspect first and a result second. But the control columns remain withdrawn, so this is A3's own distribution — not a comparison.
 
-**What we do *not* claim:** prose consistency shows **no significant difference** from RAG (S-tier p=0.9905, M-tier p=0.3361). Benxiang costs **more** tokens, and how much more depends on the model: **+25% on qwen, +149% on the long-reasoning deepseek**. Earlier claims of "writes more consistently" and "saves tokens" have been withdrawn — the data does not support the first and contradicts the second.
+**The within-arm cross-model comparison does hold** ([Run #19](benchmark/shadowbench-w/results-log.md)). A3 against itself on two models never touches the probe, so it is **unaffected by Run #18**. After a uniform rescore, 11 runs against 11:
+
+| | qwen-plus (n=11) | deepseek-v4-flash (n=11) | Permutation test |
+|---|---|---|---|
+| **W3 state accuracy** | **98.9%** | **98.9%** | diff 0.0000, **p = 1.0000** |
+| **W1 EPC** (prose, lower is better) | **0.20** | **0.55** | diff −0.35, **p = 0.0392** |
+
+The W3 distributions are **identical run for run** (10 perfect + 1 at 87.5% on each), while prose quality differs by nearly 3×. Both models' single imperfect run missed the *same* field, in different ways: deepseek left the key with Lin Zheng (never executed the handover), qwen filled in `loc:moon-platform` (a location in a character field).
+
+> **State-layer correctness is independent of the base model; prose-layer quality is not.**
+
+⚠️ This still does **not** license *"Benxiang lifts two models of very different strength to the same height."* "To the same height" is a statement about the control arms, which are withdrawn — and the premise that the two models are "of very different strength" rested on A0's 37.5%/75%, which is void for the same reason. Only the within-arm half stands.
+
+**What we do *not* claim:** prose consistency shows **no significant difference** from RAG — after a uniform M-tier rescore, qwen p=0.1852 and deepseek p=0.3341, neither significant. Benxiang costs **more** tokens: **+25% on qwen, +75% on deepseek** (n=11 measured; the "+149%" printed here earlier came from the single smoke run of Run #15 and is corrected). That figure is provisional too — fixing the probe will lengthen the control arms' calls and shrink the premium. Earlier claims of "writes more consistently" and "saves tokens" have been withdrawn.
 
 ---
 
@@ -206,7 +219,7 @@ What exists: a protocol draft, a working reference implementation with cross-dom
 
 **What does not exist yet:**
 
-1. **Multi-run cross-model validation** — on the second model (deepseek-v4-flash) the Benxiang arm is mid-run toward a planned n=10, with the control arms already at n=10 / n=7. The [experiment log](benchmark/shadowbench-w/results-log.md) carries the current count and every raw result; this page is not updated per run, because a number that expires every twenty minutes does not belong on a front page. Until the run is full, treat the qwen numbers as measured (n=10–11) and the deepseek row as unsettled — and note that a run of clean results is worth no more than one clean result was, a mistake already made once here and recorded as incident #7.
+1. **A valid three-arm comparison.** The Benxiang arm is now complete on both models (qwen n=10–11, deepseek n=10 at 98.8% ± 3.95), but **both control arms were withdrawn with Run #18 and have not been re-run**. Until they are, this project has within-arm distributions and no comparison at all — including the comparisons that would flatter it.
 2. Production-grade adapters for real formats.
 3. Any real user.
 
