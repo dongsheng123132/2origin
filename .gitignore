@@ -33,3 +33,9 @@ benchmark/shadowbench-w/results/*.judged.json
 # 本象包的写锁——进程持有期间才存在，崩溃残留的会被下一次提交按超时抢占清理。
 # 包本身（含 provenance/history.jsonl）**要进版本库**：那是证据链。
 *.origin/.origin.lock
+
+# 本机 AI 工具装进来的第三方技能包与其锁文件。属于开发者的工具环境，不是本协议的一部分，
+# 且体积以 MB 计（含图片资源）。换一台机器不需要它们也能 npm run verify 全绿。
+.agents/
+.claude/
+skills-lock.json

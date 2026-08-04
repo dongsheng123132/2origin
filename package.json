@@ -9,11 +9,12 @@
   "scripts": {
     "test": "node compiler/selftest.mjs",
     "test:cad": "node adapters/cad/selftest.mjs",
+    "test:law": "node adapters/law/selftest.mjs",
     "test:e2e": "node adapters/memory/e2e.mjs",
     "test:mutation": "node compiler/mutation-check.mjs",
     "test:conformance": "node spec/conformance/run.mjs",
     "test:a3-equiv": "node benchmark/shadowbench-w/arms/a3-benxiang/equivalence.mjs",
-    "verify": "npm run test && npm run test:cad && npm run test:e2e && npm run test:conformance && npm run test:mutation",
+    "verify": "npm run test && npm run test:cad && npm run test:law && npm run test:e2e && npm run test:conformance && npm run test:mutation",
     "origin": "node compiler/cli.mjs",
     "mcp": "node adapters/memory/mcp-server.mjs"
   },

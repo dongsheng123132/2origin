@@ -128,8 +128,10 @@ const COMMANDS = {
     emit({ ...r }, () => {
       note(`${r.ref} 当前值：${fmt(r.value)}` + (r.explained ? `（经 ${r.chain.length} 次事务改动）` : '（无事务记录）'))
       if (!r.explained) return note('该值直接来自包的初始对象表，未经任何事务——所以它「凭」的是导入，不是推演。')
-      note('seq\tat\tby\ttx\tfrom\tto\tkind')
-      for (const c of r.chain) row(c.seq, c.at, c.by, c.tx, c.from, c.to, c.kind + (('claimed_from' in c) ? `(声称前值 ${fmt(c.claimed_from)})` : ''))
+      // basis 是「凭什么」里的**凭**——applyTransaction 一直在记，此前只有 --json 看得到。
+      // 一条 why 不带依据，等于把问题答了一半。
+      note('seq\tat\tby\ttx\tfrom\tto\tkind\tbasis')
+      for (const c of r.chain) row(c.seq, c.at, c.by, c.tx, c.from, c.to, c.kind + (('claimed_from' in c) ? `(声称前值 ${fmt(c.claimed_from)})` : ''), (c.basis ?? []).join(' '))
     })
   },
 
