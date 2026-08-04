@@ -177,9 +177,10 @@ these two points is false.** The protocol guarantees exactly what the vectors pi
 
 ## 6. Writing a new implementation
 
-1. Read [`docs/03-协议草案-v0.1.md`](../../docs/03-协议草案-v0.1.md) — the normative spec text
-   (Chinese). The vectors under [`vectors/`](vectors/) carry a `why` field per case in Chinese too,
-   but the `op`, `input` and `expect` structures are language-neutral and are the actual contract.
+1. Read [`docs/03-protocol-draft-v0.1.en.md`](../../docs/03-protocol-draft-v0.1.en.md) — the
+   normative spec text. The vectors under [`vectors/`](vectors/) carry a `why` field per case in
+   Chinese, but the `op`, `input` and `expect` structures are language-neutral and are the actual
+   contract.
 2. Expect roughly the scale of [`implementations/python/benxiang.py`](implementations/python/benxiang.py):
    about 250 lines for core level, zero dependencies.
 3. Implement the adapter and run `--level core`.
