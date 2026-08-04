@@ -1,13 +1,19 @@
 #!/usr/bin/env node
-// 法律方言自测 —— 对着两份完整判决书跑，并**报出可量化的检出率**。
+// 法律方言自测 —— 对着三份完整判决书跑，并**报出可量化的检出率**。
 //
 //   node adapters/law/selftest.mjs
 //
-// fixtures/ 里两份文书按世界规格构造（不含第三方文本，判决书本身依著作权法第五条
+// fixtures/ 里三份文书按世界规格构造（不含第三方文本，判决书本身依著作权法第五条
 // 也不受著作权保护，此处只是不引用未经核实的真实案件）：
-//   A-合规.txt  一份没有缺陷的判决 —— 用来测**假阳性**。体检必须干净收场，
-//               否则几次误报之后没人会再看体检结果，这比不查更糟。
-//   B-缺陷.txt  同一个案情，种入 12 个缺陷 —— 用来测**检出率**。
+//   A-合规.txt    一份没有缺陷的判决 —— 用来测**假阳性**。体检必须干净收场，
+//                 否则几次误报之后没人会再看体检结果，这比不查更糟。
+//   B-缺陷.txt    同一个案情，种入 12 个缺陷 —— 用来测**检出率**。
+//   C-异体例.txt  换一套段落写法（「经审理查明，」/「以上事实，有经庭审举证、质证的
+//                 下列证据在案佐证：」/「据此，依照……的规定」/ 半角编号 / 阿拉伯数字
+//                 落款）—— 用来测**解析器对真实文书变体的耐受**。仍须零误报。
+//
+// ⚠ **三份都是自己造的，跑出零误报不算数。** 真正的证伪要拿真文书跑，
+//   见 intake/01-给律师的话.md。这套自测只保证「不会因为改代码而变差」。
 //
 // 12 个缺陷里有 2 个是**故意留着抓不到的**：它们需要事实推理或语义判断，
 // 确定性门禁做不到。把它们写进目录并断言「抓不到」，是为了让漏检成为
@@ -23,6 +29,7 @@ import { checkConstraints } from '../../compiler/constraints.mjs'
 import { initPackage } from '../../compiler/store.mjs'
 import { cn2num, cnDate, termToMonths, moneyToNum, extractCitations, parseWorksheet, parseCaseNo, splitSections, extractAmounts, extractTerms } from './parse.mjs'
 import { judgmentToPackage, loadLawDb, judgeCitation } from './import.mjs'
+import { inspectIntake, splitBundle } from './intake.mjs'
 import { adjust, FACTORS, lawConstraints, CITABLE_AS_BASIS } from './dialect.mjs'
 import { runSentencing } from './sentence.mjs'
 
@@ -193,7 +200,44 @@ check(noWs.notes.some((n) => n.includes('未校验')), '缺量刑评议表时明
 check(noWs.objects.filter((o) => o.type === 'factor').length === 0, '  └ 没有情节对象——判决书正文里本来就没有')
 check(noWs.objects.find((o) => o.type === 'case')?.宣告刑偏离 === undefined, '  └ 没有偏离可算')
 
+// ── 九、异体例：真文书的段落标记有大量变体 ──────────────────────
+// A 卷是自己造的，标记规整得不像真的。C 卷换成实际见过的写法：
+// 「经审理查明，」（无「本院」、逗号不冒号）/「以上事实，有经庭审举证、质证的下列证据在案佐证：」
+// /「据此，依照……的规定」（不是「之规定」）/ 说理段里先出现一个「根据《…》」
+// / 半角编号「1.」/ 落款日期用阿拉伯数字。这些全都不该导致误报。
+console.log('\n[异体例] 换一套段落写法，仍要零误报')
+const C = mkpkg('C-异体例')
+const dC = diagnose(loadOrigin(C.dir))
+const errC = dC.findings.filter((f) => f.severity === 'error')
+check(errC.length === 0, '异体例零误报', errC.map((f) => f.msg).join(' / '))
+check(C.head.案号 === '（2026）沪0101刑初789号' && C.judgedAt === '2026-07-15', '案号与阿拉伯数字落款日期识别正确')
+check(C.evidence.length === 8, '「以上事实，有经庭审举证、质证的下列证据在案佐证：」+ 半角编号，8 项全出')
+const cSec = splitSections(readFileSync(join(HERE, 'fixtures', 'C-异体例.txt'), 'utf8'))
+check(/^依照《中华人民共和国刑法》/.test(cSec.依据), '裁判依据段起点取的是「判决如下」之前最后一个引导词，没被说理段的「根据《…》」抢走')
+check(cSec.说理.includes('量刑指导意见'), '  └ 说理段里的指导意见引用留在说理段')
+check(C.objects.filter((o) => o.type === 'cite' && o.position === '说理').length === 1, '  └ 且被记为说理位引用（司法文件说理可引）')
+check(C.objects.find((o) => o.type === 'case')?.宣告刑偏离 !== undefined && C.objects.find((o) => o.type === 'case').宣告刑偏离 < 0.2, '量刑复算通过：24 月 × 65% = 15.6 → 宣告 15 月')
+
+// ── 十、收料体检：材料够不够格做体检，跟有没有毛病是两件事 ──────
+console.log('\n[收料] 解析失败不许被读成「体检通过」')
+const cText = readFileSync(join(HERE, 'fixtures', 'C-异体例.txt'), 'utf8')
+const ok8 = inspectIntake(cText, { db })
+check(ok8.score === 8 && ok8.max === 8, '完整材料可用度 8/8')
+check(ok8.可做.length === 4 && ok8.不可做.length === 0, '  └ A/C/D 四类全部可做')
+const noWsIntake = inspectIntake(cText.split('【量刑评议表】')[0], { db })
+check(noWsIntake.score === 7 && noWsIntake.items.at(-1).ok === false, '缺量刑评议表：7/8，明确标出缺哪一项')
+check(noWsIntake.不可做.some((s) => s.startsWith('D 数字可复算')), '  └ 并说清哪一类因此做不了')
+const broken = inspectIntake('这是一段跟判决书毫无关系的文字。'.repeat(20), { db })
+check(broken.score <= 1, '认不出的材料可用度趋近 0，而不是"零 error 通过"', `实得 ${broken.score}`)
+check(broken.可做.length === 0, '  └ 什么都不可做')
+
+const bundle = cText + '\n========\n' + readFileSync(join(HERE, 'fixtures', 'A-合规.txt'), 'utf8')
+check(splitBundle(bundle).length === 2, '一坨材料按 ======== 拆成 2 份')
+check(splitBundle(cText + '\n----\n' + cText).length === 2, '  └ 分隔线宽松匹配（模型爱把等号写成破折号）')
+check(splitBundle(cText).length === 1, '  └ 单份材料不误拆')
+
 // ── 汇总 ────────────────────────────────────────────────────────
+rmSync(C.dir, { recursive: true, force: true })
 rmSync(A.dir, { recursive: true, force: true })
 rmSync(B.dir, { recursive: true, force: true })
 rmSync(G.dir, { recursive: true, force: true })
@@ -203,6 +247,7 @@ console.log('\n──────── 可量化结果 ────────
 console.log(`约束条数            ${A.constraints.length}（全部可机器判定，${A.constraints.filter((c) => c.check).length}/${A.constraints.length}）`)
 console.log(`用到的核心谓词      ${[...new Set(A.constraints.map((c) => c.check?.type))].sort().join(' / ')}`)
 console.log(`A 合规卷 error      ${errA.length}（假阳性）`)
+console.log(`C 异体例 error      ${errC.length}（换一套段落写法，仍零误报）`)
 console.log(`B 缺陷卷 error      ${msgs.length}`)
 console.log(`种入缺陷            ${DEFECTS.length}　检出 ${detected}　已知抓不到 ${DEFECTS.length - detected}　检出率 ${((detected / DEFECTS.length) * 100).toFixed(1)}%`)
 console.log(`变异检查            ${MUTATIONS.length}/${MUTATIONS.length} 条约束确认有人守`)

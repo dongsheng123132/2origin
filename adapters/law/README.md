@@ -16,7 +16,25 @@ node adapters/law/import.mjs adapters/law/fixtures/A-合规.txt /tmp/A.origin --
 node adapters/law/sentence.mjs /tmp/A.origin --declare 7 --by 承办法官-李
 node compiler/cli.mjs why /tmp/A.origin case:2026沪0101刑初123号.调节比例合计
 
-npm run test:law                                  # 79 项自测
+# 收料：别人给来的材料，先看能查到什么程度
+node adapters/law/intake.mjs 收到的.txt --split 收到的/   # 一坨多份的先拆开
+node adapters/law/intake.mjs 收到的/*.txt
+
+npm run test:law                                  # 95 项自测
+```
+
+**收料体检和判定是两件事，必须分开报。**`diagnose` 回答「这份判决有没有毛病」，
+`intake` 回答「这份材料我能不能查」——混在一起会出现最坏的结果：
+解析失败导致零 error，被读成「体检通过」。
+
+```
+收料体检：某某判决书.txt
+✓  案号        （2026）沪0101刑初789号　刑事·初审
+✓  裁判依据段  6 处引用，条文库命中 7，查无 0
+✗  量刑评议表  缺失（判决书正文里本来就没有，不是材料的错）
+可做：A 引用体检　/　D 正文对照
+不可做：C 证据支撑　/　D 数字可复算
+可用度 7/8
 ```
 
 实跑输出（对 `fixtures/B-缺陷.txt`，一份种入 12 个缺陷的判决书）：
@@ -91,8 +109,12 @@ case: / fact: / evidence: / factor: / cite: / mention:
 | B 缺陷卷 error | 10（种入 10 个可检缺陷 ↔ 10 条结论，一个缺陷不报三遍） |
 | 种入缺陷检出率 | **10/12 = 83.3%**，2 个已知抓不到并写进目录 |
 | 变异检查 | 9/9 条约束确认真的有人守 |
-| 方言代码 | 705 行（`.mjs`），另 36 行条文库 + 86 行 fixture |
+| **C 异体例 error** | **0** —— 换一套段落写法（「经审理查明，」/「以上事实，有经庭审举证、质证的下列证据在案佐证：」/「据此，依照……的规定」/ 半角编号 / 阿拉伯数字落款）仍零误报 |
+| 方言代码 | 1119 行（`.mjs`），另 36 行条文库 + 129 行 fixture |
 | **核心改动** | **4 行**，且是显示层（`why` 的输出补一列 `basis`），零新增谓词、零新增校验逻辑 |
+
+> ⚠️ **三份 fixture 都是自己造的，零误报不算数。** 真正的证伪要拿真文书跑——
+> 怎么向律师要、给对方的 AI 什么提示词，见 [`intake/`](intake/)。
 
 ### 抓不到的两个，以及为什么
 

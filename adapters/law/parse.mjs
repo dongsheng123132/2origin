@@ -89,20 +89,36 @@ export function extractCitations(text) {
   return out
 }
 
+// 真实判决书的段落标记有大量变体，各地各庭写法不一。下面每条都对应实际见过的写法：
+//   查明：本院经审理查明 / 经审理查明 / 审理查明 / 本院查明
+//   证据：上述事实，有下列证据证实 / 以上事实，有经庭审举证质证的下列证据在案佐证 /
+//         认定上述事实的证据如下
+// 标记缺失时该段为空——**不猜、不回退到「整篇当说理段」**。
+// 把整篇当说理段会让数字对照产生大量假阳性，几次误报之后没人会再看体检结果。
 const SECTIONS = [
-  ['查明', /(?:本院)?经审理查明[：:]?/],
-  ['证据', /上述事实[，,].{0,20}证据(?:证实|予以证实)[：:]?/],
+  ['查明', /(?:本院(?:经审理)?|经审理|经审理依法)?(?:经)?审理查明[：:，,]?|本院查明[：:，,]?/],
+  ['证据', /(?:上述|以上|认定上述|认定以上)事实[，,][^。]{0,60}(?:证据|佐证|材料)[^。]{0,24}[：:]/],
   ['说理', /本院认为[，,]?/],
-  ['依据', /依照《/],
   ['主文', /判决如下[：:]?/],
   ['评议', /【量刑评议表】/],
 ]
 
 /**
- * 按判决书的固定段落标记切段。
- * 标记缺失时该段为空字符串——不猜、不回退到「整篇当说理段」，
- * 因为把整篇当说理段会让数字对照产生大量假阳性，几次之后没人再看体检结果。
+ * 找「裁判依据段」的起点。
+ *
+ * 不能简单匹配 `依照《`：真实文书里写法有「依照」「依据」「根据」「据此，依照」，
+ * 而**说理段本身也会出现「根据《……》」**（引指导意见说理）。
+ * 所以规则是：取**判决如下之前最后一个**、且 30 字内跟着书名号的那个引导词——
+ * 裁判依据段永远紧贴判决主文，这一条比任何关键词表都稳。
  */
+function findBasisStart(head) {
+  let best = -1
+  for (const m of head.matchAll(/依照|依据|根据|据此/g))
+    if (head.slice(m.index, m.index + 30).includes('《')) best = m.index
+  return best
+}
+
+/** 按判决书的段落标记切段。 */
 export function splitSections(text) {
   const src = String(text ?? '')
   const hits = []
@@ -110,10 +126,23 @@ export function splitSections(text) {
     const m = src.match(re)
     if (m) hits.push({ name, start: m.index, after: m.index + m[0].length })
   }
+  // 裁判依据段：起点由「紧贴主文」推出，不靠关键词表
+  const 主文 = hits.find((h) => h.name === '主文')
+  if (主文) {
+    const at = findBasisStart(src.slice(0, 主文.start))
+    // 落在说理段之前的引导词不算——那多半是首部叙述里的「根据起诉书」之类
+    const 说理 = hits.find((h) => h.name === '说理')
+    if (at >= 0 && (!说理 || at > 说理.start)) hits.push({ name: '依据', start: at, after: at })
+  }
   hits.sort((a, b) => a.start - b.start)
   const out = { 首部: src.slice(0, hits[0]?.start ?? src.length) }
   for (let i = 0; i < hits.length; i++)
-    out[hits[i].name] = src.slice(hits[i].name === '依据' ? hits[i].start : hits[i].after, hits[i + 1]?.start ?? src.length).trim()
+    out[hits[i].name] = src.slice(hits[i].after, hits[i + 1]?.start ?? src.length).trim()
+  // 依据段的引导词本身要留着——「依照」后面紧跟的就是第一处引用
+  if (out.依据 !== undefined) {
+    const h = hits.find((x) => x.name === '依据')
+    out.依据 = src.slice(h.start, hits[hits.indexOf(h) + 1]?.start ?? src.length).trim()
+  }
   return out
 }
 
