@@ -12,8 +12,8 @@
 
 **Benxiang** (pronounced *bun-SHYAHNG*): Ben (本) = origin, Xiang (象) = archetypal image. From the *Book of Changes* — «the sage establishes images to exhaust meaning» — and the *Tao Te Ching* — «the great image has no form», and therefore can be projected into any form. The technical core is called **Origin IR**.
 
-**Status: v0.1 — protocol draft + working reference implementation + two dialects + two-tier experimental data**
-([reference implementation](compiler/) · [CAD dialect](adapters/cad/) · [Memory dialect](adapters/memory/) · [experiment log](benchmark/shadowbench-w/results-log.md), in Chinese)
+**Status: v0.1 — protocol draft + working reference implementation + three dialects + two-tier experimental data**
+([reference implementation](compiler/) · [CAD dialect](adapters/cad/) · [Law dialect](adapters/law/) · [Memory dialect](adapters/memory/) · [experiment log](benchmark/shadowbench-w/results-log.md), in Chinese)
 
 ---
 
@@ -69,7 +69,7 @@ PDFs, images, Markdown and EPUB are **not source files** — they are **projecti
 ## Try it
 
 ```bash
-npm run verify   # self-test 81 + CAD 20 + MCP end-to-end 18 + mutation 13/13
+npm run verify   # self-test 81 + CAD 44 + law 95 + MCP end-to-end 18 + conformance 68 + mutation 13/13
 ```
 
 No build step, no dependencies. `mutation-check` is the important one: it deliberately
@@ -129,7 +129,7 @@ They collapse into ten general predicates — `equals`, `not_equals`, `contains`
 
 Two of the predicates are **aggregate** — `unique` and `count` judge a *set* of objects rather than one field, and that turned out to be where real defects live. `count` with `equals_count_of` is the general shape of "the same fact is stated in two places and they must agree": a door schedule listing 5 windows while the floor plan draws 4, a table of contents that outnumbers the chapters, a plan with more line items than todos. Same predicate, three domains.
 
-Two dialects are wired up and tested:
+Three dialects are wired up and tested:
 
 ```bash
 # CAD drawing consistency (adapters/cad/)
@@ -137,9 +137,25 @@ node adapters/cad/import.mjs adapters/cad/fixtures/A-101.dxf /tmp/A-101.origin
 node compiler/cli.mjs diagnose /tmp/A-101.origin
 #   → catches: geometry left on layer 0 / duplicate tag C2 / 4 windows drawn, only 3 tagged
 
+# Chain of authority in a court judgment (adapters/law/)
+node adapters/law/import.mjs adapters/law/fixtures/B-缺陷.txt /tmp/B.origin
+node compiler/cli.mjs diagnose /tmp/B.origin
+#   → catches: a ministerial rule cited as binding authority / a repealed judicial
+#     interpretation / a citation to a document that does not exist / a 55% reduction
+#     for voluntary surrender where the guideline caps it at 40% / an amount stated as
+#     6800 in the reasoning and 8600 in the findings
+
 # Project state as an MCP server (adapters/memory/)
 claude mcp add -s local benxiang -- node <abs-path>/adapters/memory/mcp-server.mjs <package>
 ```
+
+All three dialects together added **4 lines** to the core (`why` gained a `basis` column).
+Domain knowledge enters as *data* — constraint tables, a statute database — not as code.
+
+⚠️ The law dialect's numbers (10/12 planted defects caught, 0 false positives on the
+compliant fixture) come from **fixtures we wrote ourselves**. Grading your own exam is
+not evidence of capability: those numbers only guarantee the checks don't silently
+degrade. The false-positive rate on real judgments is **not yet measured**.
 
 Constraints that carry only prose and no machine check are reported as `unenforceable` warnings rather than silently passing — silence would let "we have constraints" hide "nobody checks them".
 

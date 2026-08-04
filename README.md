@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%2079%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
+[![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%2095%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
 [![conformance](https://img.shields.io/badge/conformance-68%2F68%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
@@ -147,7 +147,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ## 快速上手
 
 ```bash
-npm run verify   # 自测 81 + CAD 44 + 法律 79 + MCP 端到端 18 + 一致性 68 + 变异检查 13/13
+npm run verify   # 自测 81 + CAD 44 + 法律 95 + MCP 端到端 18 + 一致性 68 + 变异检查 13/13
 
 
 P=spec/examples/sales-2026.origin
@@ -181,6 +181,8 @@ node compiler/cli.mjs diagnose /tmp/B.origin
 #   → 自动抓出：部门规章被列为裁判依据 / 引了已失效的司法解释 / 引了查无此文的文件
 #     / 自首减 55% 超出法定 40% 上限 / 说理段金额 6800 与认定事实 8600 对不上
 #     种入 12 个缺陷抓到 10 个，2 个已知抓不到并写进缺陷目录；合规卷假阳性为 0
+#   ⚠️ 三份 fixture 全是自己造的——**自己出的卷子考满分不算能力证据**。
+#     这些数字只保证「改代码不会让它变差」，真文书上的假阳性率尚未验证。
 
 node adapters/law/import.mjs adapters/law/fixtures/A-合规.txt /tmp/A.origin --staged
 node adapters/law/sentence.mjs /tmp/A.origin --declare 7 --by 承办法官-李
