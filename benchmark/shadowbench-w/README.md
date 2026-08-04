@@ -131,7 +131,10 @@ benchmark/shadowbench-w/
 - [x] **W3 答案集**（`world/spec.origin/tasks/continuation.json`）——续写任务、5 条禁区、预期终态
 - [x] **三个判分器**：`eval/ced.mjs`（W1，确定性通道全实现 + 语义通道接口）、`eval/detect-score.mjs`（W2 准确率/召回率）、`eval/state-diff.mjs`（W3 状态比对）
 - [x] **判分器自测**（`eval/selftest.mjs`）——用已知违规夹具反测规则是否真的会响，用干净文本反测误报
-- [x] **两个实验臂**：A0 裸模型、A3 Benxiang（含[上下文编译器](arms/a3-benxiang/context-compiler.mjs)与[提交编译器](arms/a3-benxiang/commit-compiler.mjs)——协议输入侧与输出侧的最小实现）
+- [x] **两个实验臂**：A0 裸模型、A3 Benxiang
+  - [提交编译器](arms/a3-benxiang/commit-compiler.mjs)是[参考实现](../../compiler/commit-compiler.mjs)的**叙事方言**，不再自带一份校验器——曾 fork 过两天，参考实现修的洞一个都没惠及基准，而基准正是这个项目对外的证据来源
+  - [上下文编译器](arms/a3-benxiang/context-compiler.mjs)**不合并**：投影建立在主角、同地点、未回收伏笔这些叙事概念上，核心的通用投影表达不了。理由记在文件头
+  - [差分等价测试](arms/a3-benxiang/equivalence.mjs)（`npm run test:a3-equiv`）：5420 组用例比对合并前后的门禁判定与退回文案，确保 results-log 里的数字仍是「这套护栏下的成绩」
 - [x] **编排器**（`run.mjs`）+ stub 模型，全流程零成本跑通
 - [ ] 生成 S 级基线正文（3 万字）并回读校验 ← **下一步，第一次花 API 额度**
 - [ ] 接入语义通道（知识越界、语气暗示的双模型 judge）
