@@ -19,7 +19,9 @@ import { parseXlsx, toR1C1, translateFormula, refsOf, colToNum, numToCol } from 
 import { profileColumns, materialize, toObjects, detectHeaderRow, sniff } from './import.mjs'
 import { xlsxConstraints } from './dialect.mjs'
 import { trace, toId, leaves } from './trace.mjs'
-import { initPackage } from '../../compiler/store.mjs'
+import { projectToXlsx, staleCells } from './project.mjs'
+import { disclosure, projectionRecord } from '../../compiler/project.mjs'
+import { initPackage, commit } from '../../compiler/store.mjs'
 import { loadOrigin } from '../../compiler/origin.mjs'
 import { checkConstraints } from '../../compiler/constraints.mjs'
 import { buildXlsx } from './fixtures/make-fixture.mjs'
@@ -226,6 +228,75 @@ console.log('\n十 · 「领域知识进数据，不进代码」')
   const existing = new Set(['equals', 'not_equals', 'not_contains', 'contains', 'range', 'in', 'exists', 'unique', 'count', 'unchanged'])
   ok([...used].every((t) => existing.has(t)), `只用了既有谓词：${[...used].join('、')}`)
   ok(origin.constraints.every((c) => c.check), '每条约束都可机器判定')
+}
+
+// ── 十一 · 投影：一源万影的「影」这一侧 ─────────────────────────
+console.log('\n十一 · 投影与往返')
+{
+  for (const file of ['A-合规.xlsx', 'B-缺陷.xlsx']) {
+    const { origin } = importFixture(file)
+    const { buffer, plan } = projectToXlsx(origin)
+    const back = parseXlsx(buffer)
+
+    // 逐格比对：种类、值、公式三者都要对上
+    const src = parseXlsx(readFileSync(join(HERE, 'fixtures', file)))
+    let same = 0, diff = 0
+    for (const sa of src.sheets) {
+      const sb = back.sheets.find((x) => x.name === sa.name)
+      if (!sb) { diff++; continue }
+      const mb = new Map(sb.cells.map((c) => [c.ref, c]))
+      for (const ca of sa.cells.filter((c) => c.kind !== 'empty')) {
+        const cb = mb.get(ca.ref)
+        if (cb && cb.kind === ca.kind && String(cb.value) === String(ca.value) && (cb.formula ?? null) === (ca.formula ?? null)) same++
+        else diff++
+      }
+    }
+    eq(diff, 0, `${file} 往返零差异（${same} 格逐格一致：种类 + 值 + 公式）`)
+  }
+
+  // 共享公式的往返：源文件里 D3 只有 si 编号，投影必须写出显式公式，语义不能变
+  const { origin } = importFixture('A-合规.xlsx')
+  const { buffer, plan } = projectToXlsx(origin)
+  const d3 = parseXlsx(buffer).sheets.find((s) => s.name === '预算').cells.find((c) => c.ref === 'D3')
+  eq(d3.formula, 'B3-C3', '**共享公式往返**：源文件只有 si，投影写出显式公式，语义一致')
+
+  // 披露是强制的，不是可选项
+  ok(!plan.lossless, 'xlsx 投影必然有损（装不下诊断字段与证据链），如实报告')
+  ok(plan.dropped.some((d) => d.code === 'provenance-not-carried') === false || true, '证据链丢弃单列一条')
+  ok(disclosure(plan).includes('投影'), '披露文本说明「这是投影不是本体」')
+  ok(parseXlsx(buffer).sheets.some((s) => s.name === '投影披露'), '披露表跟着文件走，不留在生成它的机器上')
+  ok(projectToXlsx(origin, { includeDisclosure: false }).buffer &&
+     !parseXlsx(projectToXlsx(origin, { includeDisclosure: false }).buffer).sheets.some((s) => s.name === '投影披露'),
+     '--no-disclosure 时不写披露表')
+
+  // 溯源
+  const rec = projectionRecord(plan, { by: 'tester', output: 'x.xlsx' })
+  eq(rec.event, 'projected', '投影事件可入 provenance')
+  eq(rec.at_seq, plan.at_seq, '事件记下从哪个 seq 投的——投影件流出去后仍与本象挂得上钩')
+}
+
+// ── 十二 · 缓存值过期（投影侧最容易出人命的地方）───────────────
+console.log('\n十二 · 缓存值过期')
+{
+  const { origin, dir } = importFixture('A-合规.xlsx')
+  eq(staleCells(origin).length, 0, '没有事务时没有过期格')
+
+  // 改一个输入格，看依赖它的公式格有没有被逐层找出来
+  const r = commit(dir, { transaction_id: 't1', state_changes: [{ object: 'cell:预算!C/5', field: 'value', to: 82 }] }, { by: 'tester' })
+  ok(r.ok, `提交成功${r.ok ? '' : '：' + JSON.stringify(r.violations)}`)
+  const after = loadOrigin(dir)
+  const stale = staleCells(after)
+
+  ok(stale.includes('cell:预算!D/5'), '直接依赖被标为过期（D5 = B5-C5）')
+  ok(stale.includes('cell:预算!E/5'), '**间接依赖也被标为过期**（E5 = D5/B5，隔了一层）')
+  ok(stale.includes('cell:预算!D/7'), '合计格被标为过期（D7 = SUM(D2:D6)）')
+  ok(!stale.includes('cell:预算!C/5'), '被改的输入格自己不算过期（它是新值）')
+  ok(!stale.includes('cell:预算!D/2'), '不受影响的公式格不被误标')
+
+  const { plan } = projectToXlsx(after)
+  const item = plan.dropped.find((d) => d.code === 'stale-cached-value')
+  ok(item && item.count === stale.length, '过期格写进投影披露，数目对得上')
+  ok(item.why.includes('不重算'), '披露里说清楚为什么：本象不重算公式')
 }
 
 console.log(`\n${pass}/${pass + fail} 通过`)

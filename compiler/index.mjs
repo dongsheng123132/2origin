@@ -17,3 +17,6 @@ export { compileContext, selectRelevant, buildPrompt } from './context-compiler.
 export { validateTransaction, applyTransaction, normalizeTransaction, normalizeId, fold } from './commit-compiler.mjs'
 export { why, historyOf, diagnose, replay, stateChanges, findMirrorPairs, parseRef, nextSeq } from './provenance.mjs'
 export { commit, appendHistory, initPackage, seqOf } from './store.mjs'
+// 投影侧（一源万影的「影」）。format 层交给方言，核心只管选取、披露、溯源。
+// ⚠️ 一致性向量尚未覆盖它——见 spec/conformance/README.md 五
+export { planProjection, disclosure, projectionRecord } from './project.mjs'
