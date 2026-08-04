@@ -73,7 +73,7 @@ The task is state tracking across long-form narrative: *who holds the key right 
 
 **The deepseek row has to be held back.** The smoke run measured the bare model at 37.5% and RAG at 75.0%, and on that basis I wrote *"Benxiang lifts two models of very different strength to the same height."* Ten runs later those numbers are 53.8% and 32.1%. **A single run tells you nothing about the distribution.** Variance on that model is enormous and the control arms are bimodal — most runs land at 75%, several collapse to 0%.
 
-The Benxiang arm's multi-run is still going. Until it lands, *"state correctness comes from the architecture, not the model"* is supported **only on qwen**; the cross-model half is not established.
+The Benxiang arm is still at n=1 — the first multi-run was interrupted on 2026-08-03 and resumed on 2026-08-04 (see [results-log](benchmark/shadowbench-w/results-log.md) Run #16). Until it is full, *"state correctness comes from the architecture, not the model"* is supported **only on qwen**; the cross-model half is not established.
 
 The correction is worth keeping in the manifesto: **an n=1 result that flatters you is exactly as worthless as an n=1 result that doesn't.** The mistake in the previous version was not fabrication — it was treating "this leaves no room for interpretation" as a substitute for sample size.
 
@@ -125,7 +125,7 @@ The credibility of this project rests on stating its limits precisely.
 
 - **Not "writes more consistently."** Prose consistency shows **no significant difference** from vector RAG (p=0.9905 / p=0.3361). Cheap RAG already owns that half.
 - **Not "saves tokens."** The opposite — **more expensive**: +25% on qwen, +149% on the long-reasoning deepseek.
-- **Cross-model is not established.** On the second model the control arms have reached n=10 / n=7; the Benxiang arm is still at n=1 with a multi-run in flight. That model shows huge variance and bimodal control arms, so single-run figures were withdrawn and restated.
+- **Cross-model is not established.** On the second model the control arms have reached n=10 / n=7; the Benxiang arm is still at n=1 — the first multi-run was interrupted on 08-03 and resumed from rep2 for 9 runs on 08-04, with all four provenance fingerprints matching rep1 and the control arms. That model shows huge variance and bimodal control arms, so single-run figures were withdrawn and restated.
 - **No production adapters, no real users.** CAD and Office are, today, a line in a table.
 
 The [experiment log](benchmark/shadowbench-w/results-log.md) records **six instrumentation accidents in a single day** — all self-caught, each with the guardrail that now prevents it. Including the one where the judge graded M-tier answers against the S-tier answer key, marked a **correct answer wrong**, and handed back a *more flattering-sounding negative result* ("the advantage vanishes as the baseline grows"), which was written into the log before the cause was found.
