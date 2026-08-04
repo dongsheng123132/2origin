@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-81%20%2B%2035%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
+[![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
 
@@ -143,7 +143,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ## 快速上手
 
 ```bash
-npm run verify   # 自测 81 + CAD 35 + MCP 端到端 18 + 变异检查 13/13
+npm run verify   # 自测 81 + CAD 44 + MCP 端到端 18 + 变异检查 13/13
 
 
 P=spec/examples/sales-2026.origin

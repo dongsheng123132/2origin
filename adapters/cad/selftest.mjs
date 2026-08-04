@@ -15,7 +15,7 @@ import { readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { execFileSync } from 'node:child_process'
 import { parseDxf, geometryOf, textOf, toPairs, insertOf, insertBBox, blockBBox } from './dxf.mjs'
-import { dxfToObjects } from './import.mjs'
+import { dxfToObjects, sniff } from './import.mjs'
 import { loadOrigin } from '../../compiler/origin.mjs'
 import { diagnose } from '../../compiler/provenance.mjs'
 
@@ -120,6 +120,27 @@ check(bErrors.some((f) => f.msg.includes('C1')), '抓出重号 C1（第 1 樘与
 check(!bErrors.some((f) => f.msg.includes('两处对不上')), '  └ 不套「构件数=标注数」——该图无标注文字，硬套会是假警报')
 check(bErrors.length === 1, '恰好 1 条 error', `实际 ${bErrors.length}：${JSON.stringify(bErrors.map((f) => f.msg))}`)
 rmSync(BPKG, { recursive: true, force: true })
+
+// ── 认文件：读不了也要说清楚为什么、该怎么办 ──────────────────────
+// 真实项目里拿到的多半是 .dwg 或图纸导出的 .pdf。两者都读不了，但**原因不同**，
+// 一句笼统的「不支持」会让人去试错误的方向。
+// （这里用合成的文件头测判定逻辑——sniff 只看前 6 个字节，不需要真文件。）
+console.log('\n[认文件] DWG / PDF 的分流')
+
+const magic = (s) => Buffer.from(s + '\0'.repeat(16), 'latin1').subarray(0, 16)
+const dwg2004 = sniff('x.dwg', magic('AC1018'))
+check(dwg2004.kind === 'dwg' && !dwg2004.readable, 'DWG 被认出且明说读不了')
+check(dwg2004.version.includes('AutoCAD 2004'), '  └ 报出具体版本（魔数是明文，不解压也读得到）')
+check(dwg2004.hasHandles === true, '  └ 2004 有实体句柄 → 转 DXF 后 ID 真正稳定')
+check(sniff('x.dwg', magic('AC1009')).hasHandles === false, '  └ R12 没有句柄，如实报告')
+check(dwg2004.how.includes('另存为'), '  └ 给出可执行的转换办法，不是一句「不支持」')
+check(dwg2004.how.includes('泄密'), '  └ 并警告别用在线转换站（施工图是客户资料）')
+
+const pdf = sniff('x.pdf', magic('%PDF-1.4'))
+check(pdf.kind === 'pdf' && !pdf.readable, 'PDF 被认出且明说读不了')
+check(pdf.why.includes('投影'), '  └ 说清楚 PDF 是投影不是本源——这是协议的核心主张，不是托词')
+
+check(sniff('x.dxf', magic('  0\nSECT')).readable === true, 'DXF 照常放行')
 
 console.log(`\n${fail ? '✗' : '✓'} ${pass} 通过，${fail} 失败`)
 process.exit(fail ? 1 : 0)

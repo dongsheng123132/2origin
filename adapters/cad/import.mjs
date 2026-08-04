@@ -94,6 +94,52 @@ export function dxfToObjects(dxf, { name }) {
   return objects
 }
 
+/** DWG 版本魔数 → 人话。这几个字节是明文的，不解压也读得到。 */
+const DWG_VERSIONS = {
+  AC1009: 'R12', AC1012: 'R13', AC1014: 'R14', AC1015: 'AutoCAD 2000',
+  AC1018: 'AutoCAD 2004', AC1021: 'AutoCAD 2007', AC1024: 'AutoCAD 2010',
+  AC1027: 'AutoCAD 2013', AC1032: 'AutoCAD 2018',
+}
+
+/**
+ * 认一下这个文件到底是什么，认不了就说清楚为什么、以及该怎么办。
+ *
+ * 真实项目里拿到的多半是 .dwg（AutoCAD 私有二进制，分段压缩）或图纸导出的 .pdf。
+ * 两者都读不了，但**读不了的原因完全不同**，给出的建议也就不同——
+ * 一句笼统的「不支持」会让人去试错误的方向。
+ */
+export function sniff(path, head) {
+  const magic = head.slice(0, 6).toString('latin1')
+  if (magic in DWG_VERSIONS) {
+    const ver = DWG_VERSIONS[magic]
+    const hasHandles = magic !== 'AC1009' && magic !== 'AC1012'
+    return {
+      kind: 'dwg', version: `${magic}（${ver}）`, readable: false, hasHandles,
+      why: 'DWG 是 AutoCAD 私有二进制格式，分段压缩，没有公开规范。本项目零依赖，不内置 DWG 解析。',
+      how: [
+        `好消息：${ver} ${hasHandles ? '**有实体句柄**，转成 DXF 后 ID 是真正稳定的（挪动构件仍是同一个对象）' : '没有实体句柄，ID 只能退化为内容哈希'}。`,
+        '转换办法，任选其一：',
+        '  ① 在 CAD 里「另存为 → AutoCAD 2004/2013 DXF」——AutoCAD / 浩辰 / 中望都支持，一次点击',
+        '  ② 装 ODA File Converter（免费、离线、可批量）：https://www.opendesign.com/guestfiles/oda_file_converter',
+        '  ③ 请出图方直接给 DXF',
+        '⚠ 不要用在线转换网站——施工图属于客户资料，上传给第三方是泄密。',
+      ].join('\n'),
+    }
+  }
+  if (head.slice(0, 5).toString('latin1') === '%PDF-')
+    return {
+      kind: 'pdf', readable: false,
+      why: 'PDF 是图纸的**投影**，不是本源。CAD 导出 PDF 时文字通常被转成曲线，图层、块、属性、对象身份全部丢失。',
+      how: [
+        '实测：一份 17 页施工图 PDF 里有 545,480 条矢量绘图指令，文字绘制指令只有 65 条，',
+        '且是无 ToUnicode 的子集字体字形码——门窗编号、标高、房间名一个字都提不出来。',
+        'OCR 也救不回来：它能给出字符串，给不出「这个编号属于哪一樘窗」。',
+        '→ 请拿 DXF 或 DWG，不要拿 PDF。',
+      ].join('\n'),
+    }
+  return { kind: 'dxf', readable: true }
+}
+
 // ── CLI ─────────────────────────────────────────────────────────
 if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}` || process.argv[1]?.endsWith('import.mjs')) {
   const [src, dir] = process.argv.slice(2)
@@ -103,6 +149,12 @@ if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}` || proc
   }
   const opt = (k, d) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d }
   const name = opt('--name', basename(src).replace(/\.dxf$/i, ''))
+
+  const probe = sniff(src, readFileSync(src).subarray(0, 16))
+  if (!probe.readable) {
+    process.stderr.write(`无法导入：${src}\n\n这是 ${probe.kind.toUpperCase()}${probe.version ? ' ' + probe.version : ''}。\n${probe.why}\n\n${probe.how}\n`)
+    process.exit(2)
+  }
 
   const counted = opt('--counted', '门窗')
   const numberAttr = opt('--number-attr', 'NUMBER')
