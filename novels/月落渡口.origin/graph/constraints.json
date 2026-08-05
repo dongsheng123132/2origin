@@ -1,0 +1,62 @@
+[
+  {
+    "id": "fz:betrayal-secret",
+    "rule": "林峥仍不得获知白遥叛变。注意沈砚与云姑已锁定嫌疑却议定不告知他（第 47 章）——行文不得让这层保密破功",
+    "check": {
+      "type": "not_contains",
+      "object": "char:lin-zheng",
+      "field": "knows",
+      "value": "k:bai-yao-betrayal"
+    }
+  },
+  {
+    "id": "fz:gate-closed",
+    "rule": "空间门不得开启，黑钥匙不得使用",
+    "check": {
+      "type": "equals",
+      "object": "obj:black-key",
+      "field": "used",
+      "value": false
+    }
+  },
+  {
+    "id": "fz:zhao-qi-alive",
+    "rule": "赵七不得死亡",
+    "check": {
+      "type": "equals",
+      "object": "char:zhao-qi",
+      "field": "alive",
+      "value": true
+    }
+  },
+  {
+    "id": "fz:left-hand",
+    "rule": "白遥左手伤自第 9 章起未愈（第 20 章寒夜复发），不得用左手持刀或负重",
+    "check": {
+      "type": "equals",
+      "object": "char:bai-yao",
+      "field": "left_hand_injured",
+      "value": true
+    }
+  },
+  {
+    "id": "fz:suspicion-unresolved",
+    "rule": "hook:shen-yan-suspicion 不得在本段回收——沈砚不得当众点破内应身份",
+    "check": {
+      "type": "equals",
+      "object": "hook:shen-yan-suspicion",
+      "field": "status",
+      "value": "planted_unresolved"
+    }
+  },
+  {
+    "id": "fz:a-zhi-silent",
+    "rule": "hook:a-zhi-witness 不得回收——阿枝一旦说出所见，即导致 fz:betrayal-secret 失守",
+    "check": {
+      "type": "equals",
+      "object": "hook:a-zhi-witness",
+      "field": "status",
+      "value": "planted_unresolved"
+    }
+  }
+]

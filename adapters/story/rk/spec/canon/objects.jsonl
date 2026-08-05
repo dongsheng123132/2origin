@@ -1,0 +1,3 @@
+{"id": "obj:rulebook", "name": "规则手册", "role": "管理局发放·记录已发现层与明规则（空白页=未记录层）", "initial_state": {"intact": true, "pages": 0}}
+{"id": "obj:flashlight", "name": "手电筒", "role": "守规人标配装备", "initial_state": {"works": true}}
+{"id": "obj:black-coin", "name": "黑色硬币", "role": "便利店收银员找零所得·背面刻字", "initial_state": {"in_pocket": false, "engraved": "第七"}}

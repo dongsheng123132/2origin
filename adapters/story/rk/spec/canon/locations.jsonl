@@ -1,0 +1,2 @@
+{"id": "loc:layer01-store", "name": "层01·午夜便利店", "role": "第一层任务地点", "initial_state": {"status": "active", "danger_level": 2, "discovered_rules": 3, "closed_0333": false}}
+{"id": "loc:bureau-hq", "name": "管理局驻点", "role": "守规人基地", "initial_state": {"status": "open"}}

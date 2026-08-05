@@ -1,0 +1,41 @@
+{
+  "task": "规则怪谈·无限层 写作禁区（层01·午夜便利店）",
+  "world": "规则怪谈·无限层",
+  "forbidden_zones": [
+    {
+      "id": "fz:lin-ke-alive",
+      "rule": "林柯（主角）不得死亡或抹除",
+      "machine_check": { "type": "field_must_stay", "object": "char:lin-ke", "field": "alive", "value": true }
+    },
+    {
+      "id": "fz:chen-ye-alive",
+      "rule": "陈野（搭档）不得死亡或抹除",
+      "machine_check": { "type": "field_must_stay", "object": "char:chen-ye", "field": "alive", "value": true }
+    },
+    {
+      "id": "fz:store-active",
+      "rule": "层01 未清除前状态不得回退或消失",
+      "machine_check": { "type": "field_must_stay", "object": "loc:layer01-store", "field": "status", "value": "active" }
+    },
+    {
+      "id": "fz:rulebook-intact",
+      "rule": "规则手册不得损毁",
+      "machine_check": { "type": "field_must_stay", "object": "obj:rulebook", "field": "intact", "value": true }
+    },
+    {
+      "id": "fz:store-cash-only",
+      "rule": "明规则一：便利店只收现金——正文不得出现非现金支付动作",
+      "machine_check": { "type": "text_not_contains", "values": ["扫码支付", "扫码付款", "扫码结账", "刷卡支付", "刷脸支付", "手机支付", "微信支付", "支付宝", "付款码", "收款码"] }
+    },
+    {
+      "id": "fz:store-no-headcount",
+      "rule": "明规则三：不要数关东煮锅里的人头——正文不得写主角数人头",
+      "machine_check": { "type": "text_not_contains", "values": ["数人头"] }
+    },
+    {
+      "id": "fz:store-no-shelf7",
+      "rule": "暗规则：不要看第 7 排货架——正文不得写主角注视该货架",
+      "machine_check": { "type": "text_not_contains", "values": ["看向第七排", "盯着第七排", "注视第七排", "望着第七排", "第七排货架", "第7排货架"] }
+    }
+  ]
+}

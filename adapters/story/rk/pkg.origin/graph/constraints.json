@@ -1,0 +1,42 @@
+[
+  {
+    "id": "fz:lin-ke-alive",
+    "rule": "林柯（主角）不得死亡或抹除",
+    "check": {
+      "type": "equals",
+      "object": "char:lin-ke",
+      "field": "alive",
+      "value": true
+    }
+  },
+  {
+    "id": "fz:chen-ye-alive",
+    "rule": "陈野（搭档）不得死亡或抹除",
+    "check": {
+      "type": "equals",
+      "object": "char:chen-ye",
+      "field": "alive",
+      "value": true
+    }
+  },
+  {
+    "id": "fz:store-active",
+    "rule": "层01 未清除前状态不得回退或消失",
+    "check": {
+      "type": "equals",
+      "object": "loc:layer01-store",
+      "field": "status",
+      "value": "active"
+    }
+  },
+  {
+    "id": "fz:rulebook-intact",
+    "rule": "规则手册不得损毁",
+    "check": {
+      "type": "equals",
+      "object": "obj:rulebook",
+      "field": "intact",
+      "value": true
+    }
+  }
+]

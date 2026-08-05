@@ -40,6 +40,21 @@ node adapters/story/run-chapter.mjs <pkg.origin> 11 --provider hermes --max-toke
 实测（2026-08-06，deepseek-v4-flash）：ch11 续写 2883 字，自动产出
 1 条状态变更 + 5 条断言，门禁通过落盘 seq 11-11，正文风格与基线一致。
 
+## 连载流水线（无限长小说 · 直播式公开跑）
+
+```bash
+# 续写一章 → 落盘 → 生成公开快照 + 连载索引（自动续写下一章）
+node adapters/story/pipeline.mjs <pkg.origin> --provider hermes --title 作品名
+# 产出：narrative/chapters/chNN.txt（正文）
+#       public/state-chNN.md（世界快照：人物/物品/伏笔图谱）
+#       public/index.md（连载索引：章/字数/日期/链接）
+
+# 公开跑 = 每章一个 git commit（时间戳证据链）
+git add -A && git commit -m "ch$(N): 摘要" && git push
+```
+
+玩法与里程碑见 research/2026-08-06-无限长小说挑战-玩法设计.md。
+
 事务文件（ch11.json）形状：
 
 ```json

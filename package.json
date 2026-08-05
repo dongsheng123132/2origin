@@ -24,6 +24,7 @@
     "test:story": "node adapters/story/selftest.mjs",
     "story:demo": "node adapters/story/demo.mjs",
     "story:write": "node adapters/story/run-chapter.mjs",
+    "story:serial": "node adapters/story/pipeline.mjs",
     "test:xlsx": "node adapters/xlsx/selftest.mjs",
     "test:e2e": "node adapters/memory/e2e.mjs",
     "test:mutation": "node compiler/mutation-check.mjs",

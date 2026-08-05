@@ -1,0 +1,12 @@
+{"id":"char:lin-ke","_type":"char","name":"林柯","role":"主角·守规人（第7期）","alive":true,"san":100,"level":7,"current_layer":null,"knows":[],"inventory":["obj:rulebook","obj:flashlight"]}
+{"id":"char:chen-ye","_type":"char","name":"陈野","role":"同期守规人·搭档","alive":true,"san":100,"level":5,"knows":[]}
+{"id":"char:su-wan","_type":"char","name":"苏晚","role":"管理局联络人（电话接线，从未露面）","alive":true,"knows":[]}
+{"id":"faction:bureau","_type":"faction","name":"管理局","role":"管理层·招募守规人·编制规则手册","status":"active","recruitment":"第7期"}
+{"id":"loc:layer01-store","_type":"loc","name":"层01·午夜便利店","role":"第一层任务地点","status":"active","danger_level":2,"discovered_rules":3,"closed_0333":false}
+{"id":"loc:bureau-hq","_type":"loc","name":"管理局驻点","role":"守规人基地","status":"open"}
+{"id":"obj:rulebook","_type":"obj","name":"规则手册","role":"管理局发放·记录已发现层与明规则（空白页=未记录层）","intact":true,"pages":0}
+{"id":"obj:flashlight","_type":"obj","name":"手电筒","role":"守规人标配装备","works":true}
+{"id":"obj:black-coin","_type":"obj","name":"黑色硬币","role":"便利店收银员找零所得·背面刻字","in_pocket":false,"engraved":"第七"}
+{"id":"hook:same-word","_type":"hook","summary":"所有层的规则里藏着同一个词——第七","status":"planted_unresolved","setup_chapter":1,"payoff_chapter":30,"tier":1}
+{"id":"hook:coin-back","_type":"hook","summary":"黑色硬币背面刻着「第七」，与层的隐藏词有关","status":"planted_unresolved","setup_chapter":1,"payoff_chapter":10,"tier":2}
+{"id":"hook:store-cat","_type":"hook","summary":"便利店的猫会数人，人数不对时盯着你","status":"planted_unresolved","setup_chapter":2,"payoff_chapter":8,"tier":2}

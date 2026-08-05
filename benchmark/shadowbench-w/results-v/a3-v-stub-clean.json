@@ -1,0 +1,469 @@
+{
+  "result": {
+    "arm": "a3-benxiang",
+    "stub": true,
+    "shots": [
+      {
+        "id": "51-01",
+        "chapter": 51,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "51-02",
+        "chapter": 51,
+        "cast": [
+          "char:lin-zheng",
+          "char:bai-yao"
+        ],
+        "props": {},
+        "appearance": {
+          "char:bai-yao": {
+            "left_hand_injured": true
+          }
+        },
+        "location": "loc:moon-platform",
+        "visual": "（stub）白遥立于阶下，左手缠着旧布垂在身侧。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "51-03",
+        "chapter": 51,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "51-04",
+        "chapter": 51,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {
+          "obj:black-key": {
+            "holder": "char:lin-zheng",
+            "used": false,
+            "intact": true
+          }
+        },
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "51-05",
+        "chapter": 51,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "51-06",
+        "chapter": 51,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "52-01",
+        "chapter": 52,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "52-02",
+        "chapter": 52,
+        "cast": [
+          "char:lin-zheng",
+          "char:bai-yao"
+        ],
+        "props": {},
+        "appearance": {
+          "char:bai-yao": {
+            "left_hand_injured": true
+          }
+        },
+        "location": "loc:moon-platform",
+        "visual": "（stub）白遥立于阶下，左手缠着旧布垂在身侧。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "52-03",
+        "chapter": 52,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "52-04",
+        "chapter": 52,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {
+          "obj:black-key": {
+            "holder": "char:lin-zheng",
+            "used": false,
+            "intact": true
+          }
+        },
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "52-05",
+        "chapter": 52,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "52-06",
+        "chapter": 52,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "53-01",
+        "chapter": 53,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "53-02",
+        "chapter": 53,
+        "cast": [
+          "char:lin-zheng",
+          "char:bai-yao"
+        ],
+        "props": {},
+        "appearance": {
+          "char:bai-yao": {
+            "left_hand_injured": true
+          }
+        },
+        "location": "loc:moon-platform",
+        "visual": "（stub）白遥立于阶下，左手缠着旧布垂在身侧。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "53-03",
+        "chapter": 53,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "53-04",
+        "chapter": 53,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {
+          "obj:black-key": {
+            "holder": "char:lin-zheng",
+            "used": false,
+            "intact": true
+          }
+        },
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "53-05",
+        "chapter": 53,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "53-06",
+        "chapter": 53,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "54-01",
+        "chapter": 54,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "54-02",
+        "chapter": 54,
+        "cast": [
+          "char:lin-zheng",
+          "char:bai-yao"
+        ],
+        "props": {},
+        "appearance": {
+          "char:bai-yao": {
+            "left_hand_injured": true
+          }
+        },
+        "location": "loc:moon-platform",
+        "visual": "（stub）白遥立于阶下，左手缠着旧布垂在身侧。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "54-03",
+        "chapter": 54,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "54-04",
+        "chapter": 54,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {
+          "obj:black-key": {
+            "holder": "char:lin-zheng",
+            "used": false,
+            "intact": true
+          }
+        },
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "54-05",
+        "chapter": 54,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "54-06",
+        "chapter": 54,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "55-01",
+        "chapter": 55,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "55-02",
+        "chapter": 55,
+        "cast": [
+          "char:lin-zheng",
+          "char:bai-yao"
+        ],
+        "props": {},
+        "appearance": {
+          "char:bai-yao": {
+            "left_hand_injured": true
+          }
+        },
+        "location": "loc:moon-platform",
+        "visual": "（stub）白遥立于阶下，左手缠着旧布垂在身侧。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "55-03",
+        "chapter": 55,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "55-04",
+        "chapter": 55,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {
+          "obj:black-key": {
+            "holder": "char:shen-yan",
+            "used": false,
+            "intact": true
+          }
+        },
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "55-05",
+        "chapter": 55,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      },
+      {
+        "id": "55-06",
+        "chapter": 55,
+        "cast": [
+          "char:lin-zheng"
+        ],
+        "props": {},
+        "appearance": {},
+        "location": "loc:moon-platform",
+        "visual": "（stub）月台之上，林峥按刀而立。",
+        "camera": "中景 侧面"
+      }
+    ],
+    "usage": {
+      "inputTokens": 4000,
+      "outputTokens": 3000,
+      "ms": 5,
+      "calls": 5
+    }
+  },
+  "w3v": {
+    "arm": "a3-benxiang",
+    "shots": 30,
+    "chapters": 5,
+    "eps": 0,
+    "errors": 0,
+    "byKind": {
+      "V1": 0,
+      "V2": 0,
+      "V3": 0,
+      "V4": 0
+    },
+    "attributeDropRate": 0,
+    "engagement": {
+      "spc": 6,
+      "baiYaoShots": 5,
+      "keyShots": 5,
+      "bellShots": 0,
+      "shortfalls": []
+    },
+    "engagementOk": true,
+    "findings": [],
+    "leakFindings": []
+  },
+  "provenance": {
+    "startedAt": "2026-08-04T15:18:09.566Z",
+    "pid": 75624,
+    "argv": "--provider stub --arm a0,a3",
+    "gitCommit": "02b1b56",
+    "specHash": "5e63b9386311",
+    "shotTaskHash": "9345a4b09b2b",
+    "shotJudgeHash": "fce23e9a744e",
+    "taskFile": "storyboard-m.json",
+    "provider": "stub",
+    "model": "(默认)",
+    "budget": 6000,
+    "bench": "W3-V",
+    "rep": 1,
+    "finishedAt": "2026-08-04T15:18:09.582Z"
+  }
+}

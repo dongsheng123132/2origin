@@ -1,0 +1,22 @@
+# OriginWriter 写作包（Story 方言）
+artifact:
+  id: pkg.origin
+  kind: story
+  title: 规则怪谈·无限层
+semantics:
+  char: Entity.Person
+  loc: Entity.Place
+  obj: Entity.Artifact
+  faction: Entity.Organization
+  hook: Narrative.Foreshadowing
+  knows: State.Knowledge
+  holder: State.Custody
+constraints:
+  - forbidden_zones must_hold
+  - hook_status must_be_legal
+  - hook_payoff must_have_evidence
+  - character must_not_act_on_unknown_knowledge
+provenance:
+  source: D:/uking编程/本象协议/adapters/story/rk/spec
+  engine: OriginWriter (adapters/story)
+  replayed_until: end

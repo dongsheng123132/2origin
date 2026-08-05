@@ -1,0 +1,3 @@
+{"id": "hook:same-word", "summary": "所有层的规则里藏着同一个词——第七", "status": "planted_unresolved", "setup": {"chapter": 1}, "payoff": {"chapter": 30}, "tier": 1}
+{"id": "hook:coin-back", "summary": "黑色硬币背面刻着「第七」，与层的隐藏词有关", "status": "planted_unresolved", "setup": {"chapter": 1}, "payoff": {"chapter": 10}, "tier": 2}
+{"id": "hook:store-cat", "summary": "便利店的猫会数人，人数不对时盯着你", "status": "planted_unresolved", "setup": {"chapter": 2}, "payoff": {"chapter": 8}, "tier": 2}

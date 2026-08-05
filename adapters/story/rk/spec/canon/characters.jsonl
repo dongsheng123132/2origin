@@ -1,0 +1,3 @@
+{"id": "char:lin-ke", "name": "林柯", "role": "主角·守规人（第7期）", "initial_state": {"alive": true, "san": 100, "level": 7, "current_layer": null, "knows": [], "inventory": ["obj:rulebook", "obj:flashlight"]}}
+{"id": "char:chen-ye", "name": "陈野", "role": "同期守规人·搭档", "initial_state": {"alive": true, "san": 100, "level": 5, "knows": []}}
+{"id": "char:su-wan", "name": "苏晚", "role": "管理局联络人（电话接线，从未露面）", "initial_state": {"alive": true, "knows": []}}
