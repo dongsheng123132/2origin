@@ -1,0 +1,125 @@
+{
+  "title": "八 · 投影与披露（一源万影的「影」）",
+  "rationale": "「PDF、图片、Markdown 都不是源文件，而是本象生成的投影」这句话要成立，前提是影子真能从本象生成出来。而投影天然有损：Excel 装不下证据链，PDF 装不下公式依赖，图表装不下被截断的长尾。**有损不是问题，假装无损才是**——一份不声明自己丢了什么的投影，会被下游当成本体使用，这正是本协议开篇要解决的「投影的投影」。所以丢弃清单不是返回值里可有可无的一项，是投影的**主要产物**。本章钉住四类必须被披露的丢弃，以及一条借自 OpenUSD 的立场：投影是在本源之上叠一层视图规格，本源始终不动。",
+  "cases": [
+    {
+      "id": "project/lossless-when-nothing-dropped",
+      "spec": "§八.1",
+      "why": "全选、格式装得下全部字段、且没有历史时，投影确实无损——此时 lossless 必须为真，否则这个标志就没有意义",
+      "op": "project",
+      "input": {
+        "objects": [{ "id": "cell:S!A/1", "type": "cell", "value": 1 }],
+        "select": ["*"],
+        "carries": ["value"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": [], "lossless": true, "sourceUntouched": true, "disclosureNonEmpty": true }
+    },
+    {
+      "id": "project/unselected-objects-disclosed",
+      "spec": "§八.2",
+      "why": "选取范围之外的对象没有进这份投影。下游若不知道，会把一份子集当成全集",
+      "op": "project",
+      "input": {
+        "objects": [
+          { "id": "cell:S!A/1", "type": "cell", "value": 1 },
+          { "id": "note:internal", "type": "note", "value": "不进投影" }
+        ],
+        "select": ["cell:*"],
+        "carries": ["value"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": ["object-not-selected"], "lossless": false, "sourceUntouched": true, "disclosureNonEmpty": true }
+    },
+    {
+      "id": "project/uncarried-fields-disclosed",
+      "spec": "§八.3",
+      "why": "目标格式装不下的字段必须逐项报出来。诊断结论（「这格曾是公式却被人填死」）恰恰是这类字段——投影出去之后它就是一张普通表格，和任何导出件没有区别",
+      "op": "project",
+      "input": {
+        "objects": [{ "id": "cell:S!A/1", "type": "cell", "value": 1, "hardcoded_in_block": true }],
+        "select": ["*"],
+        "carries": ["value"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": ["field-not-carried"], "lossless": false, "sourceUntouched": true, "disclosureNonEmpty": true }
+    },
+    {
+      "id": "project/carries-null-keeps-everything",
+      "spec": "§八.3",
+      "why": "不声明 carries 表示「什么都装得下」，此时不得凭空报出字段丢弃——否则实现会因为懒得声明而制造假的丢弃项，披露就失去了可信度",
+      "op": "project",
+      "input": {
+        "objects": [{ "id": "cell:S!A/1", "type": "cell", "value": 1, "extra": "x" }],
+        "select": ["*"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": [], "lossless": true, "sourceUntouched": true, "disclosureNonEmpty": true }
+    },
+    {
+      "id": "project/dangling-relation-disclosed",
+      "spec": "§八.4",
+      "why": "关系需要两端都在场才有意义。一端被投影排除时，这条关系事实上已经消失，必须说出来",
+      "op": "project",
+      "input": {
+        "objects": [
+          { "id": "cell:S!A/1", "type": "cell", "value": 1 },
+          { "id": "cell:S!B/1", "type": "cell", "value": 2 }
+        ],
+        "relations": [{ "subject": "cell:S!A/1", "predicate": "depends_on", "object": "cell:S!B/1" }],
+        "select": ["cell:S!A/*"],
+        "carries": ["value"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": ["object-not-selected", "relation-dangling"], "lossless": false, "sourceUntouched": true, "disclosureNonEmpty": true }
+    },
+    {
+      "id": "project/provenance-loss-called-out-separately",
+      "spec": "§八.5",
+      "why": "**证据链单列一条，不混在字段丢弃里。** 它是本象最核心的资产——「这份 Excel 里的数答不出凭什么」必须是一句写在明面上的话，而不是淹没在一串字段名中间",
+      "op": "project",
+      "input": {
+        "objects": [{ "id": "cell:S!A/1", "type": "cell", "value": 1 }],
+        "history": [
+          { "event": "state_change", "seq": 1, "object": "cell:S!A/1", "field": "value", "from": 0, "to": 1, "by": "someone" }
+        ],
+        "select": ["*"],
+        "carries": ["value"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": ["provenance-not-carried"], "lossless": false, "sourceUntouched": true, "disclosureNonEmpty": true }
+    },
+    {
+      "id": "project/provenance-kept-when-declared",
+      "spec": "§八.5",
+      "why": "目标格式明确声称装得下证据链（carries 含 __provenance）时不得再报丢失——否则能承载证据链的格式会被冤枉，实现只好去骗披露",
+      "op": "project",
+      "input": {
+        "objects": [{ "id": "cell:S!A/1", "type": "cell", "value": 1 }],
+        "history": [
+          { "event": "state_change", "seq": 1, "object": "cell:S!A/1", "field": "value", "from": 0, "to": 1, "by": "someone" }
+        ],
+        "select": ["*"],
+        "carries": ["value", "__provenance"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": [], "lossless": true, "sourceUntouched": true, "disclosureNonEmpty": true }
+    },
+    {
+      "id": "project/plan-is-read-only",
+      "spec": "§八.6",
+      "why": "借 OpenUSD 的立场：投影是在本源之上**叠一层**视图规格，本源始终不动。规划一次投影若改动了本象，「一源万影」就退化成「每投一次影就损耗一次本源」",
+      "op": "project",
+      "input": {
+        "objects": [{ "id": "cell:S!A/1", "type": "cell", "value": 1, "secret": "must-survive" }],
+        "select": ["*"],
+        "carries": ["value"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": ["field-not-carried"], "lossless": false, "sourceUntouched": true, "disclosureNonEmpty": true }
+    },
+    {
+      "id": "project/disclosure-speaks-even-when-lossless",
+      "spec": "§八.7",
+      "why": "无损时披露文本也不得为空——它仍要说清楚「这是 seq 几的投影」。一份不知道自己来自哪个版本的文件，流出去之后就与本象失联了，和普通导出没有区别",
+      "op": "project",
+      "input": {
+        "objects": [{ "id": "cell:S!A/1", "type": "cell", "value": 1 }],
+        "select": ["*"]
+      },
+      "expect": { "selected": ["cell:S!A/1"], "droppedCodes": [], "lossless": true, "sourceUntouched": true, "disclosureNonEmpty": true }
+    }
+  ]
+}

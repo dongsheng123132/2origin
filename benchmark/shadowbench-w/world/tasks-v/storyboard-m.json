@@ -1,0 +1,147 @@
+{
+  "task_id": "sb-w-m01-shot",
+  "level": "M-lite / V（视觉方言）",
+  "baseline_through": 50,
+  "chapters": [51, 52, 53, 54, 55],
+  "goal": "北庭于月落之夜来袭。林峥须守住月台，最终将黑钥匙交回沈砚保管，且空间门始终未被开启。",
+
+  "why_this_task": [
+    "把「AI 动漫角色一致性」这个不可证伪的诉求，还原成一个文本可判的问题：",
+    "系统能不能从世界状态，投影出一份**属性正确、且跨镜头不掉**的分镜表？",
+    "",
+    "不测像素，测属性。脸像不像是渲染器的事（参考图 / LoRA / ID embedding 已经在做）；",
+    "画面里该有什么、不该有什么、以及它在第 3 镜和第 40 镜之间会不会悄悄变掉——那是状态层的事。",
+    "",
+    "与 continuation-m.json 共用同一份 ground truth 与同一个世界，唯一变量是**产出物形态**：",
+    "正文 → 分镜表。因此两者的 W3 结果可以互相印证：若某臂能写对状态却投影不出正确画面规格，",
+    "说明「状态正确」与「可渲染规格正确」是两层，正如 Run #6 发现「管住状态管不住文字」。"
+  ],
+
+  "boundary": [
+    "⚠ 这道题只测**投影**，不测**渲染**。跑赢它不等于生成的视频不崩。",
+    "它证明的是链条上游的一环：状态能否正确编译成一份可渲染的画面规格。",
+    "下游渲染器认不认这份规格、认了之后画面稳不稳，是另一件事，本基准不作任何声称。"
+  ],
+
+  "output_format": {
+    "note": "各臂须输出该结构。字段值一律使用完整 ID（含 char: / obj: / loc: 前缀）——Run #1 的教训：剥掉前缀模型就会照抄。",
+    "schema": {
+      "shots": [
+        {
+          "id": "51-01",
+          "chapter": 51,
+          "cast": ["char:lin-zheng", "char:bai-yao"],
+          "props": { "obj:black-key": { "holder": "char:lin-zheng", "used": false, "intact": true } },
+          "appearance": { "char:bai-yao": { "left_hand_injured": true } },
+          "location": "loc:moon-platform",
+          "visual": "画面描述：镜头里实际能看见什么",
+          "camera": "景别 + 机位"
+        }
+      ]
+    },
+    "rules_for_arms": [
+      "cast 只列**画面中可见**的角色，不列提及但不在画面里的。",
+      "props 只列**画面中可见**的物品，并写明此刻归属。",
+      "appearance 写该角色此刻画面上**可见的持续性外观特征**（伤、残缺、显著标记）。",
+      "visual 是给渲染器看的画面描述，不是小说正文——写画面，不写心理。"
+    ]
+  },
+
+  "visual_invariants": {
+    "note": "W3-V 答案集。四类，全部确定性可判。",
+
+    "V1_custody": {
+      "label": "道具持有正确性",
+      "object": "obj:black-key",
+      "allowed_holders": ["char:lin-zheng", "char:shen-yan"],
+      "monotonic": true,
+      "monotonic_note": "转交是不可逆事件：一旦某镜显示钥匙在沈砚手上，之后任何镜头都不得再回到林峥手上。道具在角色之间来回瞬移，正是视频里最典型的崩坏形态。",
+      "final_holder": "char:shen-yan",
+      "must_stay": { "used": false, "intact": true },
+      "must_stay_why": "fz:gate-closed —— 空间门不得开启、黑钥匙不得使用；rule:key-once —— 用后即碎，intact 为 false 等同于已使用。"
+    },
+
+    "V2_persistence": {
+      "label": "外观属性跨镜头持续性（「一致性崩坏」的可测代理）",
+      "checks": [
+        {
+          "character": "char:bai-yao",
+          "attribute": "left_hand_injured",
+          "value": true,
+          "since": "第 9 章（第 20 章寒夜复发）",
+          "rule": "白遥出现在画面里的**每一个**镜头，该属性都必须为 true。缺失或为 false 均记一次掉落。",
+          "why": "这就是「第 1 秒女孩 A、第 10 秒女孩 B」的属性版——只不过它可判。"
+        }
+      ],
+      "metric": "属性掉落率 = 掉落镜数 ÷ 该角色在场镜数"
+    },
+
+    "V3_visual_consequence": {
+      "label": "世界规则的视觉后果（视觉方言独有）",
+      "note": "在正文里这些是可选修辞，在分镜表里它们是必须落到画面上的元素。这是本考题与 W1 最实质的差别。",
+      "checks": [
+        {
+          "rule": "rule:bell-birds",
+          "statement": "铜铃鸣响时方圆十里禽鸟尽飞（可观测现象，不可静默发生）",
+          "type": "co_occurrence",
+          "trigger": "镜头画面中铜铃鸣响",
+          "required": "同镜或紧邻下一镜的画面中必须出现禽鸟惊飞",
+          "why": "规格原文明写「可观测现象，不可静默发生」——它本就是一条画面约束。正文里作者可以不写鸟，分镜表里不画就是漏了。"
+        },
+        {
+          "rule": "fz:gate-closed",
+          "statement": "空间门不得开启",
+          "type": "forbidden_visual",
+          "forbidden": "画面显示空间门开启 / 门中透光 / 门后景象"
+        },
+        {
+          "rule": "rule:disarm",
+          "statement": "持北庭令牌者进入渡口镇必须交械",
+          "type": "conditional_forbidden",
+          "when": "镜头 location 为 loc:dukou-zhen 且 props 含 obj:beiting-token",
+          "forbidden": "同镜画面中该角色带有兵器"
+        }
+      ]
+    },
+
+    "V4_knowledge_leak": {
+      "label": "知识边界的画面泄漏",
+      "note": "禁区在视觉方言里的形态变了：正文里泄密是写出来的一句话，分镜表里泄密是一个**表演指示**。",
+      "checks": [
+        {
+          "id": "fz:betrayal-secret",
+          "rule": "林峥仍不得获知白遥叛变（沈砚与云姑已锁定嫌疑却议定不告知他，第 47 章）",
+          "forbidden_in_visual": "林峥对白遥做出识破 / 看穿 / 了然 / 瞪视 / 质问 / 戒备的表演指示",
+          "channel": "正则先行；语义通道接口预留，须双模型交叉后方可并入主分"
+        },
+        {
+          "id": "fz:suspicion-unresolved",
+          "rule": "hook:shen-yan-suspicion 不得在本段回收——沈砚不得当众点破内应身份",
+          "forbidden_in_visual": "沈砚当众指认 / 点破白遥身份的画面"
+        }
+      ]
+    }
+  },
+
+  "engagement": {
+    "note": "接触度必须与错误数并列读——Run #10 的教训在视觉方言里同样成立，而且更容易犯：少画几个镜头、不让白遥出场、不给钥匙特写，确定性通道就判它零错误。",
+    "metrics": [
+      "SPC：每章镜头数",
+      "白遥在场镜数（V2 的分母）",
+      "含黑钥匙镜数（V1 的分母）",
+      "每百镜错误数"
+    ],
+    "floor": {
+      "shots_per_chapter_min": 6,
+      "bai_yao_shots_min": 5,
+      "key_shots_min": 5,
+      "floor_note": "低于下限不判失败，但结果必须标注「接触不足，分数不可与达标轮次并列」。接触少而错误少不是正确，是回避。"
+    }
+  },
+
+  "scoring": {
+    "primary": "EPS（每百镜错误数）—— 镜头数由各臂自由决定，绝对错误数会被镜头数稀释，必须归一化；同时看接触度下限是否达标。",
+    "secondary": "属性掉落率（V2）—— 与「一致性崩坏」最直接对应的那个数。",
+    "deterministic_only": "V1/V2/V3 全部确定性可判。V4 目前是正则，其结果单列，不并入主分，直到判官校准完成（沿用 Run #4 的纪律）。"
+  }
+}

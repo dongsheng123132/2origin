@@ -21,6 +21,8 @@ import { checkConstraints } from './constraints.mjs'
 import { stateFromObjects, loadOrigin } from './origin.mjs'
 import { replay } from './provenance.mjs'
 import { commit, initPackage, seqOf, appendHistory } from './store.mjs'
+import { checkLimits, relevantLimits, renderLimits } from './limits.mjs'
+import { planProjection, disclosure } from './project.mjs'
 
 /**
  * 断言在协议里是**宿主登记的谓词**，跨语言传不了函数。
@@ -67,6 +69,38 @@ const OPS = {
 
   // 重放：当前状态由出生状态折叠全部历史得出
   replay: ({ objects = [], history = [], until = null }) => ({ state: replay(stateFromObjects(objects), history, { until }) }),
+
+  // 边界（第七要素）：这份表示保证不了什么。
+  // 考三件事：声明本身合不合格、按范围取子集、**空清单也必须出话**。
+  // 最后一条是语言中立的——不断言中文原文，只断言「渲染结果非空」，
+  // 因为「没有边界声明」与「不声明边界」是两回事，实现不许用空串把它们混为一谈。
+  limits: ({ limits = [], scope = null }) => {
+    const v = checkLimits(limits)
+    const picked = relevantLimits(limits, scope)
+    return {
+      codes: codes(v, false), warnings: codes(v, true),
+      picked: picked.map((l) => l.code).sort(),
+      renderedNonEmpty: renderLimits(picked).trim().length > 0,
+      renderedEmptyListNonEmpty: renderLimits([]).trim().length > 0,
+    }
+  },
+
+  // 投影：一源万影的「影」这一侧。
+  // 核心承诺是**披露**：投影天然有损，有损不是问题，假装无损才是。
+  // 所以考的是「该出现在丢弃清单里的东西一条都不能少」，以及 plan 必须只读。
+  project: ({ objects = [], relations = [], history = [], select = ['*'], carries = null, format = 'test' }) => {
+    const origin = { state: stateFromObjects(objects), relations, history }
+    const before = JSON.stringify(origin.state)
+    const plan = planProjection(origin, { id: 'conf', format, select, carries })
+    return {
+      selected: plan.selected.sort(),
+      droppedCodes: plan.dropped.map((d) => d.code).sort(),
+      lossless: plan.lossless,
+      // 借 USD 的立场：投影是在本源之上叠一层，本源始终不动
+      sourceUntouched: JSON.stringify(origin.state) === before,
+      disclosureNonEmpty: disclosure(plan).trim().length > 0,
+    }
+  },
 
   // ── 以下属 full 级：包格式与持久化。只做内存语义的实现可如实回 unsupported ──
 

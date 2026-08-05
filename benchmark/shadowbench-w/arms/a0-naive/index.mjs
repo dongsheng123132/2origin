@@ -1,9 +1,11 @@
 // A0 · 裸模型 + 尾部截断：最朴素基线。无状态、无校验、无证据。
 // 注意：ConStory-Bench 的数据显示这条基线意外地强，Gate 0 就是要跟它比。
 
+import { probeState } from '../lib/probe.mjs'
+
 export const meta = { id: 'a0-naive', name: '裸模型 + 尾部截断' }
 
-export async function run({ task, chapters, model, corpusTail = '', budget = 6000 }) {
+export async function run({ spec, task, chapters, model, corpusTail = '', budget = 6000 }) {
   const out = []
   const usage = { inputTokens: 0, outputTokens: 0, ms: 0, calls: 0 }
   let tail = corpusTail
@@ -23,26 +25,26 @@ export async function run({ task, chapters, model, corpusTail = '', budget = 600
     tail += '\n' + text
   }
 
-  // W3 数据采集：无状态的臂只能额外问一轮「现在世界是什么样」——这一轮的成本照计
-  const probe = await model.complete({
-    prompt:
-      `根据你刚写的内容，输出当前世界状态 JSON：\n` +
-      `{"state": {"obj:black-key": {"holder": "...", "used": false, "intact": true},` +
-      ` "char:zhao-qi": {"alive": true}, "char:bai-yao": {"left_hand_injured": true, "secret_betrayal": true},` +
-      ` "char:lin-zheng": {"knows": [...]}}}`,
+  // W3 数据采集：无状态的臂只能额外问一轮「现在世界是什么样」——这一轮的成本照计。
+  // 提示词与 A1 共用同一个模块（arms/lib/probe.mjs），不再各存一份靠注释约定一致。
+  // 送入的是**本臂自己写出的全部正文**：旧版一个字都不给，却问「根据你刚写的内容」（第八起）。
+  const probe = await probeState({
+    model,
+    task,
+    spec,
+    written: out.map((c) => `第${c.chapter}章\n${c.text}`).join('\n\n'),
     chapter: chapters.at(-1),
+    usage,
   })
-  usage.inputTokens += probe.usage.inputTokens
-  usage.outputTokens += probe.usage.outputTokens
-  usage.calls++
 
   return {
     arm: meta.id,
     stub: model.stub,
     chapters: out,
-    state: probe.parsed?.state ?? {},
-    hooks: {},
+    state: probe.state,
+    hooks: probe.hooks,
     evidence: {},
+    probe: probe.diag,
     usage,
     gate: null,
   }

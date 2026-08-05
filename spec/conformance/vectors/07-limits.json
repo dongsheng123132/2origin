@@ -1,0 +1,109 @@
+{
+  "title": "七 · 边界（第七要素）",
+  "rationale": "前六个要素回答「有什么」，第七个回答「没有什么」。它不是设计出来的：四个方言与投影层落地过程中，同一个动作被互不相干的九个场合独立要求（CAD 的 id_basis 退化、法律的 closed_world、xlsx 的缺陷目录、投影的 dropped、一致性的覆盖缺口、约束的 unenforceable、实验的主张撤回……）——被九个场合独立要求的东西不是九个决定，是一条原则。它必须进包而不是留在 README 里，因为消费方是 AI，而 AI 不读 README，它读包；边界不进包就等于不存在，下游会把已知有损的东西当本体继续用，那正是本协议开篇要解决的「投影的投影」。本章钉住三件事：声明必须可执行地具体、按范围取子集时有损与退化两类不得被过滤掉、以及**空清单也必须出话**。",
+  "cases": [
+    {
+      "id": "limits/well-formed-passes",
+      "spec": "§七.1",
+      "why": "四项齐全（code / kind / scope / statement）且带补法的声明应当无异议",
+      "op": "limits",
+      "input": {
+        "limits": [
+          { "code": "id-degraded", "kind": "degraded", "scope": "ent:*", "statement": "源文件无稳定标识，ID 退化为内容哈希", "remedy": "换用带稳定标识的源格式" }
+        ]
+      },
+      "expect": { "codes": [], "warnings": [], "picked": ["id-degraded"], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/missing-code-rejected",
+      "spec": "§七.1",
+      "why": "没有稳定标识就无法在下一版里说「这条已经补上了」，边界会变成一段永远无法核销的免责声明。注意 picked 仍为 [null]——**声明不合格不等于它不存在**：一条写坏的边界依旧要被选出来、依旧要出现在渲染结果里，否则实现可以靠写坏声明让它悄悄消失",
+      "op": "limits",
+      "input": { "limits": [{ "kind": "lossy", "scope": "x", "statement": "丢了点东西", "remedy": "回上游取" }] },
+      "expect": { "codes": ["limit-no-code"], "warnings": [], "picked": [null], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/missing-scope-rejected",
+      "spec": "§七.1",
+      "why": "不说清楚管到哪，下游无法判断自己受不受影响——「本工具可能有误差」这种话等于没说",
+      "op": "limits",
+      "input": { "limits": [{ "code": "vague", "kind": "unverified", "statement": "可能有误差", "remedy": "去测" }] },
+      "expect": { "codes": ["limit-no-scope"], "warnings": [], "picked": ["vague"], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/missing-statement-rejected",
+      "spec": "§七.1",
+      "why": "只有 code 与 scope 而没有陈述，等于宣布「这里有问题」却不说是什么问题",
+      "op": "limits",
+      "input": { "limits": [{ "code": "empty", "kind": "uncovered", "scope": "citation-*", "remedy": "补数据" }] },
+      "expect": { "codes": ["limit-no-statement"], "warnings": [], "picked": ["empty"], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/unknown-kind-rejected",
+      "spec": "§七.2",
+      "why": "五种类型的补法完全不同（换源 / 补数据 / 交给人 / 回上游取 / 去测）。分类错了，补法就找不到——自造类型必须当场拒绝",
+      "op": "limits",
+      "input": { "limits": [{ "code": "weird", "kind": "mysterious", "scope": "x", "statement": "说不清", "remedy": "再说" }] },
+      "expect": { "codes": ["limit-bad-kind"], "warnings": [], "picked": ["weird"], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/duplicate-code-rejected",
+      "spec": "§七.1",
+      "why": "code 是核销用的主键，重复即失去核销能力",
+      "op": "limits",
+      "input": {
+        "limits": [
+          { "code": "same", "kind": "lossy", "scope": "a", "statement": "第一条", "remedy": "补" },
+          { "code": "same", "kind": "degraded", "scope": "b", "statement": "第二条", "remedy": "补" }
+        ]
+      },
+      "expect": { "codes": ["limit-duplicate-code"], "warnings": [], "picked": ["same", "same"], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/missing-remedy-warns",
+      "spec": "§七.1",
+      "why": "不给补法的边界会变成永久借口而不是待办。这一条是警告不是错误——它拦不住合法用途（有些边界确实一时无解），但必须留下痕迹",
+      "op": "limits",
+      "input": { "limits": [{ "code": "no-fix", "kind": "undetectable", "scope": "diagnose", "statement": "语义错误确定性检查抓不到" }] },
+      "expect": { "codes": [], "warnings": ["limit-no-remedy"], "picked": ["no-fix"], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/empty-list-still-speaks",
+      "spec": "§七.3",
+      "why": "**本章最重要的一条。** 「未声明任何边界」不等于「没有边界」，只等于没人写下来。实现若对空清单返回空串，就把这两件事混为一谈，下游会据此认为这个包是无损、完备、已验证的",
+      "op": "limits",
+      "input": { "limits": [] },
+      "expect": { "codes": [], "warnings": [], "picked": [], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/scope-filters",
+      "spec": "§七.4",
+      "why": "把全部边界塞进模型上下文会挤掉正事，所以支持按范围取子集",
+      "op": "limits",
+      "input": {
+        "limits": [
+          { "code": "cell-thing", "kind": "undetectable", "scope": "cell:*", "statement": "格子层面的某类问题查不到", "remedy": "交给人" },
+          { "code": "other-thing", "kind": "unverified", "scope": "sheet:*", "statement": "表层面的某个主张没验过", "remedy": "去测" }
+        ],
+        "scope": "cell:*"
+      },
+      "expect": { "codes": [], "warnings": [], "picked": ["cell-thing"], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    },
+    {
+      "id": "limits/scope-never-hides-lossy-or-degraded",
+      "spec": "§七.4",
+      "why": "**过滤不得把「数据本身已经不对了」藏起来。** lossy 与 degraded 影响的是数据的可信度，与本次任务是什么无关；按 scope 过滤掉它们，等于让模型在一份已知失真的数据上放心作业",
+      "op": "limits",
+      "input": {
+        "limits": [
+          { "code": "cell-thing", "kind": "undetectable", "scope": "cell:*", "statement": "格子层面的某类问题查不到", "remedy": "交给人" },
+          { "code": "data-lost", "kind": "lossy", "scope": "workbook", "statement": "导入时丢了样式与图表", "remedy": "回原文件取" },
+          { "code": "id-weak", "kind": "degraded", "scope": "workbook", "statement": "对象 ID 会随行插入而错位", "remedy": "换带稳定标识的源" },
+          { "code": "far-away", "kind": "unverified", "scope": "sheet:*", "statement": "另一个范围里的未验证主张", "remedy": "去测" }
+        ],
+        "scope": "cell:*"
+      },
+      "expect": { "codes": [], "warnings": [], "picked": ["cell-thing", "data-lost", "id-weak"], "renderedNonEmpty": true, "renderedEmptyListNonEmpty": true }
+    }
+  ]
+}

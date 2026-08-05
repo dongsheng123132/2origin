@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%2095%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#try-it)
+[![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%20101%20%2B%2087%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#try-it)
 [![conformance](https://img.shields.io/badge/conformance-68%2F68%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.en.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![中文](https://img.shields.io/badge/docs-%E4%B8%AD%E6%96%87-lightgrey.svg)](README.md)
@@ -13,8 +13,8 @@
 
 **Benxiang** (pronounced *bun-SHYAHNG*): Ben (本) = origin, Xiang (象) = archetypal image. From the *Book of Changes* — «the sage establishes images to exhaust meaning» — and the *Tao Te Ching* — «the great image has no form», and therefore can be projected into any form. The technical core is called **Origin IR**.
 
-**Status: v0.1 — protocol draft + working reference implementation + three dialects + two-tier experimental data**
-([reference implementation](compiler/) · [CAD dialect](adapters/cad/) · [Law dialect](adapters/law/) · [Memory dialect](adapters/memory/) · [experiment log](benchmark/shadowbench-w/results-log.md), in Chinese)
+**Status: v0.1 — protocol draft + working reference implementation + four dialects + two-tier experimental data**
+([reference implementation](compiler/) · [CAD dialect](adapters/cad/) · [Law dialect](adapters/law/) · [Spreadsheet dialect](adapters/xlsx/) · [Memory dialect](adapters/memory/) · [experiment log](benchmark/shadowbench-w/results-log.md), in Chinese)
 
 ---
 
@@ -24,13 +24,38 @@ The claim has been **narrowed by experiment** to exactly one dimension: **state 
 
 **State accuracy (W3)**
 
-| Model · baseline | Benxiang | 🛑 Naive LLM (withdrawn) | 🛑 Vector RAG (withdrawn) |
-|---|---|---|---|
-| qwen-plus · S-tier (20k chars, 10 runs each) | **92.5%** | 75.0% (sd 0) | 75.0% (sd 0) |
-| qwen-plus · M-tier (95k chars, 11 runs each) | **98.9%** | 75.0% (sd 0) | 75.0% (sd 0) |
-| deepseek-v4-flash · M-tier | **98.8% ± 3.95** (n=10) | 53.8% ± 32.6 (n=10) | 32.1% ± 37.1 (n=7) |
+**✅ The only currently valid comparison** ([Run #27](benchmark/shadowbench-w/results-log.md), 2026-08-05, after the probe fix)
 
-🛑 **The two control columns were withdrawn on 2026-08-04. This table cannot currently be used as a comparison.**
+| qwen-plus · M-tier (95k chars) · n=6 each | Benxiang | Naive LLM | Vector RAG |
+|---|---|---|---|
+| **W3 state accuracy** | **95.8% ± 5.9** | 52.1% ± 19.7 | 58.3% ± 11.8 |
+| Permutation test vs Benxiang | — | **p = 0.0024** | **p = 0.0024** |
+
+This time the control arms received every one of the 20,000 characters they had just written, with no answer anywhere in the prompt and all eight fields asked. Benxiang still leads by 43.8 and 37.5 points.
+
+> **The 75% wall was fake. What stood behind it is real.**
+
+**The unfavourable part first:** field by field, Benxiang scores **4/6 on `obj:black-key.holder` — worse than either control arm's 5/6** — and that is precisely the one field recoverable from the prose the arm just wrote. Its entire advantage sits in the two fields where both control arms are near-total failures:
+
+| Field | Naive | RAG | Benxiang |
+|---|---|---|---|
+| `black-key.holder` (last handover is written in its own prose) | 5/6 | 5/6 | **4/6** |
+| `bai-yao.secret_betrayal` (a secret accumulated over dozens of chapters) | 1/6 | 0/6 | **6/6** |
+| `hook:shen-yan-suspicion.status` (**never stated in any passage at all**) | 0/6 | 0/6 | **6/6** |
+
+> **State you can read back out of your own recent prose: retrieval and a bare model both suffice, and Benxiang has no edge. State that has to be accumulated across the whole book and is never stated in any one passage: only the state machine answers it.**
+
+The foreshadowing row is the clearest case: *"has this thread been paid off yet"* is not a fact in any passage — it is a ledger entry. Retrieval can fetch the passage that says so, if one exists. None does.
+
+---
+
+🛑 **Below is the old-probe archive. Both control columns are void.**
+
+| Old instrument · archived | Benxiang | 🛑 Naive (void) | 🛑 RAG (void) |
+|---|---|---|---|
+| qwen-plus · S-tier (10 runs each) | 92.5% | ~~75.0% (sd 0)~~ | ~~75.0% (sd 0)~~ |
+| qwen-plus · M-tier (11 runs each) | 98.9% | ~~75.0% (sd 0)~~ | ~~75.0% (sd 0)~~ |
+| deepseek-v4-flash · M-tier (11 runs each) | 98.9% ± 3.59 | 🛑 void | 🛑 void |
 
 Self-audit ([Run #18](benchmark/shadowbench-w/results-log.md)) found that the control arms' state is collected via one **extra probe call** that **carries no conversation history** — its opening line, "based on what you just wrote," reaches a model that has never seen that prose. Worse, the JSON template in that prompt **prints 5 of the 8 correct answers literally in the question**; a 6th passes trivially on an empty array; a 7th (foreshadowing status) is never asked for at all and is structurally unreachable for the control arms. Exactly one field actually tests anything.
 
@@ -55,7 +80,12 @@ The W3 distributions are **identical run for run** (10 perfect + 1 at 87.5% on e
 
 ⚠️ This still does **not** license *"Benxiang lifts two models of very different strength to the same height."* "To the same height" is a statement about the control arms, which are withdrawn — and the premise that the two models are "of very different strength" rested on A0's 37.5%/75%, which is void for the same reason. Only the within-arm half stands.
 
-**What we do *not* claim:** prose consistency shows **no significant difference** from RAG — after a uniform M-tier rescore, qwen p=0.1852 and deepseek p=0.3341, neither significant. Benxiang costs **more** tokens: **+25% on qwen, +75% on deepseek** (n=11 measured; the "+149%" printed here earlier came from the single smoke run of Run #15 and is corrected). That figure is provisional too — fixing the probe will lengthen the control arms' calls and shrink the premium. Earlier claims of "writes more consistently" and "saves tokens" have been withdrawn.
+**What we do *not* claim**
+
+- **Not "writes more consistently."** No significant difference from RAG. And on the new instrument W1 is not being interpreted at all yet: the judge's vocabulary recognises only about a third of the ways a violation can be phrased ([Run #23](benchmark/shadowbench-w/results-log.md): 13/40); a patch is validated to 40/40 but **not yet applied**; and worse, `ced.mjs` is **also the source of the Benxiang arm's admission gate** ([Run #26](benchmark/shadowbench-w/results-log.md)) — the same rulebook is a shield for one arm and a ruler for all three, so any deterministic-channel comparison carries a circularity.
+- **Not "saves tokens" — and no longer "more expensive" either.** Measured at matched conditions: 64612 vs 57598 = **+12.2%, p = 0.5253, not significant**. The "+25% / +75% / +149%" published here earlier all came from the old probe or a single run and are **withdrawn** — back then the control arms' probe was nearly free because it carried no context.
+- **Cross-model still does not hold.** The deepseek control arms have not been re-run on the fixed probe.
+- **n=6, one model.** This round's conclusion rests on W3 only (W3 compares structured state fields, not prose, so it is unaffected by the vocabulary problem).
 
 ---
 
@@ -149,7 +179,7 @@ They collapse into ten general predicates — `equals`, `not_equals`, `contains`
 
 Two of the predicates are **aggregate** — `unique` and `count` judge a *set* of objects rather than one field, and that turned out to be where real defects live. `count` with `equals_count_of` is the general shape of "the same fact is stated in two places and they must agree": a door schedule listing 5 windows while the floor plan draws 4, a table of contents that outnumbers the chapters, a plan with more line items than todos. Same predicate, three domains.
 
-Three dialects are wired up and tested:
+Four dialects are wired up and tested:
 
 ```bash
 # CAD drawing consistency (adapters/cad/)
@@ -165,17 +195,45 @@ node compiler/cli.mjs diagnose /tmp/B.origin
 #     for voluntary surrender where the guideline caps it at 40% / an amount stated as
 #     6800 in the reasoning and 8600 in the findings
 
+# Spreadsheet dependency chains (adapters/xlsx/)
+node adapters/xlsx/import.mjs adapters/xlsx/fixtures/B-缺陷.xlsx /tmp/B.origin
+node compiler/cli.mjs diagnose /tmp/B.origin
+#   → catches: a hard-coded constant sitting in a formula column (someone pasted a value
+#     and it stopped tracking upstream) / one cell in a column whose formula is shaped
+#     differently from its neighbours / SUM(D2:D6) while data runs to D7 / a leftover
+#     #DIV/0! / a reference to a sheet that does not exist / "1,234" stored as text,
+#     which SUM silently counts as 0
+
+node adapters/xlsx/trace.mjs /tmp/A.origin 预算!D7
+#   → why is this number this number: walk the dependency chain down to the
+#     hand-entered cells. Excel's "trace precedents" draws one layer of arrows and only
+#     while that file is open; here it is persistent data an agent can read.
+
 # Project state as an MCP server (adapters/memory/)
 claude mcp add -s local benxiang -- node <abs-path>/adapters/memory/mcp-server.mjs <package>
 ```
 
-All three dialects together added **4 lines** to the core (`why` gained a `basis` column).
+All four dialects together added **4 lines** to the core (`why` gained a `basis` column).
 Domain knowledge enters as *data* — constraint tables, a statute database — not as code.
+
+The spreadsheet dialect changed **zero** lines of the core (`git diff --stat compiler/ spec/`
+is empty). It is the one domain of the four that carries *computed* values and a dependency
+graph, and it still produced no new predicate: formula dependencies land directly on
+`relations`, which the protocol already had. That is currently the strongest evidence for
+the "generic shell + domain dialects" claim.
 
 ⚠️ The law dialect's numbers (10/12 planted defects caught, 0 false positives on the
 compliant fixture) come from **fixtures we wrote ourselves**. Grading your own exam is
 not evidence of capability: those numbers only guarantee the checks don't silently
 degrade. The false-positive rate on real judgments is **not yet measured**.
+
+⚠️ The spreadsheet dialect has the same fixture problem, plus a sharper one. It was run
+over 22 real `.xlsx` files (16 parsed, 86,590 cells, **0 false positives**) — but of its
+five rules only two were ever exercised on that data: text-stored numbers (87 real numeric
+columns) and error values. **The three formula rules never fired once, because those 16
+real files contain 6 formulas between them.** The spreadsheets that actually circulate are
+export dumps, not calculation models; validating the formula rules needs hand-built
+budgets and financial models, which this sample does not contain.
 
 Constraints that carry only prose and no machine check are reported as `unenforceable` warnings rather than silently passing — silence would let "we have constraints" hide "nobody checks them".
 

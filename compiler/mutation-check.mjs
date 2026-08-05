@@ -103,6 +103,44 @@ const MUTATIONS = [
     find: 'else if (!pred(stateAfter)) v.push',
     to: 'else if (false) v.push',
   },
+  // ── 第七要素与投影：2026-08-05 补上向量后，这两块也该有牙齿检查 ──
+  {
+    claim: '边界声明缺 scope 要被拒（「本工具可能有误差」这种话等于没说）',
+    file: 'compiler/limits.mjs',
+    find: "if (!l?.scope) out.push({ severity: 'error', code: 'limit-no-scope'",
+    to: "if (false) out.push({ severity: 'error', code: 'limit-no-scope'",
+  },
+  {
+    claim: '空边界清单也必须出话（「未声明边界」不等于「没有边界」）',
+    file: 'compiler/limits.mjs',
+    find: "return '⚠ 本包未声明任何边界。",
+    to: "return ''; return '⚠ 本包未声明任何边界。",
+  },
+  {
+    claim: '按 scope 过滤时不得把 lossy / degraded 藏起来（那是数据本身已经不对了）',
+    file: 'compiler/limits.mjs',
+    find: "return limits.filter((l) => re.test(l.scope) || l.kind === 'lossy' || l.kind === 'degraded')",
+    to: "return limits.filter((l) => re.test(l.scope))",
+  },
+  {
+    claim: '投影必须报出目标格式装不下的字段',
+    file: 'compiler/project.mjs',
+    find: "  for (const [field, count] of [...lostFields].sort((a, b) => b[1] - a[1]))",
+    to: "  for (const [field, count] of [])",
+  },
+  {
+    claim: '投影丢掉证据链要单列一条（「这份表答不出凭什么」得写在明面上）',
+    file: 'compiler/project.mjs',
+    find: "  if (changes && !(carries && carries.includes('__provenance')))",
+    to: "  if (false)",
+  },
+  {
+    claim: '投影规划只读，不得改动本源（USD 式叠层，本源始终不动）',
+    file: 'compiler/project.mjs',
+    find: "      if (carries && !carries.includes(k)) {",
+    to: "      if (carries && !carries.includes(k)) { delete src[k];",
+  },
+
 ]
 
 rmSync(LAB, { recursive: true, force: true })

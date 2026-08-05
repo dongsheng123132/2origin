@@ -10,6 +10,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { chunkCorpus, embed, retrieve } from './retriever.mjs'
+import { probeState } from '../lib/probe.mjs'
 
 const HERE = dirname(dirname(dirname(fileURLToPath(import.meta.url))))
 const CACHE = join(HERE, 'results', '.embed-cache.json')
@@ -21,7 +22,7 @@ export const meta = { id: 'a1-rag', name: '向量 RAG（topK 检索 + 尾部正�
 // 也避免把 A1 做成「只有检索、连上一章都不给」的稻草人。
 const TAIL_SHARE = 0.6
 
-export async function run({ task, chapters, model, corpusTail = '', budget = 6000, topK = 6 }) {
+export async function run({ spec, task, chapters, model, corpusTail = '', budget = 6000, topK = 6 }) {
   const out = []
   const usage = { inputTokens: 0, outputTokens: 0, ms: 0, calls: 0 }
   let tail = corpusTail
@@ -75,26 +76,25 @@ export async function run({ task, chapters, model, corpusTail = '', budget = 600
     fresh.forEach((c, i) => index.push({ ...c, vec: freshVecs[i] }))
   }
 
-  // W3 数据采集：与 A0 用**完全相同**的探询提示词，否则 W3 的差异会混进提问方式的差异
-  const probe = await model.complete({
-    prompt:
-      `根据你刚写的内容，输出当前世界状态 JSON：\n` +
-      `{"state": {"obj:black-key": {"holder": "...", "used": false, "intact": true},` +
-      ` "char:zhao-qi": {"alive": true}, "char:bai-yao": {"left_hand_injured": true, "secret_betrayal": true},` +
-      ` "char:lin-zheng": {"knows": [...]}}}`,
+  // W3 数据采集：与 A0 共用同一个探询模块，**同一份字符串**，不再靠注释约定一致——
+  // 否则 W3 的差异会混进提问方式的差异。
+  const probe = await probeState({
+    model,
+    task,
+    spec,
+    written: out.map((c) => `第${c.chapter}章\n${c.text}`).join('\n\n'),
     chapter: chapters.at(-1),
+    usage,
   })
-  usage.inputTokens += probe.usage.inputTokens
-  usage.outputTokens += probe.usage.outputTokens
-  usage.calls++
 
   return {
     arm: meta.id,
     stub: model.stub,
     chapters: out,
-    state: probe.parsed?.state ?? {},
-    hooks: {},
+    state: probe.state,
+    hooks: probe.hooks,
     evidence: {},
+    probe: probe.diag,
     usage,
     gate: null,
   }

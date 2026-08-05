@@ -15,7 +15,7 @@ import { dirname, join } from 'node:path'
 import { loadSpec, replay } from './eval/replay.mjs'
 import { scoreW1 } from './eval/ced.mjs'
 import { scoreW3 } from './eval/state-diff.mjs'
-import { specHash, judgeHash } from './eval/spec-hash.mjs'
+import { specHash, judgeHash, judgeHashW1, judgeHashW3, armsHash } from './eval/spec-hash.mjs'
 import { createModel } from './arms/lib/model.mjs'
 import * as A0 from './arms/a0-naive/index.mjs'
 import * as A1 from './arms/a1-rag/index.mjs'
@@ -126,6 +126,12 @@ const provenance = {
   specHash: specHash(HERE, taskFile),
   // 判分器指纹：规格没变、判分逻辑变了，分数一样会动（ced.mjs 修否定误报后 findings 18→12）
   judgeHash: judgeHash(HERE),
+  // 分维度指纹：ced.mjs 只判 W1，它一改不该把 W3 的历史数据一并作废（见 spec-hash.mjs）
+  judgeHashW1: judgeHashW1(HERE),
+  judgeHashW3: judgeHashW3(HERE),
+  // 实验臂指纹：规格与判分器都没变、**跑法**变了，分数照样会动。
+  // 第八起就住在这个盲区里——探询提示词泄题、不传上下文，两个旧指纹一个都察觉不到。
+  armsHash: armsHash(HERE),
   taskFile,
   provider,
   model: modelName ?? '(默认)',
@@ -173,7 +179,9 @@ for (const key of selected) {
 // ── 报告 ──
 const stub = provider === 'stub'
 console.log('\n' + '='.repeat(64))
-console.log(` ShadowBench-W · S 级 · 第 ${chapters[0]}-${chapters.at(-1)} 章`)
+// 级别取自任务文件，不写死——报告标题上印着「S 级」而实际跑的是 M 级，
+// 正是第五起事故（文件名不反映内容）的同型：人眼看到的标签与实际内容脱钩。
+console.log(` ShadowBench-W · ${task.level ?? taskFile} · 第 ${chapters[0]}-${chapters.at(-1)} 章`)
 console.log('='.repeat(64))
 if (stub) {
   console.log('\n  ⚠⚠ STUB 模式：模型输出是固定剧本，下列数字仅验证流程连通，')
