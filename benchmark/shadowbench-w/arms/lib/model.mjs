@@ -41,6 +41,9 @@ function stubModel(scenario = 'clean') {
             'char:bai-yao': { left_hand_injured: false, secret_betrayal: true },
             'char:lin-zheng': { knows: ['k:space-gate-exists', 'k:black-key-exists'] },
           },
+          // 探询现在也问伏笔（第八起：旧模板从不问它，却把它计入分母）。
+          // 这里故意给一个错值，好让 stub 下的判分同时走到「答了但答错」的分支。
+          hooks: { 'hook:shen-yan-suspicion': { status: 'resolved' } },
         }
         const out = JSON.stringify(canned)
         return { raw: out, parsed: canned, usage: { inputTokens: estTokens(prompt), outputTokens: estTokens(out), ms: 0 } }
@@ -89,7 +92,7 @@ function anthropicModel(model = 'claude-sonnet-5') {
 }
 
 /**
- * 本机 Hermes 配置的模型通道（当前：deepseek-v4-flash / 自定义端点 api.u-claw.org.cn）。
+ * 本机 Hermes 配置的模型通道（当前：deepseek-v4-flash / 自定义 OpenAI 兼容端点）。
  * 便宜、够用、无需另配 Key——批量生成语料的默认通道。
  *
  * v2 修复（2026-08-02）：原先用 `hermes -z <提示词>` 把整段提示词塞进命令行参数，

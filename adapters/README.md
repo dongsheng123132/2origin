@@ -5,8 +5,8 @@
 | 目录（未来） | 方言 | 底座 |
 |---|---|---|
 | `flint-chart/` | Chart | microsoft/flint-chart（MIT，仅对接公开接口） |
-| `office/` | Office | OfficeCLI + Docling + PDFium/MuPDF |
-| `story/` | Story | 自研（正文分片 + 图谱 + 时间线 + 连续性检查） |
+| `office/` | Office | **已落地雏形**：零依赖 docx→md（import.mjs，表格合并展开/章条结构化），底座规划 OfficeCLI + Docling + PDFium/MuPDF（见 [office/README.md](office/README.md)） |
+| `story/` | Story | **已落地（2026-08-06）**：OriginWriter 写作引擎——init/state/submit/check/hooks/outline 六命令，事务性写作（正文+状态变更），禁区/伏笔状态机/正文对照五道门禁，26 项自测（见 [story/README.md](story/README.md)） |
 | `memory/` | Memory | 自研 MCP Server |
 | `cad/` | CAD | FreeCAD / CLI-Anything / Modulor（Phase 4） |
 
