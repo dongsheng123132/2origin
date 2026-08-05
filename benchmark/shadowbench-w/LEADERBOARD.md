@@ -49,6 +49,15 @@ node benchmark/shadowbench-w/eval/state-diff.mjs <结果文件>
 
 提交方式：跑通后 PR 进 `results/`，附模型、语料、n、探询口径说明。判分不过关、口径不一致的提交会被拒并说明理由。
 
+
+## 外部送测（ConStory-Bench，ACL 2026）
+
+2026-08-06 用官方管线送测 60 条 prompts（52 条完成），CED = 0.52（15 错误 / 289,200 词），
+按任务：expansion 0.24 / completion 0.26 / generation 0.30 / continuation 1.03。
+对照其 22 模型榜单落在 Claude-Sonnet-4.5（0.520）与 GLM-4.6（0.528）之间。
+判分模型 qwen-plus（非其默认 judge），60/2000 子集——方向性信号，非排名主张。
+送测评论：github.com/Picrew/ConStory-Bench/issues/1#issuecomment-5196796415
+
 ## 生态
 
 - 本象协议（Origin IR）：`compiler/` 双向编译器 + `spec/` 68 条一致性向量（JS + Python 双实现）
