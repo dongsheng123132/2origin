@@ -136,7 +136,10 @@ async function readHermesModelConfig() {
     const sec = yaml.match(/^model:\s*\n([\s\S]*?)(?=^\S|$)/)?.[1]
     if (!sec) return null
     const get = (k) => {
-      const m = sec.match(new RegExp(`^\\s*${k}:\\s*(?:['\"]([^'\"]+)['\"]|(\\S+))`, 'm'))
+      // 模板字面量里 \\s 已是「一个反斜杠+s」→ 正则空白符。
+      // 写成 \\\\s 会变成「字面反斜杠+s」，永远匹配不到任何键——config 读不出来，
+      // 整个通道退化成 CLI 兜底（2026-08-06 在无 TTY 后台环境下实测暴露：stdin is not a tty）。
+      const m = sec.match(new RegExp(`^\s*${k}:\s*(?:['\"]([^'\"]+)['\"]|(\S+))`, 'm'))
       return m ? (m[1] ?? m[2]).trim() : null
     }
     const cfg = { baseUrl: get('base_url'), apiKey: get('api_key'), defaultModel: get('default') }

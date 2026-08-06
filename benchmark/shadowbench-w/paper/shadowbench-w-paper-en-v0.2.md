@@ -37,7 +37,7 @@ We call this defect **state corruption**: generated content reads fluently at a 
 
 > ⚠️ Every citation below must be re-verified (arXiv IDs, stars, scoop check) before submission, per the repository rule "citations before claims".
 
-**Long-context evaluation.** LongBench, LongBench v2, ∞Bench measure whether a model can *use* long context for question answering; they do not measure consistency of *generation* over long horizons.
+**Long-context evaluation.** LongBench (arXiv 2308.14508), LongBench v2 (arXiv 2412.15204), and ∞Bench (arXiv 2402.13718) measure whether a model can *use* long context for question answering; they do not measure consistency of *generation* over long horizons.
 
 **Story generation and continuation.** ConStory-Bench (arXiv 2603.05890, "Lost in Stories: Consistency Bugs in Long Story Generation by LLMs") is the closest and most important prior art. It evaluates narrative consistency with 2,000 prompts across four task scenarios, defines a taxonomy of five error categories with 19 fine-grained subtypes, and builds ConStory-Checker, an automated pipeline that detects contradictions and grounds each judgment in explicit textual evidence. It finds consistency errors are most common in factual and temporal dimensions, cluster around the middle of narratives, and correlate with high-entropy text segments.
 

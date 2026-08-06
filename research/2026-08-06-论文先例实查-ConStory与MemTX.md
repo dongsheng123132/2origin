@@ -52,7 +52,14 @@ ShadowBench-W 的 W3 是第一个量化「系统是否守这条纪律」的公�
    互补，不重复——这个差异要写进 Abstract / Intro / Related Work 三处。
 2. **MemTX 进 Related Work**：承认同构性（引用先于宣称），说明差异是「协议 vs 基准」。
 3. **OmniDocBench 编号修正**：真实 arXiv 是 2412.07626（我最初猜 2408.15216 是量子物理论文，错了）。
-4. **检查清单更新**：投稿前仍需逐条核实 LongBench 等其余引用。
+4. **其余引用编号补齐**（2026-08-06 实查）：
+   - LongBench → arXiv 2308.14508
+   - LongBench v2 → arXiv 2412.15204
+   - ∞Bench → arXiv 2402.13718（OpenBMB/InfiniteBench）
+   - ConStory-Bench → arXiv 2603.05890
+   - MemTX → arXiv 2607.23929
+   - OmniDocBench → arXiv 2412.07626（CVPR 2025）
+   - 全部在英文稿 v0.2 Related Work 中落实
 
 ---
 
