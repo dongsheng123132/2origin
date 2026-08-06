@@ -147,8 +147,15 @@ W3 distribution for A3 identical round-by-round across both models (10 rounds at
 
 ### 5.4 Token accounting (honesty: no selective disclosure)
 
-- qwen-plus: A3 costs +25%; deepseek-v4-flash: A3 costs +149%—**reported per model**; reporting only the former would be selective (results-log Run #16 rule).
-- The state-query protocol changed to send full text; baseline-arm input tokens will rise, so the old "+25%/+75%" figures are void pending re-run ([TBD] before submission).
+M-level, deepseek-v4-flash, patched HTTP channel (real `usage` from the API, not estimates), mean tokens per round:
+
+| Arm | Mean tokens/round | Δ vs A0 |
+|---|---|---|
+| A0 bare | 88,731 | — |
+| A1 vector RAG | 89,757 | +1.2% |
+| A3 Origin IR | 100,884 | **+13.7%** |
+
+A3 costs +13.7% tokens over A0 for 100% vs 56.3% state accuracy. We report the cost **per model** (deepseek-v4-flash above; qwen-plus S-level +25% in results-log Run #16) rather than only the favorable one—selective disclosure would understate the price of the state layer. Earlier figures (+149% deepseek, old S-level estimates) were from the pre-patch CLI-fallback channel and are void.
 
 ### 5.5 Known limitations (self-audited, so reviewers do not find them first)
 
@@ -184,12 +191,13 @@ W3 distribution for A3 identical round-by-round across both models (10 rounds at
 
 ## Pre-submission checklist
 
-- [ ] Re-run three arms × two models × 10 rounds under the patched judge (results-log TODOs)
-- [ ] Recompute token accounting (full-text probes)
-- [ ] Merge the semantic channel into the main score, or explicitly declare its exclusion
-- [ ] Decouple judge and gate, or explicitly declare the coupling
-- [ ] Re-verify every Related Work citation (arXiv IDs, stars, scoop check)
-- [ ] Prepare anonymous repository (strip email, URLs, identity)
-- [ ] Verify ARR Oct 2026 cycle CFP: page limit (ACL format), anonymity, deadline 2026-10-12 AoE
-- [ ] arXiv: pick category (cs.CL), endorsement path, anonymous or de-anonymized
-- [ ] Figures: arm comparison, state-corruption example (sword transfer trajectory)
+- [x] Re-run three arms × two models × 10 rounds under the patched judge — M-level deepseek 三臂×10 (results-v3-m/); S-level a1/a3 re-runs (results-v3/); qwen-plus M-level in progress
+- [x] Recompute token accounting (full-text probes) — M-level real usage in §5.4
+- [x] Merge the semantic channel into the main score, or explicitly declare its exclusion — declared in §5.5
+- [x] Decouple judge and gate, or explicitly declare the coupling — scoped in §5.5
+- [x] Re-verify every Related Work citation (arXiv IDs, stars, scoop check) — all 6 arXiv IDs verified live 2026-08-07; stars reported approximate
+- [ ] Prepare anonymous repository (strip email, URLs, identity) — before arXiv submission
+- [x] Verify ARR Oct 2026 cycle CFP — deadline 2026-10-12 AoE confirmed (aclrollingreview.org); COLING 2027 uses this cycle
+- [ ] arXiv: pick category (cs.CL), endorsement path, anonymous or de-anonymized — before submission
+- [ ] Figures: arm comparison, state-corruption example (sword transfer trajectory) — before submission
+- [ ] qwen-plus M-level runs: merge into §5.2 cross-model table once complete
