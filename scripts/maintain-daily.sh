@@ -40,18 +40,26 @@ if [ ! -f "$TASK" ]; then
 fi
 
 # 4. 执行（claude 无头模式，读任务文件干活）
+#    世界状态只读（单写者，主会话提交）：cli 只放 status/diagnose/why/history，
+#    不放 commit。原因见 scripts/tasks/daily-maintain.md 头部 + risk:multi-writer-seq-collision。
 echo "==> [4/7] claude 执行每日维护"
 if command -v claude >/dev/null 2>&1; then
   claude -p "$(cat "$TASK")" \
-    --allowedTools "Bash(git:*),Read,Write,Edit,Bash(npm run verify:*),Bash(node compiler/cli.mjs:*)" \
+    --allowedTools "Bash(git pull:*),Bash(git status:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Read,Write,Edit,Bash(npm run verify:*),Bash(node compiler/cli.mjs status:*),Bash(node compiler/cli.mjs diagnose:*),Bash(node compiler/cli.mjs why:*),Bash(node compiler/cli.mjs history:*)" \
     2>&1 | tail -60
 else
   echo "!! 未安装 claude CLI，本日仅做检视（pull + status + diagnose 已跑）"
 fi
 
-# 5. 维护员自己的状态也要提交（dogfooding：协议管好自己的状态）
-echo "==> [5/7] 世界状态变更提交检查"
-git status --short project.origin/ 2>&1 | head -20
+# 5. 世界状态只读检查：维护员若意外写了 project.origin/，必须恢复（主会话单写）
+echo "==> [5/7] 世界状态只读护栏（意外变更即回退）"
+if git status --short project.origin/ 2>&1 | grep -q .; then
+  echo "!! 检测到 project.origin/ 有本地变更——维护员不得写世界状态，回退中"
+  git status --short project.origin/ 2>&1 | head -20
+  git checkout -- project.origin/ 2>&1 && echo "✅ 已回退 project.origin/（世界状态只读）"
+else
+  echo "✅ project.origin/ 无变更（世界状态只读正确）"
+fi
 
 # 6. 全仓验证
 echo "==> [6/7] 全仓 verify"
