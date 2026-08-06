@@ -1,7 +1,7 @@
 # ShadowBench-W: State Consistency as a Benchmarkable Task for Long-Form Text Generation
 
 > Working draft v0.3 (English) — for arXiv preprint and ARR Oct 2026 cycle (deadline 2026-10-12 AoE).
-> Status: draft. Main results (§5.1) from benchmark/shadowbench-w/results-v3-m/ (M-level, deepseek-v4-flash, patched hermes HTTP channel, 10 rounds/arm). S-level controls (§5.2) from results-log.md + results-v3/ re-runs. qwen-plus M-level runs in progress. All six arXiv citations verified live (2026-08-07); star counts reported as approximate (values drift).
+> Status: draft, data complete. Main results (§5.1) and cross-model (§5.2) from benchmark/shadowbench-w/results-v3-m/ (M-level, 50-chapter ≈95K baseline, 10 rounds/arm, both deepseek-v4-flash and qwen-plus, patched hermes HTTP + bailian channels). All six arXiv citations verified live (2026-08-07); star counts approximate (values drift).
 
 ## Abstract
 
@@ -122,18 +122,19 @@ Three findings:
 2. **Text quality is NOT where the method wins.** A3's EPC (0.84) is 61% lower than A0 (2.16), but statistically indistinguishable from A1 (0.82). The Origin IR state layer's advantage is state writeback (W3), not prose generation (W1)—consistent with the S-level finding that W1 and W3 decouple.
 3. **The gap widens with scale.** At S-level (20K chars) A0 hit 75.0%; at M-level (95K chars) A0 collapses to 56.3%. A3 holds 100% at both scales. State corruption is a *scale* defect.
 
-### 5.2 Cross-model robustness (qwen-plus) & S-level control
+### 5.2 Cross-model robustness (qwen-plus)
 
-qwen-plus M-level runs were in progress at submission-refresh time; S-level controls (results-log, patched-judge re-runs) cover cross-model robustness on the smaller scale:
+To test whether the state layer's advantage is model-specific, we re-ran the full M-level protocol with qwen-plus (10 rounds/arm, same probe protocol, same judge):
 
-| Arm | S-level W3 | S-level EPC |
-|---|---|---|
-| A0 bare | 75.0% (sd = 0) | 1.00 |
-| A1 vector RAG | 75.0% (sd = 0) | — |
-| A3 Origin IR (qwen-plus) | 98.9% | **0.20** |
-| A3 Origin IR (deepseek-v4-flash) | 98.9% | **0.55** |
+| Arm | n | W3 state accuracy | W1 EPC | Mean tokens |
+|---|---|---|---|---|
+| A0 bare | 10 | 53.8% ± 11.3% | 1.12 ± 0.53 | 58,313 |
+| A1 vector RAG | 10 | 58.8% ± 13.8% | 1.22 ± 0.54 | 58,569 |
+| A3 Origin IR | 10 | **97.5% ± 5.0%** | **0.66 ± 0.54** | 70,605 |
 
-W3 distribution for A3 identical round-by-round across both models (10 rounds at 100%, 1 at 87.5%)—state writeback is robust to the underlying model. The 75.0% A0/A1 S-level constant reflects a probe artifact fixed in the M-level protocol (see §5.5).
+Permutation tests (20,000 rounds): A3 vs A0 **p < 0.0001**; A3 vs A1 **p < 0.0001**; A1 vs A0 p = 0.5264 (n.s.).
+
+**Robustness conclusion.** The qualitative finding is identical across two unrelated models: A3's state-writeback accuracy is near-perfect (97.5–100%) while A0/A1 sit at 54–70%; the A3-vs-baseline gap is significant at p < 0.0001 in both models, and RAG's EPC advantage (when present) does not transfer to state correctness. The 100%→97.5% drop on qwen is driven by 1–2 rounds with a single field mismatch (e.g., a character location asserted in prose but not declared to the state layer)—the residual, declared-error regime, not a systemic failure.
 
 ### 5.3 Ablations
 
