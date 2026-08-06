@@ -1,0 +1,106 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dongsheng123132/action-parity/main/schema/action-parity.schema.json",
+  "spec_version": "0.5.0",
+  "application": {
+    "id": "org.hequbing.auto-publish",
+    "name": "自动发布器 AutoPublish",
+    "version": "0.1.0",
+    "description": "基于影核协议（ActionParity）的自动发布工具：一个 post.publish 动作，X（推特）/微博/公众号 三个执行器完成。登录态由浏览器会话提供，动作可回放可验证。"
+  },
+  "conformance_targets": ["AP-1", "AP-2"],
+  "surfaces": [
+    {
+      "id": "publish-cli",
+      "kind": "cli",
+      "required_for_parity": true,
+      "test_driver": "node",
+      "description": "发布器 CLI（publish.mjs）：--dry-run 无头验证 / 正式发布走浏览器执行器。机器可直接调用，与 GUI 执行器同语义。"
+    },
+    {
+      "id": "x-web",
+      "kind": "gui",
+      "required_for_parity": true,
+      "test_driver": "browser",
+      "description": "X (twitter) web 界面，浏览器登录态。"
+    },
+    {
+      "id": "weibo-web",
+      "kind": "gui",
+      "required_for_parity": true,
+      "test_driver": "browser",
+      "description": "微博 web 界面，浏览器登录态。"
+    },
+    {
+      "id": "wechat-mp",
+      "kind": "gui",
+      "required_for_parity": true,
+      "test_driver": "browser",
+      "description": "微信公众号后台（mp.weixin.qq.com），浏览器登录态。"
+    }
+  ],
+  "actions": [
+    {
+      "id": "post.publish",
+      "title": "发布内容",
+      "description": "把一段文本发布到指定平台。支持纯文本、长文（自动分段）、线程（多推文）。",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "platform": {
+            "type": "string",
+            "enum": ["x", "weibo", "wechat-mp"],
+            "description": "目标平台"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "description": "正文内容"
+          },
+          "thread": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "线程模式：多条推文依次发布"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "default": false,
+            "description": "true 时只做登录态检查与预览，不真正发布"
+          }
+        },
+        "required": ["platform", "content"]
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "published_url": { "type": "string", "description": "发布后的内容 URL" },
+          "tweet_ids": { "type": "array", "items": { "type": "string" }, "description": "线程模式下各条推文 ID" },
+          "status": { "type": "string", "enum": ["published", "preview", "login_required"] }
+        },
+        "required": ["status"]
+      },
+      "effects": {
+        "class": "external",
+        "risk": "medium",
+        "reversible": false,
+        "confirmation": "conditional",
+        "audit_required": true
+      },
+      "execution": {
+        "headless": true,
+        "idempotent": false,
+        "cancellable": true,
+        "timeout_ms": 120000,
+        "headless_evidence": "tools/autopublish/publish.mjs 支持 --dry-run；dry-run 完成登录态检测与预览，不产生对外可见内容（无头可验证）",
+        "progress_events": true
+      },
+      "bindings": [
+        { "surface": "publish-cli", "target": "node tools/autopublish/publish.mjs" },
+        { "surface": "x-web", "target": "https://x.com/compose/post" },
+        { "surface": "weibo-web", "target": "https://weibo.com" },
+        { "surface": "wechat-mp", "target": "https://mp.weixin.qq.com" }
+      ]
+    }
+  ]
+}

@@ -69,11 +69,12 @@
 - LICENSE 已随包（Apache-2.0 全文）；ClawHub 展示 License 字段识别为 MIT-0（其识别逻辑对 LICENSE 文件内容的解析，法律效力以文件为准）
 - 版本策略：1.0.0 首发 → 补 LICENSE 后自动升 1.0.1（changelog 记录）
 
-**SkillHub（腾讯，中文主战场）— 已备好，待登录**：
-- 三个 skill 的 frontmatter 已按 SkillHub 要求补齐：slug（kebab-case）+ displayName + summary
-- `publish --dry-run` 全部通过（本地预检：metadata + 打包）
-- 待用户微信扫码登录取 token（skh_...）后执行：
-  `skillhub publish <dir> --token skh_...`（或 login 后直接 publish）
+**SkillHub（腾讯，中文主战场）— 已发布 ✅ 2026-08-06**：
+- origin-writer（skillId 145380）、benxiang-memory（145381）、origin-office（145382）
+- 网页版确认：https://skillhub.cn/skills/user_abeb50e0/origin-writer（AI 评分 4.4/5.0「优秀」、安全扫描、内容指纹+数字签名）
+- 作者显示「贺去病ai工作室-软件+品牌」
+- 注意：SkillHub 服务端拒绝 LICENSE 文件（license 走 frontmatter 字段声明），发布用临时目录排除 LICENSE，仓库保留（ClawHub 需要）
+- 发布频率限制：连续发布第三个被限流，间隔 30s 后重试成功
 
 **可发布 skill**（.agents/skills/）：origin-writer / benxiang-memory / origin-office（均带 LICENSE）。
 
