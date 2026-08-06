@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>白鼓挑战 — 2Origin 协议</title>
+<meta name="description" content="白鼓挑战：AI 挑战人类最长小说纪录，状态全程可验证。全球最难的 AI 写作考题：一致性。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111113'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23c9a227'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>2Origin</span><span class="zh-name">本象协议</span>
+    </a>
+    <div class="nav-links">
+      <a href="manifesto.html" class="hide-sm">宣言</a>
+      <a href="challenge.html" class="hide-sm">白鼓挑战</a>
+      <a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="lang-switch" href="../challenge.html">English</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">2Origin</a> / 白鼓挑战</div>
+    <h1>白鼓挑战</h1>
+    <p class="sub">AI 挑战人类最长小说纪录，状态全程可验证。<br>
+    全球最难的 AI 写作考题：一致性。全球第一个敢这么做的挑战。</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="prose">
+    <h2>人类最长的长篇小说</h2>
+    <p>人类最长的长篇小说，叫 <strong>Venmurasu</strong>（泰米尔语「白鼓」）。
+    26 卷，约 22,400 页。一个人，写了六年半。</p>
+    <p>它是人类耐力的纪念碑——写到第 20 卷还记得第 1 卷的人物，这本身就是奇迹。</p>
+
+    <h2>现在，AI 要挑战这个纪录——而且更难</h2>
+    <p>我们给自己加了一个人类作者不需要面对的难度：</p>
+    <blockquote>「每一章的世界状态，都必须可验证。」</blockquote>
+    <p>写到第 100 万字时，第 3 章埋的伏笔还记得收，第 9 章受的伤还记得疼，
+    谁在什么时候知道了什么，全都查得出来——不是靠模型记性好，是靠门禁把关。</p>
+    <p>人类写长篇小说，唯一的天花板是记忆。<br>
+    AI 写长篇小说，过去连这个天花板都没有——写到 5 万字就穿帮。</p>
+
+    <h2>方法：把世界状态从模型的脑子里搬出来</h2>
+    <p>我们把<strong>世界状态</strong>从模型上下文里拆出来，变成持久化的对象。
+    每次改动 = 一个语义事务，五道门禁全过才落盘；违规零写入，理由返回重写。</p>
+    <ol>
+      <li><strong>正文非空</strong>——没有正文的章节不是章节。</li>
+      <li><strong>结构引用</strong>——引用的每个实体都必须存在。</li>
+      <li><strong>禁区约束</strong>——不可违反的约束。</li>
+      <li><strong>伏笔状态机</strong>——埋下的线头，收没收、还开着。</li>
+      <li><strong>正文对照</strong>——正文说的和状态记的必须一致。</li>
+    </ol>
+    <p>这不是「生成 100 万字」——生成器一天能吐 100 万字，但第 5 万字就穿帮。
+    这是<strong>「AI 写出 100 万字还不穿帮」</strong>，是 AI 写作的珠穆朗玛峰。</p>
+
+    <h2>诚实的基线</h2>
+    <p>自建基准 ShadowBench-W 上，本方法的状态回写准确率：</p>
+    <table class="data-table">
+      <thead><tr><th></th><th>2Origin 状态层</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
+      <tbody>
+        <tr><td>状态回写准确率（33 轮系列）</td><td class="hl">98.9%</td><td>75.0%</td><td>75.0%</td></tr>
+      </tbody>
+    </table>
+    <p class="note">⚠️ 这是自建基准的口径，非第三方评测。探询修复后的权威对比（Run #27）为
+    95.8% ± 5.9 vs 52.1% ± 19.7 / 58.3% ± 11.8，p = 0.0024。全球没有第二家做「状态写回验证」的基准——
+    考题是我们定义的，标准制定权在我们手里。</p>
+
+    <h2>现在的进度（2026-08-06 实测）</h2>
+    <table class="data-table">
+      <thead><tr><th>连载</th><th>进度</th></tr></thead>
+      <tbody>
+        <tr><td>《月落渡口》· 悬疑志怪</td><td>2 章 · 4,347 字</td></tr>
+        <tr><td>《规则怪谈·无限层》· 规则怪谈</td><td>4 章 · 11,671 字</td></tr>
+      </tbody>
+    </table>
+    <p class="note"><strong>drift-rate</strong>（模型记错前值率）<strong>8.3%</strong>，可观测、逐章下降、目标归零。</p>
+    <div class="milestones">
+      <div class="milestone"><div class="dist">现在</div><h3>两部连载</h3><p>状态开源可验证</p></div>
+      <div class="milestone"><div class="dist">下一步</div><h3>10 万字</h3><p>公开里程碑</p></div>
+      <div class="milestone"><div class="dist">再然后</div><h3>100 万字</h3><p>百万字不失忆</p></div>
+      <div class="milestone"><div class="dist">目标</div><h3>破 22,400 页</h3><p>超越人类纪录</p></div>
+    </div>
+
+    <h2>规则（挑战本身也要可验证）</h2>
+    <ol>
+      <li>AI 每写一章 = 提交一个语义事务（正文 + 状态变更）。</li>
+      <li>五道门禁全过才落盘。</li>
+      <li>违规零写入，理由返回重写。</li>
+      <li>每章正文 + 世界状态 + git commit 全部公开。</li>
+      <li>任何人都能 clone 验证：<code>node adapters/story/cli.mjs state &lt;pkg&gt;</code></li>
+    </ol>
+
+    <h2>追连载</h2>
+    <p>人类用了 6.5 年。AI 会用多久？不知道。但我们公开每一章：正文、世界状态、伏笔图谱、
+    时间线，全部可 clone 可验证。<code>git log</code> 就是证据链。</p>
+
+    <div class="honesty">
+      <h3>诚实边界</h3>
+      <ul>
+        <li><strong>目标尚未达成——这是挑战，不是成绩单。</strong>现在约 1.6 万字，里程碑在前方。</li>
+        <li>实测基于单一模型（deepseek-v4-flash）、自造夹具。</li>
+        <li>「98.9% vs 75%」是自建基准 ShadowBench-W 的口径，非第三方评测。</li>
+        <li>Venmurasu 事实已核实（26 卷 / 约 22,400 页 / 2014–2020，单人完成，Wikipedia 2026-08-06）。</li>
+      </ul>
+    </div>
+
+    <div class="hero-cta" style="margin-top:44px">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub 上 clone 验证</a>
+      <a class="btn btn-ghost" href="index.html" style="border-color:var(--gold);color:var(--gold-deep)">回到概览</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="brand-line">2Origin <span class="zh">本象协议</span></div>
+      <p>保存本象，按需投影。<br>「圣人立象以尽意」——《易传·系辞》</p>
+    </div>
+    <div>
+      <h4>协议</h4>
+      <a href="manifesto.html">宣言</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/docs" target="_blank" rel="noopener">文档</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/spec/conformance" target="_blank" rel="noopener">一致性测试集</a>
+    </div>
+    <div>
+      <h4>项目</h4>
+      <a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="challenge.html">白鼓挑战</a>
+      <a href="https://github.com/dongsheng123132/2origin/blob/main/README.md" target="_blank" rel="noopener">README</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="in">
+      <span>© 2026 2Origin 协议 · Apache-2.0</span>
+      <span>本象协议 · Benxiang · Origin IR</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The White Drum Challenge — 2Origin Protocol</title>
+<meta name="description" content="The White Drum Challenge: AI challenges the longest novel ever written by a human — with the world state of every chapter verifiable.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111113'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23c9a227'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>2Origin</span><span class="zh-name">本象协议</span>
+    </a>
+    <div class="nav-links">
+      <a href="manifesto.html" class="hide-sm">Manifesto</a>
+      <a href="challenge.html" class="hide-sm">The Challenge</a>
+      <a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="lang-switch" href="zh/index.html">中文</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">2Origin</a> / The Challenge</div>
+    <h1>The White Drum Challenge</h1>
+    <p class="sub">AI challenges the longest novel ever written by a human — with one difficulty a human author
+    never faced: <strong>the world state of every chapter must be verifiable.</strong></p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="prose">
+    <h2>The longest book ever written by a human</h2>
+    <p>The longest novel in the world is called <strong>Venmurasu</strong> — Tamil for “the white drum.”
+    26 volumes, roughly 22,400 pages. One person, six and a half years.</p>
+    <p>It is a monument to human endurance — to still remember the characters of volume 1 while writing
+    volume 20 is itself a miracle.</p>
+
+    <h2>Now AI takes the same test — with extra difficulty</h2>
+    <p>We are adding a difficulty a human author never faces:</p>
+    <blockquote>“The world state of every chapter must be verifiable.”</blockquote>
+    <p>At one million characters, the foreshadowing planted in chapter 3 must still be paid off, the injury
+    from chapter 9 must still hurt, and who knew what, and when — every bit of it checkable. Not because the
+    model has a good memory. Because a gate keeps the books.</p>
+    <p>A human writing a long novel has exactly one ceiling: memory.<br>
+    AI writing a long novel used to have no ceiling at all — it falls apart at 50,000 characters.</p>
+
+    <h2>The method: state outside the model's head</h2>
+    <p>We move <strong>world state</strong> out of the model's context and into persisted objects.
+    Every change is one <strong>semantic transaction</strong>, passed through five gates; nothing is written
+    unless all five pass; on failure, zero writes and the reason is returned for rewriting.</p>
+    <ol>
+      <li><strong>Text non-empty</strong> — a chapter with no prose is not a chapter.</li>
+      <li><strong>Structural references</strong> — every entity referenced exists.</li>
+      <li><strong>Forbidden zones</strong> — constraints that must not be violated.</li>
+      <li><strong>Foreshadowing state machine</strong> — planted threads tracked, paid off or still open.</li>
+      <li><strong>Prose-vs-state check</strong> — what the text says agrees with what the state says.</li>
+    </ol>
+    <p>This is not “generate a million characters” — a generator can vomit a million characters in a day
+    and fall apart at the 50-thousandth. This is <strong>AI writing a million characters without falling apart</strong>,
+    the Everest of AI writing.</p>
+
+    <h2>The honest baseline</h2>
+    <p>Against a self-built benchmark (ShadowBench-W), the method's <strong>state write-back accuracy</strong>:</p>
+    <table class="data-table">
+      <thead><tr><th></th><th>2Origin state layer</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+      <tbody>
+        <tr><td>State accuracy (33-run series)</td><td class="hl">98.9%</td><td>75.0%</td><td>75.0%</td></tr>
+      </tbody>
+    </table>
+    <p class="note">⚠️ This is the instrument of our own benchmark — not a third-party evaluation. The definitive
+    comparison after the probe fix (Run #27) is 95.8% ± 5.9 vs 52.1% ± 19.7 / 58.3% ± 11.8, p = 0.0024. Nobody else
+    runs a “state write-back correctness” benchmark — we defined the exam, and the standard-setting power is ours.</p>
+
+    <h2>Where we stand now (2026-08-06)</h2>
+    <table class="data-table">
+      <thead><tr><th>Serial</th><th>Progress</th></tr></thead>
+      <tbody>
+        <tr><td>《月落渡口》· Moonfall Ferry · suspense</td><td>2 chapters · 4,347 chars</td></tr>
+        <tr><td>《规则怪谈·无限层》· Infinite Layers · rule-horror</td><td>4 chapters · 11,671 chars</td></tr>
+      </tbody>
+    </table>
+    <p class="note"><strong>drift-rate</strong> — the rate at which the model misremembers a prior value — is
+    <strong>8.3%</strong>, observable, falling chapter by chapter, targeted at zero.</p>
+    <div class="milestones">
+      <div class="milestone"><div class="dist">now</div><h3>Two serials</h3><p>open-source, verifiable state</p></div>
+      <div class="milestone"><div class="dist">next</div><h3>100k chars</h3><p>public milestone</p></div>
+      <div class="milestone"><div class="dist">then</div><h3>1,000k chars</h3><p>a million without amnesia</p></div>
+      <div class="milestone"><div class="dist">goal</div><h3>Beyond 22,400 pages</h3><p>beating the human record</p></div>
+    </div>
+
+    <h2>The rules — the challenge must itself be verifiable</h2>
+    <ol>
+      <li>Each chapter = one semantic transaction (prose + state changes).</li>
+      <li>All five gates must pass before anything is written.</li>
+      <li>Violations write nothing; the reason is returned for rewriting.</li>
+      <li>Every chapter: prose + world state + git commit — all public.</li>
+      <li>Anyone can clone and verify: <code>node adapters/story/cli.mjs state &lt;pkg&gt;</code></li>
+    </ol>
+
+    <h2>Follow the serials</h2>
+    <p>Humans took 6.5 years. How long will AI take? Unknown. But every chapter is public —
+    prose, world state, foreshadowing graph, timeline — all cloneable, all verifiable.
+    <code>git log</code> is the evidence chain.</p>
+
+    <div class="honesty">
+      <h3>Honest boundaries</h3>
+      <ul>
+        <li><strong>This is a challenge, not a report card.</strong> The target has not been reached. We are at ~16k characters; the milestones are ahead.</li>
+        <li>Measurements rest on a single model (deepseek-v4-flash) and self-made fixtures.</li>
+        <li>“98.9% vs 75%” is the ShadowBench-W instrument of our own design — not third-party evaluation.</li>
+        <li>Venmurasu facts verified: 26 volumes / ~22,400 pages / 2014–2020, single author (Wikipedia, 2026-08-06).</li>
+      </ul>
+    </div>
+
+    <div class="hero-cta" style="margin-top:44px">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">Clone &amp; verify on GitHub</a>
+      <a class="btn btn-ghost" href="index.html" style="border-color:var(--gold);color:var(--gold-deep)">Back to overview</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="brand-line">2Origin <span class="zh">本象协议</span></div>
+      <p>Save the origin, project on demand.<br>「圣人立象以尽意」——《易传·系辞》</p>
+    </div>
+    <div>
+      <h4>Protocol</h4>
+      <a href="manifesto.html">Manifesto</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/docs" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/spec/conformance" target="_blank" rel="noopener">Conformance</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="challenge.html">White Drum Challenge</a>
+      <a href="https://github.com/dongsheng123132/2origin/blob/main/README.md" target="_blank" rel="noopener">README</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="in">
+      <span>© 2026 2Origin Protocol · Apache-2.0</span>
+      <span>本象协议 · Benxiang · Origin IR</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
