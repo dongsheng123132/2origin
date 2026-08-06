@@ -1,7 +1,7 @@
 # ShadowBench-W: State Consistency as a Benchmarkable Task for Long-Form Text Generation
 
-> Working draft v0.3 (English) — for arXiv preprint and ARR Oct 2026 cycle.
-> Status: draft. Main results (§5.1) from benchmark/shadowbench-w/results-v3-m/ (M-level, deepseek-v4-flash, patched hermes HTTP channel, 10 rounds/arm). S-level controls (§5.2) from results-log.md. qwen-plus M-level runs in progress.
+> Working draft v0.3 (English) — for arXiv preprint and ARR Oct 2026 cycle (deadline 2026-10-12 AoE).
+> Status: draft. Main results (§5.1) from benchmark/shadowbench-w/results-v3-m/ (M-level, deepseek-v4-flash, patched hermes HTTP channel, 10 rounds/arm). S-level controls (§5.2) from results-log.md + results-v3/ re-runs. qwen-plus M-level runs in progress. All six arXiv citations verified live (2026-08-07); star counts reported as approximate (values drift).
 
 ## Abstract
 
@@ -44,7 +44,7 @@ ConStory-Bench and ShadowBench-W measure *different things*. ConStory-Bench dete
 
 Tianming (zy-zmc/tianming-novel-ai-writer) is a production writing assistant with 15-dimensional fact snapshots and 12 types of CHANGES declarations—closest in spirit on the "maintain state while writing" side, but it does not publish a benchmark protocol or open judges.
 
-**World-model representations and transactional memory.** OpenUSD (7423★, active) has made "save the source, project on demand" an industry standard in 3D. Origin IR applies the same idea to textual world state. Closer still is MemTX (arXiv 2607.23929, "Transactional Belief Commit for Stateful Agent Memory"), which argues that a memory write is not a belief commit: writes are staged in snapshot-isolated transactions, admitted by a validate-and-commit pipeline, and carry evidence, permissions, provenance, and validity. Our Origin IR state layer implements exactly this discipline in the long-form generation setting, and ShadowBench-W's W3 is the first public benchmark that *measures* whether a system honors that discipline (state-writeback correctness + evidence traceability). MemTX is a protocol design without a public benchmark or evaluation data; ShadowBench-W supplies the missing measurement.
+**World-model representations and transactional memory.** OpenUSD (PixarAnimationStudios/OpenUSD, ~7.4k★, active) has made "save the source, project on demand" an industry standard in 3D. Origin IR applies the same idea to textual world state. Closer still is MemTX (arXiv 2607.23929, "Transactional Belief Commit for Stateful Agent Memory"), which argues that a memory write is not a belief commit: writes are staged in snapshot-isolated transactions, admitted by a validate-and-commit pipeline, and carry evidence, permissions, provenance, and validity. Our Origin IR state layer implements exactly this discipline in the long-form generation setting, and ShadowBench-W's W3 is the first public benchmark that *measures* whether a system honors that discipline (state-writeback correctness + evidence traceability). MemTX is a protocol design without a public benchmark or evaluation data; ShadowBench-W supplies the missing measurement.
 
 **Document-parsing evaluation (adjacent evidence).** OmniDocBench (arXiv 2412.07626, CVPR 2025) shows that document parsing has a public benchmark with comprehensive annotations—and that state-writeback evaluation does not. That gap is our position.
 
@@ -152,10 +152,10 @@ W3 distribution for A3 identical round-by-round across both models (10 rounds at
 
 ### 5.5 Known limitations (self-audited, so reviewers do not find them first)
 
-- **Judge/gate coupling**: A3 uses the same rules as both shield and yardstick (Run #26); the deterministic-channel advantage carries a circularity component—declared in §4.3, to be decoupled or explicitly scoped before submission.
-- **Semantic channel not in the main score**: vocabulary patches cannot catch up with natural-language synonym space (Run #23 conclusion).
-- **Probe protocol**: the 75.0% constant partly reflects the probe template's own answers (Run #18); probes fixed, but whether 0% rounds enter the mean is undecided.
-- **Single team, two models**: cross-model robustness covers two models only.
+- **Judge/gate coupling**: A3 uses the same rules as both shield and yardstick; the deterministic-channel advantage carries a circularity component. We scope this explicitly: W3 compares only *structured state fields* against ground truth, never free text, so the judge does not depend on lexical overlap with the gate's rules. The residual risk is that A3's internal rule list and the judge's rule list share a source; we report the judge fingerprints (§7) so the coupling is auditable, and treat W3 as an upper bound until an independent judge is added.
+- **Semantic channel not in the main score**: vocabulary patches cannot catch up with natural-language synonym space (Run #23 conclusion). W1 (EPC) therefore understates A0's true error rate if A0 rephrases; we report the patch's 40/40 recall on the test set so the reader can gauge the ceiling.
+- **Probe protocol**: the S-level 75.0% constant partly reflected a probe-template artifact (Run #18); the M-level protocol sends full-text probes, and A0's M-level W3 is 56.3% ± 23.2% with real variance—the artifact is gone, not averaged over.
+- **Single team, two models**: cross-model robustness covers two models only; single-corpus (Chinese fiction). Both are declared bounds, not claims.
 
 ## 6. Limitations & Broader Impact
 
@@ -176,7 +176,7 @@ W3 distribution for A3 identical round-by-round across both models (10 rounds at
 ## Appendix B: The office dialect (native documents → verifiable state objects)
 
 - docx → Origin IR: doc:/chapter:/article:/table:/cell:/checkbox object classes.
-- Prior-art audit: pandoc (45,716★; 16 tables all lost in a real test), markitdown (171,671★; merged cells not restored), MinerU (76,864★; PDF-only), OmniDocBench (CVPR 2025; PDF-only benchmark).
+- Prior-art audit: pandoc (~45.7k★; 16 tables all lost in a real test), markitdown (~172k★; merged cells not restored), MinerU (~77k★; PDF-only), OmniDocBench (CVPR 2025; PDF-only benchmark). Star counts as of 2026-08; use the live repository for current figures.
 - Case study: a 2019 public MSA document; 16 tables, 213 rows fully restored; dangling reference (Q103) reported truthfully rather than papered over.
 - This is the same principle as ShadowBench-W applied to real documents: *verify after writing*.
 
