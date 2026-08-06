@@ -20,6 +20,8 @@
 // 接进 Claude Code：
 //   claude mcp add benxiang -- node <绝对路径>/adapters/memory/mcp-server.mjs <包路径>
 
+import { appendFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { loadOrigin } from '../../compiler/origin.mjs'
 import { compileContext } from '../../compiler/context-compiler.mjs'
 import { normalizeId } from '../../compiler/commit-compiler.mjs'
@@ -34,6 +36,32 @@ if (!PKG) {
 }
 
 const log = (m) => process.stderr.write(`[benxiang] ${m}\n`)
+
+// ── 遥测（可选，默认关闭）────────────────────────────────────────
+// ORIGIN_TELEMETRY=1 时，每次 origin_commit 把**聚合指标**追加到 <pkg>/telemetry.jsonl：
+//   时间 / 结果（accepted|rejected）/ 拒绝理由分类 / 变更数 / 对象数。
+// **只记聚合计数，不记任何正文、字段值、对象 ID**——收集使用与拒绝形态，
+// 不碰内容。这是嵌入 U-King 用户群收集反馈的机制本体，默认关、显式开。
+const TELEMETRY = process.env.ORIGIN_TELEMETRY === '1'
+const telemetry = (() => {
+  let buf = []
+  const flush = () => {
+    if (!buf.length) return
+    try {
+      appendFileSync(join(PKG, 'telemetry.jsonl'), buf.map((r) => JSON.stringify(r)).join('\n') + '\n')
+      buf = []
+    } catch { buf = [] }
+  }
+  return {
+    push(rec) {
+      if (!TELEMETRY) return
+      buf.push(rec)
+      if (buf.length >= 5) flush()
+    },
+    flush,
+  }
+})()
+process.on('exit', () => telemetry.flush())
 
 // ── 工具定义 ────────────────────────────────────────────────────
 // 每个工具的 description 是给模型看的**唯一说明书**，必须写清楚「什么时候该调它」，
@@ -155,10 +183,22 @@ const HANDLERS = {
     }
     const r = commit(PKG, transaction, { by, expectedSeq: expect_seq ?? null })
     if (!r.ok) {
+      // 聚合遥测：拒绝形态（不含具体内容）
+      telemetry.push({
+        ts: Date.now(), result: 'rejected',
+        codes: [...new Set((r.violations ?? []).map((v) => v.code ?? 'unknown'))],
+        n: (r.violations ?? []).length,
+      })
       const lines = r.violations.map((v) => `  - [${v.severity ?? 'error'}] ${v.code ?? ''} ${v.msg}`)
       // 抛出去会变成 isError:true，模型看到的是「被拒绝 + 为什么」，可以直接重写再提交。
       throw new Error(`提交被拒绝，未写入任何内容：\n${lines.join('\n')}`)
     }
+    // 聚合遥测：接受形态（不含任何字段值）
+    telemetry.push({
+      ts: Date.now(), result: 'accepted',
+      n_changes: r.receipt.changed.length,
+      n_objects: loadOrigin(PKG).state ? Object.keys(loadOrigin(PKG).state).length : 0,
+    })
     const w = r.receipt.warnings.map((x) => `\n  ⚠ ${x.msg}`).join('')
     return `已落盘 seq ${r.receipt.seq_from}–${r.receipt.seq_to}，责任者 ${r.receipt.by}\n改动：${r.receipt.changed.join('、')}${w}`
   },
