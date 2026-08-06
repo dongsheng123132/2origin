@@ -1,2 +1,3 @@
 {"id": "loc:city-august", "name": "August City", "role": "home city · Panels arrived here in 2037", "initial_state": {"status": "normal", "rifts": 0}}
-{"id": "loc:rift-01", "name": "Rift · Sewer Mouth", "role": "first rift Kael clears", "initial_state": {"status": "open", "depth": 1}}
+{"id": "loc:rift-01", "name": "Rift · Sewer Mouth", "role": "first rift Kael clears", "initial_state": {"status": "cleared", "depth": 1}}
+{"id": "loc:rift-02", "name": "Rift · Old Theater", "role": "second rift · Skill Tree era", "initial_state": {"status": "open", "depth": 2}}

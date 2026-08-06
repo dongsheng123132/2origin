@@ -1,0 +1,227 @@
+Morning light through the boarded windows of the old bathhouse annex. Kael sat up with his Panel open in front of him. The Rift Core sat on the floor, humming against the wood like a dying electric bug. The extra slot in the back of his interface still read VERSION. One word. No context. After the sewer, after the folded Guild Alpha charter, after a Rift Core that had reacted to the slot, that one word was his only map.
+
+He had a theory. At level 3, the Skill Tree opened. Maybe the System would be more forthcoming. Maybe it would just give him more questions.
+
+Mira burst in with a crossbar under her arm and a cloth full of warm bread in her fist. "You're not going to level out by sitting there."
+
+He closed the Panel. "What time is it?"
+
+"Time to train."
+
+They went to the empty lot behind the old public baths. The city was still not used to the Panels. A couple of early risers gave them a wide berth as Kael drew his practice sword. Mira stripped off her coat and tossed her dagger from hand to hand. Their Panels had been installed for three weeks, and August City had learned the shape of this new life. The lot had been a ruin for years. Now it was a training ground, scored with boot marks, spattered with fluids that were better not identified.
+
+Kael checked his stats before the first pass.
+
+Level: 2
+XP: 425
+Stat points: 6
+STR: 7  AGI: 5  INT: 5  VIT: 7  WIS: 5
+
+He was heavy. Strong enough to take hits, too slow to avoid them. The sewer had taught him that much. He had cleared the first rift because Mira had held the monster's attention and he had hit it harder than it expected. But depth 2 would not be a single monster in a tunnel. It would be a swarm, and swarms punished slowness.
+
+"Ready?" Mira asked.
+
+"Ready."
+
+She came in fast. He blocked, but the impact jarred up his arm. She twisted, switched angle, and rapped the flat of her dagger against his ribs. A light blue tick in the corner of his vision.
+
++3 XP
+
+"You're still leading with your feet," Mira said.
+
+"I'm leading with my sword."
+
+"Your feet tell me where the sword is going." She came again, feinted high, rolled low, and slapped the back of his thigh. "You're reading me with your chest, not your eyes."
+
+He reset his grip and forced himself to breathe. They did another pass. Then another. Each exchange exposed the same flaw: he was too deliberate, too static. The VIT-heavy build had made him a tank, but tanks only win fights when someone else is the hammer. Mira was fast enough for both of them, but she could not hold the line alone.
+
+The sun climbed over the rooftops. Sweat soaked through Kael's shirt. His hands shook. Mira was just as tired, but she kept pushing, and he hated the edge in her eyes. She was training like someone who knew what it felt like to be the weak link. She wasn't. But the Old Theater was not any old theater. It was a depth-2 rift, and its monsters were already level 3 and 4.
+
+Another exchange. He waited. He watched her shoulder. He moved before she did, not after. The moment of conviction collapsed the distance between them, and his sword stopped a finger from her neck.
+
+Mira blinked. "That was something."
+
+A chime echoed in his skull.
+
+LEVEL UP
+
+A blue flare across the inside of his vision, and the world seemed to sharpen. Kael lowered his sword, breathing hard. He pulled up the Panel.
+
+Level: 3
+XP: 600 / ???
+Stat points: 11
+
+"Did you-" Mira stepped close. "Level 3. Nice. Whatever you just did, do it again."
+
+"I need to spend these points." He looked at the numbers. His old build was too defensive. The sewer had rewarded him for doing damage before the monster could chew through him—and that had been mostly luck. Now he had a gift from the System: eleven points. He had to make every one count.
+
+His fingers moved across the light.
+
++1 STR (7->8)
++4 AGI (5->9)
++1 INT (5->6)
++3 VIT (7->10)
++2 WIS (5->7)
+
+The moment the last point left the pool, a silence rippled through him. The world did not seem slower, exactly. He seemed more present in it. The wind had texture. The grit under his soles had weight. He felt as if he were stepping from a barrel into open water.
+
+Stat points remaining: 0.
+
+"Level 3," he said. "And I haven't even got the skill tree yet."
+
+The second chime was not his alone.
+
+All across August City, Panels flashed with the same message. Kael read it aloud with Mira, their voices fumbling together:
+
+*** Universal Skill Tree Unlock ***
+
+All Panel holders at Level 3 may now access the Skill Tree. Choose your first node.
+
+A silver icon appeared at the bottom of his Panel, like a sapling made of glass. He opened it and watched the branches unfold. Two nodes burned at the center of his current stat layout.
+
+REACTIVE GUARD (VIT-based)
+When you take damage after your most recent attack, you automatically brace for 0.5 seconds. Damage taken during that window is reduced by up to 40%, scaling with VIT.
+
+Cost: 1 skill point.
+
+FIRST STRIKE (AGI-based)
+The first offensive action you take each combat deals +20% damage. If the target has not acted in combat yet, ignore 1 point of Armor.
+
+Cost: 1 skill point.
+
+"Which one?" Mira asked, reading over his shoulder.
+
+Kael looked at his stat line. VIT 10. AGI 9. He could become a wall. He could let the monsters break themselves on him, let Mira swoop in and finish them.
+
+But the sewer was still fresh in his memory. The thing had almost crushed his ribs. If he had only stood there and tanked it, they would both be dead.
+
+"First Strike," he said. "The best defense is the enemy being dead before it hits me."
+
+He selected it. A burning thread wrapped itself around his spine, then settled like a blade sliding into a sheath.
+
+SKILL UNLOCKED: FIRST STRIKE (LV.1)
+The first offensive action you take each combat deals +20% damage. If the target has not acted yet, ignore 1 point of Armor.
+
+Mira chose her own node. She wouldn't tell him what it was, only said "shadow" and "dive" and "don't try to watch me." He didn't.
+
+A horn sounded from the corner of the lot.
+
+Two strangers were standing at the edge of the practice ring. A man with worn leather clothing, a spear slung across his back, his jaw set in a permanent squint. Beside him, a woman with a short bow and a face that had learned patience from waiting too long for shots.
+
+Bram. Sully. They said their names like they expected Kael to know them. He didn't.
+
+"Kael," Bram said. "The one who cleared the sewer rift."
+
+"I had help."
+
+"Mira," Bram acknowledged. "You're on the guild's radar too." He reached inside his coat and pulled out a folded charter, stained with coffee and hope. "I saw your sewer log. First person in August City to clear a rift solo-adjacent. We had a copy of your run sent to us by the System broker. Guild Alpha needs people who can move and breathe inside a rift. Members are still forming, but we're the vanguard." Bram tapped the charter. "We've been authorized to scout the Old Theater rift. Depth 2. The admin wants a report, and we want to know what level-3 and level-4 monsters look like in practice. You in?"
+
+Mira looked at Kael. No words. Just a question in her eyes. Do we trust them?
+
+Kael remembered the extra slot. VERSION. He remembered the Rift Core in his pocket, humming. He didn't want to be alone when he learned what it meant.
+
+"I'm in," he said. "But we're partners, not soldiers."
+
+"Partners." Bram smiled. "Fine by me." He looked at Sully, who nodded.
+
+They walked east toward the Old Theater. The city had once been a holiday town, and the theater had been its crown: a grand horseshoe arch, a marquee that had once glowed with impossible letters, a lobby that smelled of butter and old dreams. Now it was a boarded-up skeleton. The doors hung open, the hinges rusted, and from the darkness inside came a hum like an organ note played by something too large for the room.
+
+The four of them stepped through the doors. Dust kicked up around their boots. Torn tickets lay in drifts. The popcorn machine had teeth marks in its glass. At the far end of the lobby, the inner door had been replaced by something else. A vertical crack in reality, twenty feet tall, shimmering dark purple. Around its edges, the air folded like heat on summer pavement. The smell of rust, old velvet, burnt vanilla. The Rift.
+
+"Depth 2," Sully said. "Levels 3-4 inside. If it gets bad, we retreat. No heroic stands."
+
+"Agreed." Kael stepped through first. His new skill wanted to be spent, and he wanted it spent on something that deserved it.
+
+The rift interior was not the theater. It was the theater designed by a fever dream. Rows of mildewed seats climbed an impossible slope into darkness. A stage at the bottom, vast and cluttered, with curtains that moved when the air wasn't moving. Chandeliers made of bone hung on chains of sinew. In the seats, figures sat upright. Some wore usher uniforms. Others had the blank screens of old movie projectors where their faces should have been. They did not move. Yet.
+
+"Okay," Mira whispered. "I hate this place."
+
+To Kael's left, a seat creaked. A creature peeled away from it, black cloth wrapped tight around a body with too many joints. It had a face like a folded ticket. It rose on three legs and let out a sound like the start of a projector reel.
+
+【RIFT USHER · LEVEL 3】
+HP: 42/42. Vulnerable to light. No armor.
+
+It screeched. Somewhere behind the stage, a drumbeat began. The row of seats in front of them rippled, and three more Ushers shivered upright.
+
+The fight was on.
+
+Kael moved before the nearest Usher finished its transition. The new agility carried him across the floor faster than his own memory could follow. His blade came up in a clean arc and sliced into the creature's chest before it had fully registered his presence.
+
+FIRST STRIKE ACTIVE.
+
+The monster tore open like a bag of black rice. It shrieked and collapsed.
+
+"That's the way!" Bram shouted. His spear drove into a second Usher, but the creature twisted, and the haft caught between its elbows. Sully's bow snapped. Mira dove under the thing's grasp and sent a dagger into its throat. It gurgled and fell.
+
+But the theater was not done. More Ushers rose from the seats. A heavier one lumbered down the aisle, its projector-face clattering, a brass lens glowing in its skull. Level 4. Its footsteps shook the floorboards.
+
+Kael's Panel flashed in the middle of the chaos.
+
+WARNING: SYSTEM UPDATE AVAILABLE.
+Version 0.9.2 — installation will begin automatically in 10 seconds.
+10... 9... 8...
+
+"Not now!" Kael snarled. He raised his sword to block an Usher's claw, but the creature was heavy, and Kael slid backward on the dust.
+
+"Watch it!" Mira grabbed a broken seat and threw it. The Usher staggered.
+
+4... 3... 2...
+
+A white light rolled across Kael's vision. For one blind, terrible second, the battlefield vanished. Then his Panel clicked back on.
+
+Version 0.9.2 installed.
+Patch notes:
+- Balanced depth-2 monster XP values.
+- Skill Tree nodes revalidated.
+- Message from the developer: "Look closer at what you carry."
+
+Kael didn't have time to parse it. A projector-face Usher swung a brass arm like a club. He threw himself sideways, rolled, came up inside its reach, and drove his sword into its shoulder. The lens cracked. Black oil sprayed. The monster roared and reeled back, pulling the curtain down with it.
+
+A new notification appeared: the First Strike skill had rolled over, marking this as a new combat moment. Kael did not understand the logic in the middle of a fight, but he did not argue. He stepped forward and put the sword through the creature's skull.
+
+"Back to the doors!" Bram yelled.
+
+The four of them retreated up the aisle, covering each other, smashing through anything that got too close. The rift seam flickered ahead, violet and merciful. They burst through it into the dusty lobby, gasping.
+
+The rift hummed behind them, still open. The sounds of dragging feet faded slowly.
+
+Kael leaned on his knees. His chest heaved. "Everyone alive?"
+
+"Barely," Mira said.
+
+Sully was already replacing her bowstring. "I'm fine. We didn't clear it. But we got enough data."
+
+Bram wiped blood from his chin. "Something happened to your Panel, Kael. You froze in the middle of the fight."
+
+"System update." Kael forced a grin. "It says what it wants."
+
+Mira stared at her own screen. "Wait. What's your update message?"
+
+"Same as anyone's. Balance changes."
+
+Sully read from her screen: "Message from the developer: 'Look closer at what you carry.' That's not a patch note. That's an instruction."
+
+Kael shoved a hand into his jacket to make sure the Rift Core was still there. It was. And it was warm.
+
+He stepped away from the others, opened the Panel, and brought up the extra slot at the back of his interface. Where the single word VERSION had been, there was now a second line, newer and lower, as if written by a hand that knew he would see it eventually.
+
+VERSION
+SHIFT
+
+The Rift Core pulsed against his pocket again, like a heartbeat.
+
+Kael closed the Panel. He did not tell the others what he had seen. He did not know what it meant. But he knew one thing: the System had updated, and with that update, it had written him a message. VERSION SHIFT. The version had shifted. But so had he.
+
+The Old Theater rift hummed behind him, waiting for them to come back.
+
+"Come on," Kael said. "Let's get Bram's shoulder bandaged before Guild Alpha tries to promote us."
+
+Bram laughed. "Too late." He tapped his chest. "Guild Alpha just gained two members."
+
+"We didn't agree to that."
+
+"The System's logs already have our group listed as co-opted by Guild Alpha. You can fight the paperwork later."
+
+Mira rolled her eyes, but the edge of her mouth was somewhere near a smile. Kael didn't correct Bram. He was too busy holding on to the memory of the word SHIFT, and the way the Rift Core had burned against his chest.
+
+They walked back into the bright August city, the four of them, leaves and dust clinging to their boots. Behind them, the Old Theater kept its shadows. And inside Kael's Panel, behind every option and screen, the extra slot waited with its two words, growing heavier by the step.

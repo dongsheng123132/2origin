@@ -130,7 +130,10 @@ async function readHermesModelConfig() {
     const cfgPath = join(process.env.HERMES_HOME || join(homedir(), '.hermes'), 'config.yaml')
     if (!existsSync(cfgPath)) return null
     const yaml = readFileSync(cfgPath, 'utf8')
-    const sec = yaml.match(/^model:\s*\n([\s\S]*?)(?=^\S|\Z)/m)?.[1]
+    // 注意：JS 正则没有 \Z（Python 有），`(?=^\S|\Z)` 里 \Z 会被当作字面 Z 导致整个匹配
+    // 永远失败——2026-08-06 在 GitHub Actions 上实测暴露（本机一直走 CLI 兜底所以没发现）。
+    // 无 /m 模式下 ^ 只匹配字符串开头、$ 只匹配字符串末尾，正好表达「取 model: 段到文件尾」。
+    const sec = yaml.match(/^model:\s*\n([\s\S]*?)(?=^\S|$)/)?.[1]
     if (!sec) return null
     const get = (k) => {
       const m = sec.match(new RegExp(`^\\s*${k}:\\s*(?:['\"]([^'\"]+)['\"]|(\\S+))`, 'm'))

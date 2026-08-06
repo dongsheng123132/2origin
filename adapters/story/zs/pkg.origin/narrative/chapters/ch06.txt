@@ -1,0 +1,206 @@
+They had walked four blocks before Kael stopped.
+
+The afternoon sun was doing its best to make August City look normal. Street vendors had opened their stalls, a tram rattled past with window shades drawn against the glare, and two kids were kicking a plastic bottle over the curb. Normal sounds. Normal light. But the Old Theater was still there behind them, and its black threshold wasn’t fading. It followed them like a stagehand waiting for a cue.
+
+“It’s still open,” Kael said.
+
+Vesper turned, spear balanced across her shoulders. She was older than him—early twenties, with a scarred chin and eyes that measured distances for a living. She had introduced herself two hours ago, mid-clearing, when she and Rook had barged into the same rift. “First player guild,” she’d said. “August City is going to need one.”
+
+Now she glanced at the theater. “The foyer was depth one. We cleared the orchestra pit, but the rift doesn’t close until the boss floor is done. The Old Theater is a two-depth rift. Bottom floor is the stage.”
+
+Rook planted his tower shield on the pavement and leaned on it. He was the quiet kind of large, with hands that wrapped around a sword hilt like a reaper’s grip. “If there’s a boss, that’s where it’s waiting.” He looked at Kael. “You’re the one who saw the deeper door. What does your Panel say?”
+
+Kael’s fingers brushed his chest. Behind every normal screen on his Panel, tucked in a slot that shouldn’t exist, two words had been sitting since the System first arrived:
+
+VERSION SHIFT.
+
+Now they were shimmering, like heat over asphalt. A third word was trying to shoulder its way between them.
+
+“It says shift,” Kael said. “So let’s shift back in and finish the job.”
+
+Mira was already pulling the theater doors open. She was soaked in dried dust and smelled like old curtains, but her eyes were bright. “I’ve got enough mana for three more Wards. After that I’m screaming for dramatic effect.”
+
+“Valid,” said Rook.
+
+They crossed the lobby single file. The place was a severed dream—plaster hanging in midair, velvet ropes snapped, the concession counter’s popcorn ossified into black carbon. The air was cold and carried a whiff of old greasepaint. At the far end of the auditorium, the proscenium stage waited behind its red curtain.
+
+They climbed the ramp to the stage. And there, center stage, standing on a chalk mark that had been drawn for a long-dead actor, was the Stagehand.
+
+It wore a black vest, white gloves, and a porcelain mask with no eyes, no nose, no mouth. Just a smooth oval, cracked at the left edge, as if the years had aged it.
+
+It opened a cracked leather prompt book.
+
+“Welcome back,” it said. The voice was a careful stage whisper, designed to carry to the last row. “The show was paused. The audience is still waiting.”
+
+Kael set his hand on his sword. “We’re not the audience.”
+
+“No.” The mask tilted, a gesture of condescension. “You’re the understudies. Act One.”
+
+The prompt book’s page turned on its own. A white glove lifted, pointing stage-left.
+
+“Cue: Exit, pursued by a bear.”
+
+The wing curtain bulged. Something came out of it wrong—a bear made of black ink and misremembered anatomy, fur a smear of strokes, face a charcoal smudge. It charged.
+
+Rook took the impact on his tower shield with a grunt. The bear’s claws raked metal, and a shriek ran through the theater. “It’s not really a bear!” Rook bellowed. “It’s heavy letters!”
+
+Mira’s eyes went pale as her Analyze flared. “It’s a stage property. It only exists while the Stagehand is reading its cue. If the cue stops, the bear stops.”
+
+Kael watched the Stagehand. It wasn’t looking at the bear. It was reading the prompt book, finger tracing the line. The words were a leash. He ducked under the bear’s lunge, slid across the boards on his shoulder, black ink smearing his jacket, and came up at the book’s edge.
+
+The Stagehand had already turned the page. Its mouth opened.
+
+“Cue: All the world’s—”
+
+Kael’s blade cracked the book’s spine. Not a cut—a flat, jarring slam that knocked the book out of the Stagehand’s grip. The page snapped shut. The bear imploded into a spray of black droplets that rained on the stage and left nothing.
+
+SKILL NOTICE: FIRST STRIKE — INTERRUPT.
+Cause: target’s script disrupted.
+
+The Stagehand staggered back. Its mask cracked wider.
+
+“Th-that,” it breathed, “is not in the script.”
+
+Kael pulled his blade free. “Neither am I.”
+
+For a moment, the theater held still. Somewhere in the dark, an imaginary audience might have been holding its breath.
+
+Then the Stagehand reached into its vest and produced a fountain pen. Without taking its eyes off Kael, it crouched and began to write in the fallen book. The pen scratched fast, wet and hungry.
+
+“Kael!” Mira’s voice was sharp. “It’s not reading anymore. It’s writing. If it writes a finale, the stage will enforce it. Everyone on this stage will be scripted to die.”
+
+“Then we stop the writer,” Vesper said, and threw herself up the ramp, spear spinning.
+
+The Stagehand wrote aloud, cold and mechanical:
+
+“The floor becomes a raging river.”
+
+The stage warped. Dark water slammed from the wings, swallowing the boards. Kael’s boots lost the floor; he went to one knee, and the cold took his legs.
+
+“The chandelier falls.”
+
+The ceiling groaned. A constellation of brass and crystal crashed into the flood, shattering where Rook had been standing. Rook had already moved—shield up, he caught a spray of splinters and cursed.
+
+“The house lights die.”
+
+Darkness dropped. It was total—a black that pressed on the eyes. Mira swore and threw a Ward, a violet moat of light that pushed the dark back barely an arm’s length. The water was up to their waists.
+
+The Stagehand was in the center of the stage, a dark island in the flood. A whirlpool of red curtain spun around it, dry. The prompt book lay open in front of it—a single page left, the final page. The pen moved fast.
+
+Vesper hurled her spear. It cut a line through the dark and pinned the lectern behind the Stagehand. A warning shot. The Stagehand didn’t flinch. The pen kept scratching.
+
+Rook slogged toward the stage through chest-high water. Something grabbed his ankle—a red sleeve, empty, reaching out of the flood like an extra desperate for a part. He went under. Vesper dove after him, managed to drag him up by the collar, coughing.
+
+Kael was alone now, chest-deep in cold, across from the Stagehand.
+
+The pen was tracing the last word. Kael felt the skill in his Panel—First Strike—burning its one simple truth into his spine: the gap between cause and effect is a place you can stand.
+
+The pen lifted. The last letter was done. A period hovered, unwritten, between ink and paper.
+
+Kael moved.
+
+He threw himself across the flood, both hands out, and slapped the prompt book closed. The pen flipped out of the mask’s fingers. The period never landed. The book hit the water, cracked open, and the ink ran.
+
+All of it ran. Every cue, every stage direction, every clever line bled off the paper in a single black veil that rose into the air, hung for a moment like smoke, and fell as ash.
+
+The flood retreated. The water drained between the boards with a gurgle of lost applause. The darkness peeled back from Mira’s violet light.
+
+The Stagehand stood very still.
+
+“...unexpected,” it said.
+
+Its mask split cleanly in two halves and fell away. Inside was empty—just an old stage program, yellowed and folded. The Stagehand folded at the waist, then collapsed into a heap of black vest, white gloves, red velvet, and blank pages.
+
+The rift’s attention lifted like a finger releasing a trigger. The whole theater exhaled.
+
+SPOTLIGHT ON. The stage was empty, clean, silent.
+
+“It’s closed,” Rook said, coughing water. “Boss floor cleared.”
+
+Kael stood over the heap, blood hammering in his ears. His Panel chimed.
+
+LEVEL UP.
+Level 3 → Level 4.
+Stat Points +5.
+
+He opened the allocation screen on reflex. The fight had taught him what he needed. The flood had punished his strength; the gaps had rewarded his speed. He pushed +2 into STR, +3 into AGI, and watched the numbers settle.
+
+STR 10 / AGI 12 / INT 6 / VIT 10 / WIS 7.
+
+“Kael.” Mira’s voice was soft. She was pointing at the stage floor.
+
+In the middle of the velvet and blank pages, one page lay separate from the others.
+
+It was heavier than paper. A thick, cream-colored sheet with a single line of text that swam when he tried to read it, the letters folding away from meaning like wet ink. He picked it up, and warmth climbed his arm.
+
+Behind his Panel’s screens, in that extra slot that nobody else had, the two words shifted.
+
+VERSION SHIFT → VERSION SHIFT: 1.0
+
+The Script Page’s ink rearranged itself into the same phrase—VERSION SHIFT: 1.0—burned white for an instant, then dulled to a blank, humming sheet.
+
+“My Panel can’t assign it an item ID,” Mira said, looking at her own screen. “It’s like that page doesn’t exist in the System.”
+
+“Then it’s exactly like my extra slot.” Kael folded the page and slid it into his jacket, over his heart. “Whatever’s about to change, this page is a ticket to it.”
+
+Vesper climbed onto the stage, soaked, spear back in hand, and looked at the heap of the Stagehand. “No rift core.”
+
+“The core went into that page,” Kael said.
+
+Rook spat. “First time I’ve seen a boss drop a letter instead of a heart.”
+
+They walked out the front doors of the Old Theater, into bright and ordinary sunlight. The windows went dark behind them. The black seam of the rift was gone, leaving only stone and old posters and a faded marquee.
+
+A block away, Vesper stopped Kael with a hand on his shoulder.
+
+“You hit the gap,” she said. “The space between the script and the moment. That’s not a skill. That’s an instinct.”
+
+“I got lucky.”
+
+“The bear didn’t think so.” Vesper pulled up her Panel and pushed a notification to his. It was a sleek black banner, sealed with a cracked shield emblem. GUILD ALPHA INVITATION — VESPER.
+
+“Mira told me about your Slot Zero,” Vesper said. “You’re running a version that doesn’t exist yet. And the world is about to catch up.” She glanced at the sky. “I want people in Guild Alpha who can think outside the interface. Right now it’s me and Rook. That’s two. I want you as the third.”
+
+“You’re recruiting him because his Panel is broken?” Rook said.
+
+“I’m recruiting him because his Panel is ahead.” Vesper didn’t smile. “The rifts are only going to get deeper. The System is only going to get stranger. August City needs someone who can break the script.”
+
+Kael looked at the invitation. ACCEPT / DECLINE.
+
+He pressed ACCEPT.
+
+WELCOME, KAEL. GUILD ALPHA — MEMBER COUNT: 3.
+
+Vesper reached into her jacket and tossed him a worn steel token—a shield with a single crack in it. “Don’t lose it. It’s the only one I’ve got.”
+
+Kael caught it, weighed it, and tucked it into the pocket next to the Script Page. The page pulsed once, warm.
+
+Mira shook her head before Vesper could speak. “Don’t even ask. Someone has to watch the watchers.” She hooked her arm through Kael’s for a second, then let go. “I’ll be outside the guild. That’s fine. That’s the role I like.”
+
+“You’re always outside everything,” Kael said.
+
+“Exactly.” Her smile flickered, then settled into something real. “And I’m not about to start following scripts now.”
+
+The System announcement arrived three blocks later.
+
+The chime was silver and enormous—a bell struck inside every pane of glass in August City. People stopped mid-stride. The tram halted on its tracks. Every Panel flared white, and the same text hung in the air above the rooftops, bold enough to read from a mile away:
+
+SYSTEM NOTICE
+PANEL BUILD 0.9.2 COMPLETE.
+VERSION 1.0: THE SHIFT
+WILL BEGIN AT THE NEXT RIFT EVENT.
+ALL SLOT-HOLDERS: PREPARE.
+
+The words dissolved into motes of light. The city stirred.
+
+“Version 1.0,” Mira whispered. “Kael. Your Slot said that before anyone else.”
+
+VERSION SHIFT: 1.0. The extra slot pulsed in the dark behind his screen. The Script Page was warm against his chest.
+
+“It knew,” Kael said. “It was telling me all along what was coming.”
+
+Vesper turned to face them, the point of her spear striking the pavement. “So now we know the direction. The next rift event is the switch.” She looked at Kael. “Guild Alpha walks into it together.”
+
+Kael touched the token in his jacket, then the Script Page.
+
+“Let’s find out what Version 1.0 looks like,” he said.
