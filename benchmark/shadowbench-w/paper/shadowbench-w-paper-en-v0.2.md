@@ -48,7 +48,7 @@ Tianming (zy-zmc/tianming-novel-ai-writer) is a production writing assistant wit
 
 **Document-parsing evaluation (adjacent evidence).** OmniDocBench (arXiv 2412.07626, CVPR 2025) shows that document parsing has a public benchmark with comprehensive annotations—and that state-writeback evaluation does not. That gap is our position.
 
-**Evaluation methodology.** We deliberately use deterministic rules (with a curated vocabulary patch) rather than LLM-as-judge for W1/W3, to avoid circularity between the generator and the judge. The vocabulary patch (40/40 hits, 0 false positives on 65 test cases) is versioned as part of the benchmark.
+**Evaluation methodology.** We deliberately use deterministic rules (with a curated vocabulary patch) rather than LLM-as-judge for W1/W3, to avoid circularity between the generator and the judge. The vocabulary patch (40/40 true-violation hits, 0 false positives, re-verified by `vocab-patch-check.mjs`) is versioned as part of the benchmark.
 
 ## 3. Task & Benchmark
 
@@ -171,7 +171,7 @@ A3 costs +13.7% tokens over A0 for 100% vs 56.3% state accuracy. We report the c
 
 ## 7. Reproducibility
 
-- **Code**: public repository (anonymous version strips identity info); all three arms + judges + vocabulary patch + 65 test cases.
+- **Code**: public repository (anonymous version strips identity info); all three arms + judges + vocabulary patch; self-tests (compiler 81, CAD 55, conformance 87, mutation 19/19) all pass.
 - **Data**: corpus/, world/spec.origin/, results/ (full JSON per round).
 - **Judge fingerprints**: judgeHashW1 / judgeHashW3; fingerprints unchanged after the patch (Run #29).
 
