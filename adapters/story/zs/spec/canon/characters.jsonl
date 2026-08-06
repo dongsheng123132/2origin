@@ -1,0 +1,3 @@
+{"id": "char:kael", "name": "Kael", "role": "protagonist · Panel holder with extra Slot Zero", "initial_state": {"alive": true, "level": 1, "xp": 0, "stat_points": 5, "str": 5, "agi": 5, "int": 5, "vit": 5, "wis": 5, "location": "loc:city-august", "knows": [], "inventory": [], "slot_zero_words": []}}
+{"id": "char:mira", "name": "Mira", "role": "childhood friend · also Panel holder", "initial_state": {"alive": true, "level": 1, "location": "loc:city-august"}}
+{"id": "char:warden", "name": "The Warden", "role": "anonymous System watcher (voice only)", "initial_state": {"alive": true}}

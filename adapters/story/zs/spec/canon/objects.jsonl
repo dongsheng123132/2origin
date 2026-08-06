@@ -1,0 +1,2 @@
+{"id": "obj:panel", "name": "The Panel", "role": "everyone's game interface (levels, stats, skills, quests)", "initial_state": {"version": "0.9", "installed": true}}
+{"id": "obj:rift-core", "name": "Rift Core", "role": "rare drop from clearing a rift", "initial_state": {"in_inventory": false}}

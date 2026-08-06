@@ -1,0 +1,217 @@
+The morning after the rift closed, August City had become a haunted house of glowing blue rectangles.
+
+Kael stood on the corner of Harlow and Sixth, a paper cup of coffee burning his palm, and watched the city adjust to its new skin. A woman in a gray raincoat walked face-first into a lamppost because she was reading her status menu at full brightness. Three teenagers huddled in the doorway of a shuttered bakery, whispering their stats to one another like a hand of cards. An old man sat on a bus-stop bench with his character sheet open, glaring at the words LEVEL 1 as if the system had personally insulted him.
+
+"Morning, Kael."
+
+Mira appeared at his side the way she always had — suddenly, as if the world simply decided to include her. She had a bagel in one hand, cream cheese bleeding through the paper sleeve, and her own Panel folded into a compact square hovering beside her ear. She flicked it closed with a twitch of her fingers, then gave him the look. The one she had been practicing for fifteen years, the one that said she already knew the answer to the question she was about to ask.
+
+"Did it come back?"
+
+Kael's jaw tightened. Last night, after the rift closed, after he had pulled the core from the webbing in the collapsed tunnel, he had opened his Panel one last time before sleep. A seventh slot, tucked below the standard interface. Blank. Quiet. Impossible. He had told himself it was exhaustion.
+
+He opened his Panel now. The blue rectangle unfolded in front of him with a soft hum. Name. Level. Stats: STR 7 | AGI 5 | INT 5 | VIT 7 | WIS 5. Six unspent stat points. Inventory grid: the rift core, a lump of dark, coiled energy, inert. No new quests. No messages.
+
+At the bottom of the interface, below everything, a thin black line. Empty.
+
+"Nothing," he said.
+
+Mira studied him a beat too long. "You're doing the eyebrow thing."
+
+"There's no eyebrow thing."
+
+"Kael. I've known you since you threw a worm at me in second grade. The eyebrow thing is what you do when something is definitely there and you're deciding whether to lie about it." She bit into her bagel, chewed, swallowed. "What happened yesterday?"
+
+"I cleared a rift."
+
+"And?"
+
+"And we got the core out before the walls finished collapsing. Standard run." He closed the Panel. "Nothing worth an eyebrow."
+
+Mira's eyes narrowed, but before she could argue, the world chimed.
+
+It was not exactly a sound. It was more like the air caught its breath. Every Panel on the street flickered at once — a dozen blue rectangles stuttering in sync. Kael felt his own Panel pulse against his awareness. Then the text snapped into place, crisp and bright and enormous, written in white so pale it glowed:
+
+SYSTEM UPDATE 0.9.1
+
+PATCH NOTES:
+
+• SKILL TREES unlock at level 3.
+• Minor UI fixes.
+• Miscellaneous stability improvements.
+
+Thank you for participating in the beta.
+
+The announcement hung in the air for a long, weighted moment. Then it folded inward and dissolved, leaving a bright afterimage that slowly faded into the morning.
+
+The street erupted.
+
+"Skill Trees — what is that?"
+
+"Does everybody get them at level three?"
+
+"Wait, it says beta. Is this a beta?"
+
+Kael was already opening his Panel again, faster than his body could keep up with. Mira's opened beside his, the two rectangles side by side, same blue, same light.
+
+"Mine doesn't have a changelog," Mira said, tilting her screen toward him. It showed her name, her level, and a single line at the bottom: PANEL SOFTWARE VERSION 0.9.1. "It just tells me the version."
+
+"Same."
+
+"So where are the Skill Trees?"
+
+"Level three. Which means —" He glanced at his XP: 305. "— I need ninety-five more."
+
+"One more rift, maybe."
+
+"Probably." He closed the window. "But not today."
+
+"Kael, why are you looking at your Panel like that?"
+
+Because he had scrolled down. Because at the very bottom, below his XP bar, below the standard interface, below the thin black line that had been empty last night, there was now a single word.
+
+VERSION
+
+The letters were the same crisp white as the update announcement. The same font, the same weight. They sat inside Slot Zero — the impossible seventh slot, the glitch only he could see — and they waited, patient and immovable.
+
+"Mira." His voice came out quiet. "Come here."
+
+She stepped close, close enough that her sleeve brushed his arm. He turned the Panel so she could see the full length of it.
+
+"Look at the bottom. Below the version line."
+
+Mira bent her head, swept her eyes down the length of the blue rectangle. Her brow folded. "You have... the version text? It says 0.9.1."
+
+"Below that. The black line."
+
+She looked. She was silent for a long moment. Then she straightened. "Kael, there's nothing below the version. Your Panel just ends."
+
+The words landed like a stone in still water. He held the Panel so close it cast blue light across her face. "There is a word in that slot. I am looking at it right now."
+
+"I can't see it." Her voice was careful, gentle, the tone she used when coaxing a frightened animal. "What does it say?"
+
+"VERSION."
+
+The word hung between them.
+
+"Like the update," Mira said slowly. "Like 'version 0.9.1.' Same exact word."
+
+"Yeah." He closed the Panel. The blue rectangle vanished, and he stood in the middle of the sidewalk, feeling suddenly exposed. "It wasn't there last night. It appeared when the update went through." He met her eyes. "I know the difference between empty and not empty."
+
+Mira's jaw worked. She finished her bagel — bite, chew, swallow — and folded the wrapper into a neat square, the way she did when she was thinking hard.
+
+"Okay," she said. "Seven steps."
+
+"Seven steps?"
+
+"The standard weird-event checklist. Context, content, consequence. What did we see? A version update. What did we get? Patch notes. What changed? Your impossible slot now has the word VERSION in it. What else happened?"
+
+Kael looked at the world around him. The woman in the gray raincoat was off the lamppost, showing her boyfriend the bruise forming on her forehead. The old man had finally looked up from his Panel, blinking at the sky as if expecting the announcement to return. A kid on a scooter had stopped in the middle of the crosswalk, one hand raised in the air, trying to grab an invisible menu.
+
+"There was also a message," he admitted. "A blinking envelope in the corner of my interface. I almost missed it."
+
+Mira raised an eyebrow. "From who?"
+
+"Someone signing as 'A.'" He reopened the Panel and navigated to the envelope icon, which still pulsed with amber light. The parchment-style rectangle expanded, ornate and formal, unlike anything he had seen before.
+
+FIRST PLAYER GUILD OF AUGUST CITY — FORMATION INVITATION
+
+You have been identified as a panel holder of exceptional early performance.
+
+You cleared a rift within the first 24 hours of System deployment. That places you in a category of one.
+
+A founding meeting will be held tonight at the North Gate, midnight.
+
+Come alone. No names. No Panels unless necessary.
+
+— A
+
+Mira read it silently, her lips moving over the words. When she finished, she looked at him with an expression that was half exasperation, half old affection.
+
+"Please tell me you're not going."
+
+"I'm going."
+
+"You're going."
+
+"Guild Alpha is going to be the first real guild in August City, Mira. The invitation says he cleared a rift in the first day. There are going to be other people like him — people who want to organize, to level up, to understand what this System actually is." He tapped the corner of his Panel, folding the invitation away. "And one of us has a word in a slot that only they can see, that appeared at the exact moment the System updated. I need to be part of that conversation."
+
+Mira pressed her lips together, then let out a long, slow breath. "Fine. I'll be at the gate."
+
+"The message says alone."
+
+"The message is not my dad." She crossed her arms. "I'll wait out of sight. If you're not out by one — I'm coming in."
+
+Kael almost smiled. "Deal."
+
+They started walking again, south along Harlow, the city humming around them. Everywhere he looked, people were checking their Panels, rebooting interfaces, comparing notes on the update. Two women in matching aprons argued outside a café about whether "minor UI fixes" meant the new quest-tracking overlay or the color of the health bars. A delivery driver had pulled his bike onto the sidewalk and was frantically tapping the air, trying to find a package tracker that had apparently moved.
+
+Kael steered them toward an empty table outside the café. The chairs scraped the pavement as they sat down. Mira propped her chin on her hand.
+
+"What if it's not a message?" she said. "What if it's a tag? Like a label on a file."
+
+"Explain."
+
+"Your extra slot. You've always said it's empty. What if it was never supposed to be empty? What if it's a location in your Panel where the System puts a word every update? Like a log." She held up her hand and ticked off fingers. "Update 0.9: maybe the word was 'SLOT.' Update 0.9.1: the word is 'VERSION.' The System is writing its own version history inside you, and you're the only one who can see the archive."
+
+It was a neat theory. It had the shape of truth.
+
+It also didn't feel right.
+
+Kael sat in silence, turning it over. He had had the extra slot since the day the Panels arrived — before any update, before the first rift, before anyone had even understood what a Panel was. It was not a feature. It was a crack. And now the crack had begun to write.
+
+"I want to check something," he said.
+
+He pulled the rift core from his inventory. The small, dark pebble of impossible energy appeared in his palm, heavier than it looked, dense with coiled potential. The morning light bent around it strangely, as if the air itself refused to touch its surface. He held it in his open hand and, very carefully, opened his Panel one-handed.
+
+Slot Zero was still there. Still containing the word VERSION.
+
+And the word was brighter now. It pulsed faintly, on and off, in rhythm with the core's slow, breathing light.
+
+Kael's jaw went tight. He closed the Panel. The core hummed in his hand, indifferent.
+
+"What?" Mira asked.
+
+"It's connected." He looked at the core, then at the space where his Panel had been. "When I hold the core near the Panel, the word reacts. Pulses. Like it's responding to the core's energy."
+
+Mira's face went carefully blank, the mask she wore when she was very worried. "Put it away."
+
+"It's just —"
+
+"Put it away, Kael." Her voice was quiet. He put it away.
+
+The core vanished back into his inventory. The morning felt suddenly too bright.
+
+"You've got a hidden slot," Mira said, "a word that appears when the System updates, and now a rift core that talks to both. Either this is a very good thing or a very bad thing, and we don't know which yet."
+
+"I know."
+
+"So what are you going to do?"
+
+Kael looked across the street. A kid had gotten his scooter working again and was weaving through the crowd, his Panel bobbing in the air behind him like a kite. Somewhere down the block, someone laughed too loudly at something on their screen. The city was adjusting, one glitch at a time.
+
+"Go to the meeting," he said. "Learn what Guild Alpha is. Find out if anyone else has a word in their slot that they didn't put there."
+
+"And if they don't?"
+
+He thought about the word in his slot. He thought about the announcement, the patches, the quiet phrase that had been waiting at the bottom of the update like a signature: Thank you for participating in the beta.
+
+Version 0.9.1. A beta. A test. A version number climbing toward one-point-zero.
+
+"Then I carry it," he said. "And I find out who's running this."
+
+Mira reached across the table and wrapped her fingers around his wrist. No words. Just pressure. A reminder that he was not alone in this.
+
+Up and down the street, Panels blinked and updated. A world was learning to read its own interface. And somewhere in the architecture of that interface, in the small impossible space between code and thought, a single word waited.
+
+VERSION.
+
+The same word the System had used. The same word everyone in August City had seen on their screens. But only Kael had it written in the crack between the seams.
+
+It was like someone had pried open the back of his Panel, written him a note, and closed it again while no one was looking.
+
+He let the thought settle into him. Deep, sharp, undeniable.
+
+Tonight, he would knock on the door of the first guild in August City.
+
+And tomorrow, he would start looking for the person who had left the note.

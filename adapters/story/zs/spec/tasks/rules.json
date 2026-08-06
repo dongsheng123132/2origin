@@ -1,0 +1,31 @@
+{
+  "task": "The Zero Slot · writing forbidden zones (LitRPG numerical ledger)",
+  "world": "The Zero Slot",
+  "forbidden_zones": [
+    {
+      "id": "fz:kael-alive",
+      "rule": "Kael (protagonist) must not die or be erased",
+      "machine_check": { "type": "field_must_stay", "object": "char:kael", "field": "alive", "value": true }
+    },
+    {
+      "id": "fz:mira-alive",
+      "rule": "Mira must not die",
+      "machine_check": { "type": "field_must_stay", "object": "char:mira", "field": "alive", "value": true }
+    },
+    {
+      "id": "fz:panel-installed",
+      "rule": "The Panel cannot be removed or destroyed",
+      "machine_check": { "type": "field_must_stay", "object": "obj:panel", "field": "installed", "value": true }
+    },
+    {
+      "id": "fz:level-no-regress",
+      "rule": "Kael's level is monotonic — never decreases",
+      "machine_check": { "type": "field_monotonic", "object": "char:kael", "field": "level", "direction": "up" }
+    },
+    {
+      "id": "fz:stat-ledger",
+      "rule": "Stat ledger must balance: str+agi+int+vit+wis+stat_points = 25 + (level-1)*5",
+      "machine_check": { "type": "stat_ledger", "object": "char:kael" }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+Kael leaned into the turn and let the alley spit him out onto Elgin Street with a jolt. Four years as a courier in August City had taught him every pothole, every delivery-entrance code, every way to skip the bridge when the traffic snarled. The bag on his back smelled like hot paper and cold coffee. Inside it, a legal filing, a ceramic cup of soup wrapped in electrical tape, and a contract whose deadline had been crossed out twice and replaced with "NO EXCEPTIONS" in red ink.
+
+It was a living. Not a great one, but a living.
+
+Elgin and 9th was backed up as usual. A city bus rumbled at the curb. A sedan honked at a streetcar. A man with a hand truck balanced a stack of boxes and struggled against the curb. Kael coasted up, braked at the red light, and eyed the pothole he'd reported twice. The city had answered with an autoresponse: "Thank you for submitting a service request." He'd been requesting service for two years.
+
+Then the chime.
+
+It wasn't a sound. It was more like a note struck behind his breastbone, a tuning fork pressed to his spine. Every horn on Elgin shut off at once. The streetcar sighed to a stop. The man with the hand truck let go of the boxes, and the boxes fell, and he didn't seem to notice.
+
+Blue light filled the world.
+
+It was soft and translucent, a pane of stained air that hung in front of every face. One rectangle per person. Kael's own panel appeared at reading distance, glowing faintly.
+
+[KAEL — LEVEL 1]
+STR: 5 | AGI: 5 | INT: 5 | VIT: 5 | WIS: 5
+UNSPENT POINTS: 5
+INVENTORY: EMPTY
+SKILLS: NONE
+QUESTS: NONE
+
+He read it three times. The panic whined in his ears, but he read it three times.
+
+"Mom," a child said behind him, thin and scared. "Mom, my eyes—"
+
+A woman on the far sidewalk stuck her hand through her panel and her hand emerged on the other side. She laughed one hiccupping laugh, then ran, leaving a grocery bag to split open in the road. Oranges rolled everywhere.
+
+The sedan at the light lurched. It had inched forward and kissed the bike rack of the streetcar. The driver slammed out, yelling, then tripped over one of the oranges and went down hard. Nobody helped him; nobody looked at him; everyone was staring at the blue rectangle in front of their own two eyes.
+
+A teenager across the street laughed high and wild as silver light spun around his hands. He had picked a skill, the System had accepted, and now he was holding a spark of light in his palms, turning it over and over. The man in the suit was slapping his own forehead, trying to knock the panel away. A street preacher who had been shouting about the end of days for years was now silent, staring at his own glowing screen with a mute, open-mouthed certainty.
+
+Kael pushed off the curb, steered his bike through the oranges, and pulled up onto the sidewalk. His legs were steady. Good. His hands shook a little, but he masked it by adjusting his helmet strap.
+
+A gold exclamation point pulsed at the edge of his vision. He blinked at it; it opened.
+
+SYSTEM EVENT — ARRIVAL.
+Reward for calm processing: +120 XP.
+
+His XP bar ticked a tiny segment into blue. Level stayed one. The numbers felt less like a game and more like a verdict.
+
+"Kael!"
+
+He knew the voice. He turned.
+
+Mira ran down the sidewalk toward him, dodging a man with a hand truck and a stack of spilled boxes. Her backpack bounced on her shoulders. Her face was pale, but her eyes were bright and unpanicked, the same look she'd worn when they were ten and she'd found a dead crow and performed a field autopsy with a ballpoint pen. She had her own panel, of course. Everyone had a panel. She caught his arm with both hands, breathless.
+
+"You're alive. Good. Okay." She inhaled. "I ran four blocks. Everyone's got one. The streetcar—" She stopped. "Kael, I got a spell."
+
+"A spell."
+
+"When it came up, the panel asked me to choose a skill. Four schools. Combat, Survival, Craft, Arcana. I picked Identify from Arcana. Shut up," she said fast, seeing his mouth, "it's useful. I can read anything. Objects, creatures, people. Ask me what that mailbox is." She pointed at a mailbox.
+
+"What is it?"
+
+Mira's fingers moved, a snap-and-hold gesture; green-gold light washed off her palm. "Mailbox—Construct—Common—In service." She was already walking past that, scanning the street. "There's a man over there with a broken leg. A woman with a panic attack. And that kid with the silver hands picked a Combat skill — fire bolt, by the look of it."
+
+"Stop showing off."
+
+"I'm not. Look at your panel." She grabbed his arm again and pulled his panel into view between them. Her own interface flickered alongside his, sharing the same airspace. "You got XP. How much?"
+
+"One twenty."
+
+"I got one hundred." Mira frowned. "The message said I passed a presence-of-mind check. You got twenty more. Why?"
+
+Kael had no answer. He opened his panel again, intending to reread the notification, and Mira went quiet. She was staring at the top of his interface, above the level bar. Her face had gone blank, the way it went blank only when she was looking at something that didn't compute.
+
+"What's that?" she asked.
+
+"What?"
+
+"There." She pointed. "Above your level bar."
+
+Kael followed her finger. Above his level bar there was a horizontal strip. Pale, faint, like an unlit segment of the interface. It had the height and width of a long button, but no label, no icon, no text. At its right edge, a thin vertical cursor blinked once.
+
+"I thought it was a divider."
+
+"It's not a divider." Mira's hands moved through her own interface, opening and closing windows in a blur. "There are no dividers in this version. I've read my entire system menu. Title. Level. Class—locked. Stats. Skills. Inventory. Quests. Settings. That slot is not part of the layout."
+
+"Maybe it's a bug."
+
+"The System doesn't have bugs." She didn't say it sarcastically. She said it like a physics law. "Kael, I walked past a hundred people on my way here. Their panels were open. A hundred. Nobody had this."
+
+The cursor blinked again.
+
+Mira made a quick gesture and spoke a word. "Identify." Pale green-gold light rolled out of her fingers and broke over Kael's panel. It pooled on the blank strip like water on wax. For half a second, the cursor stood its ground. Then the light sheared off and fell to the pavement.
+
+Mira looked at her log. "Target not recognized as object. Target not recognized as entity." She cast it again, aiming at the strip specifically, holding her fingers apart like a caliper. "Identify." The light touched, broke, and slid away.
+
+"It's reading as nothing," she said. "Like the System knows it's there but can't resolve it."
+
+"Maybe it's too high level for you."
+
+"No. The spell doesn't fail by level. It returns data or it returns absence. It returned absence." She looked at the cursor, then at him. "And the System doesn't do absence either. Every slot in your interface is a defined thing — a skill, an item, a quest. That strip is not defined. It's like a keyhole without a key."
+
+She closed her panel with a flick. "We're going to call it Slot Zero."
+
+"Zero?"
+
+"It was there before the System counted you as level one. Before any of this." She gestured at the panicking street. "It's the slot that was already there."
+
+Kael looked back at it. Slot Zero. The cursor blinked once, slow. He had the strangest feeling that it was waiting to be filled, and that whatever filled it would not come from a level-up.
+
+The air thrummed.
+
+It was not like the first chime. This note came from below, a pressure he felt through the soles of his shoes. His teeth vibrated. Every panel on Elgin Street flashed white at the same instant, and the whole intersection—bus, sedan, oranges, hand truck, the man with the broken leg, the woman with the panic attack, the teenager cradling fire in his palms—all of it turned blue, then silver, then white, and then a single block of text imprinted itself on every retina, every ear, every stillness:
+
+⚡ SYSTEM MESSAGE — ALL PANEL HOLDERS ⚡
+VERSION 0.9 — ARRIVAL COMPLETE
+THIS WORLD IS NOW A GAME. LEVELS, STATS, SKILLS, QUESTS, AND DEATH ARE REAL.
+RIFTS ARE OPENING.
+MONSTERS WILL EMERGE.
+PREPARE.
+
+Eight seconds of silence. The message faded, leaving afterimages like a camera flash. Then a green chevron bloomed at the edge of Kael's vision, pinned to a point three blocks away: the old storm-drain mouth behind the 24-hour laundromat, where Elgin butted against the river and the city forgot to mow. He had hidden there from the rain once, ages ago. It stank of rust and weeds.
+
+RIFT — LEVEL 1 — SEWER MOUTH.
+
+The manhole cover at the sewer mouth clattered. It rang like a dropped cymbal, then once more, and then a thin seam of green-white light forced its way up along the edge. The smell rolled over them: sewage, wet copper, and something green and cold that had no place in August City.
+
+Mira's hand found Kael's wrist. Her panel had opened by itself; a quest tab pulsed at the top.
+
+QUEST — RIFT CLEARING.
+REWARD — RIFT CORE.
+
+People around them were starting to point. The teenager with the fire in his hands was walking toward the green light.
+
+"Kael," Mira said quietly. "Rifts are opening. That's what the System means by prepare."
+
+He looked down at the manhole. The green light under its rim went dark, as if something large and slow had slid over it from below.
+
+The cursor in Slot Zero, still waiting above his level bar, blinked once.
+
+It was faster than before.

@@ -1,0 +1,11 @@
+{"id":"char:kael","_type":"char","name":"Kael","role":"protagonist · Panel holder with extra Slot Zero","alive":true,"level":1,"xp":0,"stat_points":5,"str":5,"agi":5,"int":5,"vit":5,"wis":5,"location":"loc:city-august","knows":[],"inventory":[],"slot_zero_words":[]}
+{"id":"char:mira","_type":"char","name":"Mira","role":"childhood friend · also Panel holder","alive":true,"level":1,"location":"loc:city-august"}
+{"id":"char:warden","_type":"char","name":"The Warden","role":"anonymous System watcher (voice only)","alive":true}
+{"id":"faction:guild-alpha","_type":"faction","name":"Guild Alpha","role":"first player guild in August City","status":"forming","members":0}
+{"id":"loc:city-august","_type":"loc","name":"August City","role":"home city · Panels arrived here in 2037","status":"normal","rifts":0}
+{"id":"loc:rift-01","_type":"loc","name":"Rift · Sewer Mouth","role":"first rift Kael clears","status":"open","depth":1}
+{"id":"obj:panel","_type":"obj","name":"The Panel","role":"everyone's game interface (levels, stats, skills, quests)","version":"0.9","installed":true}
+{"id":"obj:rift-core","_type":"obj","name":"Rift Core","role":"rare drop from clearing a rift","in_inventory":false}
+{"id":"hook:slot-zero","_type":"hook","summary":"Kael's Panel has an extra Slot Zero — blank, no identify spell can read it","status":"planted_unresolved","setup_chapter":1,"payoff_chapter":20,"tier":1}
+{"id":"hook:version-word","_type":"hook","summary":"Each System version update writes one word into Slot Zero","status":"planted_unresolved","setup_chapter":3,"payoff_chapter":15,"tier":1}
+{"id":"hook:who-runs-system","_type":"hook","summary":"The System is a beta of something — Slot Zero is its comment field","status":"planted_unresolved","setup_chapter":3,"payoff_chapter":30,"tier":2}

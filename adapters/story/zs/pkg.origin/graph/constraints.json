@@ -1,0 +1,32 @@
+[
+  {
+    "id": "fz:kael-alive",
+    "rule": "Kael (protagonist) must not die or be erased",
+    "check": {
+      "type": "equals",
+      "object": "char:kael",
+      "field": "alive",
+      "value": true
+    }
+  },
+  {
+    "id": "fz:mira-alive",
+    "rule": "Mira must not die",
+    "check": {
+      "type": "equals",
+      "object": "char:mira",
+      "field": "alive",
+      "value": true
+    }
+  },
+  {
+    "id": "fz:panel-installed",
+    "rule": "The Panel cannot be removed or destroyed",
+    "check": {
+      "type": "equals",
+      "object": "obj:panel",
+      "field": "installed",
+      "value": true
+    }
+  }
+]

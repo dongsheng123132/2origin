@@ -1,0 +1,2 @@
+{"id": "loc:city-august", "name": "August City", "role": "home city · Panels arrived here in 2037", "initial_state": {"status": "normal", "rifts": 0}}
+{"id": "loc:rift-01", "name": "Rift · Sewer Mouth", "role": "first rift Kael clears", "initial_state": {"status": "open", "depth": 1}}
