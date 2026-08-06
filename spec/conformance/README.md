@@ -165,3 +165,21 @@ node spec/conformance/run.mjs --json           # 机器可读
 
 发现向量与规范正文冲突时，**以向量为准并提 issue**——
 规范正文是给人读的，向量是给机器判的，两者不一致本身就是必须修的缺陷。
+
+### 给 AI 实现者（第三方采纳 stub）
+
+上面是给人读的路径。**让 AI agent 帮你实现时，不要让它读完整本规范**——
+「向量即需求」：`vectors/` 的 JSON 是语言中立的契约，比正文更硬。
+
+```text
+1. 看 vectors/*.json（core 级；项数随向量集版本演进，以 run.mjs 实际跑出为准）—— 每项 case 就是一条需求
+2. 写 ~250 行实现 + 适配器，契约照抄 run.mjs 的 stdin/stdout：
+     stdin:  {"version":1,"cases":[{"id":…,"op":…,"input":…},…]}
+     stdout: {"results":[{"id":…,"output":…},…]}     # 除合法 JSON 外 stdout 不输出任何东西
+     stderr: 日志；退出码 0
+3. 跑：node spec/conformance/run.mjs --adapter "<你的命令>" --level core
+4. 全过即可声明合规；**未实现的 op 必须如实回 {"id":…,"error":"unsupported"}**
+   ——运行器把 unsupported 计为未通过，沉默跳过 = 拿「有约束」的假象掩盖「没校验」的事实
+```
+
+向量集有版本号、随协议演进。实现方**应当**在声明合规时注明所对向量集版本。
