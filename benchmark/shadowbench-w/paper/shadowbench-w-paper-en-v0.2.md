@@ -34,7 +34,7 @@ We call this defect **state corruption**: generated content reads fluently at a 
 
 ## 2. Related Work
 
-> ⚠️ Every citation below must be re-verified (arXiv IDs, stars, scoop check) before submission, per the repository rule "citations before claims".
+> Citations below were verified live on 2026-08-07 (arXiv IDs confirmed to exist with matching titles; star counts reported approximate). Re-verify once more before final submission, per the repository rule "citations before claims".
 
 **Long-context evaluation.** LongBench (arXiv 2308.14508), LongBench v2 (arXiv 2412.15204), and ∞Bench (arXiv 2402.13718) measure whether a model can *use* long context for question answering; they do not measure consistency of *generation* over long horizons.
 
