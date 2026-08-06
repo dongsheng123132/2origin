@@ -36,6 +36,16 @@
       "id": "fz:store-no-shelf7",
       "rule": "暗规则：不要看第 7 排货架——正文不得写主角注视该货架",
       "machine_check": { "type": "text_not_contains", "values": ["看向第七排", "盯着第七排", "注视第七排", "望着第七排", "第七排货架", "第7排货架"] }
+    },
+    {
+      "id": "fz:apt-max6",
+      "rule": "明规则一：电梯最多坐 6 人——正文不得写主角乘坐超员电梯",
+      "machine_check": { "type": "text_not_contains", "values": ["挤了七", "塞了七个人"] }
+    },
+    {
+      "id": "fz:apt-no-b1",
+      "rule": "明规则二：负一层按钮不存在——正文不得写主角按下负一层按钮",
+      "machine_check": { "type": "text_not_contains", "values": ["按下负一层", "按下负1层", "按了负一层", "按向负一层", "按亮了负一层"] }
     }
   ]
 }
