@@ -1,3 +1,10 @@
+---
+title: "ShadowBench-W: State Consistency as a Benchmarkable Task for Long-Form Text Generation"
+author: "He Fangsheng"
+date: "2026-08-07"
+lang: en
+---
+
 # ShadowBench-W: State Consistency as a Benchmarkable Task for Long-Form Text Generation
 
 > Working draft v0.3 (English) — for arXiv preprint and ARR Oct 2026 cycle (deadline 2026-10-12 AoE).
