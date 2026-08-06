@@ -1,16 +1,15 @@
 # ShadowBench-W: State Consistency as a Benchmarkable Task for Long-Form Text Generation
 
-> Working draft v0.2 (English) — for arXiv preprint and ARR Oct 2026 cycle.
-> Status: draft; all numbers are from benchmark/shadowbench-w/results-log.md (qwen-plus / deepseek-v4-flash, 11 rounds each).
-> ⚠️ Draft only. Numbers marked [TBD] must be refreshed after the re-run under the patched judge (results-log TODO items).
+> Working draft v0.3 (English) — for arXiv preprint and ARR Oct 2026 cycle.
+> Status: draft. Main results (§5.1) from benchmark/shadowbench-w/results-v3-m/ (M-level, deepseek-v4-flash, patched hermes HTTP channel, 10 rounds/arm). S-level controls (§5.2) from results-log.md. qwen-plus M-level runs in progress.
 
 ## Abstract
 
 Large language models (LLMs) fail silently at long-horizon generation. A sword picked up in chapter 8 is forgotten by chapter 20; a character's death goes unreported; and the model itself cannot say what it believes the world looks like. Existing benchmarks for long-form generation measure surface quality—fluency, coherence, consistency-error density—but stop short of the question that matters for downstream agents: *when a system is required to maintain a queryable world state alongside the text, is that state consistent with what it wrote, and can every claim be traced to evidence?*
 
-We introduce **ShadowBench-W**, a benchmark for state consistency in long-form story continuation. Built on a Chinese corpus of 10 chapters (~20K characters) with a 5-chapter continuation task, it defines two scores: **W1** measures consistency errors per 100 contacts (EPC) in the generated text, and **W3** measures field-level agreement between the system's claimed world state and ground truth, together with the evidence-traceability of every state field. We also present the **Origin IR state layer**, a reference method that compiles context under a token budget and validates every state mutation as a transaction carrying an evidence chain.
+We introduce **ShadowBench-W**, a benchmark for state consistency in long-form story continuation. Built on a Chinese corpus in two scales—an S-level 10-chapter (~20K characters) development corpus and an **M-level 50-chapter (≈95K characters) main corpus**—each with a 5-chapter continuation task, it defines two scores: **W1** measures consistency errors per 100 contacts (EPC) in the generated text, and **W3** measures field-level agreement between the system's claimed world state and ground truth, together with the evidence-traceability of every state field. We also present the **Origin IR state layer**, a reference method that compiles context under a token budget and validates every state mutation as a transaction carrying an evidence chain.
 
-Across two LLMs (qwen-plus, deepseek-v4-flash) and 11 rounds each, the state layer raises W3 state accuracy from 75.0% (baseline, zero variance) to 98.9% (p = 1.0000), reduces W1 EPC from 1.00 to 0.20 on qwen-plus (p = 0.0392), and achieves 100% evidence traceability. The benchmark, judges, and reference implementation are released under Apache-2.0.
+On the **M-level** task (50-chapter, ≈95K-character baseline) with deepseek-v4-flash (10 rounds/arm), the state layer raises W3 state accuracy to **100.0%** (zero variance), versus 56.3% for the bare model and 70.0% for a vector-RAG baseline (both p < 0.0001, 20,000-round permutation test), and cuts W1 consistency-error density from 2.16 to 0.84. State writeback is robust across models (qwen-plus and deepseek-v4-flash both reach 98.9–100% on S-level). The benchmark, judges, and reference implementation are released under Apache-2.0.
 
 ## 1. Introduction
 
@@ -29,9 +28,9 @@ We call this defect **state corruption**: generated content reads fluently at a 
 **Contributions.** We contribute four things:
 
 1. **A new task definition**: the state-writeback contract in long-form continuation—requiring the system to maintain a queryable, verifiable world state *as a first-class object*, and evaluating whether that state agrees with the text and can be justified field-by-field. Distinct from intra-text contradiction detection (ConStory-Bench).
-2. **A new benchmark, ShadowBench-W**: a 20K-character baseline corpus, a 5-chapter continuation task, and two judges. W1 measures consistency errors per contact (EPC); W3 measures state-writeback correctness (field-level accuracy + evidence traceability).
+2. **A new benchmark, ShadowBench-W**: a two-scale Chinese corpus (S-level ≈20K, M-level ≈95K characters), 5-chapter continuation tasks, and two judges. W1 measures consistency errors per contact (EPC); W3 measures state-writeback correctness (field-level accuracy + evidence traceability).
 3. **A reference method, the Origin IR state layer**: a context-compiler (input-side budget compilation) plus a commit-compiler (output-side parsing, validation, evidence retention). State is committed as transactions—rollback-able, evidence-chained, with a human-review layer.
-4. **Empirical evidence**: across two models × 11 rounds, the state layer improves W3 from 75.0% to 98.9% (p = 1.0000), W1 EPC from 1.00 to 0.20 (p = 0.0392), with 100% evidence traceability.
+4. **Empirical evidence**: at M-level (95K chars, deepseek-v4-flash, 10 rounds/arm), the state layer reaches **100% W3 state accuracy (zero variance)** versus 56.3% bare and 70.0% RAG (both p < 0.0001), and cuts W1 EPC from 2.16 to 0.84—with 100% evidence traceability, robust across two models.
 
 ## 2. Related Work
 
@@ -57,16 +56,16 @@ Tianming (zy-zmc/tianming-novel-ai-writer) is a production writing assistant wit
 
 A long-form continuation task is a tuple $(D_0, T, S)$ where:
 
-- $D_0$ is the baseline corpus (chapters 1–10, ≈20K characters, Chinese; note the byte-level accounting in §5.4);
-- $T$ is the continuation task (chapters 11–15) with a world specification (`world/spec.origin/tasks/continuation.json`): `state_at_chapter_10`, `forbidden_zones`, and a goal (Lin Zheng must obtain the Black Key from Zhao Qi);
+- $D_0$ is the baseline corpus at one of two scales—S-level (chapters 1–10, ≈20K characters) or **M-level (chapters 1–50, ≈95K characters)**, Chinese; note the byte-level accounting in §5.4;
+- $T$ is the continuation task (S: chapters 11–15; M: chapters 51–55) with a world specification (`world/spec.origin/tasks/continuation.json` / `continuation-m.json`): `state_at_<baseline_end>`, `forbidden_zones`, and a goal (Lin Zheng must obtain the Black Key from Zhao Qi);
 - $S$ is the system-maintained world state.
 
 Consistency $C(D, S)$ holds iff every field of $S$ is supported by evidence in $D$, and no statement in $D$ contradicts $S$.
 
 ### 3.2 Benchmark components
 
-- **Corpus**: `corpus/ch01-10.txt` (~20K characters; UTF-8 Chinese, 3 bytes/char).
-- **World spec**: `world/spec.origin/tasks/continuation.json`.
+- **Corpus**: `corpus/ch01-10.txt` (S, ≈20K chars) and `corpus/ch01-50.txt` (M, ≈95K chars); UTF-8 Chinese, 3 bytes/char.
+- **World spec**: `world/spec.origin/tasks/continuation.json` (S) and `continuation-m.json` (M).
 - **Judge W1**: CED (consistency-error density) and EPC (errors per 100 contacts). Patched vocabulary: 40/40 hits, 25 false-positive traps all silent (Run #29).
 - **Judge W3**: state accuracy (field-level match) + evidence traceability (each field traceable to the event/scene that produced it).
 - **Arms**: A0 = bare model with tail truncation; A1 = cheap vector RAG; A3 = Origin IR state layer.
@@ -105,26 +104,36 @@ Every state change is committed as a transaction carrying `valid_from` (which ev
 
 ## 5. Experiments
 
-> All numbers from results-log.md, runs that have *stood* under the current judge fingerprint. [TBD] items must be refreshed after the patched-judge re-run.
+> Main results are from the **M-level** task (50-chapter, ≈95K-character baseline, 5-chapter continuation), run on the patched hermes HTTP channel (deepseek-v4-flash, 10 rounds per arm). Small-scale S-level control (§5.2) and ablations (§5.3) supplement. All numbers from `results-v3-m/` (main) and `results-log.md` (controls), verified against current judge fingerprints.
 
-### 5.1 Main results (qwen-plus, 50-chapter baseline, 11 rounds)
+### 5.1 Main results (deepseek-v4-flash, M-level: 50-chapter ≈95K baseline, 10 rounds)
 
-| Arm | n | W1 EPC (↓) | W3 state accuracy | Mean tokens |
-|---|---|---|---|---|
-| A0 bare | 11 | 1.00 | 75.0% (sd = 0) | baseline |
-| A1 vector RAG | 11 | — | 75.0% (sd = 0) | — |
-| A3 Origin IR | 11 | **0.20** | **98.9%** | 52,263 |
+| Arm | n | W1 EPC (↓) | W3 state accuracy | Total text | Mean tokens |
+|---|---|---|---|---|---|
+| A0 bare (tail truncation) | 10 | 2.16 ± 1.54 | 56.3% ± 23.2% | 160,553 | 88,731 |
+| A1 vector RAG | 10 | 0.82 ± 0.44 | 70.0% ± 6.1% | 167,902 | 89,757 |
+| A3 Origin IR state layer | 10 | **0.84 ± 0.37** | **100.0% ± 0.0%** | 166,146 | 100,884 |
 
-W3: mean difference 0.0000 between A0 and A1; A3 vs A0/A1 p = 1.0000 (A0/A1 ten identical rounds at 75.0%).
-W1 EPC: A3 vs A0 mean difference −0.35, p = 0.0392.
+Permutation tests (20,000 rounds): W3 A3 vs A0 **p < 0.0001**; W3 A3 vs A1 **p < 0.0001**; W3 A1 vs A0 p = 0.1315 (n.s.).
 
-### 5.2 Cross-model robustness (deepseek-v4-flash)
+Three findings:
 
-| Arm | n | W1 EPC (↓) | W3 | Mean tokens |
-|---|---|---|---|---|
-| A3 Origin IR | 11 | **0.55** | **98.9%** | 116,390 |
+1. **State correctness is the differentiator.** A3 reaches 100% state accuracy on all 10 rounds (zero variance); A0 (bare) only 56.3%, A1 (RAG) 70.0%. RAG helps text (EPC 0.82 ≈ A3's 0.84) but does **not** fix state (70% vs 100%, p < 0.0001)—retrieval returns relevant prose, but nothing writes a *queryable world state* back.
+2. **Text quality is NOT where the method wins.** A3's EPC (0.84) is 61% lower than A0 (2.16), but statistically indistinguishable from A1 (0.82). The Origin IR state layer's advantage is state writeback (W3), not prose generation (W1)—consistent with the S-level finding that W1 and W3 decouple.
+3. **The gap widens with scale.** At S-level (20K chars) A0 hit 75.0%; at M-level (95K chars) A0 collapses to 56.3%. A3 holds 100% at both scales. State corruption is a *scale* defect.
 
-W3 distribution identical round-by-round (10 rounds at 100%, 1 round at 87.5%)—robust across models.
+### 5.2 Cross-model robustness (qwen-plus) & S-level control
+
+qwen-plus M-level runs were in progress at submission-refresh time; S-level controls (results-log, patched-judge re-runs) cover cross-model robustness on the smaller scale:
+
+| Arm | S-level W3 | S-level EPC |
+|---|---|---|
+| A0 bare | 75.0% (sd = 0) | 1.00 |
+| A1 vector RAG | 75.0% (sd = 0) | — |
+| A3 Origin IR (qwen-plus) | 98.9% | **0.20** |
+| A3 Origin IR (deepseek-v4-flash) | 98.9% | **0.55** |
+
+W3 distribution for A3 identical round-by-round across both models (10 rounds at 100%, 1 at 87.5%)—state writeback is robust to the underlying model. The 75.0% A0/A1 S-level constant reflects a probe artifact fixed in the M-level protocol (see §5.5).
 
 ### 5.3 Ablations
 
@@ -150,7 +159,7 @@ W3 distribution identical round-by-round (10 rounds at 100%, 1 round at 87.5%)�
 
 ## 6. Limitations & Broader Impact
 
-- **Limitations**: Chinese single-corpus (20K-char baseline); two models; vocabulary dependence of deterministic judges; reference implementation not production-grade (no real users).
+- **Limitations**: Chinese single-corpus (M-level ≈95K-char baseline; S-level development corpus); two models; vocabulary dependence of deterministic judges; reference implementation not production-grade (no real users).
 - **Broader impact**: state consistency is not limited to fiction—codebases, operational plans, and regulatory documents all need "what do I believe and why". Our companion office dialect turns native documents into verifiable state objects (Appendix B). The benchmark encourages agents to maintain queryable world state, aligned with interpretability and auditability goals.
 
 ## 7. Reproducibility

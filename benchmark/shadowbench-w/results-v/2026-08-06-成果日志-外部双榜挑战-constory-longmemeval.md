@@ -33,9 +33,17 @@
   Llama-3.1-70B 0.744 / Llama-3.1-8B 0.710 / Phi-3.5-Mini 0.660
 - **定位（判分器差异 caveat 必带）**：0.9155 压过论文全部无 CoN 模型（含 GPT-4o 0.870），
   仅低于 GPT-4o+Chain-of-Note（0.924）0.85pt
-- **S 档抽测 20 题**（115k tokens 历史，orig-session 全喂）：产物 19 条有答案（1 条空），
-  判分进行中（deepseek-v4-flash 判分）；prompt tokens 2,302,850（≈115k/题，与官方口径一致）
-- 产物：outputs/hyp_oracle_500.jsonl（497 条）+ 补跑合并；outputs/s_subset20*.jsonl
+- **S 档抽测 20 题**（115k tokens 历史，orig-session 全喂）：产物 20 条有答案；
+  prompt tokens 2,302,850（≈115k/题，与官方口径一致）
+  - **qwen-plus 判分 Accuracy = 0.85**（17/20；multi-session 2/5 0.4，其余类型全 1.0）
+  - 官方 S 档对照（Table 2，QA accuracy）：GPT-4o 0.606 / Llama-3.1-70B 0.334 /
+    GPT-4o 无 CoN（oracle 档）0.870 —— S 档抽测 0.85 与官方 oracle 档 GPT-4o 相当（0.85 vs 0.870），
+    高于官方 S 档 GPT-4o 0.606，**% Drop 优于官方口径**（官方 oracle→S 掉 0.26，我们 oracle→S 掉 0.066）
+  - ⚠️ **判分器教训：deepseek-v4-flash 判同题 Accuracy 0.0（20 全判 no），不可用作 LongMemEval 判分器**
+    （qwen-plus 同题 0.85）——判分一律用 qwen-plus
+  - ⚠️ 修 `run-eval.sh` API key 写死 `***` bug（`$KEY` 变量定义后未使用，导致 401 无限重试，产物恒 0B）
+- 产物：outputs/hyp_oracle_500.jsonl（497 条）+ 补跑合并；outputs/s_subset20*.jsonl；
+  判分结果 `.eval-results-qwen-plus`（0.85）与 `.eval-results-deepseek-v4-flash`（0.0，作废）
 
 ## 3. 成本（估算）
 
@@ -46,7 +54,8 @@
 
 ## 4. 下一步
 
-- [ ] S 版判分完成 → 对照官方 S 档（GPT-4o 0.606 / Llama-70B 0.334），算 % Drop
+- [x] S 版判分完成 → **0.85（qwen-plus）**，对照官方 S 档（GPT-4o 0.606 / Llama-70B 0.334）见上文
 - [ ] ConStory 全量 2000 条（约 3.5 天 + ¥300-500）——待用户拍板
 - [ ] 成绩贴官方 issue（ConStory issue #1 已有 n=52 评论，更新 n=112）
 - [ ] LongMemEval 官方是否接受外部提交（看 repo 的 CONTRIBUTING/issue 惯例）
+- [ ] S 档 20 题抽测样本量小（multi-session 只有 5 题）——若正式引用，宜补到 n≥30 或说明抽测性质
