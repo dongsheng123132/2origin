@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2Origin Protocol — From Shadow to Origin</title>
+<meta name="description" content="2Origin Protocol (本象协议): a persistent object-representation layer for AI. Save the origin, project on demand. Every state change is a verifiable transaction.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111113'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23c9a227'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>2Origin</span><span class="zh-name">本象协议</span>
+    </a>
+    <div class="nav-links">
+      <a href="manifesto.html" class="hide-sm">Manifesto</a>
+      <a href="challenge.html" class="hide-sm">The Challenge</a>
+      <a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="lang-switch" href="zh/index.html">中文</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">2Origin Protocol · Origin IR · v0.1</div>
+    <h1>From <span class="grad">Shadow</span> to Origin.</h1>
+    <p class="sub">A persistent <em>object-representation layer</em> for AI. The AI no longer edits
+    PDFs and screenshots — the shadows of shadows. It edits the origin, and the system proves the edit was correct.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">Read the protocol</a>
+      <a class="btn btn-ghost" href="manifesto.html">The Manifesto</a>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="num">95.8%<em>±5.9</em></div><div class="lbl">State accuracy · Benxiang (Run #27)</div></div>
+      <div class="metric"><div class="num">52.1%</div><div class="lbl">Bare model · same task</div></div>
+      <div class="metric"><div class="num">58.3%</div><div class="lbl">Vector RAG · same task</div></div>
+      <div class="metric"><div class="num">p=0.0024</div><div class="lbl">Permutation test vs. Benxiang</div></div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="problem">
+  <div class="sec-kicker">The disease</div>
+  <h2 class="sec-title">AI reads the shadow of a shadow<span class="zh">AI 读到的，是影子的影子</span></h2>
+  <p class="sec-lead">A real building becomes a CAD model, then a floor plan, then a PDF, then a screenshot, then OCR text.
+  Every step travels better; every step loses something. AI today is fed this seven-layer-compressed
+  <strong>projection of a projection</strong> — and we call the last shadow the source file.</p>
+  <div class="grid-3">
+    <div class="card">
+      <div class="tag">Perception</div>
+      <h3>AI has no eyes</h3>
+      <p>It generates Word, Excel, PPT and CAD — yet has no stable
+      open-see-locate-edit-verify loop. What it reads is screenshots of exports of summaries.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Memory</div>
+      <h3>The context explodes</h3>
+      <p>Chat history is treated as project state. The longer the chat, the closer to a full window —
+      and compressed summaries drift. State and conversation are conflated.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Output</div>
+      <h3>Final artifacts are unstable</h3>
+      <p>AI emits whole deliverables — 40-page decks, full novels, chart configs. Content, format and
+      references fail together; the only remedy is to regenerate everything.</p>
+    </div>
+  </div>
+
+  <div class="origin-block">
+    <div class="quote">The root cause is one line: <em>we mistook the projection for the object.</em><br>
+    The fix is one line too: <em>keep the body, cast shadows on demand.</em></div>
+    <div class="subnote">Save the origin, project on demand. 一源万影 — the sage establishes images to exhaust meaning. 《易传·系辞》</div>
+  </div>
+</section>
+
+<section class="section" id="protocol">
+  <div class="sec-kicker">The protocol</div>
+  <h2 class="sec-title">Not a bigger JSON — a persistent world layer<span class="zh">不是更大的 JSON，而是持久的对象层</span></h2>
+  <p class="sec-lead">2Origin keeps seven kinds of things together. The AI submits only a
+  <strong>semantic transaction</strong> — what changed, what it depends on, what it asserts. A deterministic
+  compiler validates it, applies it, and generates the artifact. Violations are bounced back with the
+  evidence attached; nothing is written unless it passes.</p>
+  <div class="two-col">
+    <div>
+      <div class="pipeline">
+        <div class="flow">Word / CAD / Excel / video / web / chat
+        ↓  import
+        Origin IR — objects · semantics · relations · state · constraints · provenance · limits
+        ↓  context compiler (input side)
+        visual map + object graph + precise excerpts + allowed actions → AI
+        ↓  AI emits a semantic transaction
+        commit compiler (output side)
+        validate constraints → update state → keep evidence → re-project
+        ↓
+        PDF / image / text / 3D / UI  (projections, generated on demand)</div>
+      </div>
+      <blockquote class="pull">
+        “Chat is only a temporary window onto the origin.
+        Close the chat, switch the model, clear the context — the world is still there.”
+        <span class="who">— docs/01-愿景与定位.md</span>
+      </blockquote>
+    </div>
+    <div>
+      <div class="chips">
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Objects</h3>
+          <p>real entities with stable IDs — the only thing you can hold onto.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Relations</h3>
+          <p>who owns, references, depends on, generates whom.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>State &amp; time</h3>
+          <p>past, present, change, and the reason for each.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Provenance</h3>
+          <p>who created, who modified, what was inferred.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Constraints</h3>
+          <p>what may and may never happen — enforced at commit.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Payloads</h3>
+          <p>native domain data: geometry, formulas, timelines.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Limits</h3>
+          <p><strong>what this representation cannot guarantee.</strong> The boundary travels inside the package, not in a README.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="evidence">
+  <div class="sec-kicker">The evidence</div>
+  <h2 class="sec-title">State tracking, measured — and what it does not claim<span class="zh">只主张状态追踪，且如实报告不主张什么</span></h2>
+  <p class="sec-lead">The claim has been narrowed by experiment to exactly one dimension: <strong>state tracking</strong>.
+  Task: across a 95k-character narrative, who holds the key right now, who learned the secret, which planted threads are still open.</p>
+
+  <table class="data-table">
+    <caption>ShadowBench-W · Run #27 (2026-08-05) · the only currently valid comparison · qwen-plus · 95k chars · n=6 each</caption>
+    <thead><tr><th>W3 state accuracy</th><th>Benxiang</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+    <tbody>
+      <tr><td>Score</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
+      <tr><td>Permutation test vs. Benxiang</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+    </tbody>
+  </table>
+
+  <p class="note"><strong>The unfavourable part first.</strong> Field by field, Benxiang scores <strong>4/6</strong> on
+  <code>black-key.holder</code> — worse than either control arm's 5/6 — and that is exactly the one field recoverable
+  from the prose the arm just wrote. Its whole advantage lives in the two fields where both controls collapse:</p>
+
+  <table class="data-table">
+    <thead><tr><th>Field</th><th>Bare</th><th>RAG</th><th>Benxiang</th></tr></thead>
+    <tbody>
+      <tr><td><code>black-key.holder</code> — last handover written in its own prose</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
+      <tr><td><code>bai-yao.secret_betrayal</code> — a secret accumulated over dozens of chapters</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      <tr><td><code>hook:shen-yan-suspicion.status</code> — never stated in any passage at all</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+    </tbody>
+  </table>
+
+  <blockquote class="pull">
+    “State you can read back from your own recent prose: retrieval and a bare model both suffice, and Benxiang has no edge.
+    State that must be accumulated across the whole book and is never stated in any one passage: only the state machine answers it.”
+  </blockquote>
+
+  <table class="data-table">
+    <caption>Within-arm, cross-model (Run #19, n=11 each) — the half of the cross-model claim that holds</caption>
+    <thead><tr><th></th><th>qwen-plus</th><th>deepseek-v4-flash</th><th>Permutation test</th></tr></thead>
+    <tbody>
+      <tr><td><strong>W3 state accuracy</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>diff 0.0000 · <strong>p = 1.0000</strong></td></tr>
+      <tr><td><strong>W1 EPC</strong> (prose, lower is better)</td><td>0.20</td><td>0.55</td><td>diff −0.35 · <strong>p = 0.0392</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p class="note strong">State-layer correctness is independent of the base model; prose-layer quality is not.
+  That is the property a protocol ought to have: it does not depend on how strong the machine underneath is. And it is 11 against 11 — not an n=1.</p>
+
+  <div class="honesty">
+    <h3>What we do not claim</h3>
+    <ul>
+      <li><strong>Not “writes more consistently.”</strong> Prose consistency shows no significant difference from vector RAG (qwen p=0.1852, deepseek p=0.3341).</li>
+      <li><strong>Not “saves tokens” — and no longer “more expensive” either.</strong> At matched conditions: +12.2%, p = 0.5253, not significant.</li>
+      <li><strong>Cross-model holds only halfway.</strong> What holds is within-arm. The control arms on the second model are void and must be re-run.</li>
+      <li><strong>No production adapters, no real users.</strong> The credibility of this project rests on stating its limits precisely.</li>
+      <li><strong>The 75% wall was fake.</strong> The control arms' zero variance was the probe template printing the answer key — our own self-audit found it.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="dialects">
+  <div class="sec-kicker">Domain dialects</div>
+  <h2 class="sec-title">One shell, many origins<span class="zh">通用外壳 + 领域方言</span></h2>
+  <p class="sec-lead">One dialect working could be a coincidence. <strong>Two is a protocol.</strong> The same core,
+  essentially unmodified, runs across four domains — domain knowledge lives in <em>data</em> (constraint tables,
+  statute books), not in code. All four dialects together added 4 lines to the core.</p>
+  <div class="chips">
+    <div class="chip">
+      <div class="en">Memory</div>
+      <h3>Project state</h3>
+      <p>Chat history committed as world state. A new session resumes in seconds. MCP server, zero deps.</p>
+    </div>
+    <div class="chip">
+      <div class="en">Story</div>
+      <h3>Narrative</h3>
+      <p>Characters, secrets, foreshadowing and forbidden zones held across a million-character target without amnesia.</p>
+    </div>
+    <div class="chip">
+      <div class="en">Law</div>
+      <h3>Judgment chains</h3>
+      <p>Citation whitelists and sentence recalculation. A 20%-over-limit mitigation is refused on the spot, with basis.</p>
+    </div>
+    <div class="chip">
+      <div class="en">xlsx</div>
+      <h3>Spreadsheet dependency graphs</h3>
+      <p>Formula dependencies as relations. “This number is decided by these 10 manual inputs” — Excel itself can’t answer that.</p>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:44px">
+    <div>
+      <table class="data-table">
+        <caption>Conformance — the line that makes this a protocol, not a library</caption>
+        <thead><tr><th></th><th>Vectors</th></tr></thead>
+        <tbody>
+          <tr><td>Language-neutral test vectors (data, not code)</td><td class="hl">68 / 68</td></tr>
+          <tr><td>JavaScript reference implementation</td><td>68 / 68</td></tr>
+          <tr><td>Python second implementation (~250 lines, zero deps)</td><td>60 / 60 core</td></tr>
+          <tr><td>Reference-implementation dependencies</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Any implementation that writes a small adapter can prove conformance on the spot —
+      the standard is the 68 vectors, not the name.</p>
+    </div>
+    <div class="honesty">
+      <h3>Why “protocol” and not “library”</h3>
+      <p style="margin-top:10px">An implementation passing its own tests proves nothing about a protocol.
+      The mutation check deliberately breaks each protocol promise and watches <em>who</em> catches it.
+      Promises caught only by the self-test are coverage gaps — the protocol guarantees only what the vectors pin down.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="challenge">
+  <div class="sec-kicker">The hardest test</div>
+  <h2 class="sec-title">The White Drum Challenge<span class="zh">白鼓挑战</span></h2>
+  <p class="sec-lead">The longest novel ever written by a human is <strong>Venmurasu</strong> — “the white drum” in
+  Tamil — 26 volumes, ~22,400 pages, one person, six and a half years. AI now challenges that record, with one
+  difficulty a human author never faced: <strong>the world state of every chapter must be verifiable.</strong></p>
+  <div class="milestones">
+    <div class="milestone"><div class="dist">now</div><h3>Two serials running</h3><p>《月落渡口》2 ch · 《规则怪谈·无限层》4 ch · state open-source, verifiable</p></div>
+    <div class="milestone"><div class="dist">next</div><h3>100k characters</h3><p>first public milestone</p></div>
+    <div class="milestone"><div class="dist">then</div><h3>1,000k characters</h3><p>a million without amnesia</p></div>
+    <div class="milestone"><div class="dist">goal</div><h3>Beyond 22,400 pages</h3><p>beating the human record, verifiably</p></div>
+  </div>
+  <p class="note" style="margin-top:22px">drift-rate — the model’s rate of misremembering prior values — is 8.3%,
+  observable, falling chapter by chapter, and aimed at zero. Every chapter: prose + world state + git evidence chain.
+  <a href="challenge.html" style="color:var(--gold-deep);font-weight:600">Read the rules →</a></p>
+</section>
+
+<section class="section tight" id="roadmap">
+  <div class="sec-kicker">Where this goes</div>
+  <h2 class="sec-title">A file in the age of AI<span class="zh">AI 时代的文件</span></h2>
+  <p class="sec-lead">If this holds, a “file” should no longer be a <code>.docx</code> or a <code>.pdf</code>,
+  but an <strong>origin package</strong> that can be opened, seen, located, modified and re-verified.
+  Humans read projections. AI edits the origin. The system proves the edit was correct.</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">Star &amp; verify on GitHub</a>
+    <a class="btn btn-ghost" href="manifesto.html" style="border-color:var(--gold);color:var(--gold-deep)">Read the full manifesto</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="brand-line">2Origin <span class="zh">本象协议</span></div>
+      <p>Save the origin, project on demand.<br>「圣人立象以尽意」——《易传·系辞》</p>
+    </div>
+    <div>
+      <h4>Protocol</h4>
+      <a href="manifesto.html">Manifesto</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/docs" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/spec/conformance" target="_blank" rel="noopener">Conformance</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="challenge.html">White Drum Challenge</a>
+      <a href="https://github.com/dongsheng123132/2origin/blob/main/README.md" target="_blank" rel="noopener">README</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="in">
+      <span>© 2026 2Origin Protocol · Apache-2.0</span>
+      <span>本象协议 · Benxiang · Origin IR</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

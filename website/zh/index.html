@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2Origin 本象协议 — 从影子回到本源</title>
+<meta name="description" content="2Origin 本象协议：面向 AI 的持久对象表示层。一源万影，保存本象，按需投影。AI 只提交语义事务，确定性编译器校验后才落地，每个字段都能回答「凭什么」。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111113'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23c9a227'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>2Origin</span><span class="zh-name">本象协议</span>
+    </a>
+    <div class="nav-links">
+      <a href="manifesto.html" class="hide-sm">宣言</a>
+      <a href="challenge.html" class="hide-sm">白鼓挑战</a>
+      <a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="lang-switch" href="../index.html">English</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">2Origin 协议 · Origin IR · v0.1</div>
+    <h1>从影子，回到<span class="grad">本源</span>。</h1>
+    <p class="sub">一套面向 AI 的<em>持久对象表示层</em>。AI 不再去改 PDF、改截图——那些是影子的影子——
+    它改的是本源，而系统负责证明：这次改动真的对了。</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">读协议源码</a>
+      <a class="btn btn-ghost" href="manifesto.html">读宣言</a>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="num">95.8%<em>±5.9</em></div><div class="lbl">状态准确率 · 本象（Run #27）</div></div>
+      <div class="metric"><div class="num">52.1%</div><div class="lbl">裸模型 · 同一道题</div></div>
+      <div class="metric"><div class="num">58.3%</div><div class="lbl">向量 RAG · 同一道题</div></div>
+      <div class="metric"><div class="num">p=0.0024</div><div class="lbl">置换检验 vs 本象</div></div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="problem">
+  <div class="sec-kicker">病根</div>
+  <h2 class="sec-title">AI 读到的，是影子的影子<span class="zh">From shadow to shadow</span></h2>
+  <p class="sec-lead">真实建筑 → CAD 模型 → 平面图 → PDF → 截图 → OCR 文字。
+  每一步都更好传播，每一步都丢掉一些东西。AI 今天读到的，正是这种压缩了七八轮的
+  <strong>投影的投影</strong>——而我们竟然把最后那层影子当成了源文件。</p>
+  <div class="grid-3">
+    <div class="card">
+      <div class="tag">感知</div>
+      <h3>AI 没有眼睛</h3>
+      <p>它能生成 Word、Excel、PPT、CAD，却没有稳定的「打开-看见-定位-修改-复验」系统。
+      读到的往往是截图的 OCR、摘要的摘要。</p>
+    </div>
+    <div class="card">
+      <div class="tag">记忆</div>
+      <h3>上下文必炸</h3>
+      <p>聊天记录被当成项目状态。聊得越久越接近内存爆满，压缩摘要不断失真——状态和对话被混为一谈。</p>
+    </div>
+    <div class="card">
+      <div class="tag">输出</div>
+      <h3>终态不稳</h3>
+      <p>AI 直接吐完整成品：几十页 PPT、百万字全文、几百行图表配置。内容、格式、引用一起失控，
+      错了只能整个重来。</p>
+    </div>
+  </div>
+
+  <div class="origin-block">
+    <div class="quote">病根只有一句话：<em>我们把投影当成了对象本身。</em><br>
+    解法也只有一句话：<em>把本源留住，影子按需投影。</em></div>
+    <div class="subnote">一源万影 ·「圣人立象以尽意」——《易传·系辞》 · Save the origin, project on demand.</div>
+  </div>
+</section>
+
+<section class="section" id="protocol">
+  <div class="sec-kicker">协议</div>
+  <h2 class="sec-title">不是更大的 JSON，而是持久的对象层<span class="zh">Origin IR</span></h2>
+  <p class="sec-lead">2Origin 同时保存七样东西。AI 只提交<strong>语义事务</strong>——改了什么、依赖什么、断言什么。
+  确定性的编译器校验、落地、生成终态。违规就带着证据退回重写，<strong>一个字节都不写</strong>。</p>
+  <div class="two-col">
+    <div>
+      <div class="pipeline">
+        <div class="flow">Word / CAD / Excel / 视频 / 网页 / 对话
+        ↓  导入
+        本象 IR（Origin IR）— 对象 · 语义 · 关系 · 状态 · 约束 · 来源 · 边界
+        ↓  输入侧编译（Context Compiler）
+        视觉地图 + 对象图 + 精确片段 + 可用动作 → AI
+        ↓  AI 输出语义事务
+        输出侧编译（Commit Compiler）
+        校验约束 → 更新状态 → 留存证据 → 重新投影
+        ↓
+        PDF / 图片 / 文字 / 三维 / 界面（按需生成的投影）</div>
+      </div>
+      <blockquote class="pull">
+        「对话只是操作本象的一个临时窗口。关掉对话、切换模型、清空上下文——世界还在。」
+        <span class="who">——《愿景与定位》</span>
+      </blockquote>
+    </div>
+    <div>
+      <div class="chips">
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>对象</h3>
+          <p>带稳定 ID 的真实实体——唯一能抓住的东西。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>关系</h3>
+          <p>谁拥有、谁引用、谁依赖、谁生成谁。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>状态与时间</h3>
+          <p>过去、现在、变化，以及每个变化的原因。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>来源与证据</h3>
+          <p>谁创建、谁修改、哪些是推断。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>行为与约束</h3>
+          <p>能做什么、不能违反什么——提交时强制执行。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>领域载荷</h3>
+          <p>各领域原生数据：几何、公式、时间线。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>边界</h3>
+          <p><strong>这份表示保证不了什么。</strong>边界跟着包走，不是写在 README 里。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="evidence">
+  <div class="sec-kicker">证据</div>
+  <h2 class="sec-title">状态追踪，实测——以及我们如实不主张什么<span class="zh">Measured, and bounded</span></h2>
+  <p class="sec-lead">对外主张已按实验结果收窄到<strong>一个</strong>维度：状态追踪。考题：在 9.5 万字的长篇叙事里，
+  黑钥匙此刻在谁手里、谁知道了那个秘密、哪些伏笔还没收。</p>
+
+  <table class="data-table">
+    <caption>ShadowBench-W · Run #27（2026-08-05）· 当前唯一有效对照口径 · qwen-plus · 9.5 万字 · 各 n=6</caption>
+    <thead><tr><th>W3 状态准确率</th><th>本象</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
+    <tbody>
+      <tr><td>得分</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
+      <tr><td>置换检验 vs 本象</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+    </tbody>
+  </table>
+
+  <p class="note"><strong>先把不利的说在前面。</strong>字段级看，本象在 <code>black-key.holder</code> 上是
+  <strong>4/6，比两条对照臂的 5/6 都差</strong>——而那恰恰是唯一能从近文直接读出来的字段。
+  优势全部集中在两条对照臂同时近乎全灭的那两格：</p>
+
+  <table class="data-table">
+    <thead><tr><th>字段</th><th>裸模型</th><th>RAG</th><th>本象</th></tr></thead>
+    <tbody>
+      <tr><td><code>black-key.holder</code>（最后一次转交就写在自己正文里）</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
+      <tr><td><code>bai-yao.secret_betrayal</code>（跨几十章累积的秘密）</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      <tr><td><code>hook:shen-yan-suspicion.status</code>（从不存在于任何一段文字里）</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+    </tbody>
+  </table>
+
+  <blockquote class="pull">
+    「能从自己刚写的正文里读出来的状态，检索和裸模型都够用，本象不占便宜；
+    需要跨全书累积、且从不在任何一段文字里被陈述的状态，只有状态机答得出来。」
+  </blockquote>
+
+  <table class="data-table">
+    <caption>臂内跨模型（Run #19，各 n=11）——跨模型主张中立住的那一半</caption>
+    <thead><tr><th></th><th>qwen-plus</th><th>deepseek-v4-flash</th><th>置换检验</th></tr></thead>
+    <tbody>
+      <tr><td><strong>W3 状态准确率</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>均值差 0.0000 · <strong>p = 1.0000</strong></td></tr>
+      <tr><td><strong>W1 EPC</strong>（正文，越低越好）</td><td>0.20</td><td>0.55</td><td>均值差 −0.35 · <strong>p = 0.0392</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p class="note strong">状态层的正确性与底模无关，正文层的质量与底模显著相关。
+  这正是「协议」该有的性质：不依赖底下那台机器有多强。而且是 11 对 11——不是 n=1。</p>
+
+  <div class="honesty">
+    <h3>我们不主张什么</h3>
+    <ul>
+      <li><strong>不主张「写得更一致」。</strong>正文一致性与向量 RAG 无显著差异（qwen p=0.1852、deepseek p=0.3341）。</li>
+      <li><strong>不主张「更省 Token」——也不再承认「更贵」。</strong>同口径实测 +12.2%，p = 0.5253，不显著。</li>
+      <li><strong>跨模型只成立一半。</strong>立住的是臂内；对照臂在第二个模型上作废，必须重跑。</li>
+      <li><strong>没有生产级适配器，没有真实用户。</strong>这个项目的可信度建立在把边界说清楚上。</li>
+      <li><strong>那堵 75% 的墙是假的。</strong>对照臂的零方差是提示词模板把答案印在了题面上——我们自查抓出来的。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="dialects">
+  <div class="sec-kicker">领域方言</div>
+  <h2 class="sec-title">一个外壳，多个本源<span class="zh">通用外壳 + 领域方言</span></h2>
+  <p class="sec-lead">一个方言成功可能是巧合，<strong>两个才是协议</strong>。同一套核心，几乎零改动跑通四个域——
+  领域知识进的是<em>数据</em>（约束表、条文库），不是代码。四个方言合计只给核心加了 4 行。</p>
+  <div class="chips">
+    <div class="chip">
+      <div class="en">Memory</div>
+      <h3>项目状态</h3>
+      <p>聊天历史持续提交为世界状态，新会话秒恢复。MCP Server，零依赖。</p>
+    </div>
+    <div class="chip">
+      <div class="en">Story</div>
+      <h3>叙事</h3>
+      <p>人物、秘密、伏笔、禁区，目标是百万字不失忆、事务式写作。</p>
+    </div>
+    <div class="chip">
+      <div class="en">Law</div>
+      <h3>判决依据链</h3>
+      <p>引用白名单 + 量刑复算。自首减 55% 超出法定 40% 上限，当场拒绝，带依据。</p>
+    </div>
+    <div class="chip">
+      <div class="en">xlsx</div>
+      <h3>表格依赖链</h3>
+      <p>公式依赖落在协议自带的 relations 上。「这个数由哪 10 个人工录入决定」——Excel 自己答不了。</p>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:44px">
+    <div>
+      <table class="data-table">
+        <caption>一致性测试集——「协议」与「一个库」的分界线</caption>
+        <thead><tr><th></th><th>向量</th></tr></thead>
+        <tbody>
+          <tr><td>语言无关的测试向量（数据，不是代码）</td><td class="hl">68 / 68</td></tr>
+          <tr><td>JavaScript 参考实现</td><td>68 / 68</td></tr>
+          <tr><td>Python 第二实现（约 250 行，零依赖）</td><td>60 / 60 core</td></tr>
+          <tr><td>参考实现第三方依赖</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <p class="note">任何实现只要写一个几十行的适配器就能当场自证合规——
+      标准是那 68 条向量，不是「本象」这两个字。</p>
+    </div>
+    <div class="honesty">
+      <h3>为什么叫「协议」而不是「一个库」</h3>
+      <p style="margin-top:10px">一份实现自己跑通自己的测试，证明不了协议存在。变异检查故意打坏每一条协议承诺，
+      看<em>谁</em>抓得到——只被自测抓到的就是覆盖缺口。协议只保证向量钉住的部分。</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="challenge">
+  <div class="sec-kicker">最难的一场考试</div>
+  <h2 class="sec-title">白鼓挑战<span class="zh">The White Drum Challenge</span></h2>
+  <p class="sec-lead">人类最长的长篇小说叫 <strong>Venmurasu</strong>（泰米尔语「白鼓」）——26 卷，约 22,400 页，
+  一个人，写了六年半。现在 AI 要挑战这个纪录，但我们给自己加了一个人类作者不需要面对的难度：
+  <strong>每一章的世界状态，都必须可验证。</strong></p>
+  <div class="milestones">
+    <div class="milestone"><div class="dist">现在</div><h3>两部连载在跑</h3><p>《月落渡口》2 章 · 《规则怪谈·无限层》4 章 · 状态开源可验证</p></div>
+    <div class="milestone"><div class="dist">下一步</div><h3>10 万字</h3><p>第一个公开里程碑</p></div>
+    <div class="milestone"><div class="dist">再然后</div><h3>100 万字</h3><p>百万字不失忆</p></div>
+    <div class="milestone"><div class="dist">目标</div><h3>破 22,400 页</h3><p>超越人类纪录，且全程可验证</p></div>
+  </div>
+  <p class="note" style="margin-top:22px">drift-rate（模型记错前值率）8.3%，可观测、逐章下降、目标归零。
+  每章：正文 + 世界状态 + git 证据链。 <a href="challenge.html" style="color:var(--gold-deep);font-weight:600">看挑战规则 →</a></p>
+</section>
+
+<section class="section tight" id="roadmap">
+  <div class="sec-kicker">往哪里去</div>
+  <h2 class="sec-title">AI 时代的文件<span class="zh">The origin package</span></h2>
+  <p class="sec-lead">如果这条路走通，AI 时代的「文件」不该再是 <code>.docx</code> 或 <code>.pdf</code>，
+  而应该是一个<strong>本象包</strong>——能被打开、被看见、被定位、被修改、被复验。
+  人看投影，AI 改本象，系统证明改对了。</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub 上验证</a>
+    <a class="btn btn-ghost" href="manifesto.html" style="border-color:var(--gold);color:var(--gold-deep)">读完整宣言</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="brand-line">2Origin <span class="zh">本象协议</span></div>
+      <p>保存本象，按需投影。<br>「圣人立象以尽意」——《易传·系辞》</p>
+    </div>
+    <div>
+      <h4>协议</h4>
+      <a href="manifesto.html">宣言</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/docs" target="_blank" rel="noopener">文档</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/spec/conformance" target="_blank" rel="noopener">一致性测试集</a>
+    </div>
+    <div>
+      <h4>项目</h4>
+      <a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="challenge.html">白鼓挑战</a>
+      <a href="https://github.com/dongsheng123132/2origin/blob/main/README.md" target="_blank" rel="noopener">README</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="in">
+      <span>© 2026 2Origin 协议 · Apache-2.0</span>
+      <span>本象协议 · Benxiang · Origin IR</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

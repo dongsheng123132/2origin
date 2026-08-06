@@ -18,6 +18,7 @@ import { parseDxf, geometryOf, textOf, toPairs, insertOf, insertBBox, blockBBox 
 import { dxfToObjects, sniff } from './import.mjs'
 import { loadOrigin } from '../../compiler/origin.mjs'
 import { diagnose } from '../../compiler/provenance.mjs'
+import { comparePackages } from './diff.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const DXF = join(HERE, 'fixtures', 'A-101.dxf')
@@ -141,6 +142,44 @@ check(pdf.kind === 'pdf' && !pdf.readable, 'PDF 被认出且明说读不了')
 check(pdf.why.includes('投影'), '  └ 说清楚 PDF 是投影不是本源——这是协议的核心主张，不是托词')
 
 check(sniff('x.dxf', magic('  0\nSECT')).readable === true, 'DXF 照常放行')
+
+// ── R13 版本对比：句柄驱动的稳定 ID ─────────────────────────────
+// R13+（AC1015）每个图元带实体句柄（组码 5）→ ID = ent:<层>/<句柄> 真正稳定。
+// 梁移动 / 改长仍是同一对象，对比报「修改」而不是「删+加」——版本对比的前提。
+// 夹具 C-101 / C-101-v2：v2 里 B02 移动、B03 加长、B04 删除、两樘窗不变。
+console.log('\n[R13 版本对比] 句柄驱动：移动/改属性可识别，不是删+加')
+
+const sniff1015 = sniff('x.dwg', magic('AC1015'))
+check(sniff1015.hasHandles === true, 'R13（AC1015）有实体句柄 → 转 DXF 后 ID 真正稳定')
+const sniff1012 = sniff('x.dwg', magic('AC1012'))
+check(sniff1012.hasHandles === true, 'R13（AC1012）同样有句柄（曾误判为无）')
+check(sniff('x.dwg', magic('AC1009')).hasHandles === false, '  └ 仅 R12（AC1009）无句柄')
+
+const C1 = join(HERE, 'fixtures', 'C-101.dxf')
+const C2 = join(HERE, 'fixtures', 'C-101-v2.dxf')
+const cPkg1 = join(tmpdir(), `cad-r13-v1-${process.pid}.origin`)
+const cPkg2 = join(tmpdir(), `cad-r13-v2-${process.pid}.origin`)
+rmSync(cPkg1, { recursive: true, force: true })
+rmSync(cPkg2, { recursive: true, force: true })
+execFileSync(process.execPath, [join(HERE, 'import.mjs'), C1, cPkg1, '--name', 'C-101'], { stdio: ['ignore', 'pipe', 'pipe'] })
+execFileSync(process.execPath, [join(HERE, 'import.mjs'), C2, cPkg2, '--name', 'C-101'], { stdio: ['ignore', 'pipe', 'pipe'] })
+
+const o1 = loadOrigin(cPkg1)
+const o2 = loadOrigin(cPkg2)
+check(o1.objects.some((o) => o.id_basis === 'handle'), 'R13 导入对象标记 id_basis=handle（非退化的 content）')
+check(!o1.objects.some((o) => o.id_basis === 'content'), '  └ 没有一个对象退化为内容哈希')
+
+const diff = comparePackages(cPkg1, cPkg2)
+const moved = diff.changed.find((c) => c.id.includes('B02'))
+const lengthened = diff.changed.find((c) => c.id.includes('B03'))
+check(diff.changed.length === 2, '两处修改：B02 移动 + B03 加长', `实际 ${diff.changed.length}: ${diff.changed.map((c) => c.id)}`)
+check(!!moved && moved.diffs.some((d) => d.field === 'bbox' && String(d.from).includes('5000') && String(d.to).includes('6000')), '  └ B02 被识别为「移动」（bbox 5000→6000），不是删+加')
+check(!!lengthened && lengthened.diffs.some((d) => d.field === 'width' && d.from === 1000 && d.to === 1500), '  └ B03 被识别为「加长」（width 1000→1500）')
+check(diff.removed.some((r) => r.id.includes('B04')), 'B04 被识别为「删除」')
+check(diff.added.length === 0, '  └ 没有误报「新增」（移动/加长不该被当成新对象）')
+check(diff.stable.length === 5, '  └ 5 处不变（外墙、B01、两樘窗）', `实际 ${diff.stable.length}`)
+rmSync(cPkg1, { recursive: true, force: true })
+rmSync(cPkg2, { recursive: true, force: true })
 
 console.log(`\n${fail ? '✗' : '✓'} ${pass} 通过，${fail} 失败`)
 process.exit(fail ? 1 : 0)

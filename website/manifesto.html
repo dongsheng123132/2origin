@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Manifesto — 2Origin Protocol</title>
+<meta name="description" content="The 2Origin (Benxiang) Manifesto: the disease (shadow for thing), one irreversible line, AI should deliver transactions not artifacts, what has been demonstrated, what we do not claim.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111113'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23c9a227'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>2Origin</span><span class="zh-name">本象协议</span>
+    </a>
+    <div class="nav-links">
+      <a href="manifesto.html" class="hide-sm">Manifesto</a>
+      <a href="challenge.html" class="hide-sm">The Challenge</a>
+      <a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="lang-switch" href="zh/index.html">中文</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">2Origin</a> / Manifesto</div>
+    <h1>The Manifesto</h1>
+    <p class="sub">Save the origin, project on demand. 一源万影 · «The sage establishes images to exhaust meaning.» — Book of Changes</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="prose">
+    <h2>I · The disease: we mistook the shadow for the thing</h2>
+    <p>The history of human information is a history of flattening the world.</p>
+<pre>a real building → CAD model → floor plan → PDF → screenshot → OCR text
+a real business → workflows → spreadsheet → summary figures → one paragraph
+a real argument → a web of relations → an outline → a line of prose</pre>
+    <p>Every step travels better. Every step loses something. Among humans this trade was fine — we carry
+    enough common sense to reconstruct the original from a damaged projection.</p>
+    <p><strong>But what AI reads today is the shadow of a shadow, seven or eight compressions deep.</strong>
+    Worse: we started treating that last shadow as the source file. Edit the PDF, edit the screenshot,
+    edit the summary — every one of those edits lands on a projection, while the actual object never existed
+    in any file at all.</p>
+    <p>This is not an argument against text. Text is a spectacularly high-compression, highly composable
+    representation, and for a legal clause the text <em>is</em> the origin. The error is narrower than that —
+    it is <strong>mistaking a projection for the object</strong>:</p>
+    <table class="data-table">
+      <thead><tr><th>Domain</th><th>What the origin actually is</th><th>What we edit instead</th></tr></thead>
+      <tbody>
+        <tr><td>CAD</td><td>geometry, constraints, parameters, assemblies</td><td>the exported drawing</td></tr>
+        <tr><td>Spreadsheets</td><td>formulas and data dependencies</td><td>pixels on screen</td></tr>
+        <tr><td>Novels</td><td>character state, timeline, planted–payoff graph</td><td>paragraphs of prose</td></tr>
+        <tr><td>Software</td><td>code, state, runtime behaviour</td><td>screenshots</td></tr>
+      </tbody>
+    </table>
+
+    <h2>II · One irreversible line</h2>
+    <p>Rendering a 2D image from a 3D model is easy. Recovering <em>the</em> 3D model from a 2D image is,
+    in general, <strong>impossible</strong> — infinitely many objects cast the same shadow.</p>
+<pre>origin → projection      ✅ deterministic, repeatable
+projection ⇏ the origin  ❌ irreversible</pre>
+    <p>That asymmetry sets the architecture: <strong>stop trying to infer the body from its shadow — keep the body.</strong>
+    PDFs, images, Markdown, EPUB are not source files. They are projections — cached views generated on demand.
+    Deleting one costs nothing, because it can always be cast again.</p>
+
+    <h2>III · AI should not deliver final artifacts. It should deliver transactions.</h2>
+    <p>Today's AI emits whole artifacts: a forty-page deck, a novel, hundreds of lines of chart config.
+    Content, formatting and references fail together, and the only remedy is to regenerate everything.</p>
+    <blockquote>“The AI submits only a semantic transaction — what changed, what it depends on, what it asserts.
+    A deterministic compiler validates it, applies it, and generates the final artifact.”</blockquote>
+    <p>The model says <em>“I handed the black key to Shen Yan, and I assert Zhao Qi is still alive.”</em>
+    The validator does not take its word for it. It checks. If the check fails, the transaction is bounced
+    back with the evidence attached. This is not distrust of the model. It is <strong>keeping separate books
+    for “claimed” and “verified”.</strong></p>
+
+    <h2>IV · What has actually been demonstrated</h2>
+    <p>The claim has been narrowed by experiment to exactly one dimension: <strong>state tracking</strong> —
+    across long-form narrative, who holds the key right now, who learned the secret, which planted threads are still open.</p>
+
+    <table class="data-table">
+      <caption>Run #27 (2026-08-05) — the only currently valid comparison · qwen-plus · 95k chars · n=6 each</caption>
+      <thead><tr><th>W3 state accuracy</th><th>Benxiang</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+      <tbody>
+        <tr><td>Score</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
+        <tr><td>Permutation test</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+      </tbody>
+    </table>
+    <p>This time the control arms got every character they had just written, no answer anywhere in the prompt,
+    and all eight fields asked. Benxiang still leads by 43.8 and 37.5 points.</p>
+    <blockquote>“The 75% wall was fake. What stood behind it is real.”</blockquote>
+    <p><strong>The unfavourable part first:</strong> Benxiang scores 4/6 on <code>black-key.holder</code> —
+    worse than either control arm — and that is exactly the field recoverable from the prose it just wrote.
+    Its whole advantage lives in the two fields where both controls collapse:</p>
+    <table class="data-table">
+      <thead><tr><th>Field</th><th>Bare</th><th>RAG</th><th>Benxiang</th></tr></thead>
+      <tbody>
+        <tr><td><code>black-key.holder</code> (last handover written in its own prose)</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
+        <tr><td><code>bai-yao.secret_betrayal</code> (secret accumulated over dozens of chapters)</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+        <tr><td><code>hook:shen-yan-suspicion.status</code> (never stated in any passage)</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      </tbody>
+    </table>
+    <p><em>“Has this thread been paid off”</em> is not a fact in any passage. It is a ledger entry. Retrieval can
+    fetch the passage that says so — except none exists.</p>
+
+    <p><strong>The cross-model comparison holds only halfway.</strong> What holds is the within-arm comparison,
+    A3 against itself on two models, which never touches the probe. After a uniform rescore, 11 runs against 11:</p>
+    <table class="data-table">
+      <thead><tr><th></th><th>qwen-plus (n=11)</th><th>deepseek-v4-flash (n=11)</th><th>Permutation test</th></tr></thead>
+      <tbody>
+        <tr><td><strong>W3 state accuracy</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>diff 0.0000 · <strong>p = 1.0000</strong></td></tr>
+        <tr><td><strong>W1 EPC</strong> (prose, lower is better)</td><td>0.20</td><td>0.55</td><td>diff −0.35 · <strong>p = 0.0392</strong></td></tr>
+      </tbody>
+    </table>
+    <blockquote>“State-layer correctness is independent of the base model; prose-layer quality is not.”</blockquote>
+
+    <h2>V · Why this is not a novel-writing tool</h2>
+    <p>One dialect working could be a coincidence. <strong>Two is a protocol.</strong> The shape is
+    <em>generic shell + domain dialects</em>: the shell defines lifecycle and minimal structure, each domain
+    brings its own schema, and they share one action surface —
+    <code>inspect · render · query · act · diff · validate · commit · rollback</code>.</p>
+    <p>The move that made it a protocol was turning constraints from code into data: three hard-coded types
+    whose names reeked of fiction now collapse into six general predicates —
+    <code>equals · not_equals · contains · not_contains · range · unchanged</code>.
+    <em>“The protagonist must not learn this secret”</em> and <em>“revenue must never go negative”</em>
+    are the same statement at the protocol layer.</p>
+
+    <h2>VI · Where this goes</h2>
+    <p><strong>Now</strong> — the narrative dialect, validated at 95k characters, target one million:
+    character state, timeline, planted-payoff graph and forbidden zones held without amnesia, written
+    transactionally. <strong>Next</strong> — the same shell over CAD/3D, Office, Chart/data, and project memory.
+    <strong>Further out</strong> — if this holds, a “file” in the age of AI should no longer be a <code>.docx</code>
+    or a <code>.pdf</code>, but an origin package that can be opened, seen, located, modified and re-verified.
+    Humans read projections. AI edits the origin. The system proves the edit was correct.</p>
+
+    <h2>VII · What we do not claim</h2>
+    <p>The credibility of this project rests on stating its limits precisely.</p>
+    <ul>
+      <li><strong>Not “writes more consistently.”</strong> No significant difference from vector RAG.</li>
+      <li><strong>Not “saves tokens” — but no longer “more expensive” either.</strong> +12.2%, p = 0.5253, not significant.</li>
+      <li><strong>Cross-model holds only halfway.</strong> The within-arm half holds; the comparison half awaits control-arm re-runs.</li>
+      <li><strong>No production adapters, no real users.</strong> CAD and Office are, today, a line in a table.</li>
+      <li><strong>The 75% wall was fake.</strong> Six instrumentation accidents are all self-caught and published.
+      An erroneous negative result is harder to question than an erroneous positive one. We publish all of it,
+      because for a benchmark <strong>the honesty of the instrument is the entire asset</strong>.</li>
+    </ul>
+
+    <div class="hero-cta" style="margin-top:44px">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin/blob/main/MANIFESTO.md" target="_blank" rel="noopener">Full text + experiment log on GitHub</a>
+      <a class="btn btn-ghost" href="index.html" style="border-color:var(--gold);color:var(--gold-deep)">Back to overview</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="brand-line">2Origin <span class="zh">本象协议</span></div>
+      <p>Save the origin, project on demand.<br>「圣人立象以尽意」——《易传·系辞》</p>
+    </div>
+    <div>
+      <h4>Protocol</h4>
+      <a href="manifesto.html">Manifesto</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/docs" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/spec/conformance" target="_blank" rel="noopener">Conformance</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="challenge.html">White Drum Challenge</a>
+      <a href="https://github.com/dongsheng123132/2origin/blob/main/README.md" target="_blank" rel="noopener">README</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="in">
+      <span>© 2026 2Origin Protocol · Apache-2.0</span>
+      <span>本象协议 · Benxiang · Origin IR</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

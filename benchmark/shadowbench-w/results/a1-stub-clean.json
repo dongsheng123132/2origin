@@ -1,0 +1,158 @@
+{
+  "result": {
+    "arm": "a1-rag",
+    "stub": true,
+    "chapters": [
+      {
+        "chapter": 11,
+        "text": "（stub 第 11 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "retrieved": 6
+      },
+      {
+        "chapter": 12,
+        "text": "（stub 第 12 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "retrieved": 6
+      },
+      {
+        "chapter": 13,
+        "text": "（stub 第 13 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "retrieved": 5
+      },
+      {
+        "chapter": 14,
+        "text": "（stub 第 14 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "retrieved": 6
+      },
+      {
+        "chapter": 15,
+        "text": "（stub 第 15 章正文）林峥在茶肆坐到掌灯。赵七终于把那枚黑钥匙推过桌面，只说了一句：拿去，别叫我知道你用在哪里。",
+        "retrieved": 6
+      }
+    ],
+    "state": {
+      "obj:black-key": {
+        "holder": "char:lin-zheng",
+        "used": false,
+        "intact": true
+      },
+      "char:zhao-qi": {
+        "alive": true
+      },
+      "char:bai-yao": {
+        "left_hand_injured": false,
+        "secret_betrayal": true
+      },
+      "char:lin-zheng": {
+        "knows": [
+          "k:space-gate-exists",
+          "k:black-key-exists"
+        ]
+      }
+    },
+    "hooks": {
+      "hook:shen-yan-suspicion": {
+        "status": "resolved"
+      }
+    },
+    "evidence": {},
+    "probe": {
+      "promptChars": 1109,
+      "writtenChars": 333,
+      "parsed": true,
+      "finishReason": null,
+      "reasoningTokens": null,
+      "raw": "{\"state\":{\"obj:black-key\":{\"holder\":\"char:lin-zheng\",\"used\":false,\"intact\":true},\"char:zhao-qi\":{\"alive\":true},\"char:bai-yao\":{\"left_hand_injured\":false,\"secret_betrayal\":true},\"char:lin-zheng\":{\"knows\":[\"k:space-gate-exists\",\"k:black-key-exists\"]}},\"hooks\":{\"hook:shen-yan-suspicion\":{\"status\":\"resolved\"}}}"
+    },
+    "usage": {
+      "inputTokens": 25058,
+      "outputTokens": 519,
+      "ms": 0,
+      "calls": 6
+    },
+    "gate": null
+  },
+  "w1": {
+    "arm": "a1-rag",
+    "words": 285,
+    "chapters": 5,
+    "findings": [],
+    "errors": 0,
+    "byCategory": {},
+    "epc": 0,
+    "ced": 0,
+    "avgChapterLen": 57,
+    "lengthRatio": 0.02,
+    "channel": {
+      "deterministic": true,
+      "semantic": false
+    }
+  },
+  "w3": {
+    "arm": "a1-rag",
+    "rows": [
+      {
+        "key": "obj:black-key.holder",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "obj:black-key.used",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "obj:black-key.intact",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:zhao-qi.alive",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:bai-yao.left_hand_injured",
+        "pass": false,
+        "detail": "期望 true，实为 false"
+      },
+      {
+        "key": "char:bai-yao.secret_betrayal",
+        "pass": true,
+        "detail": "一致"
+      },
+      {
+        "key": "char:lin-zheng.knows.not_contains",
+        "pass": true,
+        "detail": "不含 k:bai-yao-betrayal"
+      },
+      {
+        "key": "hook:a-zhi-witness.status",
+        "pass": false,
+        "detail": "未上报该字段"
+      }
+    ],
+    "stateAccuracy": 0.75,
+    "checked": 8,
+    "passed": 6,
+    "missing": 1,
+    "evidenceTraceability": null
+  },
+  "provenance": {
+    "startedAt": "2026-08-06T03:29:11.738Z",
+    "pid": 413180,
+    "argv": "--help",
+    "gitCommit": "9795a21",
+    "specHash": "df34b3b5d8a3",
+    "judgeHash": "5918fbefcc05",
+    "judgeHashW1": "b0eaab705dab",
+    "judgeHashW3": "e2a12b4d9710",
+    "armsHash": "c839722ab068",
+    "taskFile": "continuation.json",
+    "provider": "stub",
+    "model": "(默认)",
+    "budget": 6000,
+    "concurrentAllowed": false,
+    "rep": 1,
+    "finishedAt": "2026-08-06T03:29:17.252Z"
+  }
+}

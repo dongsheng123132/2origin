@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updated_at": "2026-08-06T18:19:00Z",
+  "agents": [
+    {
+      "id": "macmini-maintainer",
+      "name": "本象协议维护员",
+      "host": "macmini",
+      "os": "macOS 15.6.1",
+      "status": "idle",
+      "last_run_at": "2026-08-06T18:19:00Z",
+      "last_run_result": "no run yet",
+      "next_run_at": null,
+      "schedule": "0 9 * * *",
+      "log_tail": "",
+      "world": {
+        "objects": "105",
+        "changes": "517"
+      }
+    }
+  ]
+}

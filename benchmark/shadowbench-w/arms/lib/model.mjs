@@ -136,6 +136,11 @@ async function readHermesModelConfig() {
     const sec = yaml.match(/^model:\s*\n([\s\S]*?)(?=^\S|$)/)?.[1]
     if (!sec) return null
     const get = (k) => {
+      // 模板字面量里 \\s 才是「一个反斜杠+s」→ 正则空白符。
+      // 写成 \s（单反斜杠）会被 JS 当作非法转义、退化成字面 s——正则变成 /^s*k:/，
+      // 永远匹配不到任何键，config 读不出来，整个通道退化成 CLI 兜底。
+      // （2026-08-06 事故记录说已修成 \\s，但字节核对发现 077692d 里仍是单反斜杠——
+      //   修复从未真正提交。此次核对后已改为 \\s，并加了单臂回归验证。）
       const m = sec.match(new RegExp(`^\\s*${k}:\\s*(?:['\"]([^'\"]+)['\"]|(\\S+))`, 'm'))
       return m ? (m[1] ?? m[2]).trim() : null
     }

@@ -147,6 +147,12 @@ const HANDLERS = {
   },
 
   origin_commit({ transaction, by = 'mcp-client', expect_seq }) {
+    // 防御：部分 MCP 客户端把嵌套对象参数序列化成 JSON 字符串（e2e 直接传对象则原样通过）。
+    // 两种形态都应受理——对象直接用，字符串 parse 成对象再校验。
+    if (typeof transaction === 'string') {
+      try { transaction = JSON.parse(transaction) }
+      catch { throw new Error(`提交被拒绝：transaction 参数是字符串但不是合法 JSON，无法解析为事务对象`) }
+    }
     const r = commit(PKG, transaction, { by, expectedSeq: expect_seq ?? null })
     if (!r.ok) {
       const lines = r.violations.map((v) => `  - [${v.severity ?? 'error'}] ${v.code ?? ''} ${v.msg}`)

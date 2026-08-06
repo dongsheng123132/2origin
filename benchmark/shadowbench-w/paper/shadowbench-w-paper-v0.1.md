@@ -77,14 +77,18 @@ open-sourced under Apache-2.0.
 
 - **长上下文评测**：LongBench、LongBench v2、∞Bench——测「能不能用上长上下文」，
   不测「长程生成的一致性」。
-- **小说续写/创作评测**：ConStory-Bench（arXiv 2603.05890，求 CED 定义中）、
-  天命（zy-zmc/tianming-novel-ai-writer，15 维事实快照 + 12 类 CHANGES 变更声明）。
-  天命是最接近的先例——它已把「事实快照 + 变更声明」用于创作，但未开源
-  基准评测口径，且面向单机应用而非可验证协议。
-- **World Model 赛道**：OpenUSD（7423★，活跃）——「保存本源、按需投影」在三维领域
-  已成工业标准。本文的 Origin IR 是同一思想在文本状态层的落地。
-- **文档解析基准**（旁证赛道）：OmniDocBench（CVPR 2025）——文档解析有基准，
-  状态一致性没有，这个空白就是本文的位置。
+- **小说续写/创作评测**：ConStory-Bench（arXiv 2603.05890，《Lost in Stories: Consistency Bugs in Long Story Generation by LLMs》，2026-08-06 实查确认）——2000 prompts、4 任务场景、5 类错误×19 子类、ConStory-Checker 自动检测+证据锚定。
+  **它测文本内矛盾（事后检测），ShadowBench-W 测状态回写契约（生成时维护可查询状态 + 字段级证据可追溯）——互补，不是重复。**
+  天命（zy-zmc/tianming-novel-ai-writer，15 维事实快照 + 12 类 CHANGES 变更声明）——「边写边维护状态」侧最接近的先例，但未开源基准评测口径。
+- **World Model / 事务化记忆赛道**：OpenUSD（7423★，活跃）——「保存本源、按需投影」在三维领域
+  已成工业标准，本文的 Origin IR 是同一思想在文本状态层的落地。
+  更近的先例：**MemTX（arXiv 2607.23929，《Transactional Belief Commit for Stateful Agent Memory》，
+  2026-08-06 实查确认）**——「memory write 不是 belief commit」，快照隔离事务 + validate-and-commit
+  管线 + 证据/权限/来源/有效性。本象状态层在长文生成场景实现同款纪律；
+  ShadowBench-W 的 W3 是第一个**量化**系统是否守这条纪律的公开基准
+  （MemTX 只有协议设计，无公开基准与评测数据——我们补上缺失的测量）。
+- **文档解析基准**（旁证赛道）：OmniDocBench（arXiv 2412.07626，CVPR 2025）——文档解析有基准，
+  状态回写评测没有，这个空白就是本文的位置。
 - **AI 评测方法论**：确定性规则 vs LLM-as-judge 的争论；本文 W1/W3 全部用
   确定性规则 + 词表补丁（40/40 命中、0 误报），不做 LLM 判分（避免判分器
   与生成器同源的循环论证）。

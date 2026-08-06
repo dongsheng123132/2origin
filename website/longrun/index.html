@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>长期任务控制台 — 2Origin</title>
+<meta name="description" content="2Origin 长期任务控制台：Mac Mini 维护员等长进程任务的可视化状态面板。">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .console { max-width: 1080px; margin: 0 auto; padding: 40px 22px; }
+  .agent-card {
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 24px; margin-top: 20px; background: var(--paper);
+    box-shadow: var(--shadow-card);
+  }
+  .agent-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .agent-head h2 { font-size: 20px; color: var(--ink); }
+  .badge { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; letter-spacing: .5px; }
+  .badge.running { background: #e6f4ea; color: #1e7d43; }
+  .badge.idle { background: #eef0f3; color: #5c5c66; }
+  .badge.failed { background: #fdecea; color: #c0392b; }
+  .agent-meta { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 10px; font-size: 13.5px; color: var(--text-soft); }
+  .agent-meta b { color: var(--ink); font-weight: 600; }
+  .logbox {
+    margin-top: 16px; background: var(--ink); color: var(--paper);
+    border-radius: 10px; padding: 14px 16px; font-family: var(--mono);
+    font-size: 12.5px; line-height: 1.7; max-height: 220px; overflow-y: auto;
+    white-space: pre-wrap; word-break: break-all;
+  }
+  .empty { padding: 60px 20px; text-align: center; color: var(--text-faint); }
+  .status-bar { font-family: var(--mono); font-size: 12px; color: var(--text-faint); margin-top: 30px; }
+  .refresh { margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>2Origin</span><span class="zh-name">本象协议</span>
+    </a>
+    <div class="nav-links">
+      <a href="../manifesto.html" class="hide-sm">Manifesto</a>
+      <a href="../challenge.html" class="hide-sm">Challenge</a>
+      <a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="lang-switch" href="../zh/index.html">中文</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="../index.html">2Origin</a> / Long-Run Console</div>
+    <h1>长期任务控制台</h1>
+    <p class="sub">本象协议自己的长期维护员，正在哪台机器上跑、跑得怎么样——
+    这是一个「持续存在、间歇运行」的 agent 的公开状态页。</p>
+  </div>
+</header>
+
+<section class="console">
+  <div id="agents"></div>
+  <div class="status-bar" id="status"></div>
+</section>
+
+<script>
+const STATUS_LABEL = { running: '运行中', idle: '闲置', failed: '失败', never: '未运行' };
+
+async function load() {
+  const box = document.getElementById('agents');
+  const status = document.getElementById('status');
+  try {
+    const r = await fetch('agents.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    if (!data.agents || data.agents.length === 0) {
+      box.innerHTML = '<div class="empty">暂无已注册的长期任务</div>';
+    } else {
+      box.innerHTML = data.agents.map(a => {
+        const log = (a.log_tail || '（暂无日志）').trim();
+        return `<div class="agent-card">
+          <div class="agent-head">
+            <h2>${a.name}</h2>
+            <span class="badge ${a.status}">${STATUS_LABEL[a.status] || a.status}</span>
+          </div>
+          <div class="agent-meta">
+            <div><b>机器</b> ${a.host} (${a.os || '?'})</div>
+            <div><b>上次运行</b> ${a.last_run_at ? new Date(a.last_run_at).toLocaleString() : '—'}</div>
+            <div><b>调度</b> <code>${a.schedule || '—'}</code></div>
+            <div><b>上次结果</b> ${a.last_run_result || '—'}</div>
+            ${a.world ? `<div><b>世界状态</b> objects=${a.world.objects ?? '—'} · changes=${a.world.changes ?? '—'}${a.world.drift_rate ? ' · drift=' + a.world.drift_rate : ''}</div>` : ''}
+          </div>
+          <div class="logbox">${log.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+        </div>`;
+      }).join('');
+    }
+    status.textContent = '状态文件更新于 ' + new Date(data.updated_at).toLocaleString() + ' · agents.json v' + data.version;
+  } catch (e) {
+    box.innerHTML = `<div class="empty">状态文件不可读（${e.message}）。<br>
+      尚未同步 agents.json 到站点，或维护员还未产出首次状态。</div>`;
+    status.textContent = '';
+  }
+}
+load();
+setInterval(load, 60000); // 每分钟刷新
+</script>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="brand-line">2Origin <span class="zh">本象协议</span></div>
+      <p>保存本象，按需投影。<br>「圣人立象以尽意」——《易传·系辞》</p>
+    </div>
+    <div>
+      <h4>Protocol</h4>
+      <a href="../manifesto.html">Manifesto</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/docs" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/dongsheng123132/2origin/tree/main/spec/conformance" target="_blank" rel="noopener">Conformance</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="../challenge.html">White Drum Challenge</a>
+      <a href="https://github.com/dongsheng123132/2origin/blob/main/README.md" target="_blank" rel="noopener">README</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="in">
+      <span>© 2026 2Origin Protocol · Apache-2.0</span>
+      <span>本象协议 · Benxiang · Origin IR</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
