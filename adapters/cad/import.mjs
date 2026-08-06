@@ -112,7 +112,10 @@ export function sniff(path, head) {
   const magic = head.slice(0, 6).toString('latin1')
   if (magic in DWG_VERSIONS) {
     const ver = DWG_VERSIONS[magic]
-    const hasHandles = magic !== 'AC1009' && magic !== 'AC1012'
+    // 实体句柄（组码 5）自 R13（AC1012）起普及；只有 R12（AC1009）没有。
+    // （曾误写为 `magic !== 'AC1009' && magic !== 'AC1012'`，把 R13 也判成无句柄——
+    //   与 import.mjs/dxf.mjs 注释自相矛盾，此处已更正。）
+    const hasHandles = magic !== 'AC1009'
     return {
       kind: 'dwg', version: `${magic}（${ver}）`, readable: false, hasHandles,
       why: 'DWG 是 AutoCAD 私有二进制格式，分段压缩，没有公开规范。本项目零依赖，不内置 DWG 解析。',
