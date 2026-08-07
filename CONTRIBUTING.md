@@ -20,7 +20,7 @@
 零成本先跑通全流程（不花 API 钱）：
 
 ```bash
-npm run verify                                    # 全量：81 + CAD 44 + 法律 95 + MCP 18 + 一致性 68 + 变异 13/13
+npm run verify                                    # 全量：81 + CAD 44 + 法律 95 + MCP 18 + 一致性 87 + 变异 13/13
 node compiler/selftest.mjs                        # 只跑协议参考实现，81 项跨两域
 cd benchmark/shadowbench-w
 node eval/selftest.mjs                            # 判分器自测：谁来验证验证者
@@ -45,7 +45,7 @@ node run.mjs --provider bailian --task continuation-m.json --repeat 10
 | **攻击判分器** | 构造能骗过 `eval/ced.mjs` 的正文：真违规但判分器看不出，或没违规却被判违规。把样本加进 `eval/fixtures/ced-selftest.json` 并开 PR |
 | **换语料** | 现有世界是构造出来的（ground truth by construction）。换一个世界规格重跑，看结论是否依赖特定语料 |
 | **第四个方言** | 现有三个方言（CAD 图纸、法律判决、项目记忆）合计只给核心加了 4 行。**再来一个你自己的域，如果也不用改核心，这条主张才算被别人验过**——它现在只被我们自己验过 |
-| **第二实现** | 一致性向量 68 条是数据不是代码，写个几十行适配器即可自证合规（[英文入口](spec/conformance/README.en.md)）。**真正的第三方实现是本项目最想要的东西**——现有两份出自同一作者，证明不了「只读规范就能写对」 |
+| **第二实现** | 一致性向量 87 条是数据不是代码，写个几十行适配器即可自证合规（[英文入口](spec/conformance/README.en.md)）。**真正的第三方实现是本项目最想要的东西**——现有两份出自同一作者，证明不了「只读规范就能写对」 |
 | **指标批评** | W3 按字段对错计分，把「守着旧状态不动」和「凭空捏造」算成等价扣分——这个粒度是否合理？ |
 
 ## 三、几条硬规矩

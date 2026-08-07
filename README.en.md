@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
 [![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%20101%20%2B%2087%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#try-it)
-[![conformance](https://img.shields.io/badge/conformance-68%2F68%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.en.md)
+[![conformance](https://img.shields.io/badge/conformance-87%2F87%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.en.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![中文](https://img.shields.io/badge/docs-%E4%B8%AD%E6%96%87-lightgrey.svg)](README.md)
 
@@ -121,7 +121,7 @@ PDFs, images, Markdown and EPUB are **not source files** — they are **projecti
 ## Try it
 
 ```bash
-npm run verify   # self-test 81 + CAD 44 + law 95 + MCP end-to-end 18 + conformance 68 + mutation 13/13
+npm run verify   # self-test 81 + CAD 44 + law 95 + MCP end-to-end 18 + conformance 87 + mutation 13/13
 ```
 
 No build step, no dependencies. `mutation-check` is the important one: it deliberately
@@ -244,14 +244,14 @@ Constraints that carry only prose and no machine check are reported as `unenforc
 ## Why this is a protocol and not just a library
 
 One implementation passing its own tests proves nothing about a protocol. The line is drawn by the
-[conformance suite](spec/conformance/README.en.md): **68 test vectors that are data, not code.**
+[conformance suite](spec/conformance/README.en.md): **87 test vectors that are data, not code.**
 They depend on no host language. Any implementation that writes an adapter of a few dozen lines —
 read cases on stdin, write results on stdout — can certify itself on the spot.
 
 ```bash
-npm run test:conformance                       # JavaScript reference: 68/68 (core + full)
+npm run test:conformance                       # JavaScript reference: 87/87 (core 79 + full 8)
 node spec/conformance/run.mjs --level core \
-  --adapter "python spec/conformance/implementations/python/adapter.py"   # second impl: 60/60
+  --adapter "python spec/conformance/implementations/python/adapter.py"   # second impl: 79/79
 ```
 
 The [Python second implementation](spec/conformance/implementations/python/benxiang.py) is about

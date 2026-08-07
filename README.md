@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
 [![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%20101%20%2B%2087%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
-[![conformance](https://img.shields.io/badge/conformance-68%2F68%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.md)
+[![conformance](https://img.shields.io/badge/conformance-87%2F87%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
 
@@ -215,7 +215,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ```text
 本象协议/
 ├── docs/        # 创始文档集（本轮产出）
-├── spec/        # JSON Schema + 示例 .origin 包 + **一致性测试集**（68 条语言无关向量）
+├── spec/        # JSON Schema + 示例 .origin 包 + **一致性测试集**（87 条语言无关向量）
 ├── compiler/    # 双向编译器 + 证据链 + 落盘 + `origin` CLI（可运行，81 项跨域自测）
 ├── adapters/    # 领域方言
 │   ├── memory/  #   项目状态：MCP Server（零依赖）+ 回填工具
@@ -231,7 +231,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ## 快速上手
 
 ```bash
-npm run verify   # 自测 81 + CAD 44 + 法律 101 + xlsx 87 + MCP 端到端 18 + 一致性 68 + 变异检查 13/13
+npm run verify   # 自测 81 + CAD 44 + 法律 101 + xlsx 87 + MCP 端到端 18 + 一致性 87 + 变异检查 13/13
 
 
 P=spec/examples/sales-2026.origin
@@ -315,14 +315,14 @@ claude mcp add -s local benxiang -- node <绝对路径>/adapters/memory/mcp-serv
 ### 凭什么说这是「协议」而不是「一个库」
 
 一份实现自己跑通自己的测试，证明不了协议存在。分界线在
-[一致性测试集](spec/conformance/README.md)：**68 条测试向量是数据不是代码**，
+[一致性测试集](spec/conformance/README.md)：**87 条测试向量是数据不是代码**，
 不依赖任何宿主语言。任何实现只要写一个几十行的适配器（stdin 收 case、stdout 出结果），
 就能当场自证合规。
 
 ```bash
-npm run test:conformance                       # JavaScript 参考实现：68/68（core + full）
+npm run test:conformance                       # JavaScript 参考实现：87/87（core 79 + full 8）
 node spec/conformance/run.mjs --level core \
-  --adapter "python spec/conformance/implementations/python/adapter.py"   # Python 第二实现：60/60
+  --adapter "python spec/conformance/implementations/python/adapter.py"   # Python 第二实现：79/79
 ```
 
 [Python 第二实现](spec/conformance/implementations/python/benxiang.py) 约 250 行、零依赖，

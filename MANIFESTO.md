@@ -163,7 +163,7 @@ A0 真正稳定失败的是另外两项：赵七是否存活（0/6）与伏笔�
 协议的形状是「通用外壳 + 领域方言」：外壳只定义生命周期和最小结构，各领域自带 Schema，但共享同一套动作——
 
 ```text
-inspect · render · query · act · diff · validate · commit · rollback
+inspect · validate · commit（核心） · render · project · query · act · diff · rollback（派生）
 ```
 
 [参考实现](compiler/)的自测就是照这条线设计的：**同一份代码、零改动**，同时跑通一个叙事世界（人物、秘密、伏笔）和一份销售数据（没有人物、没有情节、没有伏笔）。

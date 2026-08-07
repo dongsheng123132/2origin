@@ -122,9 +122,9 @@ To prevent concept drift, the following are explicitly **not** true:
 - ❌ *"Benxiang means screenshotting text into images to save tokens."* Image compression is one
   projection technique, not a storage format.
 - ❌ *"Benxiang is a bigger universal JSON / universal DOM."* Office, CAD and ZIP are fundamentally
-  different; they share only a lifecycle (`inspect / render / query / act / diff / validate / commit
-  / rollback`), never a data structure. Generic shell plus domain dialects — anything else converges
-  on the lowest common denominator.
+  different; they share only a lifecycle (`inspect / validate / commit` core, plus
+  `render / project / query / act / diff / rollback` derived), never a data structure. Generic shell
+  plus domain dialects — anything else converges on the lowest common denominator.
 - ❌ *"Benxiang is a previewer supporting 500 formats."* That is how traditional software competes.
 - ❌ *"Benxiang can compress a million words into a few thousand tokens losslessly."* It **manages**
   the context limit the way an operating system manages memory. It does not abolish it.

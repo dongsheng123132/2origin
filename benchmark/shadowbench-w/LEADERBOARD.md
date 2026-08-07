@@ -60,6 +60,6 @@ node benchmark/shadowbench-w/eval/state-diff.mjs <结果文件>
 
 ## 生态
 
-- 本象协议（Origin IR）：`compiler/` 双向编译器 + `spec/` 68 条一致性向量（JS + Python 双实现）
+- 本象协议（Origin IR）：`compiler/` 双向编译器 + `spec/` 87 条一致性向量（JS + Python 双实现）
 - 评测参与：ConStory-Bench（ACL 2026）issue #1 —— 本象臂送测长篇一致性
 - 博客：本象协议开源文（blog.hequbing.com/post?slug=benxiang-protocol）

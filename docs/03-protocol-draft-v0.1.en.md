@@ -371,13 +371,13 @@ counted, and in that state a "protocol" is just a carefully worded design docume
 - **The test vectors are data, not code** (`vectors/*.json`), depending on no host language
 - Any implementation can certify itself by writing an adapter of a few dozen lines
   (read cases on stdin, write results on stdout)
-- Two levels: **core** (in-memory semantics, 60 cases) and **full** (`.origin` persistence, 8 cases)
+- Two levels: **core** (in-memory semantics, 79 cases) and **full** (`.origin` persistence, 8 cases)
 - An unimplemented op **MUST** honestly return `unsupported`, and the runner counts it as *not
   passing* — silently skipping lets the appearance of "there are constraints" hide the fact that
   nothing checks them
 
 ```bash
-npm run test:conformance          # reference implementation: 68/68
+npm run test:conformance          # reference implementation: 87/87 (core 79 + full 8)
 node spec/conformance/run.mjs --adapter "python …/adapter.py" --level core
 ```
 

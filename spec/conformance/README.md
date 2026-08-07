@@ -18,8 +18,8 @@
 
 | 实现 | 语言 | core | full | 适配器 |
 |---|---|---|---|---|
-| 参考实现 | JavaScript | ✅ 60/60 | ✅ 8/8 | [`compiler/conformance-adapter.mjs`](../../compiler/conformance-adapter.mjs) |
-| 第二实现 | Python 3 | ✅ 60/60 | ⊘ 未实现 | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
+| 参考实现 | JavaScript | ✅ 79/79 | ✅ 8/8 | [`compiler/conformance-adapter.mjs`](../../compiler/conformance-adapter.mjs) |
+| 第二实现 | Python 3 | ✅ 79/79 | ⊘ 未实现 | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
 
 > 第二实现的诚实边界：两份实现出自同一作者，中间没有信息隔离。它证明的是
 > **这套语义可以在另一门语言里独立成立、向量确实是语言中立的契约**，
@@ -29,7 +29,7 @@
 
 一个实现**必须**声明自己达到哪一级，**不得**笼统地说「合规」。
 
-**core —— 内存语义**（第一至五章，60 项）
+**core —— 内存语义**（第一至五章，79 项）
 Origin IR 的判定核心：ID 归一化、事务校验、约束谓词、折叠与证据链、重放。
 只要不碰磁盘的实现（库、WASM 模块、服务端中间层）都能达到这一级。
 
@@ -127,7 +127,7 @@ node spec/conformance/run.mjs --json           # 机器可读
 
 ## 五、向量本身有没有牙齿
 
-「68 项全过」本身说明不了什么——一套只断言 1+1=2 的向量也能全过。
+「87 项全过」本身说明不了什么——一套只断言 1+1=2 的向量也能全过。
 `npm run test:mutation` 把参考实现逐条打坏，同时跑自测与一致性向量，看谁抓得到：
 
 - **自测+向量** 都抓到 → 这条承诺协议真的钉死了，换个实现也做不丢

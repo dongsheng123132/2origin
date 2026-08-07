@@ -42,8 +42,22 @@ lands; and the protocol promises only what is checkable.**
 
 Example: the unified action surface lists nine actions, but **the true core is three** —
 `inspect` (read), `commit` (write), `validate` (check);
-`render / query / act / diff / project / replay` are all derived from them.
+`render / project / query / act / diff / rollback` are all derived from them.
 Everything outside the core is optional.
+
+## Dialect self-check form (fill this page before starting a new dialect)
+
+**If you cannot fill in a row, the concept is not thought through — do not start.** A genuinely
+*new* concept beyond the five needs a core review; a dialect only needs to state each of the five
+in one line, and once it can, it enters the dialect zone.
+
+| Concept | What is "it" for this dialect? | Example (Story dialect) |
+|---|---|---|
+| **Object** | the thing referenced (stable ID + source of truth) | characters / objects / places (`char:bai-yao`) |
+| **Reference** | what others hold instead of the truth | object ID + state version (`@state-822`) |
+| **Projection** | an on-demand, rebuildable view | the three-layer context atlas / graph / exact |
+| **Transaction** | the smallest unit of AI write-back | a semantic transaction (`append_scene` + `state_changes`) |
+| **Validation** | the checkable promise | constraint predicates (`equals` / `unchanged`) + conformance vectors |
 
 ## One hard rule (Reference-First applied to the protocols themselves)
 
