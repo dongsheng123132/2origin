@@ -27,6 +27,7 @@ English documents use.
 | **语义事务** | **Semantic Transaction** | The AI's unit of output: operation + target + dependencies + content + state changes + assertions | How does the AI's output get written back to the world safely? |
 | **上下文编译器** | **Context Compiler** | Input side: compiles an origin into the context the AI most needs, given the model, task and token budget | What should the AI be looking at right now? |
 | **提交编译器** | **Commit Compiler** | Output side: parses the transaction, validates constraints, updates state, retains evidence, re-projects | How does the AI's output get verified and landed? |
+| **引用优先** | **Reference-First** | Carry references, not truth; resolve at use-time, version-pinned. The common mechanism behind Origin / ActionParity / Origin-Environment and the four-layer stub system | For any state a new design introduces: store the source, or only a reference? |
 
 The division of labour, as a single line:
 
@@ -129,3 +130,9 @@ To prevent concept drift, the following are explicitly **not** true:
   the context limit the way an operating system manages memory. It does not abolish it.
 - ❌ *"A summary can stand in for the source."* A summary is a rebuildable projection with no
   authority to overwrite source fact; inference and fact must be labelled separately.
+- ❌ *"Reference-First forbids all copying / caching."* It forbids **carrying truth** (one fact stored
+  in two places). Caching a **projection** is fine — as long as the projection is rebuildable and
+  says what it dropped, because a projection is not the source.
+- ❌ *"Reference-First is a new clause Benxiang just added."* It is the **generalized name** for
+  principles the protocol already used (derive-don't-store #6, ID normalization #7, the Flint rule),
+  extended to every design decision — not just state and output.

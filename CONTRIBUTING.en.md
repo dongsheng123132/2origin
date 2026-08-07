@@ -80,6 +80,11 @@ These were paid for. Please respect them:
    and a false-positive sample.
 5. **Do not edit scorer code while an experiment is running.** A running process uses the version it
    loaded at start, so the data it finishes with will not have the semantics you think it does.
+6. **Every new design passes the Reference-First check first.** For every state/content a design
+   introduces, answer four questions: **① Who is the single source of truth?** **② Where does the
+   reference live** (don't copy truth elsewhere)? **③ Who resolves it?** **④ What keeps it fresh**
+   (version / watermark / fingerprint)? If you cannot answer one, the design is not thought through.
+   Full statement: [`docs/09-Reference-First.en.md`](docs/09-Reference-First.en.md).
 
 ## 4. Code style
 
