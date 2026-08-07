@@ -8,6 +8,8 @@
 > become a check every new design must pass.
 >
 > 🇨🇳 **[中文](09-引用优先-Reference-First.md)**
+>
+> Applied recursively: use this principle on the protocols themselves → [00 · The Core](00-CORE.en.md).
 
 ---
 

@@ -11,6 +11,8 @@
 > Save the origin, project on demand.
 >
 > 「立象以尽意」——《易传·系辞》 · Establish the image to exhaust the meaning.
+>
+> **如果只读一页，读 [docs/00-极简核心](docs/00-极简核心.md)** —— 整系协议的骨架，一页讲完。
 
 **英文名 Benxiang**：Ben（本）= origin，Xiang（象）= the archetypal image。「象」取自《易传》「圣人立象以尽意」与《道德经》「大象无形」——文字装不下意义，须回到更本源的表示；大象无形，故能投影万形。发音：bun-SHYAHNG。协议的技术核心称 **Origin IR**（描述性术语）。
 

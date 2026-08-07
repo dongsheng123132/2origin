@@ -3,6 +3,8 @@
 > **Save the origin, project on demand.** 一源万影
 >
 > *«The sage establishes images to exhaust meaning.»* — Book of Changes
+>
+> If you read one page, read [The Core](docs/00-CORE.en.md).
 
 ---
 

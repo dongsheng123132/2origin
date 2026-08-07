@@ -10,6 +10,8 @@
 > **Save the origin, project on demand.** 一源万影：保存本象，按需投影。
 >
 > 「立象以尽意」——《易传·系辞》 · *Establish the image to exhaust the meaning.*
+>
+> **If you read one page, read [The Core](docs/00-CORE.en.md)** — the skeleton of the whole protocol family, in one page.
 
 **Benxiang** (pronounced *bun-SHYAHNG*): Ben (本) = origin, Xiang (象) = archetypal image. From the *Book of Changes* — «the sage establishes images to exhaust meaning» — and the *Tao Te Ching* — «the great image has no form», and therefore can be projected into any form. The technical core is called **Origin IR**.
 
