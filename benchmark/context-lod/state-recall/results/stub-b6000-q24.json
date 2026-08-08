@@ -4,145 +4,145 @@
   "repeat": 1,
   "questions": [
     {
-      "id": "fact:vercel-project-created",
-      "field": "kind",
-      "answer": "observed",
-      "stratum": "近期改动"
-    },
-    {
-      "id": "decision:credential-map-approach",
+      "id": "task:frame-diff-retained-mode",
       "field": "status",
-      "answer": "decided",
+      "answer": "open",
       "stratum": "近期改动"
     },
     {
-      "id": "task:public-surface-accuracy-check",
+      "id": "task:uking-memory-embed",
       "field": "owner",
       "answer": "claude",
       "stratum": "近期改动"
     },
     {
-      "id": "task:cloudflare-track",
+      "id": "risk:vercel-login-flaky",
+      "field": "status",
+      "answer": "open",
+      "stratum": "近期改动"
+    },
+    {
+      "id": "fact:benxiang-protocol-skill",
+      "field": "summary",
+      "answer": "SKILL.md 已补齐",
+      "stratum": "近期改动"
+    },
+    {
+      "id": "task:uking-actionparity-embed",
+      "field": "status",
+      "answer": "open",
+      "stratum": "近期改动"
+    },
+    {
+      "id": "task:projection-conformance-vectors",
       "field": "owner",
       "answer": "claude",
       "stratum": "近期改动"
     },
     {
-      "id": "decision:seventh-element-limits",
+      "id": "risk:xlsx-formula-rules-unvalidated",
+      "field": "status",
+      "answer": "mitigated",
+      "stratum": "近期改动"
+    },
+    {
+      "id": "task:rerun-control-arms",
+      "field": "status",
+      "answer": "open",
+      "stratum": "近期改动"
+    },
+    {
+      "id": "risk:single-author-impls",
+      "field": "severity",
+      "answer": "medium",
+      "stratum": "近期改动"
+    },
+    {
+      "id": "decision:instrument-not-silently",
       "field": "status",
       "answer": "decided",
       "stratum": "近期改动"
     },
     {
-      "id": "task:xlsx-real-financial-model",
-      "field": "title",
-      "answer": "找真实财务模型验公式类规则",
-      "stratum": "近期改动"
-    },
-    {
-      "id": "task:law-real-doc-validation",
-      "field": "title",
-      "answer": "拿真文书验假阳性率",
-      "stratum": "近期改动"
-    },
-    {
-      "id": "task:shadowbench-l",
-      "field": "owner",
-      "answer": "未定",
-      "stratum": "近期改动"
-    },
-    {
-      "id": "decision:conformance-levels",
-      "field": "status",
-      "answer": "decided",
-      "stratum": "近期改动"
-    },
-    {
-      "id": "task:merge-benchmark-lib",
-      "field": "blocking",
-      "answer": "无，但越拖越贵",
-      "stratum": "近期改动"
-    },
-    {
-      "id": "fact:real-drawings-dwg2004",
-      "field": "kind",
-      "answer": "observed",
-      "stratum": "近期改动"
-    },
-    {
-      "id": "task:verify-real-mcp-client",
+      "id": "task:cad-source-format",
       "field": "status",
       "answer": "done",
       "stratum": "近期改动"
     },
     {
-      "id": "risk:window-by-weeks",
-      "field": "severity",
-      "answer": "high",
+      "id": "decision:rules-by-usage",
+      "field": "value",
+      "answer": "规则集按图纸实际用法自动选，并把选了哪套写进包里",
+      "stratum": "近期改动"
+    },
+    {
+      "id": "fact:token-overhead",
+      "field": "evidence",
+      "answer": "README.md 顶部实验收窄声明",
       "stratum": "早期/未动"
     },
     {
-      "id": "decision:mvp-first-step",
+      "id": "decision:license",
+      "field": "decided_at",
+      "answer": "2026-08-02",
+      "stratum": "早期/未动"
+    },
+    {
+      "id": "decision:explicit-creates",
       "field": "status",
       "answer": "decided",
       "stratum": "早期/未动"
     },
     {
-      "id": "decision:claim-scope",
+      "id": "decision:real-targets",
       "field": "status",
       "answer": "decided",
       "stratum": "早期/未动"
     },
     {
-      "id": "fact:commit-2a6efb1",
-      "field": "at",
-      "answer": "2026-08-03",
-      "stratum": "早期/未动"
-    },
-    {
-      "id": "fact:commit-ae66e32",
-      "field": "at",
-      "answer": "2026-08-03",
-      "stratum": "早期/未动"
-    },
-    {
-      "id": "fact:commit-3b34eff",
-      "field": "at",
-      "answer": "2026-08-03",
-      "stratum": "早期/未动"
-    },
-    {
-      "id": "fact:commit-dd1c118",
+      "id": "fact:commit-3625714",
       "field": "kind",
       "answer": "observed",
       "stratum": "早期/未动"
     },
     {
-      "id": "fact:commit-ff54c58",
+      "id": "fact:commit-c04675d",
+      "field": "at",
+      "answer": "2026-08-03",
+      "stratum": "早期/未动"
+    },
+    {
+      "id": "fact:commit-28d7a20",
+      "field": "kind",
+      "answer": "observed",
+      "stratum": "早期/未动"
+    },
+    {
+      "id": "fact:commit-924e8cd",
       "field": "evidence",
-      "answer": "git:ff54c58",
+      "answer": "git:924e8cd",
       "stratum": "早期/未动"
     },
     {
-      "id": "fact:commit-55d4c83",
+      "id": "fact:commit-2f84a9a",
       "field": "evidence",
-      "answer": "git:55d4c83",
+      "answer": "git:2f84a9a",
       "stratum": "早期/未动"
     },
     {
-      "id": "fact:commit-10770bb",
-      "field": "summary",
-      "answer": "门禁接入正文校验：管住状态管不住文字",
-      "stratum": "早期/未动"
-    },
-    {
-      "id": "fact:commit-ecde7c9",
+      "id": "fact:commit-20afdce",
       "field": "at",
       "answer": "2026-08-02",
       "stratum": "早期/未动"
     },
     {
-      "id": "fact:commit-7221992",
+      "id": "fact:commit-62da5e7",
+      "field": "at",
+      "answer": "2026-08-02",
+      "stratum": "早期/未动"
+    },
+    {
+      "id": "fact:commit-b473f93",
       "field": "kind",
       "answer": "observed",
       "stratum": "早期/未动"
@@ -155,20 +155,9 @@
       "ctxChars": 6000,
       "rows": [
         {
-          "id": "fact:vercel-project-created",
-          "field": "kind",
-          "answer": "observed",
-          "stratum": "近期改动",
-          "got": "observed",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "decision:credential-map-approach",
+          "id": "task:frame-diff-retained-mode",
           "field": "status",
-          "answer": "decided",
+          "answer": "open",
           "stratum": "近期改动",
           "got": "（编造值）",
           "visible": false,
@@ -177,7 +166,7 @@
           "hallucinated": true
         },
         {
-          "id": "task:public-surface-accuracy-check",
+          "id": "task:uking-memory-embed",
           "field": "owner",
           "answer": "claude",
           "stratum": "近期改动",
@@ -188,7 +177,40 @@
           "hallucinated": true
         },
         {
-          "id": "task:cloudflare-track",
+          "id": "risk:vercel-login-flaky",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:benxiang-protocol-skill",
+          "field": "summary",
+          "answer": "SKILL.md 已补齐",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "task:uking-actionparity-embed",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "task:projection-conformance-vectors",
           "field": "owner",
           "answer": "claude",
           "stratum": "近期改动",
@@ -199,7 +221,40 @@
           "hallucinated": true
         },
         {
-          "id": "decision:seventh-element-limits",
+          "id": "risk:xlsx-formula-rules-unvalidated",
+          "field": "status",
+          "answer": "mitigated",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "task:rerun-control-arms",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "risk:single-author-impls",
+          "field": "severity",
+          "answer": "medium",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "decision:instrument-not-silently",
           "field": "status",
           "answer": "decided",
           "stratum": "近期改动",
@@ -210,73 +265,7 @@
           "hallucinated": true
         },
         {
-          "id": "task:xlsx-real-financial-model",
-          "field": "title",
-          "answer": "找真实财务模型验公式类规则",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "task:law-real-doc-validation",
-          "field": "title",
-          "answer": "拿真文书验假阳性率",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "task:shadowbench-l",
-          "field": "owner",
-          "answer": "未定",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "decision:conformance-levels",
-          "field": "status",
-          "answer": "decided",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "task:merge-benchmark-lib",
-          "field": "blocking",
-          "answer": "无，但越拖越贵",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "fact:real-drawings-dwg2004",
-          "field": "kind",
-          "answer": "observed",
-          "stratum": "近期改动",
-          "got": "observed",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "task:verify-real-mcp-client",
+          "id": "task:cad-source-format",
           "field": "status",
           "answer": "done",
           "stratum": "近期改动",
@@ -287,9 +276,20 @@
           "hallucinated": true
         },
         {
-          "id": "risk:window-by-weeks",
-          "field": "severity",
-          "answer": "high",
+          "id": "decision:rules-by-usage",
+          "field": "value",
+          "answer": "规则集按图纸实际用法自动选，并把选了哪套写进包里",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:token-overhead",
+          "field": "evidence",
+          "answer": "README.md 顶部实验收窄声明",
           "stratum": "早期/未动",
           "got": "（编造值）",
           "visible": false,
@@ -298,7 +298,18 @@
           "hallucinated": true
         },
         {
-          "id": "decision:mvp-first-step",
+          "id": "decision:license",
+          "field": "decided_at",
+          "answer": "2026-08-02",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "decision:explicit-creates",
           "field": "status",
           "answer": "decided",
           "stratum": "早期/未动",
@@ -309,7 +320,7 @@
           "hallucinated": true
         },
         {
-          "id": "decision:claim-scope",
+          "id": "decision:real-targets",
           "field": "status",
           "answer": "decided",
           "stratum": "早期/未动",
@@ -320,40 +331,7 @@
           "hallucinated": true
         },
         {
-          "id": "fact:commit-2a6efb1",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "2026-08-03",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-ae66e32",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "2026-08-03",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-3b34eff",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "2026-08-03",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-dd1c118",
+          "id": "fact:commit-3625714",
           "field": "kind",
           "answer": "observed",
           "stratum": "早期/未动",
@@ -364,40 +342,51 @@
           "hallucinated": false
         },
         {
-          "id": "fact:commit-ff54c58",
+          "id": "fact:commit-c04675d",
+          "field": "at",
+          "answer": "2026-08-03",
+          "stratum": "早期/未动",
+          "got": "2026-08-03",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "fact:commit-28d7a20",
+          "field": "kind",
+          "answer": "observed",
+          "stratum": "早期/未动",
+          "got": "observed",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "fact:commit-924e8cd",
           "field": "evidence",
-          "answer": "git:ff54c58",
+          "answer": "git:924e8cd",
           "stratum": "早期/未动",
-          "got": "git:ff54c58",
+          "got": "git:924e8cd",
           "visible": true,
           "unknown": false,
           "correct": true,
           "hallucinated": false
         },
         {
-          "id": "fact:commit-55d4c83",
+          "id": "fact:commit-2f84a9a",
           "field": "evidence",
-          "answer": "git:55d4c83",
+          "answer": "git:2f84a9a",
           "stratum": "早期/未动",
-          "got": "git:55d4c83",
+          "got": "git:2f84a9a",
           "visible": true,
           "unknown": false,
           "correct": true,
           "hallucinated": false
         },
         {
-          "id": "fact:commit-10770bb",
-          "field": "summary",
-          "answer": "门禁接入正文校验：管住状态管不住文字",
-          "stratum": "早期/未动",
-          "got": "门禁接入正文校验：管住状态管不住文字",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-ecde7c9",
+          "id": "fact:commit-20afdce",
           "field": "at",
           "answer": "2026-08-02",
           "stratum": "早期/未动",
@@ -408,7 +397,18 @@
           "hallucinated": false
         },
         {
-          "id": "fact:commit-7221992",
+          "id": "fact:commit-62da5e7",
+          "field": "at",
+          "answer": "2026-08-02",
+          "stratum": "早期/未动",
+          "got": "2026-08-02",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "fact:commit-b473f93",
           "field": "kind",
           "answer": "observed",
           "stratum": "早期/未动",
@@ -419,10 +419,10 @@
           "hallucinated": false
         }
       ],
-      "correct": 11,
-      "hallucinated": 13,
+      "correct": 8,
+      "hallucinated": 16,
       "unknown": 0,
-      "visible": 11,
+      "visible": 8,
       "wrongDespiteVisible": 0,
       "n": 24
     },
@@ -432,20 +432,9 @@
       "ctxChars": 253,
       "rows": [
         {
-          "id": "fact:vercel-project-created",
-          "field": "kind",
-          "answer": "observed",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "decision:credential-map-approach",
+          "id": "task:frame-diff-retained-mode",
           "field": "status",
-          "answer": "decided",
+          "answer": "open",
           "stratum": "近期改动",
           "got": "（编造值）",
           "visible": false,
@@ -454,7 +443,7 @@
           "hallucinated": true
         },
         {
-          "id": "task:public-surface-accuracy-check",
+          "id": "task:uking-memory-embed",
           "field": "owner",
           "answer": "claude",
           "stratum": "近期改动",
@@ -465,7 +454,40 @@
           "hallucinated": true
         },
         {
-          "id": "task:cloudflare-track",
+          "id": "risk:vercel-login-flaky",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:benxiang-protocol-skill",
+          "field": "summary",
+          "answer": "SKILL.md 已补齐",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "task:uking-actionparity-embed",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "task:projection-conformance-vectors",
           "field": "owner",
           "answer": "claude",
           "stratum": "近期改动",
@@ -476,7 +498,40 @@
           "hallucinated": true
         },
         {
-          "id": "decision:seventh-element-limits",
+          "id": "risk:xlsx-formula-rules-unvalidated",
+          "field": "status",
+          "answer": "mitigated",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "task:rerun-control-arms",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "risk:single-author-impls",
+          "field": "severity",
+          "answer": "medium",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "decision:instrument-not-silently",
           "field": "status",
           "answer": "decided",
           "stratum": "近期改动",
@@ -487,73 +542,7 @@
           "hallucinated": true
         },
         {
-          "id": "task:xlsx-real-financial-model",
-          "field": "title",
-          "answer": "找真实财务模型验公式类规则",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "task:law-real-doc-validation",
-          "field": "title",
-          "answer": "拿真文书验假阳性率",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "task:shadowbench-l",
-          "field": "owner",
-          "answer": "未定",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "decision:conformance-levels",
-          "field": "status",
-          "answer": "decided",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "task:merge-benchmark-lib",
-          "field": "blocking",
-          "answer": "无，但越拖越贵",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "fact:real-drawings-dwg2004",
-          "field": "kind",
-          "answer": "observed",
-          "stratum": "近期改动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "task:verify-real-mcp-client",
+          "id": "task:cad-source-format",
           "field": "status",
           "answer": "done",
           "stratum": "近期改动",
@@ -564,9 +553,20 @@
           "hallucinated": true
         },
         {
-          "id": "risk:window-by-weeks",
-          "field": "severity",
-          "answer": "high",
+          "id": "decision:rules-by-usage",
+          "field": "value",
+          "answer": "规则集按图纸实际用法自动选，并把选了哪套写进包里",
+          "stratum": "近期改动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:token-overhead",
+          "field": "evidence",
+          "answer": "README.md 顶部实验收窄声明",
           "stratum": "早期/未动",
           "got": "（编造值）",
           "visible": false,
@@ -575,7 +575,18 @@
           "hallucinated": true
         },
         {
-          "id": "decision:mvp-first-step",
+          "id": "decision:license",
+          "field": "decided_at",
+          "answer": "2026-08-02",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "decision:explicit-creates",
           "field": "status",
           "answer": "decided",
           "stratum": "早期/未动",
@@ -586,7 +597,7 @@
           "hallucinated": true
         },
         {
-          "id": "decision:claim-scope",
+          "id": "decision:real-targets",
           "field": "status",
           "answer": "decided",
           "stratum": "早期/未动",
@@ -597,40 +608,7 @@
           "hallucinated": true
         },
         {
-          "id": "fact:commit-2a6efb1",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "fact:commit-ae66e32",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "fact:commit-3b34eff",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "fact:commit-dd1c118",
+          "id": "fact:commit-3625714",
           "field": "kind",
           "answer": "observed",
           "stratum": "早期/未动",
@@ -641,9 +619,31 @@
           "hallucinated": true
         },
         {
-          "id": "fact:commit-ff54c58",
+          "id": "fact:commit-c04675d",
+          "field": "at",
+          "answer": "2026-08-03",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-28d7a20",
+          "field": "kind",
+          "answer": "observed",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-924e8cd",
           "field": "evidence",
-          "answer": "git:ff54c58",
+          "answer": "git:924e8cd",
           "stratum": "早期/未动",
           "got": "（编造值）",
           "visible": false,
@@ -652,9 +652,9 @@
           "hallucinated": true
         },
         {
-          "id": "fact:commit-55d4c83",
+          "id": "fact:commit-2f84a9a",
           "field": "evidence",
-          "answer": "git:55d4c83",
+          "answer": "git:2f84a9a",
           "stratum": "早期/未动",
           "got": "（编造值）",
           "visible": false,
@@ -663,18 +663,7 @@
           "hallucinated": true
         },
         {
-          "id": "fact:commit-10770bb",
-          "field": "summary",
-          "answer": "门禁接入正文校验：管住状态管不住文字",
-          "stratum": "早期/未动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "fact:commit-ecde7c9",
+          "id": "fact:commit-20afdce",
           "field": "at",
           "answer": "2026-08-02",
           "stratum": "早期/未动",
@@ -685,7 +674,18 @@
           "hallucinated": true
         },
         {
-          "id": "fact:commit-7221992",
+          "id": "fact:commit-62da5e7",
+          "field": "at",
+          "answer": "2026-08-02",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-b473f93",
           "field": "kind",
           "answer": "observed",
           "stratum": "早期/未动",
@@ -706,32 +706,21 @@
     {
       "arm": "B2·v0.2斜坡",
       "rep": 1,
-      "ctxChars": 5996,
+      "ctxChars": 5995,
       "rows": [
         {
-          "id": "fact:vercel-project-created",
-          "field": "kind",
-          "answer": "observed",
-          "stratum": "近期改动",
-          "got": "observed",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "decision:credential-map-approach",
+          "id": "task:frame-diff-retained-mode",
           "field": "status",
-          "answer": "decided",
+          "answer": "open",
           "stratum": "近期改动",
-          "got": "decided",
+          "got": "open",
           "visible": true,
           "unknown": false,
           "correct": true,
           "hallucinated": false
         },
         {
-          "id": "task:public-surface-accuracy-check",
+          "id": "task:uking-memory-embed",
           "field": "owner",
           "answer": "claude",
           "stratum": "近期改动",
@@ -742,7 +731,40 @@
           "hallucinated": false
         },
         {
-          "id": "task:cloudflare-track",
+          "id": "risk:vercel-login-flaky",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "open",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "fact:benxiang-protocol-skill",
+          "field": "summary",
+          "answer": "SKILL.md 已补齐",
+          "stratum": "近期改动",
+          "got": "SKILL.md 已补齐",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "task:uking-actionparity-embed",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "open",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "task:projection-conformance-vectors",
           "field": "owner",
           "answer": "claude",
           "stratum": "近期改动",
@@ -753,7 +775,40 @@
           "hallucinated": false
         },
         {
-          "id": "decision:seventh-element-limits",
+          "id": "risk:xlsx-formula-rules-unvalidated",
+          "field": "status",
+          "answer": "mitigated",
+          "stratum": "近期改动",
+          "got": "mitigated",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "task:rerun-control-arms",
+          "field": "status",
+          "answer": "open",
+          "stratum": "近期改动",
+          "got": "open",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "risk:single-author-impls",
+          "field": "severity",
+          "answer": "medium",
+          "stratum": "近期改动",
+          "got": "medium",
+          "visible": true,
+          "unknown": false,
+          "correct": true,
+          "hallucinated": false
+        },
+        {
+          "id": "decision:instrument-not-silently",
           "field": "status",
           "answer": "decided",
           "stratum": "近期改动",
@@ -764,73 +819,7 @@
           "hallucinated": false
         },
         {
-          "id": "task:xlsx-real-financial-model",
-          "field": "title",
-          "answer": "找真实财务模型验公式类规则",
-          "stratum": "近期改动",
-          "got": "找真实财务模型验公式类规则",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "task:law-real-doc-validation",
-          "field": "title",
-          "answer": "拿真文书验假阳性率",
-          "stratum": "近期改动",
-          "got": "拿真文书验假阳性率",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "task:shadowbench-l",
-          "field": "owner",
-          "answer": "未定",
-          "stratum": "近期改动",
-          "got": "未定",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "decision:conformance-levels",
-          "field": "status",
-          "answer": "decided",
-          "stratum": "近期改动",
-          "got": "decided",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "task:merge-benchmark-lib",
-          "field": "blocking",
-          "answer": "无，但越拖越贵",
-          "stratum": "近期改动",
-          "got": "无，但越拖越贵",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:real-drawings-dwg2004",
-          "field": "kind",
-          "answer": "observed",
-          "stratum": "近期改动",
-          "got": "observed",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "task:verify-real-mcp-client",
+          "id": "task:cad-source-format",
           "field": "status",
           "answer": "done",
           "stratum": "近期改动",
@@ -841,118 +830,30 @@
           "hallucinated": false
         },
         {
-          "id": "risk:window-by-weeks",
-          "field": "severity",
-          "answer": "high",
-          "stratum": "早期/未动",
-          "got": "high",
+          "id": "decision:rules-by-usage",
+          "field": "value",
+          "answer": "规则集按图纸实际用法自动选，并把选了哪套写进包里",
+          "stratum": "近期改动",
+          "got": "规则集按图纸实际用法自动选，并把选了哪套写进包里",
           "visible": true,
           "unknown": false,
           "correct": true,
           "hallucinated": false
         },
         {
-          "id": "decision:mvp-first-step",
-          "field": "status",
-          "answer": "decided",
-          "stratum": "早期/未动",
-          "got": "decided",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "decision:claim-scope",
-          "field": "status",
-          "answer": "decided",
-          "stratum": "早期/未动",
-          "got": "decided",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-2a6efb1",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "2026-08-03",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-ae66e32",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "2026-08-03",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-3b34eff",
-          "field": "at",
-          "answer": "2026-08-03",
-          "stratum": "早期/未动",
-          "got": "2026-08-03",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-dd1c118",
-          "field": "kind",
-          "answer": "observed",
-          "stratum": "早期/未动",
-          "got": "observed",
-          "visible": true,
-          "unknown": false,
-          "correct": true,
-          "hallucinated": false
-        },
-        {
-          "id": "fact:commit-ff54c58",
+          "id": "fact:token-overhead",
           "field": "evidence",
-          "answer": "git:ff54c58",
+          "answer": "README.md 顶部实验收窄声明",
           "stratum": "早期/未动",
-          "got": "（编造值）",
-          "visible": false,
+          "got": "README.md 顶部实验收窄声明",
+          "visible": true,
           "unknown": false,
-          "correct": false,
-          "hallucinated": true
+          "correct": true,
+          "hallucinated": false
         },
         {
-          "id": "fact:commit-55d4c83",
-          "field": "evidence",
-          "answer": "git:55d4c83",
-          "stratum": "早期/未动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "fact:commit-10770bb",
-          "field": "summary",
-          "answer": "门禁接入正文校验：管住状态管不住文字",
-          "stratum": "早期/未动",
-          "got": "（编造值）",
-          "visible": false,
-          "unknown": false,
-          "correct": false,
-          "hallucinated": true
-        },
-        {
-          "id": "fact:commit-ecde7c9",
-          "field": "at",
+          "id": "decision:license",
+          "field": "decided_at",
           "answer": "2026-08-02",
           "stratum": "早期/未动",
           "got": "2026-08-02",
@@ -962,21 +863,120 @@
           "hallucinated": false
         },
         {
-          "id": "fact:commit-7221992",
+          "id": "decision:explicit-creates",
+          "field": "status",
+          "answer": "decided",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "decision:real-targets",
+          "field": "status",
+          "answer": "decided",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-3625714",
           "field": "kind",
           "answer": "observed",
           "stratum": "早期/未动",
-          "got": "observed",
-          "visible": true,
+          "got": "（编造值）",
+          "visible": false,
           "unknown": false,
-          "correct": true,
-          "hallucinated": false
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-c04675d",
+          "field": "at",
+          "answer": "2026-08-03",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-28d7a20",
+          "field": "kind",
+          "answer": "observed",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-924e8cd",
+          "field": "evidence",
+          "answer": "git:924e8cd",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-2f84a9a",
+          "field": "evidence",
+          "answer": "git:2f84a9a",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-20afdce",
+          "field": "at",
+          "answer": "2026-08-02",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-62da5e7",
+          "field": "at",
+          "answer": "2026-08-02",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
+        },
+        {
+          "id": "fact:commit-b473f93",
+          "field": "kind",
+          "answer": "observed",
+          "stratum": "早期/未动",
+          "got": "（编造值）",
+          "visible": false,
+          "unknown": false,
+          "correct": false,
+          "hallucinated": true
         }
       ],
-      "correct": 21,
-      "hallucinated": 3,
+      "correct": 14,
+      "hallucinated": 10,
       "unknown": 0,
-      "visible": 21,
+      "visible": 14,
       "wrongDespiteVisible": 0,
       "n": 24
     }

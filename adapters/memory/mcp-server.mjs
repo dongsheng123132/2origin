@@ -23,7 +23,7 @@
 import { appendFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { loadOrigin } from '../../compiler/origin.mjs'
-import { compileContext } from '../../compiler/context-compiler.mjs'
+import { compileContext, compileDelta } from '../../compiler/context-compiler.mjs'
 import { normalizeId } from '../../compiler/commit-compiler.mjs'
 import { why, historyOf, diagnose, parseRef } from '../../compiler/provenance.mjs'
 import { commit, seqOf, initPackage } from '../../compiler/store.mjs'
@@ -77,6 +77,11 @@ const TOOLS = [
         task: { type: 'string', description: '当前要做什么。用于挑选相关对象；留空则给全局概览' },
         budget: { type: 'number', description: '字符预算，缺省 6000。超出时优先保状态与约束' },
         pin: { type: 'array', items: { type: 'string' }, description: '必须包含的对象 ID' },
+        since_frame: {
+          type: 'string',
+          description:
+            '上一次本工具返回的【帧】编号。带上它就只回传自那一帧以来**变了的部分**，其余对象无需重读（实测省 80% 字符）。基帧对不上或已过期时自动退回全量，不会静默给你一份对不上号的差分。',
+        },
       },
     },
   },
@@ -155,9 +160,14 @@ const TOOLS = [
   },
 ]
 
+// 已发出去的帧（保留模式的「显存」）。进程内、有上限、不落盘：
+// 它是一份**优化缓存**，丢了只会退回全量，不会导致状态错误——所以不必持久化，
+// 也不该持久化（持久化就得考虑失效与并发，为一个可再生的东西付这个代价不划算）。
+const FRAMES = new Map()
+
 // ── 工具实现 ────────────────────────────────────────────────────
 const HANDLERS = {
-  origin_state({ task, budget = 6000, pin = [] }) {
+  origin_state({ task, budget = 6000, pin = [], since_frame }) {
     const origin = loadOrigin(PKG)
     // 无 task 时不做相关性挑选（hops:0），但**不再退回 renderAll 全量倾倒**。
     //
@@ -170,15 +180,33 @@ const HANDLERS = {
     // 现在交给编译器的预算斜坡：约束是不可降级的固定开销先扣下，剩下的预算按
     // 「最近被改动过的对象优先」从近到远买细节，够不到的对象仍留一行 id 保持可寻址。
     // 同预算下实测：可寻址对象 22% → 85%，约束存活 0/6 → 6/6。
-    const ctx = compileContext({
+    //
+    // 保留模式（v0.3）：服务端留着发出去过的帧，客户端回传帧号即可只拿差分。
+    // 这是显卡的场景图常驻显存那一手——但对语言模型有个 GPU 没有的风险：
+    // 基帧躺在对话历史里，可能已被上下文压缩挤掉。所以帧对不上时**退回全量**，
+    // 绝不发一份「相对于某个已经不存在的东西」的差分。
+    const args = {
       origin, state: origin.state,
       task: { goal: task ?? '恢复项目当前状态' },
       pin, budget,
       hops: task ? 1 : 0,
-    })
+    }
+    const base = since_frame ? FRAMES.get(since_frame) : null
+    const ctx = base ? compileDelta({ ...args, since: base }) : compileContext(args)
+
+    FRAMES.set(ctx.frame.id, ctx.frame)
+    // 只留最近几帧：客户端不会拿着很旧的帧号回来，留多了纯占内存
+    while (FRAMES.size > 8) FRAMES.delete(FRAMES.keys().next().value)
+
+    const notice =
+      since_frame && !base
+        ? `\n【注意】帧 ${since_frame} 已不在服务端缓存，本次返回的是全量，不是差分。`
+        : ''
     return [
       ctx.text,
+      notice,
       '',
+      `【帧】${ctx.frame.id}　下次调用本工具时传 since_frame=${ctx.frame.id}，即可只取变化的部分。`,
       `【seq 水位】${seqOf(PKG)}　提交时把它作为 expect_seq 传回，即可发现有人插队。`,
     ].join('\n')
   },

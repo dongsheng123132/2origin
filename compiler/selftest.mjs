@@ -12,7 +12,7 @@ import { dirname, join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { rmSync } from 'node:fs'
 import {
-  loadOrigin, stateFromObjects, compileContext, buildPrompt,
+  loadOrigin, stateFromObjects, compileContext, compileDelta, buildPrompt,
   validateTransaction, applyTransaction, normalizeTransaction, checkConstraints, predicateNames,
   why, historyOf, replay, diagnose, findMirrorPairs,
   commit, initPackage, seqOf,
@@ -147,6 +147,44 @@ check(ctx.text.includes('obj:black-key'), '渲染使用完整 ID（曾因剥前�
 check(ctx.text.includes('holder=char:lin-zheng'), '字段值也带完整 ID 前缀')
 check(!ctx.overBudget, '未超预算')
 check(buildPrompt(ctx).includes('不可省略前缀'), '输出契约包含前缀要求')
+
+// ── 帧与差分（保留模式）─────────────────────────────────────────
+console.log('\n[输入侧] 帧与差分')
+const frameArgs = { origin: story, task: { goal: '把黑钥匙交回 char:shen-yan' }, budget: 4000 }
+const f1 = compileContext(frameArgs)
+check(typeof f1.frame?.id === 'string' && f1.frame.id.length === 8, '每一帧带内容指纹')
+check(compileContext(frameArgs).frame.id === f1.frame.id, '同样的世界+任务+预算 → 同一个帧 id（纯函数）')
+
+// 世界没变：差分应为空，且仍然重发规则
+const dSame = compileDelta({ ...frameArgs, since: f1.frame })
+check(dSame.kind === 'delta' && dSame.delta.changed === 0, '世界未变时差分为空')
+check(dSame.base === f1.frame.id, '差分标出所基于的帧 id（对不上时调用方才发现得了）')
+
+// 改一个字段：差分只包含那一个对象
+const moved = { ...story.state, 'obj:black-key': { ...story.state['obj:black-key'], holder: 'char:zhao-qi' } }
+const dOne = compileDelta({ ...frameArgs, state: moved, since: f1.frame })
+check(dOne.delta.changed === 1, '改一个字段 → 差分只含一个对象', `实际 ${dOne.delta?.changed}`)
+check(dOne.text.includes('obj:black-key') && dOne.text.includes('holder=char:zhao-qi'), '  └ 且给的是新值')
+check(dOne.estChars < compileContext({ ...frameArgs, state: moved }).estChars, '  └ 差分比关键帧短')
+
+// 规则永远重发——基帧可能已被上下文压缩挤掉，差分不带规则等于让模型裸奔
+const ruled = { origin: { ...story, constraints: storyConstraints }, task: frameArgs.task, budget: 4000 }
+const rf1 = compileContext(ruled)
+const rd = compileDelta({ ...ruled, state: moved, since: rf1.frame })
+check(
+  storyConstraints.every((c) => rd.text.includes(c.rule)),
+  '差分里原样重发全部约束（275 字符的保险，不省）',
+)
+
+// 差分不许比关键帧更长——优化不能把事情变坏
+const wideChange = Object.fromEntries(
+  Object.entries(story.state).map(([id, s]) => [id, { ...s, note: '每个对象都变了一点' }]),
+)
+const dWide = compileDelta({ ...frameArgs, state: wideChange, since: f1.frame })
+check(dWide.estChars <= compileContext({ ...frameArgs, state: wideChange }).estChars, '差分不小于关键帧时退回关键帧')
+
+// 没有基帧就是关键帧，不能悄悄发一份「相对于不存在的东西」的差分
+check(compileDelta({ ...frameArgs }).kind === 'key', '未提供 since 时发关键帧')
 
 // ── 证据链：来源不只是「记下来」，得「查得出」 ───────────────────────
 console.log('\n[证据] provenance 日志与 why 查询')

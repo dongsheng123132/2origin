@@ -315,6 +315,12 @@ export function compileContext({
   const byLevel = { full: [], key: [], id: [] }
   for (const [id, lv] of level) byLevel[lv].push(id)
 
+  // 帧句柄：把「这一帧每个对象长什么样」留下来，下一帧才有的可差分。
+  // 只存渲染后的行，不存状态快照——差分要比的就是**给模型看的那一行**变没变，
+  // 状态变了但那一档没显示出来（比如长文本字段在 key 档本来就被丢掉）不该触发重发。
+  const lines = {}
+  for (const { id } of items) if (level.has(id)) lines[id] = render(id, level.get(id))
+
   return {
     text: body,
     selected: rendered,
@@ -328,6 +334,72 @@ export function compileContext({
     budget,
     utilization: +(body.length / budget).toFixed(3),
     overBudget: body.length > budget,
+    frame: { id: hashOf(body), seq: (origin.history ?? []).length, lines, tail },
+  }
+}
+
+/** 帧标识：内容哈希。同样的世界 + 同样的任务 + 同样的预算 → 同一个 id。 */
+function hashOf(s) {
+  // FNV-1a 32 位。这里只需要「内容变没变」的廉价指纹，不是抗碰撞摘要；
+  // 不引 node:crypto 是为了让本文件在浏览器/边缘运行时也能原样跑（参考实现零依赖）。
+  let h = 0x811c9dc5
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) }
+  return (h >>> 0).toString(16).padStart(8, '0')
+}
+
+/**
+ * 差分帧：只发自上一帧起真正变了的部分。
+ *
+ * ── 为什么需要它 ────────────────────────────────────────────────
+ * 实测（project.origin，129 对象，预算 6000）：每轮重编都发满 ~5990 字符，
+ * 而两轮之间真正改动的只有 3–5 个对象。与上一轮的公共前缀从 8.9% 一路衰减到 1.3%——
+ * 因为背景层按「最近改动」排序，而新近度每轮都在变，整张对象表跟着重排。
+ * **相关性排序与前缀稳定性直接冲突。** GPU 没这个矛盾（它没有前缀缓存），
+ * 但视频编解码有，解法也早有定论：关键帧 + 预测帧。
+ *
+ * ── 三条安全规则（都不是可选项）──────────────────────────────────
+ * ① **规则永远重发。** 差分里也原样带上约束与禁区。它们只要 275 字符，而一旦基帧
+ *    被上下文压缩挤掉、差分又没带规则，模型就在没有护栏的情况下作答——正是本仓库
+ *    修过的那个缺陷（约束排在末尾被截尾切光）的翻版。便宜的保险，不省。
+ * ② **差分不小于关键帧就发关键帧。** 优化不许把事情变坏。
+ * ③ **base 帧 id 随帧带出。** 编译器无从得知调用方是否还留着基帧（上下文可能被压缩过），
+ *    所以不替它判断：`since` 是调用方的断言，编译器只负责把 base id 如实标出，
+ *    对不上时调用方能立刻发现，而不是拿着一份「相对于某个已经不存在的东西」的差分。
+ */
+export function compileDelta({ since, ...opts }) {
+  const next = compileContext(opts)
+  if (!since?.lines) return { ...next, kind: 'key', base: null }
+
+  const prev = since.lines
+  const cur = next.frame.lines
+  const changed = [], added = [], removed = []
+  for (const [id, line] of Object.entries(cur)) {
+    if (!(id in prev)) added.push(line)
+    else if (prev[id] !== line) changed.push(line)
+  }
+  for (const id of Object.keys(prev)) if (!(id in cur)) removed.push(id)
+
+  const parts = [`【状态差分】基于帧 ${since.id}（其余对象与上一帧相同，无需重读）`]
+  if (changed.length) { parts.push('\n· 已变更'); parts.push(...changed) }
+  if (added.length) { parts.push('\n· 新进入视野'); parts.push(...added) }
+  if (removed.length) parts.push(`\n· 已移出视野（预算或相关性）：${removed.join('、')}`)
+  if (!changed.length && !added.length && !removed.length) parts.push('  （无变化）')
+  // 规则原样重发——见上面规则 ①
+  parts.push(...(next.frame.tail ?? []))
+
+  const text = parts.join('\n')
+  // 规则 ②：差分没占到便宜就退回关键帧，别为了「用上了差分」而发更长的东西
+  if (text.length >= next.text.length) return { ...next, kind: 'key', base: since.id, deltaRejected: true }
+
+  return {
+    ...next,
+    kind: 'delta',
+    base: since.id,
+    text,
+    estChars: text.length,
+    utilization: +(text.length / opts.budget ?? 6000).toFixed(3),
+    overBudget: false,
+    delta: { changed: changed.length, added: added.length, removed: removed.length, savedChars: next.text.length - text.length },
   }
 }
 

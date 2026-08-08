@@ -170,6 +170,7 @@ if (provider === 'stub') console.log('\n⚠ STUB：数字仅验证流程连通�
 console.log('')
 
 const results = []
+const parseFails = []
 for (const arm of ARMS) {
   const ctx = arm.ctx()
   for (let rep = 1; rep <= repeat; rep++) {
@@ -177,9 +178,11 @@ for (const arm of ARMS) {
     if (provider === 'stub') parsed = stubAnswer(ctx)
     else {
       const model = createModel({ provider, model: arg('model') })
-      const res = await model.complete({ prompt: buildPrompt(ctx), maxTokens: 4096 })
+      const res = await model.complete({ prompt: buildPrompt(ctx), maxTokens: 16384 /* 4096 不够：该模型的 reasoning 与正文共享配额，实测推演单次烧掉 1540–2422 token，
+         赶上偏长的一次就把正文挤没、finish=stop 但内容截断 → 解析失败。实测 3 轮里失手 2 轮，
+         差点被读成「差分让模型答不出来」——**基础设施参数不足伪装成实验结论**，是最难查的一类 */ })
       parsed = res.parsed
-      if (!parsed) { console.log(`  ⚠ ${arm.id} rep${rep}：模型输出解析失败，本轮作废`); continue }
+      if (!parsed) { parseFails.push(`${arm.id} rep${rep}`); console.log(`  ⚠ ${arm.id} rep${rep}：模型输出解析失败，本轮作废`); continue }
     }
     const s = score(parsed, ctx)
     results.push({ arm: arm.id, rep, ctxChars: ctx.length, ...s })
@@ -220,6 +223,11 @@ for (const arm of ARMS) {
     `${by('早期/未动', (y) => y.correct).toFixed(1)}/${cnt('早期/未动')} | ${by('早期/未动', (y) => y.hallucinated).toFixed(1)} |`,
   )
 }
+
+// 解析失败必须显式上报：被丢掉的轮次会让样本量悄悄缩水，
+// 「3 轮均值」实际只有 1 轮时，那个均值不配叫均值。
+if (parseFails.length) console.log(`\n⚠ 有 ${parseFails.length} 轮解析失败已作废：${parseFails.join('、')}——对应臂的样本量按此折算`)
+else console.log('\n所有轮次解析成功，无作废')
 
 mkdirSync(join(HERE, 'results'), { recursive: true })
 const out = join(HERE, 'results', `${provider}-b${BUDGET}-q${questions.length}.json`)

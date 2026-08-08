@@ -37,7 +37,8 @@
     "test:a3-projection": "node benchmark/shadowbench-w/arms/a3-benxiang/projection-equivalence.mjs",
     "test:context-lod": "node benchmark/context-lod/bench.mjs",
     "test:lod-engagement": "node benchmark/context-lod/engagement-probe.mjs",
-    "test:state-recall": "node benchmark/context-lod/state-recall/bench.mjs --provider stub"
+    "test:state-recall": "node benchmark/context-lod/state-recall/bench.mjs --provider stub",
+    "test:delta": "node benchmark/context-lod/state-recall/delta-bench.mjs --provider stub"
   },
   "files": [
     "compiler/",
