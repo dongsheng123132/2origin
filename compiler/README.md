@@ -66,6 +66,36 @@ equals · not_equals · contains · not_contains · range · unchanged
 2. **前值对不上只能警告，不能拦截。** 运行时本就知道当前值，要求模型精确复述旧值是刁难；曾按错误处理，一次运行废掉 3 章。降级为警告并计入指标——「模型记忆偏差率」本身是有价值的观测量。
 3. **给模型看的格式就是它会模仿的格式。** 曾为「好读」把 ID 前缀剥掉渲染，模型照抄了那份写法，交上来的事务全被门禁判为未知对象，5 章全废。**可读性优化必须让位于可回传性。**
 
+## 投影是方言的，预算是核心的
+
+`compileContext` 的 `project` 参数是**方言着色器**，四个槽（`cast` / `render` / `group` / `fixed`）
+决定「给模型看什么」；预算怎么花则一律归核心：
+
+```js
+compileContext({ origin, task, budget, project: myDialectShader })
+```
+
+| 归方言（各写各的） | 归核心（只有一份） |
+|---|---|
+| 谁进画面（主角？同地点？最近改过的？） | 相机 depth 分级 |
+| 每个对象给哪几个字段、怎么排 | 三档 LOD 阶梯 full / key / id |
+| 分成几段、抬头叫什么 | 超预算由远及近降档，有余量由近及远升档 |
+| 哪些内容不许降级（世界规则、词表、禁区） | 装不下时显式记账（`ctx.dropped`），全文长度收敛 |
+
+这条分界是**改过一次的**。早先 A3 臂拒绝合并，理由是「共享的只剩预算算术那三行」——
+当时对。现在预算侧长到六十行且全是领域无关的，而方言一行都没有，理由随之从
+「消除重复」变成「方言拿不到预算纪律」。见 `context-compiler.mjs` 里 `project` 的注释。
+
+**预算是目标值，不是上限。** 不足会升档补满（旧版在真实包上只用掉 5% 预算），
+超出会降档压回（旧版直接溢出让上游硬截，而硬截先切掉的正是排在末尾的约束）。
+数据见 [`benchmark/context-lod/`](../benchmark/context-lod/)。
+
 ## 与实验臂的关系
 
-[`benchmark/shadowbench-w/arms/a3-benxiang/`](../benchmark/shadowbench-w/arms/a3-benxiang/) 是这套机制在叙事域的实测版本，取得 W3 状态准确率 **98.9%**（对照：裸模型与向量 RAG 均为 75.0%，标准差 0，见 [实验记录](../benchmark/shadowbench-w/results-log.md) Run #14）。本目录是从中抽出的领域无关内核；实验臂尚未改为依赖它，两者暂时并存——**先证明抽象成立，再动已在产出数据的代码。**
+[`benchmark/shadowbench-w/arms/a3-benxiang/`](../benchmark/shadowbench-w/arms/a3-benxiang/) 是这套机制在叙事域的实测版本，取得 W3 状态准确率 **98.9%**（对照：裸模型与向量 RAG 均为 75.0%，标准差 0，见 [实验记录](../benchmark/shadowbench-w/results-log.md) Run #14）。
+
+输出侧（校验器）已合并，由 `test:a3-equiv` 守住「换实现不换判定」。
+输入侧（投影器）现已改为核心的方言着色器，由 `test:a3-projection` 守住更严的合同：
+**换实现不换一个字节**——因为投影器的产出就是提示词本身，差一个字，results-log 里
+W1/W2/W3 的数字就不再是「这套输入下的成绩」。核心的预算斜坡对该臂默认关闭
+（`lod: false`），要用得显式打开，那是新的一臂、重新跑分。

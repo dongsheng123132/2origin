@@ -178,7 +178,14 @@ check(d.text.includes('✓ 无 error 级问题'), '世界状态自洽')
 console.log('\n[10] 新会话恢复：这次世界有东西了')
 const restored = await call('origin_state', {})
 check(restored.text.includes('Benxiang') && restored.text.includes('先做 MCP'), '一次调用即恢复全部项目状态')
-check(restored.text.includes('【约束·违反即拒绝提交】'), '  └ 投影里同时带上了不可违反的边界')
+check(restored.text.includes('【约束·机器校验，违反即拒绝】'), '  └ 投影里同时带上了不可违反的边界')
+
+// 回归保护：约束是**不可降级的固定开销**，不许被对象挤掉。
+// 旧写法（无 task 时退回 renderAll 全量倾倒，约束排在全部对象之后）一旦被上游按预算截尾，
+// benchmark/context-lod 实测 1500/3000/6000/12000 四档预算下 6 条约束全军覆没——
+// 恰恰是会话恢复这条最需要规则的路径上，模型一次都没见过规则。
+const tight = await call('origin_state', { budget: 400 })
+check(tight.text.includes('【约束·机器校验，违反即拒绝】'), '  └ 预算极紧时先保约束，再拿剩下的买对象')
 
 srv.stdin.end()
 rmSync(PKG, { recursive: true, force: true })

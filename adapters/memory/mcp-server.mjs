@@ -159,16 +159,25 @@ const TOOLS = [
 const HANDLERS = {
   origin_state({ task, budget = 6000, pin = [] }) {
     const origin = loadOrigin(PKG)
+    // 无 task 时不做相关性挑选（hops:0），但**不再退回 renderAll 全量倾倒**。
+    //
+    // 旧写法 `task ? ctx.text : renderAll(origin)` 有个被基准实测烧出来的缺陷
+    // （benchmark/context-lod/bench.mjs 臂 A′）：renderAll 把约束排在全部对象之后，
+    // 而本包 129 个对象在任何预算下都排得满满当当，于是按预算截尾时
+    // **6 条「违反即拒绝提交」的约束在 1500/3000/6000/12000 四档下全部被切掉**——
+    // 恰恰是会话恢复这条最需要规则的路径上，模型一次都没见过规则。
+    //
+    // 现在交给编译器的预算斜坡：约束是不可降级的固定开销先扣下，剩下的预算按
+    // 「最近被改动过的对象优先」从近到远买细节，够不到的对象仍留一行 id 保持可寻址。
+    // 同预算下实测：可寻址对象 22% → 85%，约束存活 0/6 → 6/6。
     const ctx = compileContext({
       origin, state: origin.state,
       task: { goal: task ?? '恢复项目当前状态' },
       pin, budget,
       hops: task ? 1 : 0,
     })
-    // 无 task 时不做相关性挑选，给全局——新会话恢复要的就是全貌
-    const text = task ? ctx.text : renderAll(origin)
     return [
-      text,
+      ctx.text,
       '',
       `【seq 水位】${seqOf(PKG)}　提交时把它作为 expect_seq 传回，即可发现有人插队。`,
     ].join('\n')
@@ -234,28 +243,8 @@ const HANDLERS = {
   },
 }
 
-/** 全局概览：新会话恢复时要的是全貌，不是按任务挑过的子集。 */
-function renderAll(origin) {
-  const lines = ['【项目世界状态】']
-  const byType = {}
-  for (const [id, f] of Object.entries(origin.state)) (byType[f._type ?? 'object'] ??= []).push([id, f])
-  for (const [type, items] of Object.entries(byType)) {
-    lines.push(`\n· ${type}`)
-    for (const [id, f] of items) {
-      const bits = Object.entries(f)
-        .filter(([k, v]) => k !== '_type' && v !== null && v !== undefined && typeof v !== 'object')
-        .map(([k, v]) => `${k}=${v}`)
-      const arrs = Object.entries(f).filter(([k, v]) => k !== '_type' && Array.isArray(v) && v.length).map(([k, v]) => `${k}=[${v.join(', ')}]`)
-      lines.push(`  ${id}　${[...bits, ...arrs].join('；')}`)
-    }
-  }
-  const enforceable = (origin.constraints ?? []).filter((c) => c.check)
-  if (enforceable.length) {
-    lines.push('\n【约束·违反即拒绝提交】')
-    for (const c of enforceable) lines.push(`  - ${c.rule ?? c.id}`)
-  }
-  return lines.join('\n')
-}
+// renderAll 已删除（无预算纪律的全量倾倒，约束排在末尾必被截）。
+// 历史版本保留在 benchmark/context-lod/baseline-v0.1.mjs 旁的臂 A′ 里，作为对照基线。
 
 // ── JSON-RPC over stdio ────────────────────────────────────────
 const send = (msg) => process.stdout.write(JSON.stringify(msg) + '\n')
