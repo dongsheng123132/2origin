@@ -42,3 +42,7 @@ skills-lock.json
 
 # 一次性脚本的临时输出
 h
+
+# 凭证
+.secrets/
+*.key
