@@ -3,7 +3,7 @@
 > **Carry references, not truth. Resolve at use-time, and pin the version you resolve to.**
 >
 > This page states the principle that runs through all three protocols — Benxiang (Origin),
-> ActionParity, and Origin Environment — and the four-layer stub system. It is not a new clause
+> Action Kernel, and Origin Environment — and the four-layer stub system. It is not a new clause
 > of any single protocol; it names the one mechanism all three were already using, so it can
 > become a check every new design must pass.
 >
@@ -80,7 +80,7 @@ One mechanism at different scales — what it points to, who resolves it, what k
 |---|---|---|---|---|
 | Origin object ID + `depends_on` | object state | origin CLI / MCP | `seq` watermark | content |
 | Origin semantic transaction (Flint) | large payloads | commit compiler | validation / vector-set version | content |
-| ActionParity action name | action schema + executor | open365 registry | ActionParity version | action |
+| Action Kernel action name | action schema + executor | open365 registry | Action Kernel version | action |
 | Origin Environment fingerprint | a whole machine's state | (future env-git) | SHA-256 layered hash | environment |
 | uenv stub | the environment-check workflow | `uenv doctor --agent` | `CARGO_PKG_VERSION` | onboarding |
 | CLAUDE.md pointer | this machine's truth | `uenv doctor` + `llms.txt` | nothing hard-coded at runtime | onboarding |

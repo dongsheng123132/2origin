@@ -75,7 +75,7 @@ A principle without an incident behind it is a principle nobody has tested yet.
     > substandard and dropped 1–2 chapters per run — trading completeness for correctness, which
     > is unacceptable in real use. Changing it to "when retries are exhausted, accept the draft
     > with the fewest errors and flag it for human review" restored full completion while keeping
-    > the quality advantage. This is exactly where the PodApp (human confirmation layer) sits in
+    > the quality advantage. This is exactly where the Review Console (human confirmation layer) sits in
     > the protocol.
 
 ## 2. The minimal Origin IR core (six parts + provenance)
@@ -337,7 +337,7 @@ origin validate <artifact>        # constraint and integrity validation
 origin commit   <transaction>     # submit a semantic transaction
 ```
 
-Exposure forms: CLI, MCP, REST API, SDK, PodApp review interface.
+Exposure forms: CLI, MCP, REST API, SDK, Review Console review interface.
 
 ### 7.2 Reference implementation status (as of v0.1)
 

@@ -1,6 +1,6 @@
 # 自动发布器 AutoPublish
 
-> 基于影核协议（ActionParity）的自动发布工具。
+> 基于影核协议（Action Kernel）的自动发布工具。
 > **一个动作（post.publish），多个执行器**：CLI 检测 → 浏览器发布 → 未来 API 直发。
 > 登录态由浏览器会话提供，凭据只经用户之手；动作可 dry-run 验证、可回放。
 

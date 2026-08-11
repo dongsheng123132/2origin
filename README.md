@@ -198,14 +198,14 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 | 影核协议 / Action Kernel | 统一指令集 ↗ 实现在 ShadowOS |
 | Shadow Runtime | 虚拟机 🕳 candidate |
 | 叠象 / Redline | 调试器 + 测试系统 + Git 🕳 candidate |
-| 确认台 / Review Console（原 舟舱/PodApp） | 面向人的显示器和控制台 🕳 candidate |
+| 确认台 / Review Console（原 确认台/Review Console） | 面向人的显示器和控制台 🕳 candidate |
 
 ## 文档导航
 
 | 文档 | 回答什么 |
 |---|---|
 | [01-愿景与定位](docs/01-愿景与定位.md) | 为什么做，做到哪个高度 |
-| [02-概念体系](docs/02-概念体系.md) | 术语表：本象/影子/叠象/影核/影域/舟舱（全项目术语准绳） |
+| [02-概念体系](docs/02-概念体系.md) | 术语表：本象/影子/叠象/影核/影域/确认台（全项目术语准绳） |
 | [03-协议草案-v0.1](docs/03-协议草案-v0.1.md) | `.origin` 包结构、Origin IR 最小核心、事务格式 |
 | [04-架构设计](docs/04-架构设计.md) | 双向编译器、三级记忆、与 RAG 的区别 |
 | [05-生态对照](docs/05-生态对照.md) | 借鉴谁、不重复造谁（OfficeCLI/Docling/Flint/GraphRAG…） |

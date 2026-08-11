@@ -1,7 +1,7 @@
 # 00 · The Core
 
 > **If you read one page, read this one.**
-> This page is the skeleton of the whole family of protocols — Benxiang (Origin), ActionParity,
+> This page is the skeleton of the whole family of protocols — Benxiang (Origin), Action Kernel,
 > and Origin-Environment — checked against [Reference-First](09-Reference-First.en.md) recursively.
 > Every other document is an expansion of this page, a dialect of it, or a proof of it.
 >
@@ -28,7 +28,7 @@ lands; and the protocol promises only what is checkable.**
 | Protocol | Its "object" | Dialects (optional extensions, never core) |
 |---|---|---|
 | **Benxiang** | `.origin` pack / object ID | Story · Office · CAD · Chart · Memory … |
-| **ActionParity** | action name | every executor is a dialect of it |
+| **Action Kernel** | action name | every executor is a dialect of it |
 | **Origin-Environment** | environment fingerprint | detectors · rules · adapters are dialects of it |
 
 ## Complexity audit (everything outside the core, by kind)
