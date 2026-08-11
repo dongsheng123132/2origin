@@ -185,17 +185,20 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 
 配套概念分工（详见 [概念体系](docs/02-概念体系.md)）：
 
-> **影域负责隔离，本象负责保存，叠象负责看见与比较，影核负责行动，舟舱负责人类确认。**
+> 🕳影域负责隔离，**本象负责保存**，🕳叠象负责看见与比较，↗影核负责行动，🕳确认台负责人类确认。
+>
+> （🕳 ＝ `candidate`：零实现、零判据，说的是打算不是现状；↗ ＝ 实现在 ShadowOS。
+> 逐项状态见 [概念体系](docs/02-概念体系.md)。）
 
 计算机体系类比：
 
 | 本体系 | 类比 |
 |---|---|
 | 本象 IR / Origin IR | AI 时代的 LLVM IR（通用中间表示） |
-| 影核协议 / ActionParity | 统一指令集 |
-| Shadow Runtime | 虚拟机 |
-| 叠象 / Redline | 调试器 + 测试系统 + Git |
-| 舟舱 / PodApp | 面向人的显示器和控制台 |
+| 影核协议 / Action Kernel | 统一指令集 ↗ 实现在 ShadowOS |
+| Shadow Runtime | 虚拟机 🕳 candidate |
+| 叠象 / Redline | 调试器 + 测试系统 + Git 🕳 candidate |
+| 确认台 / Review Console（原 舟舱/PodApp） | 面向人的显示器和控制台 🕳 candidate |
 
 ## 文档导航
 
