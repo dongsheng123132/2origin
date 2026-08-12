@@ -3,6 +3,8 @@
 > **Save the origin, project on demand.** 一源万影
 >
 > *«The sage establishes images to exhaust meaning.»* — Book of Changes
+>
+> If you read one page, read [The Core](docs/00-CORE.en.md).
 
 ---
 
@@ -149,7 +151,7 @@ One dialect working could be a coincidence. **Two is a protocol.**
 The shape is *generic shell + domain dialects*: the shell defines lifecycle and minimal structure, each domain brings its own schema, and they share one action surface —
 
 ```text
-inspect · render · query · act · diff · validate · commit · rollback
+inspect · validate · commit (core) · render · project · query · act · diff · rollback (derived)
 ```
 
 The [reference implementation](compiler/)'s test suite is built to prove exactly this line: **the same code, unmodified**, drives a narrative world (characters, secrets, foreshadowing) and a sales dataset (no characters, no plot, no foreshadowing).

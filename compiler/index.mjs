@@ -13,7 +13,7 @@
 
 export { loadOrigin, stateFromObjects } from './origin.mjs'
 export { checkConstraints, predicateNames } from './constraints.mjs'
-export { compileContext, selectRelevant, buildPrompt } from './context-compiler.mjs'
+export { compileContext, compileDelta, selectRelevant, castCamera, buildPrompt } from './context-compiler.mjs'
 export { validateTransaction, applyTransaction, normalizeTransaction, normalizeId, fold } from './commit-compiler.mjs'
 export { why, historyOf, diagnose, replay, stateChanges, findMirrorPairs, parseRef, nextSeq } from './provenance.mjs'
 export { commit, appendHistory, initPackage, seqOf } from './store.mjs'

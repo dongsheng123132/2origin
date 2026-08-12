@@ -33,7 +33,7 @@ and which version of the scorer produced it.**
 Run the whole pipeline at zero cost first (no API spend):
 
 ```bash
-npm run verify                          # everything: 81 + CAD 44 + law 95 + MCP 18 + conformance 68 + mutation 13/13
+npm run verify                          # everything: 81 + CAD 44 + law 95 + MCP 18 + conformance 87 + mutation 13/13
 cd benchmark/shadowbench-w
 node eval/selftest.mjs                  # the scorer's own tests: who validates the validator
 node run.mjs --provider stub            # full-pipeline smoke run
@@ -58,7 +58,7 @@ Attach the `rescore` output and the `specHash` / `judgeHash` from your machine.
 | **Attack the scorer** | Construct prose that fools `eval/ced.mjs`: a real violation it cannot see, or a non-violation it flags. Add the sample to `eval/fixtures/ced-selftest.json` and open a PR |
 | **A different corpus** | The current world is constructed (ground truth by construction). Rebuild against a different world spec and see whether the conclusions depend on this particular corpus |
 | **A fourth dialect** | The three existing dialects (CAD drawings, court judgments, project memory) together added 4 lines to the core. **Bring your own domain — if it also needs no core changes, that claim has finally been checked by someone other than us** |
-| **A second implementation** | The 68 conformance vectors are data, not code; an adapter of a few dozen lines is enough to self-certify ([entry point](spec/conformance/README.en.md)). **A genuine third-party implementation is the single thing this project wants most** — the two that exist share an author and therefore cannot show that the spec alone is sufficient |
+| **A second implementation** | The 87 conformance vectors are data, not code; an adapter of a few dozen lines is enough to self-certify ([entry point](spec/conformance/README.en.md)). **A genuine third-party implementation is the single thing this project wants most** — the two that exist share an author and therefore cannot show that the spec alone is sufficient |
 | **Criticise the metric** | W3 scores field-by-field, which charges "clung to a stale value" and "invented something from nothing" the same penalty. Is that granularity defensible? |
 
 ## 3. Hard rules
@@ -80,6 +80,11 @@ These were paid for. Please respect them:
    and a false-positive sample.
 5. **Do not edit scorer code while an experiment is running.** A running process uses the version it
    loaded at start, so the data it finishes with will not have the semantics you think it does.
+6. **Every new design passes the Reference-First check first.** For every state/content a design
+   introduces, answer four questions: **① Who is the single source of truth?** **② Where does the
+   reference live** (don't copy truth elsewhere)? **③ Who resolves it?** **④ What keeps it fresh**
+   (version / watermark / fingerprint)? If you cannot answer one, the design is not thought through.
+   Full statement: [`docs/09-Reference-First.en.md`](docs/09-Reference-First.en.md).
 
 ## 4. Code style
 

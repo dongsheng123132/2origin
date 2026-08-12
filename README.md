@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
 [![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%20101%20%2B%2087%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
-[![conformance](https://img.shields.io/badge/conformance-68%2F68%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.md)
+[![conformance](https://img.shields.io/badge/conformance-87%2F87%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
 
@@ -11,6 +11,8 @@
 > Save the origin, project on demand.
 >
 > 「立象以尽意」——《易传·系辞》 · Establish the image to exhaust the meaning.
+>
+> **如果只读一页，读 [docs/00-极简核心](docs/00-极简核心.md)** —— 整系协议的骨架，一页讲完。
 
 **英文名 Benxiang**：Ben（本）= origin，Xiang（象）= the archetypal image。「象」取自《易传》「圣人立象以尽意」与《道德经》「大象无形」——文字装不下意义，须回到更本源的表示；大象无形，故能投影万形。发音：bun-SHYAHNG。协议的技术核心称 **Origin IR**（描述性术语）。
 
@@ -183,24 +185,27 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 
 配套概念分工（详见 [概念体系](docs/02-概念体系.md)）：
 
-> **影域负责隔离，本象负责保存，叠象负责看见与比较，影核负责行动，舟舱负责人类确认。**
+> 🕳影域负责隔离，**本象负责保存**，🕳叠象负责看见与比较，↗影核负责行动，🕳确认台负责人类确认。
+>
+> （🕳 ＝ `candidate`：零实现、零判据，说的是打算不是现状；↗ ＝ 实现在 ShadowOS。
+> 逐项状态见 [概念体系](docs/02-概念体系.md)。）
 
 计算机体系类比：
 
 | 本体系 | 类比 |
 |---|---|
 | 本象 IR / Origin IR | AI 时代的 LLVM IR（通用中间表示） |
-| 影核协议 / ActionParity | 统一指令集 |
-| Shadow Runtime | 虚拟机 |
-| 叠象 / Redline | 调试器 + 测试系统 + Git |
-| 舟舱 / PodApp | 面向人的显示器和控制台 |
+| 影核协议 / Action Kernel | 统一指令集 ↗ 实现在 ShadowOS |
+| Shadow Runtime | 虚拟机 🕳 candidate |
+| 叠象 / Redline | 调试器 + 测试系统 + Git 🕳 candidate |
+| 确认台 / Review Console（原 确认台/Review Console） | 面向人的显示器和控制台 🕳 candidate |
 
 ## 文档导航
 
 | 文档 | 回答什么 |
 |---|---|
 | [01-愿景与定位](docs/01-愿景与定位.md) | 为什么做，做到哪个高度 |
-| [02-概念体系](docs/02-概念体系.md) | 术语表：本象/影子/叠象/影核/影域/舟舱（全项目术语准绳） |
+| [02-概念体系](docs/02-概念体系.md) | 术语表：本象/影子/叠象/影核/影域/确认台（全项目术语准绳） |
 | [03-协议草案-v0.1](docs/03-协议草案-v0.1.md) | `.origin` 包结构、Origin IR 最小核心、事务格式 |
 | [04-架构设计](docs/04-架构设计.md) | 双向编译器、三级记忆、与 RAG 的区别 |
 | [05-生态对照](docs/05-生态对照.md) | 借鉴谁、不重复造谁（OfficeCLI/Docling/Flint/GraphRAG…） |
@@ -213,7 +218,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ```text
 本象协议/
 ├── docs/        # 创始文档集（本轮产出）
-├── spec/        # JSON Schema + 示例 .origin 包 + **一致性测试集**（68 条语言无关向量）
+├── spec/        # JSON Schema + 示例 .origin 包 + **一致性测试集**（87 条语言无关向量）
 ├── compiler/    # 双向编译器 + 证据链 + 落盘 + `origin` CLI（可运行，81 项跨域自测）
 ├── adapters/    # 领域方言
 │   ├── memory/  #   项目状态：MCP Server（零依赖）+ 回填工具
@@ -229,7 +234,7 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ## 快速上手
 
 ```bash
-npm run verify   # 自测 81 + CAD 44 + 法律 101 + xlsx 87 + MCP 端到端 18 + 一致性 68 + 变异检查 13/13
+npm run verify   # 自测 81 + CAD 44 + 法律 101 + xlsx 87 + MCP 端到端 18 + 一致性 87 + 变异检查 13/13
 
 
 P=spec/examples/sales-2026.origin
@@ -313,14 +318,14 @@ claude mcp add -s local benxiang -- node <绝对路径>/adapters/memory/mcp-serv
 ### 凭什么说这是「协议」而不是「一个库」
 
 一份实现自己跑通自己的测试，证明不了协议存在。分界线在
-[一致性测试集](spec/conformance/README.md)：**68 条测试向量是数据不是代码**，
+[一致性测试集](spec/conformance/README.md)：**87 条测试向量是数据不是代码**，
 不依赖任何宿主语言。任何实现只要写一个几十行的适配器（stdin 收 case、stdout 出结果），
 就能当场自证合规。
 
 ```bash
-npm run test:conformance                       # JavaScript 参考实现：68/68（core + full）
+npm run test:conformance                       # JavaScript 参考实现：87/87（core 79 + full 8）
 node spec/conformance/run.mjs --level core \
-  --adapter "python spec/conformance/implementations/python/adapter.py"   # Python 第二实现：60/60
+  --adapter "python spec/conformance/implementations/python/adapter.py"   # Python 第二实现：79/79
 ```
 
 [Python 第二实现](spec/conformance/implementations/python/benxiang.py) 约 250 行、零依赖，

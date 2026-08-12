@@ -20,6 +20,7 @@ import { createModel } from './arms/lib/model.mjs'
 import * as A0 from './arms/a0-naive/index.mjs'
 import * as A1 from './arms/a1-rag/index.mjs'
 import * as A3 from './arms/a3-benxiang/index.mjs'
+import * as A4 from './arms/a4-lod/index.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const arg = (name, def) => {
@@ -78,7 +79,8 @@ if (corpusIsReal) {
   }
 }
 
-const arms = { a0: A0, a1: A1, a3: A3 }
+const arms = { a0: A0, a1: A1, a3: A3, a4: A4 }
+// a4 不进 all：它是新臂、跑分独立，混进默认批次会让人误以为可与旧数字并列
 const selected = which === 'all' ? ['a0', 'a1', 'a3'] : which.split(',')
 const chapters = task.chapters
 

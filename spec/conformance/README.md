@@ -18,8 +18,8 @@
 
 | 实现 | 语言 | core | full | 适配器 |
 |---|---|---|---|---|
-| 参考实现 | JavaScript | ✅ 60/60 | ✅ 8/8 | [`compiler/conformance-adapter.mjs`](../../compiler/conformance-adapter.mjs) |
-| 第二实现 | Python 3 | ✅ 60/60 | ⊘ 未实现 | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
+| 参考实现 | JavaScript | ✅ 79/79 | ✅ 8/8 | [`compiler/conformance-adapter.mjs`](../../compiler/conformance-adapter.mjs) |
+| 第二实现 | Python 3 | ✅ 79/79 | ⊘ 未实现 | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
 
 > 第二实现的诚实边界：两份实现出自同一作者，中间没有信息隔离。它证明的是
 > **这套语义可以在另一门语言里独立成立、向量确实是语言中立的契约**，
@@ -29,7 +29,7 @@
 
 一个实现**必须**声明自己达到哪一级，**不得**笼统地说「合规」。
 
-**core —— 内存语义**（第一至五章，60 项）
+**core —— 内存语义**（第一至五章，79 项）
 Origin IR 的判定核心：ID 归一化、事务校验、约束谓词、折叠与证据链、重放。
 只要不碰磁盘的实现（库、WASM 模块、服务端中间层）都能达到这一级。
 
@@ -127,7 +127,7 @@ node spec/conformance/run.mjs --json           # 机器可读
 
 ## 五、向量本身有没有牙齿
 
-「68 项全过」本身说明不了什么——一套只断言 1+1=2 的向量也能全过。
+「87 项全过」本身说明不了什么——一套只断言 1+1=2 的向量也能全过。
 `npm run test:mutation` 把参考实现逐条打坏，同时跑自测与一致性向量，看谁抓得到：
 
 - **自测+向量** 都抓到 → 这条承诺协议真的钉死了，换个实现也做不丢
@@ -165,3 +165,21 @@ node spec/conformance/run.mjs --json           # 机器可读
 
 发现向量与规范正文冲突时，**以向量为准并提 issue**——
 规范正文是给人读的，向量是给机器判的，两者不一致本身就是必须修的缺陷。
+
+### 给 AI 实现者（第三方采纳 stub）
+
+上面是给人读的路径。**让 AI agent 帮你实现时，不要让它读完整本规范**——
+「向量即需求」：`vectors/` 的 JSON 是语言中立的契约，比正文更硬。
+
+```text
+1. 看 vectors/*.json（core 级；项数随向量集版本演进，以 run.mjs 实际跑出为准）—— 每项 case 就是一条需求
+2. 写 ~250 行实现 + 适配器，契约照抄 run.mjs 的 stdin/stdout：
+     stdin:  {"version":1,"cases":[{"id":…,"op":…,"input":…},…]}
+     stdout: {"results":[{"id":…,"output":…},…]}     # 除合法 JSON 外 stdout 不输出任何东西
+     stderr: 日志；退出码 0
+3. 跑：node spec/conformance/run.mjs --adapter "<你的命令>" --level core
+4. 全过即可声明合规；**未实现的 op 必须如实回 {"id":…,"error":"unsupported"}**
+   ——运行器把 unsupported 计为未通过，沉默跳过 = 拿「有约束」的假象掩盖「没校验」的事实
+```
+
+向量集有版本号、随协议演进。实现方**应当**在声明合规时注明所对向量集版本。

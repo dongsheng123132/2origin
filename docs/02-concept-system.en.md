@@ -18,20 +18,21 @@ English documents use.
 | **影子** | **Shadow** | A projection generated for one user, device or task | Who sees what, in which situation? |
 | **投影** | **Projection** | The process and the result of generating a shadow from an origin (PDF, image, text, 3D, UI are all projections) | How does an origin become something consumable? |
 | **叠象** | **Redline** | The state / difference / evidence / version layer: visual, structural, semantic, geometric, data and behavioural diffs, plus change trails and validation results | What changed? Is it right? Can it be proven? |
-| **影核协议** | **ActionParity Protocol** | The unified action layer: one semantic action, many executors | What does the AI want to do, and how do different applications carry it out uniformly? |
+| **影核协议** | **Action Kernel Protocol** | The unified action layer: one semantic action, many executors | What does the AI want to do, and how do different applications carry it out uniformly? |
 | **影域** | **ShadowSpace** | The isolated space where the AI works safely — try, simulate and validate without damaging real files | Where does the AI fail safely? |
-| **舟舱** | **PodApp** | The human confirmation, annotation and control surface | Which part needs a human to see and decide? |
+| **确认台** Queren-tai<br>*(formerly 舟舱)* | **Review Console**<br>*(formerly PodApp)* | The human confirmation, annotation and control surface | Which part needs a human to see and decide? |
 | **影刻** | **ShadowFork** | The mechanism for rapid customization, distribution and branding | How does the system replicate and spread? |
 | **Shadow Runtime** | **Shadow Runtime** | The execution layer: the "virtual machine" that loads origins, runs compilation and produces projections | Who actually runs all this? |
 | **本象包** | **Origin Pack** (`.origin/`) | The on-disk form of the federated meta-format: manifest + layered payloads + projections + evidence | What does an origin look like on disk? |
 | **语义事务** | **Semantic Transaction** | The AI's unit of output: operation + target + dependencies + content + state changes + assertions | How does the AI's output get written back to the world safely? |
 | **上下文编译器** | **Context Compiler** | Input side: compiles an origin into the context the AI most needs, given the model, task and token budget | What should the AI be looking at right now? |
 | **提交编译器** | **Commit Compiler** | Output side: parses the transaction, validates constraints, updates state, retains evidence, re-projects | How does the AI's output get verified and landed? |
+| **引用优先** | **Reference-First** | Carry references, not truth; resolve at use-time, version-pinned. The common mechanism behind Origin / Action Kernel / Origin-Environment and the four-layer stub system | For any state a new design introduces: store the source, or only a reference? |
 
 The division of labour, as a single line:
 
 > **ShadowSpace isolates, the Origin preserves, the Redline sees and compares, the Shadow Core acts,
-> the PodApp gets human confirmation, and the ShadowFork replicates.**
+> the Review Console gets human confirmation, and the ShadowFork replicates.**
 
 ## 2. One Origin, Many Shadows
 
@@ -50,7 +51,7 @@ temporal view, a causal view, a visual view and an interactive view.
 ### 2.3 One action, many executors
 
 `replace_text` can be executed by native Office, by direct OOXML manipulation, by LibreOffice, by
-OfficeCLI or by GUI automation. The ActionParity protocol handles routing and fallback.
+OfficeCLI or by GUI automation. The Action Kernel protocol handles routing and fallback.
 
 ### 2.4 One result, many verifiers
 
@@ -67,8 +68,8 @@ Observe → Understand → Act → Render → Verify → Commit
 Mapped to components:
 
 ```text
-Redline perception → shadow object model → ActionParity → real application executes
-→ Redline re-renders and compares → PodApp human confirmation → commit to the real file
+Redline perception → shadow object model → Action Kernel → real application executes
+→ Redline re-renders and compares → Review Console human confirmation → commit to the real file
 ```
 
 ## 4. A concrete example
@@ -109,7 +110,7 @@ As a single line:
 | Protocol | Belongs to | Responsible for |
 |---|---|---|
 | **Artifact Projection Protocol** | Origin / Redline | file structure, semantics, coordinates, previews, available actions, provenance tracking |
-| **ActionParity Protocol** | Shadow Core | action definitions, parameters, preconditions, executor selection, failure fallback, undo |
+| **Action Kernel Protocol** | Shadow Core | action definitions, parameters, preconditions, executor selection, failure fallback, undo |
 | **Evidence Commit Protocol** | Redline | multi-renderer validation, difference reports, risk scoring, human approval, evidence chain, final commit |
 
 Together they are the **Shadow Runtime Protocol**.
@@ -121,11 +122,17 @@ To prevent concept drift, the following are explicitly **not** true:
 - ❌ *"Benxiang means screenshotting text into images to save tokens."* Image compression is one
   projection technique, not a storage format.
 - ❌ *"Benxiang is a bigger universal JSON / universal DOM."* Office, CAD and ZIP are fundamentally
-  different; they share only a lifecycle (`inspect / render / query / act / diff / validate / commit
-  / rollback`), never a data structure. Generic shell plus domain dialects — anything else converges
-  on the lowest common denominator.
+  different; they share only a lifecycle (`inspect / validate / commit` core, plus
+  `render / project / query / act / diff / rollback` derived), never a data structure. Generic shell
+  plus domain dialects — anything else converges on the lowest common denominator.
 - ❌ *"Benxiang is a previewer supporting 500 formats."* That is how traditional software competes.
 - ❌ *"Benxiang can compress a million words into a few thousand tokens losslessly."* It **manages**
   the context limit the way an operating system manages memory. It does not abolish it.
 - ❌ *"A summary can stand in for the source."* A summary is a rebuildable projection with no
   authority to overwrite source fact; inference and fact must be labelled separately.
+- ❌ *"Reference-First forbids all copying / caching."* It forbids **carrying truth** (one fact stored
+  in two places). Caching a **projection** is fine — as long as the projection is rebuildable and
+  says what it dropped, because a projection is not the source.
+- ❌ *"Reference-First is a new clause Benxiang just added."* It is the **generalized name** for
+  principles the protocol already used (derive-don't-store #6, ID normalization #7, the Flint rule),
+  extended to every design decision — not just state and output.

@@ -460,6 +460,13 @@ async function main() {
 
 // 动态导入已内联在 main()（顶层 await 不可用于函数内，用 async 处理）
 
-if (process.argv[1] && (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}` || process.argv[1].endsWith('import.mjs'))) {
+// 守卫必须同时认「文件名叫 import.mjs」和「在 office 目录下」：cad 与 textbook 方言的
+// 入口也叫 import.mjs，只判文件名会让它们一 import 本模块就把 main() 跑起来
+// （实测：textbook 方言 import 本模块时，直接打印出整本教材的 markdown）。
+if (
+  process.argv[1] &&
+  (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}` ||
+    (process.argv[1].endsWith('import.mjs') && process.argv[1].replace(/\\/g, '/').includes('/office/')))
+) {
   main();
 }

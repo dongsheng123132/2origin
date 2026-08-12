@@ -9,5 +9,6 @@
 | `story/` | Story | **已落地（2026-08-06）**：OriginWriter 写作引擎——init/state/submit/check/hooks/outline 六命令，事务性写作（正文+状态变更），禁区/伏笔状态机/正文对照五道门禁，26 项自测（见 [story/README.md](story/README.md)） |
 | `memory/` | Memory | 自研 MCP Server |
 | `cad/` | CAD | FreeCAD / CLI-Anything / Modulor（Phase 4） |
+| `video/` | Video | **已落地（2026-08-09）**：两遍制粗读—精读 + ASR 通道 + 三段式 events/audiences/appraisals，fail-closed 校验器；四篇文档里三篇是负结果（见 [video/README.md](video/README.md)） |
 
 原则：**不重新实现格式解析与渲染，成熟项目一律作为 Adapter 接入**（见 [docs/05-生态对照](../docs/05-生态对照.md)）。

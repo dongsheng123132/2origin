@@ -178,7 +178,32 @@ check(d.text.includes('✓ 无 error 级问题'), '世界状态自洽')
 console.log('\n[10] 新会话恢复：这次世界有东西了')
 const restored = await call('origin_state', {})
 check(restored.text.includes('Benxiang') && restored.text.includes('先做 MCP'), '一次调用即恢复全部项目状态')
-check(restored.text.includes('【约束·违反即拒绝提交】'), '  └ 投影里同时带上了不可违反的边界')
+check(restored.text.includes('【约束·机器校验，违反即拒绝】'), '  └ 投影里同时带上了不可违反的边界')
+
+// 回归保护：约束是**不可降级的固定开销**，不许被对象挤掉。
+// 旧写法（无 task 时退回 renderAll 全量倾倒，约束排在全部对象之后）一旦被上游按预算截尾，
+// benchmark/context-lod 实测 1500/3000/6000/12000 四档预算下 6 条约束全军覆没——
+// 恰恰是会话恢复这条最需要规则的路径上，模型一次都没见过规则。
+const tight = await call('origin_state', { budget: 400 })
+check(tight.text.includes('【约束·机器校验，违反即拒绝】'), '  └ 预算极紧时先保约束，再拿剩下的买对象')
+
+// ── 保留模式：客户端回传帧号，只取变化的部分 ──────────────────────
+console.log('\n[11] 帧与差分（保留模式）')
+const frameId = restored.text.match(/【帧】(\w+)/)?.[1]
+check(!!frameId, '全量投影回带了帧号')
+
+const again = await call('origin_state', { since_frame: frameId })
+check(again.text.includes('【状态差分】'), '带 since_frame 回来 → 返回差分而非全量')
+check(again.text.length < restored.text.length, '  └ 差分确实更短', `${again.text.length} vs ${restored.text.length}`)
+check(
+  again.text.includes('【约束·机器校验，违反即拒绝】'),
+  '  └ 差分里仍原样重发约束（基帧可能已被上下文压缩挤掉，规则不省）',
+)
+
+// 帧号对不上时必须退回全量，绝不能给一份对不上号的差分
+const bogus = await call('origin_state', { since_frame: 'deadbeef' })
+check(bogus.text.includes('已不在服务端缓存'), '未知帧号 → 明说退回全量')
+check(!bogus.text.includes('【状态差分】'), '  └ 且确实给的是全量，不是差分')
 
 srv.stdin.end()
 rmSync(PKG, { recursive: true, force: true })

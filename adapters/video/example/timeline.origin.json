@@ -1,0 +1,135 @@
+{
+  "$schema": "origin/dialect-video/v0.3",
+  "note": "结构示例（合成数据，非真实素材）。展示 events / audiences / appraisals 三段式与 veto、grades、limits。",
+  "source": {
+    "file": "example.mp4",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "duration_s": 120,
+    "container": "1920x1080 h264 + aac",
+    "capture": "屏幕录制",
+    "burned_subtitle": false
+  },
+  "sampling": {
+    "strategy": "two-pass coarse-dense + ASR",
+    "pass1": { "stride_s": 15, "grid": "5x4", "cell_px": 300, "coverage": "100% 时长，无盲丢" },
+    "pass2": [
+      { "range": [40, 70], "stride_s": 2, "why": "E02 估值 ≥0.7，按 V-PASS1-RESOLUTION 加密" }
+    ],
+    "asr": { "engine": "bailian-cli / fun-asr", "segments": 24 },
+    "why": "视觉通道给场景分段，语义判断依赖 ASR"
+  },
+  "world": {
+    "genre": "产品演示",
+    "product": "示例产品",
+    "speaker": "演示者",
+    "intent": "让新用户看懂怎么用",
+    "audience": "首次接触的用户"
+  },
+
+  "events": [
+    {
+      "id": "E01", "t": [0, 40], "ref": "example.mp4@00000000#t=0,40",
+      "scene": "开场", "action": "介绍要演示什么",
+      "gist": "今天给大家看一下这个功能怎么用",
+      "gist_from": "transcribed",
+      "evidence": ["example.mp4@00000000#t=3.2,8.6 「今天给大家看一下」"]
+    },
+    {
+      "id": "E02", "t": [40, 70], "ref": "example.mp4@00000000#t=40,70",
+      "scene": "核心操作", "action": "点击一次完成配置",
+      "gist": "点这一个按钮，剩下的它自己做完",
+      "gist_from": "read-on-screen",
+      "evidence": ["sheets_focus/sheet_01.jpg#cell-4 (t=48s, 按钮文字与口播同时出现)"]
+    },
+    {
+      "id": "E03", "t": [70, 95], "ref": "example.mp4@00000000#t=70,95",
+      "scene": "失败重试", "action": "第一次没成功，重来一遍",
+      "gist": "咦，怎么没反应……我再点一下",
+      "gist_from": "transcribed",
+      "evidence": ["example.mp4@00000000#t=72.1,78.4 「怎么没反应」"]
+    },
+    {
+      "id": "E04", "t": [95, 120], "ref": "example.mp4@00000000#t=95,120",
+      "scene": "收尾", "action": "展示结果并引导下一步",
+      "gist": "你看，出来了。想试的可以去官网下载",
+      "gist_from": "transcribed",
+      "evidence": ["example.mp4@00000000#t=99.0,106.2 「你看，出来了」"]
+    }
+  ],
+
+  "audiences": [
+    {
+      "id": "newcomer-2026H2",
+      "who": "第一次听说这个产品的人，注意力短，3 秒不给理由就走",
+      "criterion": "短视频钩子：能不能拦住人并让他想试",
+      "as_of": "2026-08-09",
+      "dimensions": { "hook": 0.40, "clarity": 0.25, "payoff": 0.35 }
+    },
+    {
+      "id": "existing-user-2026H2",
+      "who": "已经在用的老用户，只想知道这次更新解决了什么",
+      "criterion": "对老用户的信息增量",
+      "as_of": "2026-08-09",
+      "dimensions": { "novelty": 0.50, "specificity": 0.30, "trust": 0.20 }
+    }
+  ],
+
+  "appraisals": [
+    { "event": "E01", "audience": "newcomer-2026H2", "grades": { "hook": 2, "clarity": 4, "payoff": 1 },
+      "value": 0.1875, "basis": "asserted", "by": "示例", "as_of": "2026-08-09",
+      "reason": "必要交代，但没有钩子" },
+    { "event": "E02", "audience": "newcomer-2026H2", "grades": { "hook": 5, "clarity": 5, "payoff": 5 },
+      "value": 1, "basis": "asserted", "by": "示例", "as_of": "2026-08-09",
+      "reason": "按钮文字与口播同时坐实承诺，全片唯一的爆点" },
+    { "event": "E03", "audience": "newcomer-2026H2", "value": 0, "basis": "asserted",
+      "by": "示例", "as_of": "2026-08-09",
+      "veto": { "reason": "演示失败画面。对外投影一律剔除——这不是"价值低"，是不能出现。", "kind": "brand" },
+      "reason": "被否决，不参与加权" },
+    { "event": "E04", "audience": "newcomer-2026H2", "grades": { "hook": 3, "clarity": 4, "payoff": 4 },
+      "value": 0.65, "basis": "asserted", "by": "示例", "as_of": "2026-08-09",
+      "reason": "结果 + 引导，转化动作" },
+
+    { "event": "E01", "audience": "existing-user-2026H2", "grades": { "novelty": 1, "specificity": 2, "trust": 3 },
+      "value": 0.175, "basis": "asserted", "by": "示例", "as_of": "2026-08-09",
+      "reason": "老用户不需要开场介绍" },
+    { "event": "E02", "audience": "existing-user-2026H2", "grades": { "novelty": 4, "specificity": 5, "trust": 4 },
+      "value": 0.825, "basis": "asserted", "by": "示例", "as_of": "2026-08-09",
+      "reason": "这就是这次更新的内容，老用户最关心" },
+    { "event": "E03", "audience": "existing-user-2026H2", "grades": { "novelty": 2, "specificity": 4, "trust": 2 },
+      "value": 0.475, "basis": "asserted", "by": "示例", "as_of": "2026-08-09",
+      "reason": "失败重试对老用户反而是有用信息——知道这里容易卡。**同一事件对新客是否决，对老用户有价值**" },
+    { "event": "E04", "audience": "existing-user-2026H2", "grades": { "novelty": 1, "specificity": 2, "trust": 3 },
+      "value": 0.175, "basis": "asserted", "by": "示例", "as_of": "2026-08-09",
+      "reason": "官网引导对老用户无意义" }
+  ],
+
+  "limits": [
+    {
+      "code": "X-SYNTHETIC", "kind": "unverified", "scope": "整包",
+      "statement": "本文件是结构示例，数据全部虚构，不对应任何真实素材。source.sha256 是占位零值，跑 validate.mjs 会因找不到素材而报 src-missing——那是正确行为。",
+      "remedy": "拿真实素材按 spec.md 的流程重新生成"
+    },
+    {
+      "code": "X-ALL-ASSERTED", "kind": "unverified", "scope": "appraisals[*]",
+      "statement": "全部估值都是 asserted（模型/人的判断），没有一条 measured。真实项目里这个比例会被校验器报出来，且只能靠接入真实受众反馈来降低。",
+      "remedy": "投放后用 ingest.mjs 把逐秒留存转成 basis=measured 的估值，追加而不覆盖"
+    }
+  ],
+
+  "projections": {
+    "newcomer_30s": {
+      "audience": "newcomer-2026H2",
+      "target": "竖屏 30s",
+      "pick": [[40, 70], [95, 120]],
+      "logic": "承诺（一键完成）→ 行动（去官网）",
+      "dropped": "E01(0.19) 开场无钩子；E03 被 veto——演示失败画面不能对外"
+    },
+    "changelog_60s": {
+      "audience": "existing-user-2026H2",
+      "target": "更新说明 60s",
+      "pick": [[40, 95]],
+      "logic": "只讲这次改了什么，含失败重试段——老用户需要知道哪里容易卡",
+      "dropped": "E01 E04 —— 开场与官网引导对老用户无信息增量"
+    }
+  }
+}

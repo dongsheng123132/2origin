@@ -23,8 +23,8 @@ Current status:
 
 | Implementation | Language | core | full | Adapter |
 |---|---|---|---|---|
-| Reference | JavaScript | ✅ 60/60 | ✅ 8/8 | [`compiler/conformance-adapter.mjs`](../../compiler/conformance-adapter.mjs) |
-| Second | Python 3 | ✅ 60/60 | ⊘ not implemented | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
+| Reference | JavaScript | ✅ 79/79 | ✅ 8/8 | [`compiler/conformance-adapter.mjs`](../../compiler/conformance-adapter.mjs) |
+| Second | Python 3 | ✅ 79/79 | ⊘ not implemented | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
 
 > **Honest boundary on the second implementation:** both implementations were written by the same
 > author, with no information isolation between them. What it demonstrates is that **this semantics
@@ -37,7 +37,7 @@ Current status:
 An implementation **MUST** declare which level it reaches. It **MUST NOT** claim "conformant"
 without qualification.
 
-**core — in-memory semantics** (chapters 1–5, 60 cases)
+**core — in-memory semantics** (chapters 1–5, 79 cases)
 The decision core of the Origin IR: ID normalization, transaction validation, constraint predicates,
 folding and the evidence chain, replay. Any implementation that never touches disk (a library, a
 WASM module, a server-side middle layer) can reach this level.
@@ -145,7 +145,7 @@ abstract.
 
 ## 5. Do the vectors have teeth?
 
-"68 of 68 passing" proves nothing on its own — a suite that only asserts `1 + 1 = 2` also passes
+"87 of 87 passing" proves nothing on its own — a suite that only asserts `1 + 1 = 2` also passes
 completely. `npm run test:mutation` breaks the reference implementation one promise at a time and
 runs both the self-tests and the conformance vectors against each mutant, to see **which of the two
 catches it**:

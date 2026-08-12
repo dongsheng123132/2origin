@@ -105,6 +105,10 @@ const ARM_EXTERNAL_DEPS = [
   ['eval', 'ced.mjs'], //                 a3-benxiang/commit-compiler.mjs 的正文门禁规则源
   ['..', '..', 'compiler', 'commit-compiler.mjs'], // 参考实现：校验/应用事务
   ['..', '..', 'compiler', 'constraints.mjs'], //     参考实现：通用约束检查
+  // 输入侧：a3-benxiang/context-compiler.mjs 自 2026-08 起是核心的方言着色器，
+  // 选取、渲染与预算斜坡都住在核心里。**漏掉这一条，改核心就能悄悄改掉提示词而指纹不动**
+  // ——正是第八起的同一个形状（规格与判分器都没变、跑法变了，旧指纹一个都察觉不到）。
+  ['..', '..', 'compiler', 'context-compiler.mjs'], // 参考实现：投影 + 预算斜坡
 ]
 
 export function armsHash(here) {

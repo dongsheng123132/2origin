@@ -30,10 +30,15 @@
     "test:mutation": "node compiler/mutation-check.mjs",
     "test:conformance": "node spec/conformance/run.mjs",
     "test:a3-equiv": "node benchmark/shadowbench-w/arms/a3-benxiang/equivalence.mjs",
-    "verify": "npm run test && npm run test:cad && npm run test:law && npm run test:office && npm run test:xlsx && npm run test:e2e && npm run test:conformance && npm run test:mutation",
+    "verify": "npm run test && npm run test:cad && npm run test:law && npm run test:office && npm run test:xlsx && npm run test:e2e && npm run test:conformance && npm run test:mutation && npm run test:a3-projection",
     "origin": "node compiler/cli.mjs",
     "mcp": "node adapters/memory/mcp-server.mjs",
-    "mcp:origin": "node compiler/mcp.mjs"
+    "mcp:origin": "node compiler/mcp.mjs",
+    "test:a3-projection": "node benchmark/shadowbench-w/arms/a3-benxiang/projection-equivalence.mjs",
+    "test:context-lod": "node benchmark/context-lod/bench.mjs",
+    "test:lod-engagement": "node benchmark/context-lod/engagement-probe.mjs",
+    "test:state-recall": "node benchmark/context-lod/state-recall/bench.mjs --provider stub",
+    "test:delta": "node benchmark/context-lod/state-recall/delta-bench.mjs --provider stub"
   },
   "files": [
     "compiler/",

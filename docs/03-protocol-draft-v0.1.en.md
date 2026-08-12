@@ -75,7 +75,7 @@ A principle without an incident behind it is a principle nobody has tested yet.
     > substandard and dropped 1–2 chapters per run — trading completeness for correctness, which
     > is unacceptable in real use. Changing it to "when retries are exhausted, accept the draft
     > with the fewest errors and flag it for human review" restored full completion while keeping
-    > the quality advantage. This is exactly where the PodApp (human confirmation layer) sits in
+    > the quality advantage. This is exactly where the Review Console (human confirmation layer) sits in
     > the protocol.
 
 ## 2. The minimal Origin IR core (six parts + provenance)
@@ -337,7 +337,7 @@ origin validate <artifact>        # constraint and integrity validation
 origin commit   <transaction>     # submit a semantic transaction
 ```
 
-Exposure forms: CLI, MCP, REST API, SDK, PodApp review interface.
+Exposure forms: CLI, MCP, REST API, SDK, Review Console review interface.
 
 ### 7.2 Reference implementation status (as of v0.1)
 
@@ -371,13 +371,13 @@ counted, and in that state a "protocol" is just a carefully worded design docume
 - **The test vectors are data, not code** (`vectors/*.json`), depending on no host language
 - Any implementation can certify itself by writing an adapter of a few dozen lines
   (read cases on stdin, write results on stdout)
-- Two levels: **core** (in-memory semantics, 60 cases) and **full** (`.origin` persistence, 8 cases)
+- Two levels: **core** (in-memory semantics, 79 cases) and **full** (`.origin` persistence, 8 cases)
 - An unimplemented op **MUST** honestly return `unsupported`, and the runner counts it as *not
   passing* — silently skipping lets the appearance of "there are constraints" hide the fact that
   nothing checks them
 
 ```bash
-npm run test:conformance          # reference implementation: 68/68
+npm run test:conformance          # reference implementation: 87/87 (core 79 + full 8)
 node spec/conformance/run.mjs --adapter "python …/adapter.py" --level core
 ```
 
