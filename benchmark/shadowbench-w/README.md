@@ -63,7 +63,7 @@ W3 是关键。所有现有系统（mem0/Letta/Zep 到天命）都在写回状�
 |---|---|---|
 | **A0** | 裸模型 + 尾部截断 | 最朴素基线（ConStory-Bench 显示它意外地强） |
 | **A1** | 向量 RAG 检索 topK | 当前主流（Long-Novel-GPT 等） |
-| **A2** | 状态机 + 门禁（天命式） | 已知最强先行者，Windows 应用可本机实跑 |
+| **A2** | **纯提示词状态维护**：每章重写完整 JSON 状态，无校验/证据/上下文编译 | 决定性方法消融：分离「要求维护状态」本身的收益 |
 | **A3** | **Benxiang**：状态机 + 语义事务 + 证据链 + 预算编译 | 本项目 |
 
 控制变量：同一底模、同一世界规格、同一续写任务、同一随机种子策略；只变「上下文怎么给」和「状态怎么写回」。
@@ -108,7 +108,7 @@ benchmark/shadowbench-w/
 ├── arms/                  # 四个实验臂的运行器
 │   ├── a0-naive/
 │   ├── a1-rag/
-│   ├── a2-tianming/       #   调 Windows 应用或复现其门禁逻辑
+│   ├── a2-prompt-state/   #   纯提示词维护完整状态；无校验、证据与上下文编译
 │   └── a3-benxiang/
 ├── eval/                  # 判分器
 │   ├── ced.mjs            #   一致性错误检测（规则 + LLM-judge 双通道）
@@ -131,15 +131,15 @@ benchmark/shadowbench-w/
 - [x] **W3 答案集**（`world/spec.origin/tasks/continuation.json`）——续写任务、5 条禁区、预期终态
 - [x] **三个判分器**：`eval/ced.mjs`（W1，确定性通道全实现 + 语义通道接口）、`eval/detect-score.mjs`（W2 准确率/召回率）、`eval/state-diff.mjs`（W3 状态比对）
 - [x] **判分器自测**（`eval/selftest.mjs`）——用已知违规夹具反测规则是否真的会响，用干净文本反测误报
-- [x] **两个实验臂**：A0 裸模型、A3 Benxiang
+- [x] **四个主实验臂**：A0 裸模型、A1 向量 RAG、A2 纯提示词状态、A3 Benxiang
   - [提交编译器](arms/a3-benxiang/commit-compiler.mjs)是[参考实现](../../compiler/commit-compiler.mjs)的**叙事方言**，不再自带一份校验器——曾 fork 过两天，参考实现修的洞一个都没惠及基准，而基准正是这个项目对外的证据来源
   - [上下文编译器](arms/a3-benxiang/context-compiler.mjs)**不合并**：投影建立在主角、同地点、未回收伏笔这些叙事概念上，核心的通用投影表达不了。理由记在文件头
   - [差分等价测试](arms/a3-benxiang/equivalence.mjs)（`npm run test:a3-equiv`）：5420 组用例比对合并前后的门禁判定与退回文案，确保 results-log 里的数字仍是「这套护栏下的成绩」
 - [x] **编排器**（`run.mjs`）+ stub 模型，全流程零成本跑通
-- [ ] 生成 S 级基线正文（3 万字）并回读校验 ← **下一步，第一次花 API 额度**
-- [ ] 接入语义通道（知识越界、语气暗示的双模型 judge）
-- [ ] **跑 Gate 0**
-- [ ] Gate 0 通过后补 A1/A2，升 M 级
+- [x] **M 级主实验**：A0/A1/A3 × 10 轮 × 2 模型，原始结果在 `results-v3-m/`
+- [x] **A2 实现与冒烟**：stub 自测进入 `npm run verify`；qwen3.7-max 固定快照单轮完成 5/5 状态快照（只作 pilot，不并入论文统计）
+- [ ] **A2 正式消融**：M 级 10 轮 × deepseek-v4-flash / qwen-plus
+- [ ] **前沿模型压力测试**：qwen3.7-max-2026-06-08 的 A0，M 级 10 轮
 
 ```bash
 node eval/replay.mjs --validate            # 校验世界规格自洽
@@ -147,6 +147,7 @@ node eval/replay.mjs --chapter 10          # 任意章节末的 ground truth
 node eval/selftest.mjs                     # 判分器自测（必须全绿）
 node run.mjs --provider stub               # 零成本跑通全流程
 node run.mjs --provider stub --scenario violating --arm a3   # 验证门禁能拦住违规
+node run.mjs --provider stub --arm a2 --task continuation-m.json  # 验证 prompt-only 链路
 node run.mjs --provider anthropic --model claude-sonnet-5    # 真实实验（需 API Key）
 ```
 
@@ -221,6 +222,6 @@ node run-shot.mjs --provider stub --scenario drifting    # 验证判分器抓得
 
 ---
 
-**外部对照与致谢**：CED 指标口径取自 ConStory-Bench（*Lost in Stories*, arXiv 2603.05890）；A2 臂设计参考开源项目「天命」（[zy-zmc/tianming-novel-ai-writer](https://github.com/zy-zmc/tianming-novel-ai-writer)，MIT，其「不靠上下文，靠状态」的主张与本项目高度一致）；写侧事务语义参考 MemTX（arXiv 2607.23929）与 Cordon（arXiv 2606.17573）。
+**外部对照与致谢**：CED 指标口径取自 ConStory-Bench（*Lost in Stories*, arXiv 2603.05890）；开源项目「天命」（[zy-zmc/tianming-novel-ai-writer](https://github.com/zy-zmc/tianming-novel-ai-writer)，MIT）是状态+门禁路线的重要先行工作，但不是本仓库的 A2——A2 专指不带门禁的 prompt-only 方法消融；写侧事务语义参考 MemTX（arXiv 2607.23929）与 Cordon（arXiv 2606.17573）。
 
 *注：ConStory-Bench 摘要页未列出 CED 精确定义与各系统分数，采用前需核对全文并在此更新。*

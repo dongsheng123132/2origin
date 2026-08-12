@@ -5,7 +5,7 @@
 //   node run.mjs --provider stub --scenario violating 验证校验器能拦住违规
 //   node run.mjs --provider anthropic --model claude-sonnet-5   真实实验
 //
-// 选项：--arm a0|a1|a3|all（可逗号分隔，默认 all）  --budget <字符数>  --out <目录>
+// 选项：--arm a0|a1|a2|a3|a4|all（可逗号分隔，默认 all）  --budget <字符数>  --out <目录>
 //       --repeat <次数>  --rep-offset <起始编号偏移，用于续跑不覆盖已有数据>
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync } from 'node:fs'
@@ -19,6 +19,7 @@ import { specHash, judgeHash, judgeHashW1, judgeHashW3, armsHash } from './eval/
 import { createModel } from './arms/lib/model.mjs'
 import * as A0 from './arms/a0-naive/index.mjs'
 import * as A1 from './arms/a1-rag/index.mjs'
+import * as A2 from './arms/a2-prompt-state/index.mjs'
 import * as A3 from './arms/a3-benxiang/index.mjs'
 import * as A4 from './arms/a4-lod/index.mjs'
 
@@ -79,8 +80,9 @@ if (corpusIsReal) {
   }
 }
 
-const arms = { a0: A0, a1: A1, a3: A3, a4: A4 }
-// a4 不进 all：它是新臂、跑分独立，混进默认批次会让人误以为可与旧数字并列
+const arms = { a0: A0, a1: A1, a2: A2, a3: A3, a4: A4 }
+// a2/a4 不进 all：它们是新增实验臂，混进默认批次会改变历史命令的成本与语义。
+// 完成正式跑分并更新论文后，再决定是否扩大 all 的默认集合。
 const selected = which === 'all' ? ['a0', 'a1', 'a3'] : which.split(',')
 const chapters = task.chapters
 
@@ -187,7 +189,7 @@ console.log(` ShadowBench-W · ${task.level ?? taskFile} · 第 ${chapters[0]}-$
 console.log('='.repeat(64))
 if (stub) {
   console.log('\n  ⚠⚠ STUB 模式：模型输出是固定剧本，下列数字仅验证流程连通，')
-  console.log('     不是实验结果，不得引用。真实实验需 --provider anthropic。')
+  console.log('     不是实验结果，不得引用。真实实验需使用非 stub 的模型通道。')
 }
 if (!corpusIsReal) console.log('  ⚠ 基线语料未生成，A0 的「最近正文」暂用大纲摘要顶替。')
 
@@ -212,6 +214,12 @@ for (const { meta, result, w1, w3, rep } of report) {
     const nr = result.gate.needsReview ?? []
     if (nr.length)
       console.log(`  待人工复核：${nr.length} 章（重试耗尽后收下最优稿）→ ${nr.map((r) => `ch${r.chapter}(残留${r.remainingErrors})`).join('，')}`)
+  }
+  if (result.promptOnly) {
+    console.log(
+      `  纯提示词状态：完整快照 ${result.promptOnly.stateSnapshots}/${result.chapters.length}` +
+        (result.promptOnly.parseFailures.length ? `，格式缺失 ${result.promptOnly.parseFailures.length} 章（不重试）` : '')
+    )
   }
   const u = result.usage
   console.log(`  用量：输入 ${u.inputTokens} tok，输出 ${u.outputTokens} tok，${u.calls} 次调用，${u.ms}ms`)
