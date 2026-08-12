@@ -3,9 +3,14 @@
 ```bash
 cd benchmark/shadowbench-w/paper
 pandoc -s -o shadowbench-w-paper.tex shadowbench-w-paper-en-v0.3.md
-# ⚠️ 生成后手工把 \usepackage{lmodern} 注释掉（pandoc 默认会加回来；
-#    本机 MiKTeX 生成 lmodern 字库会卡住，arXiv 接受默认 CM 字体）
 xelatex -interaction=nonstopmode -halt-on-error shadowbench-w-paper.tex
+```
+
+2026-08-12 实测：带 `\usepackage{lmodern}` 直接通过（11 页，exit 0）。
+若哪台机器的 MiKTeX 卡在 lmodern 字库生成上（2026-08-07 遇到过），把那一行注释掉即可，
+arXiv 接受默认 CM 字体。
+
+```
 ```
 
 ## 必须用 XeLaTeX，不能用 pdfLaTeX

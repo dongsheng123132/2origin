@@ -17,8 +17,7 @@
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% \usepackage{lmodern}  % 注释：本机 MiKTeX lmodern 字库生成卡住；arXiv 接受默认 CM 字体
-%                        重新 pandoc 生成后必须重新注释掉这一行（pandoc 默认会加回来）
+\usepackage{lmodern}
 \ifPDFTeX\else
   % xetex/luatex font selection
 \fi
@@ -676,8 +675,10 @@ Impact}\label{limitations-broader-impact}
 \tightlist
 \item
   \textbf{Code}: public repository (anonymous version strips identity
-  info); all three arms + judges + vocabulary patch; self-tests
-  (compiler 81, CAD 55, conformance 87, mutation 19/19) all pass.
+  info); all three arms + judges + vocabulary patch. Self-tests, re-run
+  2026-08-12, all green: compiler \textbf{91}, CAD 55, conformance
+  \textbf{87/87}, compiler mutation \textbf{19/19 killed}, judge
+  mutation \textbf{9/9 killed} (§7.1).
 \item
   \textbf{Data}: corpus/, world/spec.origin/, results/ (full JSON per
   round).
@@ -685,6 +686,29 @@ Impact}\label{limitations-broader-impact}
   \textbf{Judge fingerprints}: judgeHashW1 / judgeHashW3; fingerprints
   unchanged after the patch (Run \#29).
 \end{itemize}
+
+\subsubsection{7.1 Who validates the
+validator?}\label{who-validates-the-validator}
+
+A self-test that kills no mutant is indistinguishable from no self-test:
+it keeps passing after every refactor while the benchmark quietly hands
+out points to every arm. We therefore mutate the \emph{judges}
+themselves --- nine plausible human errors injected into
+\texttt{ced.mjs} (W1), \texttt{detect-score.mjs} (W2) and
+\texttt{state-diff.mjs} (W3), one at a time, each followed by a full
+self-test run and a revert.
+
+Mutants include: W3 accuracy pinned to full marks, W3 strict comparison
+degraded to string comparison, W3 evidence-traceability loosened, W1
+error count pinned to zero, W1 chain-of-custody check for the Black Key
+removed, and W2 recall computed over \emph{found} rather than
+\emph{planted} errors.
+
+\textbf{Result: 9 injected, 9 killed, 0 survived}
+(\texttt{eval/mutation-check.mjs\ -\/-json}). This does not remove the
+judge/gate coupling declared in §5.5 --- it establishes the weaker but
+necessary property that the scoring logic is actually under assertion,
+so a silent regression in the judge cannot inflate any arm.
 
 \subsection{Appendix A: Conformance vectors and mutation
 testing}\label{appendix-a-conformance-vectors-and-mutation-testing}
@@ -762,12 +786,13 @@ objects)}\label{appendix-b-the-office-dialect-native-documents-verifiable-state-
 \item[$\square$]
   \textbf{Run the A2 prompt-only arm (§5.3)} --- 10 rounds × 2 models;
   the one experiment that turns §5.3 into a real ablation
-\item[$\square$]
-  Rebuild the LaTeX package after any edit
-  (\texttt{pandoc\ -s\ -o\ shadowbench-w-paper.tex\ shadowbench-w-paper-en-v0.3.md})
-  --- the 2026-08-07 build emitted
-  \texttt{\$\textbackslash{}\textbackslash{}pm\$}, which does not
-  compile as ±
+\item[$\boxtimes$]
+  LaTeX package builds --- \textbf{fixed 2026-08-12}. The 2026-08-07
+  build emitted \texttt{\$\textbackslash{}\textbackslash{}pm\$} /
+  \texttt{\$\textbackslash{}\textbackslash{}to\$} (double backslash =
+  line break in math mode) and had never compiled. Rebuild recipe in
+  \texttt{BUILD.md}; \textbf{XeLaTeX only} (pdfLaTeX dies on \texttt{≈}
+  U+2248). Verified: 11-page PDF, exit 0.
 \end{itemize}
 
 \end{document}
