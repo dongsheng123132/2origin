@@ -129,9 +129,14 @@ deepseek-v4-flash (10 rounds/arm), the state layer raises W3 state
 accuracy to \textbf{100.0\%} (zero variance), versus 56.3\% for the bare
 model and 70.0\% for a vector-RAG baseline (both p \textless{} 0.0001,
 20,000-round permutation test), and cuts W1 consistency-error density
-from 2.16 to 0.84. State writeback is robust across models (qwen-plus
-and deepseek-v4-flash both reach 98.9--100\% on S-level). The benchmark,
-judges, and reference implementation are released under Apache-2.0.
+from 2.16 to 0.84. The finding holds across two unrelated models: on the
+same M-level protocol, qwen-plus reaches 97.5\% with the state layer
+versus 53.8\% bare and 58.8\% RAG (p \textless{} 0.0001). We also
+declare what the design does \emph{not} yet establish: A3 bundles three
+interventions (a demand for explicit state, a validator, an evidence
+chain), and the prompt-only ablation that would separate them has not
+been run (§5.3). The benchmark, judges, and reference implementation are
+released under Apache-2.0.
 
 \subsection{1. Introduction}\label{introduction}
 
