@@ -57,6 +57,38 @@ check(scoreW3(stale).stateAccuracy < 1, '钥匙未转手应判失败')
 const partial = { arm: '__selftest__', state: { 'obj:black-key': { holder: 'char:lin-zheng' } } }
 check(scoreW3(partial).missing > 0, '漏报字段应计入 missing')
 
+// ── 以下由变异验证补出（`node eval/mutation-check.mjs`，2026-08-08）──────────
+// 这几条对应的判分逻辑此前**没有任何断言在看**：把严格比对退化成字符串比、把证据正则
+// 放成「非空即可」、把主指标 EPC 写死成 0 —— 三种改法自测都照样全绿。
+// 夹具只能证明「判分器能发现坏输入」，证明不了「判分器自己被改坏时会有人喊」。
+
+// ① 类型必须严格。LLM 回填状态时把布尔写成字符串、把标量裹成数组是常事，
+//    那是**真的判错了**，不能因为 `String()` 看起来一样就放过去。
+const typed = structuredClone(perfect)
+typed.state['obj:black-key'].used = 'false' // 期望布尔 false，这里是字符串
+check(scoreW3(typed).stateAccuracy < 1, '布尔被写成字符串应判失败（严格比对不许退化）')
+
+const boxed = structuredClone(perfect)
+boxed.state['obj:black-key'].holder = ['char:lin-zheng'] // 期望标量，这里裹成数组
+check(scoreW3(boxed).stateAccuracy < 1, '标量被裹成数组应判失败')
+
+// ② 证据可追溯率必须真的检查格式。这个数字在 Run #2 被当作 A3 的核心优势公布过
+//    （「证据可追溯率 100%，A0 无此能力」），却一直没有断言保护 ——
+//    把正则放成 `/./` 之后它恒等于 100%，而报告读起来一模一样。
+const evidenced = structuredClone(perfect)
+evidenced.evidence = {
+  'obj:black-key.holder': 'scene:03-02', // 合格：指得回具体场景
+  'char:zhao-qi.alive': '我记得是这样', // 不合格：指不回任何来源
+}
+const ev = scoreW3(evidenced).evidenceTraceability
+check(Math.abs(ev - 0.5) < 1e-9, '指不回来源的证据不算可追溯', `实际 ${ev}`)
+
+// ③ 主指标必须由真实发现数算出来，不能是常数。
+//    上面 [W1] 那段只看了 `findings`（逐章规则命中），从不看聚合值 ——
+//    于是 `epc: 0` 这种最粗暴的送分能一路绿灯进报告。
+check(w1.errors === w1.findings.length, 'errors 必须等于实际发现数')
+check(w1.epc > 0, '有违规的夹具，主指标 EPC 必须 > 0（不许是写死的常数）', `实际 ${w1.epc}`)
+
 console.log('\n[W2] 检出评分')
 const w2 = scoreW2({
   arm: '__selftest__',
