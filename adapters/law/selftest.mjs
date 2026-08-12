@@ -34,7 +34,8 @@ import { adjust, FACTORS, lawConstraints, CITABLE_AS_BASIS } from './dialect.mjs
 import { runSentencing } from './sentence.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const db = loadLawDb()
+// 生产样本库默认开放世界；自造 fixture 明确收紧为封闭世界，才能种入「伪造引用」。
+const db = { ...loadLawDb(), closedWorld: true }
 let pass = 0, fail = 0
 const check = (cond, name, detail = '') => {
   if (cond) { pass++; console.log(`  ✓ ${name}`) }
@@ -72,6 +73,10 @@ check(cites[3].title === '中华人民共和国刑事诉讼法', '跨书名号�
 const cn = parseCaseNo('（2026）沪0101刑初123号')
 check(cn?.类型 === '刑事' && cn?.审级 === '初', '案号解析出案件类型与审级')
 check(parseCaseNo('（2026）沪0101民初99号')?.类型 === '民事', '民事案号同样认得（可引范围不同）')
+check(parseCaseNo('（2024）最高法民辖23号')?.审级 === '辖', '民事管辖裁定案号同样认得')
+const rulingSections = splitSections('（2024）最高法民辖23号\n本院经审查认为，本案应由原审法院审理。\n根据《中华人民共和国民事诉讼法》第二十八条之规定，裁定如下：\n本案由甲法院管辖。')
+check(rulingSections.说理?.includes('本案应由原审法院审理') && rulingSections.主文?.includes('本案由甲法院管辖'), '民事裁定书的「经审查认为 / 裁定如下」可切段')
+check(rulingSections.依据?.startsWith('根据《中华人民共和国民事诉讼法》第二十八条'), '裁定主文前的最后一处依据被归入裁判依据段')
 
 // ── 二、条文库判定 ──────────────────────────────────────────────
 console.log('\n[引用体检] 法释〔2009〕14号的白名单，一个缺陷只出一条结论')
@@ -99,12 +104,12 @@ console.log('\n[库覆盖] 「没查」≠「查过没问题」≠「有问题�
 const partial = { ...db, closedWorld: false }
 const jcP = (title, article, position = '裁判依据') =>
   judgeCitation({ title, article, article_cn: String(article) }, { db: partial, at: '2026-07-15', whitelist: CITABLE_AS_BASIS.刑事, position })
-check(db.closedWorld === true, 'fixture 条文库自称完备（closed_world: true）')
+check(db.closedWorld === true, '自造 fixture 显式使用封闭世界条文库')
 check(jc('最高人民法院关于办理盗窃案件数额认定的补充规定', 3).status === 'not-found', '  └ 故完备库里查不到 = 伪造，判 not-found')
 check(jcP('最高人民法院关于办理盗窃案件数额认定的补充规定', 3).status === 'uncovered', '同一处引用，换成不自称完备的库：只判 uncovered')
 check(jcP('中华人民共和国刑法', 999).status === 'uncovered', '刑法第 999 条不在库里——判「未覆盖」而不是「不存在」')
 check(/未校验/.test(jcP('中华人民共和国刑法', 999).note ?? ''), '  └ 且明说「未校验，不代表它有问题」，不静默')
-check(loadLawDb === loadLawDb && ((raw) => raw.closedWorld === false)({ closedWorld: false }), 'closedWorld 缺省 false：不敢自称完备的库，不许说别人伪造')
+check(loadLawDb().closedWorld === false, '生产条文库默认开放世界：不敢自称完备，就不许说别人伪造')
 
 // ── 三、量刑计算 ────────────────────────────────────────────────
 console.log('\n[量刑] 同向相加、逆向相减（法发〔2021〕21号），不是连乘')

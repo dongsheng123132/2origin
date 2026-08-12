@@ -108,6 +108,7 @@ export function judgmentToPackage(text, { db, name, staged = false }) {
 
   // ── 认定事实：金额是最常被两处记账的那个数 ──
   const factAmounts = extractAmounts(sec.查明 ?? '')
+  const reasoningAmounts = extractAmounts(sec.说理 ?? '')
   const 认定金额 = factAmounts[0]?.value ?? null
   objects.push({
     id: 'fact:F-01', type: 'fact', case: caseId,
@@ -194,13 +195,19 @@ export function judgmentToPackage(text, { db, name, staged = false }) {
 
   // ── 正文对照状态：说理段的金额、判决主文的刑期，各自必须等于状态里那一份 ──
   // 只在审计模式下生成：生成模式还没有正文可对照，正文是最后才投影出来的。
+  //
+  // 金额不是「同一段里看见的所有元字样」：一份民事文书可以同时出现本金、利息、
+  // 诉讼请求、已付款、鉴定费等。没有字段级绑定时，把它们都和查明段第一笔钱相等，
+  // 会制造假阳性。故仅在查明、说理各有唯一候选时做这个保守对照；多候选时明确降级。
   const mentions = []
-  if (!staged && 认定金额 !== null)
-    for (const [i, a] of extractAmounts(sec.说理 ?? '').entries()) {
-      const id = `M-说理金额-${i + 1}`
-      mentions.push({ id, expect: 认定金额, where: '本院认为段', label: '涉案金额' })
-      objects.push({ id: `mention:${id}`, type: 'mention', case: caseId, where: '说理', label: '涉案金额', value: a.value, raw: a.raw })
-    }
+  if (!staged && factAmounts.length === 1 && reasoningAmounts.length === 1) {
+    const a = reasoningAmounts[0]
+    const id = 'M-说理金额-1'
+    mentions.push({ id, expect: 认定金额, where: '本院认为段', label: '涉案金额' })
+    objects.push({ id: `mention:${id}`, type: 'mention', case: caseId, where: '说理', label: '涉案金额', value: a.value, raw: a.raw })
+  } else if (!staged && (factAmounts.length || reasoningAmounts.length)) {
+    notes.push(`查明段金额 ${factAmounts.length} 处、说理段金额 ${reasoningAmounts.length} 处，缺少字段级对应关系，故 D 类金额对照未校验。这不是体检通过。`)
+  }
   if (!staged && Number.isFinite(ws?.拟宣告刑))
     for (const [i, t] of extractTerms(sec.主文 ?? '').entries()) {
       const id = `M-主文刑期-${i + 1}`
