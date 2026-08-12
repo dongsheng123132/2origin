@@ -18,6 +18,7 @@
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 % \usepackage{lmodern}  % 注释：本机 MiKTeX lmodern 字库生成卡住；arXiv 接受默认 CM 字体
+%                        重新 pandoc 生成后必须重新注释掉这一行（pandoc 默认会加回来）
 \ifPDFTeX\else
   % xetex/luatex font selection
 \fi
@@ -87,12 +88,16 @@ Generation}\label{shadowbench-w-state-consistency-as-a-benchmarkable-task-for-lo
 
 \begin{quote}
 Working draft v0.3 (English) --- for arXiv preprint and ARR Oct 2026
-cycle (deadline 2026-10-12 AoE). Status: draft, data complete. Main
-results (§5.1) and cross-model (§5.2) from
-benchmark/shadowbench-w/results-v3-m/ (M-level, 50-chapter $\\approx$95K
+cycle (deadline 2026-10-12 AoE). Status: draft; \textbf{main-result data
+complete}, method ablations \textbf{not yet run} (declared in §5.3).
+Main results (§5.1) and cross-model (§5.2) come from
+\texttt{benchmark/shadowbench-w/results-v3-m/} (M-level, 50-chapter ≈95K
 baseline, 10 rounds/arm, both deepseek-v4-flash and qwen-plus, patched
-hermes HTTP + bailian channels). All six arXiv citations verified live
-(2026-08-07); star counts approximate (values drift).
+hermes HTTP + bailian channels). \textbf{Every cell of the §5.1 and §5.2
+tables is recomputable from the 60 per-round JSON files in that
+directory} --- re-verified 2026-08-12, all twelve accuracy/EPC cells
+reproduce exactly. All six arXiv citations verified live (2026-08-07);
+star counts approximate (values drift).
 \end{quote}
 
 \subsection{Abstract}\label{abstract}
@@ -110,7 +115,7 @@ and can every claim be traced to evidence?}
 We introduce \textbf{ShadowBench-W}, a benchmark for state consistency
 in long-form story continuation. Built on a Chinese corpus in two
 scales---an S-level 10-chapter (\textasciitilde20K characters)
-development corpus and an \textbf{M-level 50-chapter ($\\approx$95K characters)
+development corpus and an \textbf{M-level 50-chapter (≈95K characters)
 main corpus}---each with a 5-chapter continuation task, it defines two
 scores: \textbf{W1} measures consistency errors per 100 contacts (EPC)
 in the generated text, and \textbf{W3} measures field-level agreement
@@ -120,7 +125,7 @@ the evidence-traceability of every state field. We also present the
 under a token budget and validates every state mutation as a transaction
 carrying an evidence chain.
 
-On the \textbf{M-level} task (50-chapter, $\\approx$95K-character baseline) with
+On the \textbf{M-level} task (50-chapter, ≈95K-character baseline) with
 deepseek-v4-flash (10 rounds/arm), the state layer raises W3 state
 accuracy to \textbf{100.0\%} (zero variance), versus 56.3\% for the bare
 model and 70.0\% for a vector-RAG baseline (both p \textless{} 0.0001,
@@ -190,7 +195,7 @@ to answer ``what do I believe now, and why''.
   (ConStory-Bench).
 \item
   \textbf{A new benchmark, ShadowBench-W}: a two-scale Chinese corpus
-  (S-level $\\approx$20K, M-level $\\approx$95K characters), 5-chapter continuation tasks,
+  (S-level ≈20K, M-level ≈95K characters), 5-chapter continuation tasks,
   and two judges. W1 measures consistency errors per contact (EPC); W3
   measures state-writeback correctness (field-level accuracy + evidence
   traceability).
@@ -218,7 +223,7 @@ before claims''.
 \end{quote}
 
 \textbf{Long-context evaluation.} LongBench (arXiv 2308.14508),
-LongBench v2 (arXiv 2412.15204), and $\\infty$Bench (arXiv 2402.13718) measure
+LongBench v2 (arXiv 2412.15204), and ∞Bench (arXiv 2402.13718) measure
 whether a model can \emph{use} long context for question answering; they
 do not measure consistency of \emph{generation} over long horizons.
 
@@ -287,8 +292,8 @@ A long-form continuation task is a tuple \((D_0, T, S)\) where:
 \tightlist
 \item
   \(D_0\) is the baseline corpus at one of two scales---S-level
-  (chapters 1--10, $\\approx$20K characters) or \textbf{M-level (chapters 1--50,
-  $\\approx$95K characters)}, Chinese; note the byte-level accounting in §5.4;
+  (chapters 1--10, ≈20K characters) or \textbf{M-level (chapters 1--50,
+  ≈95K characters)}, Chinese; note the byte-level accounting in §5.4;
 \item
   \(T\) is the continuation task (S: chapters 11--15; M: chapters
   51--55) with a world specification
@@ -309,8 +314,8 @@ evidence in \(D\), and no statement in \(D\) contradicts \(S\).
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Corpus}: \texttt{corpus/ch01-10.txt} (S, $\\approx$20K chars) and
-  \texttt{corpus/ch01-50.txt} (M, $\\approx$95K chars); UTF-8 Chinese, 3
+  \textbf{Corpus}: \texttt{corpus/ch01-10.txt} (S, ≈20K chars) and
+  \texttt{corpus/ch01-50.txt} (M, ≈95K chars); UTF-8 Chinese, 3
   bytes/char.
 \item
   \textbf{World spec}:
@@ -357,12 +362,12 @@ Layer}\label{method-the-origin-ir-state-layer}
 
 \begin{verbatim}
 Input side: context-compiler (budget compilation)
-  corpus + world spec $\\to$ pruned/projected under a token budget $\\to$ prompt ($\\approx$6K tokens)
+  corpus + world spec → pruned/projected under a token budget → prompt (≈6K tokens)
 
 Output side: commit-compiler (parse / validate / retain evidence)
-  model output $\\to$ parse state-change declarations $\\to$ validator (deterministic rules
-  + vocabulary patch) $\\to$ pass: commit transaction with evidence chain
-                        $\\to$ fail: keep best-effort output flagged for human review
+  model output → parse state-change declarations → validator (deterministic rules
+  + vocabulary patch) → pass: commit transaction with evidence chain
+                        → fail: keep best-effort output flagged for human review
 \end{verbatim}
 
 \subsubsection{4.2 State as transactions}\label{state-as-transactions}
@@ -391,10 +396,10 @@ failures}\label{design-decisions-learned-from-real-failures}
 \item
   \textbf{State and text are gated separately.} Correct state does not
   imply correct text; the gate checks both (empirical rule \#9; three
-  runs: errors 1/6/3 $\\to$ 0/0/0).
+  runs: errors 1/6/3 → 0/0/0).
 \item
   \textbf{Vocabulary patch.} Deterministic rules have systematic synonym
-  blind spots (13/40 $\\to$ 40/40). The vocabulary is part of the judge and
+  blind spots (13/40 → 40/40). The vocabulary is part of the judge and
   versioned with it.
 \end{itemize}
 
@@ -402,7 +407,7 @@ failures}\label{design-decisions-learned-from-real-failures}
 
 \begin{quote}
 Main results are from the \textbf{M-level} task (50-chapter,
-$\\approx$95K-character baseline, 5-chapter continuation), run on the patched
+≈95K-character baseline, 5-chapter continuation), run on the patched
 hermes HTTP channel (deepseek-v4-flash, 10 rounds per arm). Small-scale
 S-level control (§5.2) and ablations (§5.3) supplement. All numbers from
 \texttt{results-v3-m/} (main) and \texttt{results-log.md} (controls),
@@ -410,7 +415,7 @@ verified against current judge fingerprints.
 \end{quote}
 
 \subsubsection{5.1 Main results (deepseek-v4-flash, M-level: 50-chapter
-$\\approx$95K baseline, 10
+≈95K baseline, 10
 rounds)}\label{main-results-deepseek-v4-flash-m-level-50-chapter-95k-baseline-10-rounds}
 
 {\def\LTcaptype{none} % do not increment counter
@@ -439,10 +444,10 @@ Mean tokens
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-A0 bare (tail truncation) & 10 & 2.16 $\\pm$ 1.54 & 56.3\% $\\pm$ 23.2\% & 160,553
+A0 bare (tail truncation) & 10 & 2.16 ± 1.54 & 56.3\% ± 23.2\% & 160,553
 & 88,731 \\
-A1 vector RAG & 10 & 0.82 $\\pm$ 0.44 & 70.0\% $\\pm$ 6.1\% & 167,902 & 89,757 \\
-A3 Origin IR state layer & 10 & \textbf{0.84 $\\pm$ 0.37} & \textbf{100.0\% $\\pm$
+A1 vector RAG & 10 & 0.82 ± 0.44 & 70.0\% ± 6.1\% & 167,902 & 89,757 \\
+A3 Origin IR state layer & 10 & \textbf{0.84 ± 0.37} & \textbf{100.0\% ±
 0.0\%} & 166,146 & 100,884 \\
 \end{longtable}
 }
@@ -459,7 +464,7 @@ Three findings:
 \item
   \textbf{State correctness is the differentiator.} A3 reaches 100\%
   state accuracy on all 10 rounds (zero variance); A0 (bare) only
-  56.3\%, A1 (RAG) 70.0\%. RAG helps text (EPC 0.82 $\\approx$ A3's 0.84) but
+  56.3\%, A1 (RAG) 70.0\%. RAG helps text (EPC 0.82 ≈ A3's 0.84) but
   does \textbf{not} fix state (70\% vs 100\%, p \textless{}
   0.0001)---retrieval returns relevant prose, but nothing writes a
   \emph{queryable world state} back.
@@ -490,9 +495,9 @@ Arm & n & W3 state accuracy & W1 EPC & Mean tokens \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-A0 bare & 10 & 53.8\% $\\pm$ 11.3\% & 1.12 $\\pm$ 0.53 & 58,313 \\
-A1 vector RAG & 10 & 58.8\% $\\pm$ 13.8\% & 1.22 $\\pm$ 0.54 & 58,569 \\
-A3 Origin IR & 10 & \textbf{97.5\% $\\pm$ 5.0\%} & \textbf{0.66 $\\pm$ 0.54} &
+A0 bare & 10 & 53.8\% ± 11.3\% & 1.12 ± 0.53 & 58,313 \\
+A1 vector RAG & 10 & 58.8\% ± 13.8\% & 1.22 ± 0.54 & 58,569 \\
+A3 Origin IR & 10 & \textbf{97.5\% ± 5.0\%} & \textbf{0.66 ± 0.54} &
 70,605 \\
 \end{longtable}
 }
@@ -506,12 +511,19 @@ across two unrelated models: A3's state-writeback accuracy is
 near-perfect (97.5--100\%) while A0/A1 sit at 54--70\%; the
 A3-vs-baseline gap is significant at p \textless{} 0.0001 in both
 models, and RAG's EPC advantage (when present) does not transfer to
-state correctness. The 100\%$\\to$97.5\% drop on qwen is driven by 1--2
+state correctness. The 100\%→97.5\% drop on qwen is driven by 1--2
 rounds with a single field mismatch (e.g., a character location asserted
 in prose but not declared to the state layer)---the residual,
 declared-error regime, not a systemic failure.
 
-\subsubsection{5.3 Ablations}\label{ablations}
+\subsubsection{\texorpdfstring{5.3 Judge and harness validation ---
+\emph{and the ablation we have not
+run}}{5.3 Judge and harness validation --- and the ablation we have not run}}\label{judge-and-harness-validation-and-the-ablation-we-have-not-run}
+
+The table below is often mistaken for an ablation study. It is not, and
+we label it accordingly: it records \textbf{fixes to the judge and the
+harness}, each with a before/after measurement. It says nothing about
+which \emph{component of the method} produces the effect in §5.1.
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -520,7 +532,7 @@ declared-error regime, not a systemic failure.
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
-Change
+Change (judge / harness, \textbf{not} method components)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 W1 effect
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
@@ -536,9 +548,42 @@ Before vocabulary patch & 13/40 hits, 27 misses & judge protocol
 broken \\
 After vocabulary patch & 40/40 hits, 0 false positives & judge protocol
 credible \\
-Dual gate (state + text) & errors 1/6/3 $\\to$ 0/0/0 (3 runs) & --- \\
+Dual gate (state + text) & errors 1/6/3 → 0/0/0 (3 runs) & --- \\
 \end{longtable}
 }
+
+\textbf{The method ablation is not yet run, and we state the confound it
+leaves open.} A0 and A1 are \emph{asked for} their world state in one
+probe round at the end (§3.3); A3 is \emph{required to maintain} one
+throughout, \emph{and} has it validated, \emph{and} must attach
+evidence. Those are three interventions bundled into one arm. The §5.1
+result therefore cannot yet distinguish:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{(a) the demand} --- merely instructing a model to keep an
+  explicit, queryable state while it writes;
+\item
+  \textbf{(b) the validator} --- rejecting state writes that fail
+  deterministic rules;
+\item
+  \textbf{(c) the evidence chain} --- requiring every field to carry
+  \texttt{valid\_from} and a supporting passage.
+\end{itemize}
+
+The decisive missing arm is \textbf{A2 = prompt-only state maintenance}:
+the model is told to emit and update a JSON world state each chapter,
+with no validator, no evidence requirement, and no context-compiler. If
+A2 approaches A3, the contribution of §5.1 is (a) --- a
+\emph{task-design} finding, and the Origin IR machinery is unnecessary
+for this benchmark. If A2 lands between A0/A1 (54--70\%) and A3
+(97.5--100\%), the gap isolates (b)+(c). Two further arms, A3 minus
+validator and A3 minus evidence chain, would separate (b) from (c).
+
+We consider this the single most important open experiment in the paper
+and report the confound rather than let §5.1 be read as stronger than it
+is. Cost is \textasciitilde10 rounds/arm/model on the existing harness.
 
 \subsubsection{5.4 Token accounting (honesty: no selective
 disclosure)}\label{token-accounting-honesty-no-selective-disclosure}
@@ -592,8 +637,14 @@ first)}\label{known-limitations-self-audited-so-reviewers-do-not-find-them-first
 \item
   \textbf{Probe protocol}: the S-level 75.0\% constant partly reflected
   a probe-template artifact (Run \#18); the M-level protocol sends
-  full-text probes, and A0's M-level W3 is 56.3\% $\\pm$ 23.2\% with real
+  full-text probes, and A0's M-level W3 is 56.3\% ± 23.2\% with real
   variance---the artifact is gone, not averaged over.
+\item
+  \textbf{Bundled intervention, no method ablation yet}: A3 bundles the
+  state demand, the validator, and the evidence chain (§5.3). Until the
+  A2 prompt-only arm is run, §5.1 establishes that \emph{the bundle}
+  works, not \emph{which part} works. We name this first because it is
+  the objection we would raise ourselves.
 \item
   \textbf{Single team, two models}: cross-model robustness covers two
   models only; single-corpus (Chinese fiction). Both are declared
@@ -606,7 +657,7 @@ Impact}\label{limitations-broader-impact}
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Limitations}: Chinese single-corpus (M-level $\\approx$95K-char
+  \textbf{Limitations}: Chinese single-corpus (M-level ≈95K-char
   baseline; S-level development corpus); two models; vocabulary
   dependence of deterministic judges; reference implementation not
   production-grade (no real users).
@@ -648,14 +699,14 @@ testing}\label{appendix-a-conformance-vectors-and-mutation-testing}
   freedom.
 \end{itemize}
 
-\subsection{Appendix B: The office dialect (native documents $\\to$
+\subsection{Appendix B: The office dialect (native documents →
 verifiable state
 objects)}\label{appendix-b-the-office-dialect-native-documents-verifiable-state-objects}
 
 \begin{itemize}
 \tightlist
 \item
-  docx $\\to$ Origin IR: doc:/chapter:/article:/table:/cell:/checkbox object
+  docx → Origin IR: doc:/chapter:/article:/table:/cell:/checkbox object
   classes.
 \item
   Prior-art audit: pandoc (\textasciitilde45.7k★; 16 tables all lost in
@@ -679,9 +730,10 @@ objects)}\label{appendix-b-the-office-dialect-native-documents-verifiable-state-
 \begin{itemize}
 \tightlist
 \item[$\boxtimes$]
-  Re-run three arms $\\times$ two models $\\times$ 10 rounds under the patched judge ---
-  M-level deepseek 三臂$\\times$10 (results-v3-m/); S-level a1/a3 re-runs
-  (results-v3/); qwen-plus M-level in progress
+  Re-run three arms × two models × 10 rounds under the patched judge ---
+  \textbf{complete}: M-level deepseek 3 arms × 10 and qwen-plus 3 arms ×
+  10, all 60 runs in \texttt{results-v3-m/}; S-level a1/a3 re-runs in
+  \texttt{results-v3/}
 \item[$\boxtimes$]
   Recompute token accounting (full-text probes) --- M-level real usage
   in §5.4
@@ -708,8 +760,14 @@ objects)}\label{appendix-b-the-office-dialect-native-documents-verifiable-state-
   Figures: arm comparison, state-corruption example (sword transfer
   trajectory) --- before submission
 \item[$\square$]
-  qwen-plus M-level runs: merge into §5.2 cross-model table once
-  complete
+  \textbf{Run the A2 prompt-only arm (§5.3)} --- 10 rounds × 2 models;
+  the one experiment that turns §5.3 into a real ablation
+\item[$\square$]
+  Rebuild the LaTeX package after any edit
+  (\texttt{pandoc\ -s\ -o\ shadowbench-w-paper.tex\ shadowbench-w-paper-en-v0.3.md})
+  --- the 2026-08-07 build emitted
+  \texttt{\$\textbackslash{}\textbackslash{}pm\$}, which does not
+  compile as ±
 \end{itemize}
 
 \end{document}

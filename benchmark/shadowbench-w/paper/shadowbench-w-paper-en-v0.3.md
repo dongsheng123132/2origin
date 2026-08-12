@@ -8,7 +8,10 @@ lang: en
 # ShadowBench-W: State Consistency as a Benchmarkable Task for Long-Form Text Generation
 
 > Working draft v0.3 (English) — for arXiv preprint and ARR Oct 2026 cycle (deadline 2026-10-12 AoE).
-> Status: draft, data complete. Main results (§5.1) and cross-model (§5.2) from benchmark/shadowbench-w/results-v3-m/ (M-level, 50-chapter ≈95K baseline, 10 rounds/arm, both deepseek-v4-flash and qwen-plus, patched hermes HTTP + bailian channels). All six arXiv citations verified live (2026-08-07); star counts approximate (values drift).
+> Status: draft; **main-result data complete**, method ablations **not yet run** (declared in §5.3).
+> Main results (§5.1) and cross-model (§5.2) come from `benchmark/shadowbench-w/results-v3-m/` (M-level, 50-chapter ≈95K baseline, 10 rounds/arm, both deepseek-v4-flash and qwen-plus, patched hermes HTTP + bailian channels).
+> **Every cell of the §5.1 and §5.2 tables is recomputable from the 60 per-round JSON files in that directory** — re-verified 2026-08-12, all twelve accuracy/EPC cells reproduce exactly.
+> All six arXiv citations verified live (2026-08-07); star counts approximate (values drift).
 
 ## Abstract
 
@@ -143,15 +146,27 @@ Permutation tests (20,000 rounds): A3 vs A0 **p < 0.0001**; A3 vs A1 **p < 0.000
 
 **Robustness conclusion.** The qualitative finding is identical across two unrelated models: A3's state-writeback accuracy is near-perfect (97.5–100%) while A0/A1 sit at 54–70%; the A3-vs-baseline gap is significant at p < 0.0001 in both models, and RAG's EPC advantage (when present) does not transfer to state correctness. The 100%→97.5% drop on qwen is driven by 1–2 rounds with a single field mismatch (e.g., a character location asserted in prose but not declared to the state layer)—the residual, declared-error regime, not a systemic failure.
 
-### 5.3 Ablations
+### 5.3 Judge and harness validation — *and the ablation we have not run*
 
-| Change | W1 effect | W3 effect |
+The table below is often mistaken for an ablation study. It is not, and we label it accordingly: it records **fixes to the judge and the harness**, each with a before/after measurement. It says nothing about which *component of the method* produces the effect in §5.1.
+
+| Change (judge / harness, **not** method components) | W1 effect | W3 effect |
 |---|---|---|
 | Before ID normalization | 5 chapters invalidated | — |
 | After ID normalization | passes | — |
 | Before vocabulary patch | 13/40 hits, 27 misses | judge protocol broken |
 | After vocabulary patch | 40/40 hits, 0 false positives | judge protocol credible |
 | Dual gate (state + text) | errors 1/6/3 → 0/0/0 (3 runs) | — |
+
+**The method ablation is not yet run, and we state the confound it leaves open.** A0 and A1 are *asked for* their world state in one probe round at the end (§3.3); A3 is *required to maintain* one throughout, *and* has it validated, *and* must attach evidence. Those are three interventions bundled into one arm. The §5.1 result therefore cannot yet distinguish:
+
+- **(a) the demand** — merely instructing a model to keep an explicit, queryable state while it writes;
+- **(b) the validator** — rejecting state writes that fail deterministic rules;
+- **(c) the evidence chain** — requiring every field to carry `valid_from` and a supporting passage.
+
+The decisive missing arm is **A2 = prompt-only state maintenance**: the model is told to emit and update a JSON world state each chapter, with no validator, no evidence requirement, and no context-compiler. If A2 approaches A3, the contribution of §5.1 is (a) — a *task-design* finding, and the Origin IR machinery is unnecessary for this benchmark. If A2 lands between A0/A1 (54–70%) and A3 (97.5–100%), the gap isolates (b)+(c). Two further arms, A3 minus validator and A3 minus evidence chain, would separate (b) from (c).
+
+We consider this the single most important open experiment in the paper and report the confound rather than let §5.1 be read as stronger than it is. Cost is ~10 rounds/arm/model on the existing harness.
 
 ### 5.4 Token accounting (honesty: no selective disclosure)
 
@@ -170,6 +185,7 @@ A3 costs +13.7% tokens over A0 for 100% vs 56.3% state accuracy. We report the c
 - **Judge/gate coupling**: A3 uses the same rules as both shield and yardstick; the deterministic-channel advantage carries a circularity component. We scope this explicitly: W3 compares only *structured state fields* against ground truth, never free text, so the judge does not depend on lexical overlap with the gate's rules. The residual risk is that A3's internal rule list and the judge's rule list share a source; we report the judge fingerprints (§7) so the coupling is auditable, and treat W3 as an upper bound until an independent judge is added.
 - **Semantic channel not in the main score**: vocabulary patches cannot catch up with natural-language synonym space (Run #23 conclusion). W1 (EPC) therefore understates A0's true error rate if A0 rephrases; we report the patch's 40/40 recall on the test set so the reader can gauge the ceiling.
 - **Probe protocol**: the S-level 75.0% constant partly reflected a probe-template artifact (Run #18); the M-level protocol sends full-text probes, and A0's M-level W3 is 56.3% ± 23.2% with real variance—the artifact is gone, not averaged over.
+- **Bundled intervention, no method ablation yet**: A3 bundles the state demand, the validator, and the evidence chain (§5.3). Until the A2 prompt-only arm is run, §5.1 establishes that *the bundle* works, not *which part* works. We name this first because it is the objection we would raise ourselves.
 - **Single team, two models**: cross-model robustness covers two models only; single-corpus (Chinese fiction). Both are declared bounds, not claims.
 
 ## 6. Limitations & Broader Impact
@@ -179,9 +195,17 @@ A3 costs +13.7% tokens over A0 for 100% vs 56.3% state accuracy. We report the c
 
 ## 7. Reproducibility
 
-- **Code**: public repository (anonymous version strips identity info); all three arms + judges + vocabulary patch; self-tests (compiler 81, CAD 55, conformance 87, mutation 19/19) all pass.
+- **Code**: public repository (anonymous version strips identity info); all three arms + judges + vocabulary patch. Self-tests, re-run 2026-08-12, all green: compiler **91**, CAD 55, conformance **87/87**, compiler mutation **19/19 killed**, judge mutation **9/9 killed** (§7.1).
 - **Data**: corpus/, world/spec.origin/, results/ (full JSON per round).
 - **Judge fingerprints**: judgeHashW1 / judgeHashW3; fingerprints unchanged after the patch (Run #29).
+
+### 7.1 Who validates the validator?
+
+A self-test that kills no mutant is indistinguishable from no self-test: it keeps passing after every refactor while the benchmark quietly hands out points to every arm. We therefore mutate the *judges* themselves — nine plausible human errors injected into `ced.mjs` (W1), `detect-score.mjs` (W2) and `state-diff.mjs` (W3), one at a time, each followed by a full self-test run and a revert.
+
+Mutants include: W3 accuracy pinned to full marks, W3 strict comparison degraded to string comparison, W3 evidence-traceability loosened, W1 error count pinned to zero, W1 chain-of-custody check for the Black Key removed, and W2 recall computed over *found* rather than *planted* errors.
+
+**Result: 9 injected, 9 killed, 0 survived** (`eval/mutation-check.mjs --json`). This does not remove the judge/gate coupling declared in §5.5 — it establishes the weaker but necessary property that the scoring logic is actually under assertion, so a silent regression in the judge cannot inflate any arm.
 
 ## Appendix A: Conformance vectors and mutation testing
 
@@ -199,7 +223,7 @@ A3 costs +13.7% tokens over A0 for 100% vs 56.3% state accuracy. We report the c
 
 ## Pre-submission checklist
 
-- [x] Re-run three arms × two models × 10 rounds under the patched judge — M-level deepseek 三臂×10 (results-v3-m/); S-level a1/a3 re-runs (results-v3/); qwen-plus M-level in progress
+- [x] Re-run three arms × two models × 10 rounds under the patched judge — **complete**: M-level deepseek 3 arms × 10 and qwen-plus 3 arms × 10, all 60 runs in `results-v3-m/`; S-level a1/a3 re-runs in `results-v3/`
 - [x] Recompute token accounting (full-text probes) — M-level real usage in §5.4
 - [x] Merge the semantic channel into the main score, or explicitly declare its exclusion — declared in §5.5
 - [x] Decouple judge and gate, or explicitly declare the coupling — scoped in §5.5
@@ -208,4 +232,5 @@ A3 costs +13.7% tokens over A0 for 100% vs 56.3% state accuracy. We report the c
 - [x] Verify ARR Oct 2026 cycle CFP — deadline 2026-10-12 AoE confirmed (aclrollingreview.org); COLING 2027 uses this cycle
 - [ ] arXiv: pick category (cs.CL), endorsement path, anonymous or de-anonymized — before submission
 - [ ] Figures: arm comparison, state-corruption example (sword transfer trajectory) — before submission
-- [ ] qwen-plus M-level runs: merge into §5.2 cross-model table once complete
+- [ ] **Run the A2 prompt-only arm (§5.3)** — 10 rounds × 2 models; the one experiment that turns §5.3 into a real ablation
+- [x] LaTeX package builds — **fixed 2026-08-12**. The 2026-08-07 build emitted `$\\pm$` / `$\\to$` (double backslash = line break in math mode) and had never compiled. Rebuild recipe in `BUILD.md`; **XeLaTeX only** (pdfLaTeX dies on `≈` U+2248). Verified: 11-page PDF, exit 0.
