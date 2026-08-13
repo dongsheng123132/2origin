@@ -2,7 +2,7 @@
 
 ```bash
 cd benchmark/shadowbench-w/paper
-pandoc -s -o shadowbench-w-paper.tex shadowbench-w-paper-en-v0.3.md
+pandoc -s -o shadowbench-w-paper.tex shadowbench-w-paper-en-v0.4.md
 xelatex -interaction=nonstopmode -halt-on-error shadowbench-w-paper.tex
 ```
 

@@ -1,7 +1,7 @@
 ---
 title: "ShadowBench-W: State Consistency as a Benchmarkable Task for Long-Form Text Generation"
 author: "He Fangsheng"
-date: "2026-08-07"
+date: "2026-08-13"
 lang: en
 ---
 
@@ -10,23 +10,23 @@ lang: en
 > Working draft v0.4 (English) — for arXiv preprint and ARR Oct 2026 cycle (deadline 2026-10-12 AoE).
 > Status: draft; main-result data complete, **method ablation run 2026-08-13 and it overturned our own attribution** (§5.3).
 > v0.3 → v0.4 changed what this paper claims. Two corrections, both against our own interest, both from data in this repository:
-> **(i)** the gain we attributed to the Origin IR state layer is almost entirely produced by *requiring the model to maintain an explicit state at all* — a prompt-only arm (A2) captures 41.3 of the 43.8 points, and the remaining 2.5 are not significant (p = 0.48 / 0.72);
+> **(i)** the gain we attributed to the Origin IR state layer is almost entirely produced by *requiring the model to maintain an explicit state at all* — a prompt-only arm (A2) captures 41.3 of the 43.8 points, and the remaining 2.5 are not significant (p = 0.47 / 0.72);
 > **(ii)** the "100% evidence traceability" reported in v0.3 used a self-selected denominator; measured against the fields the benchmark actually asks about, coverage is **27.5% / 15.0%**.
-> Main results (§5.1) and cross-model (§5.2) come from `benchmark/shadowbench-w/results-v3-m/` (M-level, 50-chapter ≈95K baseline, 10 rounds/arm, both deepseek-v4-flash and qwen-plus, patched hermes HTTP + bailian channels).
-> **Every cell of the §5.1 and §5.2 tables is recomputable from the 60 per-round JSON files in that directory** — re-verified 2026-08-12, all twelve accuracy/EPC cells reproduce exactly.
-> All six arXiv citations verified live (2026-08-07); star counts approximate (values drift).
+> All results are M-level (50-chapter ≈95K baseline), 10 rounds per arm per model, from **90 per-round JSON files** in `results-v3-m/`, `results-v3-m-ablation/` and `results-v3-m-frontier-qwen37/`.
+> **Every table in §5 regenerates with one command** — `node eval/paper-tables.mjs` — including all *p*-values, which come from exhaustive permutation (all 184,756 splits), not sampling. Re-verified 2026-08-13: all 36 accuracy / standard-deviation / EPC / token cells reproduce exactly from the raw files.
+> All six arXiv citations verified live (2026-08-07); star counts approximate (values drift). Re-verify before submission.
 
 ## Abstract
 
 Large language models (LLMs) fail silently at long-horizon generation. A sword picked up in chapter 8 is forgotten by chapter 20; a character's death goes unreported; and the model itself cannot say what it believes the world looks like. Existing benchmarks for long-form generation measure surface quality—fluency, coherence, consistency-error density—but stop short of the question that matters for downstream agents: *when a system is required to maintain a queryable world state alongside the text, is that state consistent with what it wrote, and can every claim be traced to evidence?*
 
-We introduce **ShadowBench-W**, a benchmark for state consistency in long-form story continuation. Built on a Chinese corpus in two scales—an S-level 10-chapter (~20K characters) development corpus and an **M-level 50-chapter (≈95K characters) main corpus**—each with a 5-chapter continuation task, it defines two scores: **W1** measures consistency errors per 100 contacts (EPC) in the generated text, and **W3** measures field-level agreement between the system's claimed world state and ground truth, together with the evidence-traceability of every state field. We also present the **Origin IR state layer**, a reference method that compiles context under a token budget and validates every state mutation as a transaction carrying an evidence chain.
+We introduce **ShadowBench-W**, a benchmark for state consistency in long-form story continuation. Built on a Chinese corpus in two scales—an S-level 10-chapter (~20K characters) development corpus and an **M-level 50-chapter (≈95K characters) main corpus**—each with a 5-chapter continuation task, it defines two scores: **W1** measures consistency errors per 100 contacts (EPC) in the generated text, and **W3** measures field-level agreement between the system's claimed world state and ground truth, plus two separately reported evidence numbers — *coverage* (of the fields under test, how many carry source-traceable evidence) and *precision* (of the evidence supplied, how much is traceable). We also present the **Origin IR state layer**, a reference method that compiles context under a token budget and validates every state mutation as a transaction carrying an evidence chain.
 
-On the **M-level** task (50-chapter, ≈95K-character baseline, 10 rounds/arm, two unrelated models), bare models score 56.3% / 53.8% on W3 and vector RAG does not fix it (70.0% / 58.8%). A full state layer reaches 100.0% / 97.5%. **But an ablation shows the machinery is not what produces this.** A prompt-only arm — the model is simply told to emit and update an explicit world state each chapter, with no validator, no evidence chain, and no context compiler — reaches **97.5% / 95.0%**, capturing 41.3 of the state layer's 43.8-point advantage on *both* models; the residual 2.5 points are not significant (p = 0.48 / 0.72). The prompt-only arm is also **cheaper than the bare baseline** (−9.7% / −28.2% tokens), while the full state layer costs +13.7% / +21.1%.
+On the **M-level** task (50-chapter, ≈95K-character baseline, 10 rounds/arm, two unrelated models), bare models score 56.3% / 53.8% on W3 and vector RAG does not fix it (70.0% / 58.8%). A full state layer reaches 100.0% / 97.5%. **But an ablation shows the machinery is not what produces this.** A prompt-only arm — the model is simply told to emit and update an explicit world state each chapter, with no validator, no evidence chain, and no context compiler — reaches **97.5% / 95.0%**, capturing 41.3 of the state layer's 43.8-point advantage on *both* models; the residual 2.5 points are not significant (p = 0.47 / 0.72). The prompt-only arm is also **cheaper than the bare baseline** (−9.7% / −28.2% tokens), while the full state layer costs +13.7% / +21.1%.
 
 The premise survives a frontier control: a flagship model (qwen3.7-max) writes the best prose we have measured (EPC 0.60) and still scores **56.3%** on state — state corruption is a missing mechanism, not a capability gap that scale closes.
 
-What the machinery does buy is the thing prompting cannot produce at all: an evidence chain. Prompt-only and bare arms have zero evidence coverage by construction; the state layer attaches source-traceable evidence to **27.5% / 15.0%** of the fields under test — a real categorical difference, and far below the "100%" we reported in v0.3 under a self-selected denominator. Our headline finding is therefore not *"build a state layer"* but *"ask for the state"*: the expensive part of the system reproduces almost none of the benefit its own authors attributed to it, and ShadowBench-W is what made that visible. The benchmark, judges, all four arms, and 80 per-round result files are released under Apache-2.0.
+What the machinery does buy is the thing prompting cannot produce at all: an evidence chain. Prompt-only and bare arms have zero evidence coverage by construction; the state layer attaches source-traceable evidence to **27.5% / 15.0%** of the fields under test — a real categorical difference, and far below the "100%" we reported in v0.3 under a self-selected denominator. Our headline finding is therefore not *"build a state layer"* but *"ask for the state"*: the expensive part of the system reproduces almost none of the benefit its own authors attributed to it, and ShadowBench-W is what made that visible. The benchmark, judges, all four arms, and 90 per-round result files are released under Apache-2.0.
 
 ## 1. Introduction
 
@@ -138,7 +138,7 @@ Every state change is committed as a transaction carrying `valid_from` (which ev
 | **A2 prompt-only state** | 10 | 1.17 ± 0.70 | **97.5% ± 5.0%** | 0% (by construction) | **80,112 (−9.7%)** |
 | A3 Origin IR state layer | 10 | **0.84 ± 0.37** | **100.0% ± 0.0%** | **15.0%** | 100,884 (+13.7%) |
 
-Permutation tests (20,000 rounds): W3 A2 vs A0 **p < 0.0001** (Δ = 41.3 pt); W3 A3 vs A0 **p < 0.0001** (Δ = 43.8 pt); **W3 A3 vs A2 p = 0.4774 (n.s., Δ = 2.5 pt)**; W1 EPC A3 vs A2 p = 0.2551 (n.s.); W3 A1 vs A0 p = 0.1315 (n.s.).
+Exact permutation tests (all 184,756 splits): W3 A2 vs A0 **p = 3.3×10⁻⁵** (Δ = 41.3 pt); W3 A3 vs A0 **p = 1.1×10⁻⁵** (Δ = 43.8 pt); **W3 A3 vs A2 p = 0.4737 (n.s., Δ = 2.5 pt)**; W1 EPC A3 vs A2 p = 0.2486 (n.s.); W3 A1 vs A0 p = 0.1331 (n.s.).
 
 Four findings:
 
@@ -158,9 +158,9 @@ To test whether the effect is model-specific, we re-ran the full M-level protoco
 | **A2 prompt-only state** | 10 | **95.0% ± 8.3%** | 1.10 ± 0.84 | 0% | **41,885 (−28.2%)** |
 | A3 Origin IR | 10 | **97.5% ± 5.0%** | **0.66 ± 0.54** | **27.5%** | 70,605 (+21.1%) |
 
-Permutation tests (20,000 rounds): A2 vs A0 **p < 0.0001** (Δ = 41.3 pt); A3 vs A0 **p < 0.0001**; **A3 vs A2 p = 0.7151 (n.s., Δ = 2.5 pt)**; EPC A3 vs A2 p = 0.2287 (n.s.); A1 vs A0 p = 0.5264 (n.s.).
+Exact permutation tests (all 184,756 splits): A2 vs A0 **p = 2.2×10⁻⁵** (Δ = 41.3 pt); A3 vs A0 **p = 1.1×10⁻⁵**; **A3 vs A2 p = 0.7214 (n.s., Δ = 2.5 pt)**; EPC A3 vs A2 p = 0.2302 (n.s.); A1 vs A0 p = 0.5372 (n.s.).
 
-**Robustness conclusion — including the part that goes against us.** Every qualitative claim replicates on a second, unrelated model, *including the ablation*: the A2-vs-A0 gap is **41.3 points on both models** (to the decimal), and the A3-vs-A2 gap is **2.5 points on both**, non-significant in both (p = 0.48 / 0.72). A result this stable across models is not a fluke of one decoder. The token finding replicates and amplifies: on qwen-plus the prompt-only arm costs **28.2% less** than the bare baseline while scoring 41 points higher.
+**Robustness conclusion — including the part that goes against us.** Every qualitative claim replicates on a second, unrelated model, *including the ablation*: the A2-vs-A0 gap is **41.3 points on both models** (to the decimal), and the A3-vs-A2 gap is **2.5 points on both**, non-significant in both (p = 0.47 / 0.72). A result this stable across models is not a fluke of one decoder. The token finding replicates and amplifies: on qwen-plus the prompt-only arm costs **28.2% less** than the bare baseline while scoring 41 points higher.
 
 The one dimension that does not replicate-to-zero is evidence: A3 supplies source-traceable evidence for 27.5% (qwen) / 15.0% (deepseek) of the fields under test, and A0/A1/A2 supply none on either model. That is the honest residual of the state layer — a categorical capability at low coverage, not an accuracy advantage.
 
@@ -198,10 +198,10 @@ A3 bundles three interventions: **(a) the demand** — instructing the model to 
 
 | | deepseek-v4-flash | qwen-plus |
 |---|---|---|
-| A0 → A2 (the demand alone) | +41.3 pt, p < 0.0001 | +41.3 pt, p < 0.0001 |
-| A2 → A3 (validator + evidence chain + compiler) | **+2.5 pt, p = 0.4774 (n.s.)** | **+2.5 pt, p = 0.7151 (n.s.)** |
+| A0 → A2 (the demand alone) | +41.3 pt, p = 3.3×10⁻⁵ | +41.3 pt, p = 2.2×10⁻⁵ |
+| A2 → A3 (validator + evidence chain + compiler) | **+2.5 pt, p = 0.4737 (n.s.)** | **+2.5 pt, p = 0.7214 (n.s.)** |
 | Token cost of the demand | **−9.7%** vs bare | **−28.2%** vs bare |
-| Token cost of the machinery | +13.7% vs bare (+26.0% vs A2) | +21.1% vs bare (+68.6% vs A2) |
+| Token cost of the machinery | +13.7% vs bare (+25.9% vs A2) | +21.1% vs bare (+68.6% vs A2) |
 | Evidence coverage, A2 vs A3 | 0% vs 15.0% | 0% vs 27.5% |
 
 **Reading, without softening it.** On state accuracy — the metric this paper introduced and built a benchmark around — **the Origin IR state layer does not beat a prompt**, on either model, at a cost premium of 26–69% over that prompt. The effect we spent the paper explaining is 94% attributable to asking the model for something we had never asked the baselines for. Note also that A2 *outperforms A1 (RAG) by 27–36 points at lower cost*: the relevant comparison for practitioners is not "retrieval vs. state layer" but "asking vs. not asking".
@@ -243,7 +243,9 @@ We report cost **per model and per arm** rather than only the favorable combinat
 ## 7. Reproducibility
 
 - **Code**: public repository (anonymous version strips identity info); all **four** arms + judges + vocabulary patch. Self-tests, re-run 2026-08-13, all green: compiler **91**, CAD 55, conformance **87/87**, compiler mutation **19/19 killed**, judge mutation **12/12 killed** (§7.1).
-- **Data**: `corpus/`, `world/spec.origin/`, and **80 per-round result files** — `results-v3-m/` (A0/A1/A3 × 2 models × 10) and `results-v3-m-ablation/` (A2 × 2 models × 10). Every cell of §5.1, §5.2, §5.3 and §5.4 is recomputable from these files.
+- **Data**: `corpus/`, `world/spec.origin/`, and **90 per-round result files** — `results-v3-m/` (A0/A1/A3 × 2 models × 10), `results-v3-m-ablation/` (A2 × 2 models × 10), `results-v3-m-frontier-qwen37/` (frontier A0 × 10).
+- **One command regenerates every table**: `node eval/paper-tables.mjs` prints §5.1, §5.2, §5.2.1, §5.3 and §5.4 — means, standard deviations, evidence coverage, token deltas and all *p*-values — from the raw files. Nothing in those sections is transcribed by hand.
+- **Significance testing is exact, not sampled.** All *p*-values come from **exhaustive** permutation over all C(20,10) = 184,756 splits, so they are bit-identical on any machine at any time. An earlier draft quoted four-decimal *p*-values from an unseeded 20,000-round Monte Carlo; those digits could not be reproduced by a reader and have been replaced. A *p*-value that only its author can obtain is not evidence.
 - **Judge fingerprints**: judgeHashW1 / judgeHashW3. **judgeHashW3 changed on 2026-08-13** when `evidenceCoverage` was added (§7.2). State accuracy is unaffected: re-scoring all 80 rounds under the new judge reproduces every previously reported `stateAccuracy` with zero drift, which is the property that matters and which we checked rather than asserted.
 
 ### 7.1 Who validates the validator?
