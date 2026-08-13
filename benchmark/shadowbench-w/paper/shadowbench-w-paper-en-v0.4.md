@@ -14,7 +14,7 @@ lang: en
 > **(ii)** the "100% evidence traceability" reported in v0.3 used a self-selected denominator; measured against the fields the benchmark actually asks about, coverage is **27.5% / 15.0%**.
 > All results are M-level (50-chapter ≈95K baseline), 10 rounds per arm per model, from **90 per-round JSON files** in `results-v3-m/`, `results-v3-m-ablation/` and `results-v3-m-frontier-qwen37/`.
 > **Every table in §5 regenerates with one command** — `node eval/paper-tables.mjs` — including all *p*-values, which come from exhaustive permutation (all 184,756 splits), not sampling. Re-verified 2026-08-13: all 36 accuracy / standard-deviation / EPC / token cells reproduce exactly from the raw files.
-> All six arXiv citations verified live (2026-08-07); star counts approximate (values drift). Re-verify before submission.
+> All six arXiv citations re-verified live **2026-08-13** (titles fetched from arxiv.org and matched against the text); star counts approximate (values drift).
 
 ## Abstract
 
@@ -51,7 +51,7 @@ We call this defect **state corruption**: generated content reads fluently at a 
 
 ## 2. Related Work
 
-> Citations below were verified live on 2026-08-07 (arXiv IDs confirmed to exist with matching titles; star counts reported approximate). Re-verify once more before final submission, per the repository rule "citations before claims".
+> Citations below were re-verified live on **2026-08-13**: every arXiv ID was fetched and its title compared to the text below. Star counts reported approximate. Per the repository rule "citations before claims".
 
 **Long-context evaluation.** LongBench (arXiv 2308.14508), LongBench v2 (arXiv 2412.15204), and ∞Bench (arXiv 2402.13718) measure whether a model can *use* long context for question answering; they do not measure consistency of *generation* over long horizons.
 
