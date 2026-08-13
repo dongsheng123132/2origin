@@ -68,8 +68,35 @@ const MUTANTS = [
     file: 'state-diff.mjs',
     label: 'W3: 证据可追溯率放水',
     why: '把「场景号格式」正则放成「非空即可」—— 证据链形同虚设，但数字更好看',
-    find: '  const traceable = evidenceKeys.filter((k) => /^scene:\\d{2}-\\d{2}$|^ch\\d+/.test(reported.evidence[k] ?? \'\')).length',
-    replace: '  const traceable = evidenceKeys.filter((k) => /./.test(reported.evidence[k] ?? \'\')).length',
+    find: '  const traceableOf = (k) => /^scene:\\d{2}-\\d{2}$|^ch\\d+/.test(reported.evidence[k] ?? \'\')',
+    replace: '  const traceableOf = (k) => /./.test(reported.evidence[k] ?? \'\')',
+  },
+
+  {
+    file: 'state-diff.mjs',
+    label: 'W3: 覆盖率的分母换回「臂自己上报的证据数」',
+    why: '这正是 2026-08-13 之前的真实口径 —— 只给 8 个必答字段中的 4 个配证据也记 100%。'
+      + '一个自选分母的比率，读起来和覆盖率一模一样，却永远不会低。',
+    find: '    evidenceCoverage: rows.length ? traceableRequired / rows.length : null,',
+    replace: '    evidenceCoverage: evidenceKeys.length ? traceableRequired / evidenceKeys.length : null,',
+  },
+
+  {
+    file: 'state-diff.mjs',
+    label: 'W3: 覆盖率按 id 而非 id.field 匹配',
+    why: '给 char:lin-zheng.location 配证据就算证了 char:lin-zheng.knows —— '
+      + '同一个对象的另一个字段被当成同一件事，覆盖率虚高。实测 A3 每轮都会踩到。',
+    find: '    return `${id}.${field}`',
+    replace: '    return id',
+  },
+
+  {
+    file: 'state-diff.mjs',
+    label: 'W3: 没有证据的臂重新获得 null 豁免',
+    why: 'null 会被均值悄悄排除，等于「一条证据都不给」不受惩罚 —— '
+      + 'A0/A1/A2 与 A3 的差距恰恰全在这一项上，豁免掉它，这个区分就消失了。',
+    find: '    evidenceCoverage: rows.length ? traceableRequired / rows.length : null,',
+    replace: '    evidenceCoverage: traceableRequired ? traceableRequired / rows.length : null,',
   },
 
   // ── W2 缺陷检出 ──

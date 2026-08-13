@@ -65,9 +65,35 @@ export function scoreW3(reported, task = TASK) {
   const passed = rows.filter((r) => r.pass).length
   const missing = rows.filter((r) => r.detail === '未上报该字段').length
 
-  // 证据可追溯率：状态字段能否指回来源场景（仅对上报了 evidence 的臂计算）
+  // 证据的两个分项。**必须分开报，报一个是选择性披露。**
+  //
+  // 2026-08-13 修：此前只有 evidenceTraceability 一个数，分母是「臂自己上报了证据的字段」，
+  // 于是只给 8 个必答字段中的 4 个配证据、且那 4 条格式合法的一轮，记 100%。
+  // 实测 A3 十轮里有一轮正是 4/8 记 100%；按必答字段重算，A3 的真实覆盖是
+  // qwen 55.0% / deepseek 38.8%，而论文当时报的是「100% evidence traceability」。
+  //
+  // 两个数都真，但回答的是不同问题：
+  //   evidenceTraceability = 精确率：**它给出的证据**里，有多少指得回来源场景
+  //   evidenceCoverage     = 覆盖率：**必须回答的字段**里，有多少配了指得回来源的证据
+  // 只报前者，等于用「我说的话都算数」冒充「该说的我都说了」。
+  //
+  // 注意 evidenceTraceability 的 null 语义也具误导性：没上报任何证据的臂得 null（被排除），
+  // 不是 0。覆盖率不给这个豁免——没有证据就是 0 覆盖，这才是可比的。
   const evidenceKeys = Object.keys(reported.evidence ?? {})
-  const traceable = evidenceKeys.filter((k) => /^scene:\d{2}-\d{2}$|^ch\d+/.test(reported.evidence[k] ?? '')).length
+  const traceableOf = (k) => /^scene:\d{2}-\d{2}$|^ch\d+/.test(reported.evidence[k] ?? '')
+  const traceable = evidenceKeys.filter(traceableOf).length
+  // 覆盖率的分子只认**落在必答字段上**的证据，且按 `id.field` 精确匹配。
+  // 按 id 匹配是不够的：`char:lin-zheng.location` 与被考的 `char:lin-zheng.knows` 同 id，
+  // 但它证的是另一个字段。实测一轮上报 8 条证据、只有 3 条落在必答字段上——
+  // 按 id 放行会把它记成 8/8，按 id.field 才是 3/8。
+  const idField = (k) => {
+    const { id, field } = parseKey(k)
+    return `${id}.${field}`
+  }
+  const required = new Set(rows.map((r) => idField(r.key)))
+  const traceableRequired = new Set(
+    evidenceKeys.filter((k) => traceableOf(k) && required.has(idField(k))).map(idField),
+  ).size
 
   return {
     arm: reported.arm,
@@ -77,6 +103,7 @@ export function scoreW3(reported, task = TASK) {
     passed,
     missing,
     evidenceTraceability: evidenceKeys.length ? traceable / evidenceKeys.length : null,
+    evidenceCoverage: rows.length ? traceableRequired / rows.length : null,
   }
 }
 
