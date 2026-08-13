@@ -135,7 +135,12 @@ const MUTANTS = [
 const results = []
 for (const m of MUTANTS) {
   const path = join(HERE, m.file)
-  const original = readFileSync(path, 'utf8')
+  const raw = readFileSync(path, 'utf8')
+  // 行尾归一化后再匹配。**这条是被本工具自己抓出来的**：跨行锚点（如「漏报字段不再算错」
+  // 那条含两个 \n）在 CRLF 检出的工作区里永远匹配不上，于是在 Windows 上 clone 的人
+  // 会看到「锚点失效」而不是 12/12。修的是匹配，不是告警——
+  // 还原时写回 `raw` 原字节，不动用户的行尾。
+  const original = raw.replace(/\r\n/g, '\n')
   if (!original.includes(m.find)) {
     // 锚点找不到 = 判分器改过了，这条变异已失效。**必须报出来**，
     // 否则一条永远打不中的变异会伪装成「已覆盖」。
@@ -150,7 +155,7 @@ for (const m of MUTANTS) {
   } catch {
     killed = true // selftest 报错退出 → 变异被杀死
   } finally {
-    writeFileSync(path, original) // 无论如何都还原，别把判分器留在坏状态
+    writeFileSync(path, raw) // 无论如何都还原成**原始字节**（含原行尾），别把判分器留在坏状态
   }
   results.push({ ...m, status: killed ? 'killed' : 'survived' })
 }
