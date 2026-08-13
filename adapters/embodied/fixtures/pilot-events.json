@@ -1,0 +1,56 @@
+{
+  "schema_version": "benxiang-embodied-events/0.1",
+  "objects": [
+    { "id": "A", "kind": "container", "track_ids": ["track-green-1"] },
+    { "id": "B", "kind": "pen", "track_ids": ["track-pen-1"] },
+    { "id": "C", "kind": "bottle", "track_ids": ["track-bottle-1"] },
+    { "id": "D", "kind": "container", "track_ids": ["track-green-2"] }
+  ],
+  "places": ["L", "M", "R", "OUTSIDE_WORKSPACE"],
+  "scenarios": [
+    {
+      "id": "S01-static-persistence",
+      "sources": [{ "id": "SRC-STATIC", "sha256": "6740b09c9e2de53017bf5e6c541f095f924ffdde396e897410e24641c1571ec6", "duration_s": 14.368345 }],
+      "events": [
+        { "event_id": "S01-E01", "type": "object_observed", "valid_from": 0, "observed_at": 3.5, "committed_at": "2026-08-13T12:00:01Z", "payload": { "object": "A", "attributes": { "exists": true, "location": "M" } }, "evidence": { "source_id": "SRC-STATIC", "sha256": "6740b09c9e2de53017bf5e6c541f095f924ffdde396e897410e24641c1571ec6", "interval_s": [0, 3.5] } },
+        { "event_id": "S01-E02", "type": "occlusion_started", "valid_from": 4, "observed_at": 4.1, "committed_at": "2026-08-13T12:00:02Z", "payload": { "object": "A" }, "evidence": { "source_id": "SRC-STATIC", "sha256": "6740b09c9e2de53017bf5e6c541f095f924ffdde396e897410e24641c1571ec6", "interval_s": [4, 4.1] } },
+        { "event_id": "S01-E03", "type": "occlusion_ended", "valid_from": 10, "observed_at": 10.1, "committed_at": "2026-08-13T12:00:03Z", "payload": { "object": "A" }, "evidence": { "source_id": "SRC-STATIC", "sha256": "6740b09c9e2de53017bf5e6c541f095f924ffdde396e897410e24641c1571ec6", "interval_s": [10, 10.1] } },
+        { "event_id": "S01-E04", "type": "object_observed", "valid_from": 10.2, "observed_at": 12, "committed_at": "2026-08-13T12:00:04Z", "payload": { "object": "A", "attributes": { "exists": true, "location": "M" } }, "evidence": { "source_id": "SRC-STATIC", "sha256": "6740b09c9e2de53017bf5e6c541f095f924ffdde396e897410e24641c1571ec6", "interval_s": [10.2, 12] } }
+      ]
+    },
+    {
+      "id": "S02-hidden-move",
+      "sources": [{ "id": "SRC-HIDDEN-MOVE", "sha256": "8a3ab30556988beec318f091bf196d664340315ed7fbe43eacfc88af1e8b318f", "duration_s": 17.468345 }],
+      "events": [
+        { "event_id": "S02-E01", "type": "object_observed", "valid_from": 0, "observed_at": 3, "committed_at": "2026-08-13T12:01:01Z", "payload": { "object": "A", "attributes": { "exists": true, "location": "M" } }, "evidence": { "source_id": "SRC-HIDDEN-MOVE", "sha256": "8a3ab30556988beec318f091bf196d664340315ed7fbe43eacfc88af1e8b318f", "interval_s": [0, 3] } },
+        { "event_id": "S02-E02", "type": "contact_started", "valid_from": 8.1, "observed_at": 8.3, "committed_at": "2026-08-13T12:01:02Z", "payload": { "actor": "human-hand-track-7", "object": "A" }, "evidence": { "source_id": "SRC-HIDDEN-MOVE", "sha256": "8a3ab30556988beec318f091bf196d664340315ed7fbe43eacfc88af1e8b318f", "interval_s": [8.1, 8.3] } },
+        { "event_id": "S02-E03", "type": "occlusion_started", "valid_from": 8.5, "observed_at": 8.6, "committed_at": "2026-08-13T12:01:03Z", "payload": { "object": "A" }, "evidence": { "source_id": "SRC-HIDDEN-MOVE", "sha256": "8a3ab30556988beec318f091bf196d664340315ed7fbe43eacfc88af1e8b318f", "interval_s": [8.5, 8.6] } },
+        { "event_id": "S02-E04", "type": "occlusion_ended", "valid_from": 13, "observed_at": 13.1, "committed_at": "2026-08-13T12:01:04Z", "payload": { "object": "A" }, "evidence": { "source_id": "SRC-HIDDEN-MOVE", "sha256": "8a3ab30556988beec318f091bf196d664340315ed7fbe43eacfc88af1e8b318f", "interval_s": [13, 13.1] } },
+        { "event_id": "S02-E05", "type": "contact_ended", "valid_from": 13.2, "observed_at": 13.3, "committed_at": "2026-08-13T12:01:05Z", "payload": { "actor": "human-hand-track-7", "object": "A" }, "evidence": { "source_id": "SRC-HIDDEN-MOVE", "sha256": "8a3ab30556988beec318f091bf196d664340315ed7fbe43eacfc88af1e8b318f", "interval_s": [13.2, 13.3] } },
+        { "event_id": "S02-E06", "type": "object_observed", "valid_from": 13.2, "observed_at": 14.5, "committed_at": "2026-08-13T12:01:06Z", "payload": { "object": "A", "attributes": { "exists": true, "location": "R" } }, "evidence": { "source_id": "SRC-HIDDEN-MOVE", "sha256": "8a3ab30556988beec318f091bf196d664340315ed7fbe43eacfc88af1e8b318f", "interval_s": [13.2, 14.5] } }
+      ]
+    },
+    {
+      "id": "S03-similar-object-replacement",
+      "sources": [{ "id": "SRC-IDENTITY", "sha256": "8a954c90100f513a4035ecd87f4563b26fa06c14e69ec685843a9ba435a2c2c9", "duration_s": 24.803333 }],
+      "events": [
+        { "event_id": "S03-E01", "type": "object_observed", "valid_from": 0, "observed_at": 4, "committed_at": "2026-08-13T12:02:01Z", "payload": { "object": "A", "attributes": { "exists": true, "location": "M" } }, "evidence": { "source_id": "SRC-IDENTITY", "sha256": "8a954c90100f513a4035ecd87f4563b26fa06c14e69ec685843a9ba435a2c2c9", "interval_s": [0, 4] } },
+        { "event_id": "S03-E02", "type": "track_lost", "valid_from": 4.5, "observed_at": 4.6, "committed_at": "2026-08-13T12:02:02Z", "payload": { "object": "A" }, "evidence": { "source_id": "SRC-IDENTITY", "sha256": "8a954c90100f513a4035ecd87f4563b26fa06c14e69ec685843a9ba435a2c2c9", "interval_s": [4.5, 4.6] } },
+        { "event_id": "S03-E03", "type": "object_observed", "valid_from": 10, "observed_at": 12, "committed_at": "2026-08-13T12:02:03Z", "payload": { "object": "D", "attributes": { "exists": true, "location": "M" } }, "evidence": { "source_id": "SRC-IDENTITY", "sha256": "8a954c90100f513a4035ecd87f4563b26fa06c14e69ec685843a9ba435a2c2c9", "interval_s": [10, 12] } },
+        { "event_id": "S03-E04", "type": "object_observed", "valid_from": 17, "observed_at": 19, "committed_at": "2026-08-13T12:02:04Z", "payload": { "object": "A", "attributes": { "exists": true, "location": "L" } }, "evidence": { "source_id": "SRC-IDENTITY", "sha256": "8a954c90100f513a4035ecd87f4563b26fa06c14e69ec685843a9ba435a2c2c9", "interval_s": [17, 19] } },
+        { "event_id": "S03-E05", "type": "identity_distinct", "valid_from": 18, "observed_at": 19, "committed_at": "2026-08-13T12:02:05Z", "payload": { "objects": ["A", "D"] }, "evidence": { "source_id": "SRC-IDENTITY", "sha256": "8a954c90100f513a4035ecd87f4563b26fa06c14e69ec685843a9ba435a2c2c9", "interval_s": [18, 19] } }
+      ]
+    },
+    {
+      "id": "S04-containment-carry",
+      "sources": [{ "id": "SRC-CONTAINMENT", "sha256": "000e2ad7f733995a94b63556a72e36a040a3b1c4f42b57744fcf00322ece5509", "duration_s": 44.173333 }],
+      "events": [
+        { "event_id": "S04-E01", "type": "object_observed", "valid_from": 0, "observed_at": 4, "committed_at": "2026-08-13T12:03:01Z", "payload": { "object": "A", "attributes": { "exists": true, "location": "L" } }, "evidence": { "source_id": "SRC-CONTAINMENT", "sha256": "000e2ad7f733995a94b63556a72e36a040a3b1c4f42b57744fcf00322ece5509", "interval_s": [0, 4] } },
+        { "event_id": "S04-E02", "type": "object_observed", "valid_from": 0, "observed_at": 4, "committed_at": "2026-08-13T12:03:02Z", "payload": { "object": "B", "attributes": { "exists": true, "location": "M" } }, "evidence": { "source_id": "SRC-CONTAINMENT", "sha256": "000e2ad7f733995a94b63556a72e36a040a3b1c4f42b57744fcf00322ece5509", "interval_s": [0, 4] } },
+        { "event_id": "S04-E03", "type": "put_inside", "valid_from": 7.5, "observed_at": 12, "committed_at": "2026-08-13T12:03:03Z", "payload": { "object": "B", "container": "A" }, "evidence": { "source_id": "SRC-CONTAINMENT", "sha256": "000e2ad7f733995a94b63556a72e36a040a3b1c4f42b57744fcf00322ece5509", "interval_s": [7.5, 12] } },
+        { "event_id": "S04-E04", "type": "object_observed", "valid_from": 19, "observed_at": 27, "committed_at": "2026-08-13T12:03:04Z", "payload": { "object": "A", "attributes": { "exists": true, "location": "R" } }, "evidence": { "source_id": "SRC-CONTAINMENT", "sha256": "000e2ad7f733995a94b63556a72e36a040a3b1c4f42b57744fcf00322ece5509", "interval_s": [19, 27] } },
+        { "event_id": "S04-E05", "type": "removed_from", "valid_from": 31, "observed_at": 42, "committed_at": "2026-08-13T12:03:05Z", "payload": { "object": "B", "container": "A", "location": "R" }, "evidence": { "source_id": "SRC-CONTAINMENT", "sha256": "000e2ad7f733995a94b63556a72e36a040a3b1c4f42b57744fcf00322ece5509", "interval_s": [31, 42] } }
+      ]
+    }
+  ]
+}
