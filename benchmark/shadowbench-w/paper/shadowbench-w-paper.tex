@@ -76,7 +76,7 @@
 \title{ShadowBench-W: State Consistency as a Benchmarkable Task for
 Long-Form Text Generation}
 \author{He Fangsheng}
-\date{2026-08-07}
+\date{2026-08-13}
 
 \begin{document}
 \maketitle
@@ -95,17 +95,20 @@ repository: \textbf{(i)} the gain we attributed to the Origin IR state
 layer is almost entirely produced by \emph{requiring the model to
 maintain an explicit state at all} --- a prompt-only arm (A2) captures
 41.3 of the 43.8 points, and the remaining 2.5 are not significant (p =
-0.48 / 0.72); \textbf{(ii)} the ``100\% evidence traceability'' reported
+0.47 / 0.72); \textbf{(ii)} the ``100\% evidence traceability'' reported
 in v0.3 used a self-selected denominator; measured against the fields
 the benchmark actually asks about, coverage is \textbf{27.5\% / 15.0\%}.
-Main results (§5.1) and cross-model (§5.2) come from
-\texttt{benchmark/shadowbench-w/results-v3-m/} (M-level, 50-chapter ≈95K
-baseline, 10 rounds/arm, both deepseek-v4-flash and qwen-plus, patched
-hermes HTTP + bailian channels). \textbf{Every cell of the §5.1 and §5.2
-tables is recomputable from the 60 per-round JSON files in that
-directory} --- re-verified 2026-08-12, all twelve accuracy/EPC cells
-reproduce exactly. All six arXiv citations verified live (2026-08-07);
-star counts approximate (values drift).
+All results are M-level (50-chapter ≈95K baseline), 10 rounds per arm
+per model, from \textbf{90 per-round JSON files} in
+\texttt{results-v3-m/}, \texttt{results-v3-m-ablation/} and
+\texttt{results-v3-m-frontier-qwen37/}. \textbf{Every table in §5
+regenerates with one command} --- \texttt{node\ eval/paper-tables.mjs}
+--- including all \emph{p}-values, which come from exhaustive
+permutation (all 184,756 splits), not sampling. Re-verified 2026-08-13:
+all 36 accuracy / standard-deviation / EPC / token cells reproduce
+exactly from the raw files. All six arXiv citations verified live
+(2026-08-07); star counts approximate (values drift). Re-verify before
+submission.
 \end{quote}
 
 \subsection{Abstract}\label{abstract}
@@ -127,11 +130,13 @@ development corpus and an \textbf{M-level 50-chapter (≈95K characters)
 main corpus}---each with a 5-chapter continuation task, it defines two
 scores: \textbf{W1} measures consistency errors per 100 contacts (EPC)
 in the generated text, and \textbf{W3} measures field-level agreement
-between the system's claimed world state and ground truth, together with
-the evidence-traceability of every state field. We also present the
-\textbf{Origin IR state layer}, a reference method that compiles context
-under a token budget and validates every state mutation as a transaction
-carrying an evidence chain.
+between the system's claimed world state and ground truth, plus two
+separately reported evidence numbers --- \emph{coverage} (of the fields
+under test, how many carry source-traceable evidence) and
+\emph{precision} (of the evidence supplied, how much is traceable). We
+also present the \textbf{Origin IR state layer}, a reference method that
+compiles context under a token budget and validates every state mutation
+as a transaction carrying an evidence chain.
 
 On the \textbf{M-level} task (50-chapter, ≈95K-character baseline, 10
 rounds/arm, two unrelated models), bare models score 56.3\% / 53.8\% on
@@ -142,7 +147,7 @@ to emit and update an explicit world state each chapter, with no
 validator, no evidence chain, and no context compiler --- reaches
 \textbf{97.5\% / 95.0\%}, capturing 41.3 of the state layer's 43.8-point
 advantage on \emph{both} models; the residual 2.5 points are not
-significant (p = 0.48 / 0.72). The prompt-only arm is also
+significant (p = 0.47 / 0.72). The prompt-only arm is also
 \textbf{cheaper than the bare baseline} (−9.7\% / −28.2\% tokens), while
 the full state layer costs +13.7\% / +21.1\%.
 
@@ -160,7 +165,7 @@ under a self-selected denominator. Our headline finding is therefore not
 \emph{``build a state layer''} but \emph{``ask for the state''}: the
 expensive part of the system reproduces almost none of the benefit its
 own authors attributed to it, and ShadowBench-W is what made that
-visible. The benchmark, judges, all four arms, and 80 per-round result
+visible. The benchmark, judges, all four arms, and 90 per-round result
 files are released under Apache-2.0.
 
 \subsection{1. Introduction}\label{introduction}
@@ -512,10 +517,10 @@ A3 Origin IR state layer & 10 & \textbf{0.84 ± 0.37} & \textbf{100.0\% ±
 \end{longtable}
 }
 
-Permutation tests (20,000 rounds): W3 A2 vs A0 \textbf{p \textless{}
-0.0001} (Δ = 41.3 pt); W3 A3 vs A0 \textbf{p \textless{} 0.0001} (Δ =
-43.8 pt); \textbf{W3 A3 vs A2 p = 0.4774 (n.s., Δ = 2.5 pt)}; W1 EPC A3
-vs A2 p = 0.2551 (n.s.); W3 A1 vs A0 p = 0.1315 (n.s.).
+Exact permutation tests (all 184,756 splits): W3 A2 vs A0 \textbf{p =
+3.3×10⁻⁵} (Δ = 41.3 pt); W3 A3 vs A0 \textbf{p = 1.1×10⁻⁵} (Δ = 43.8
+pt); \textbf{W3 A3 vs A2 p = 0.4737 (n.s., Δ = 2.5 pt)}; W1 EPC A3 vs A2
+p = 0.2486 (n.s.); W3 A1 vs A0 p = 0.1331 (n.s.).
 
 Four findings:
 
@@ -593,16 +598,16 @@ A3 Origin IR & 10 & \textbf{97.5\% ± 5.0\%} & \textbf{0.66 ± 0.54} &
 \end{longtable}
 }
 
-Permutation tests (20,000 rounds): A2 vs A0 \textbf{p \textless{}
-0.0001} (Δ = 41.3 pt); A3 vs A0 \textbf{p \textless{} 0.0001};
-\textbf{A3 vs A2 p = 0.7151 (n.s., Δ = 2.5 pt)}; EPC A3 vs A2 p = 0.2287
-(n.s.); A1 vs A0 p = 0.5264 (n.s.).
+Exact permutation tests (all 184,756 splits): A2 vs A0 \textbf{p =
+2.2×10⁻⁵} (Δ = 41.3 pt); A3 vs A0 \textbf{p = 1.1×10⁻⁵}; \textbf{A3 vs
+A2 p = 0.7214 (n.s., Δ = 2.5 pt)}; EPC A3 vs A2 p = 0.2302 (n.s.); A1 vs
+A0 p = 0.5372 (n.s.).
 
 \textbf{Robustness conclusion --- including the part that goes against
 us.} Every qualitative claim replicates on a second, unrelated model,
 \emph{including the ablation}: the A2-vs-A0 gap is \textbf{41.3 points
 on both models} (to the decimal), and the A3-vs-A2 gap is \textbf{2.5
-points on both}, non-significant in both (p = 0.48 / 0.72). A result
+points on both}, non-significant in both (p = 0.47 / 0.72). A result
 this stable across models is not a fluke of one decoder. The token
 finding replicates and amplifies: on qwen-plus the prompt-only arm costs
 \textbf{28.2\% less} than the bare baseline while scoring 41 points
@@ -736,13 +741,13 @@ qwen-plus
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-A0 → A2 (the demand alone) & +41.3 pt, p \textless{} 0.0001 & +41.3 pt,
-p \textless{} 0.0001 \\
+A0 → A2 (the demand alone) & +41.3 pt, p = 3.3×10⁻⁵ & +41.3 pt, p =
+2.2×10⁻⁵ \\
 A2 → A3 (validator + evidence chain + compiler) & \textbf{+2.5 pt, p =
-0.4774 (n.s.)} & \textbf{+2.5 pt, p = 0.7151 (n.s.)} \\
+0.4737 (n.s.)} & \textbf{+2.5 pt, p = 0.7214 (n.s.)} \\
 Token cost of the demand & \textbf{−9.7\%} vs bare & \textbf{−28.2\%} vs
 bare \\
-Token cost of the machinery & +13.7\% vs bare (+26.0\% vs A2) & +21.1\%
+Token cost of the machinery & +13.7\% vs bare (+25.9\% vs A2) & +21.1\%
 vs bare (+68.6\% vs A2) \\
 Evidence coverage, A2 vs A3 & 0\% vs 15.0\% & 0\% vs 27.5\% \\
 \end{longtable}
@@ -909,10 +914,24 @@ Impact}\label{limitations-broader-impact}
   judge mutation \textbf{12/12 killed} (§7.1).
 \item
   \textbf{Data}: \texttt{corpus/}, \texttt{world/spec.origin/}, and
-  \textbf{80 per-round result files} --- \texttt{results-v3-m/}
-  (A0/A1/A3 × 2 models × 10) and \texttt{results-v3-m-ablation/} (A2 × 2
-  models × 10). Every cell of §5.1, §5.2, §5.3 and §5.4 is recomputable
-  from these files.
+  \textbf{90 per-round result files} --- \texttt{results-v3-m/}
+  (A0/A1/A3 × 2 models × 10), \texttt{results-v3-m-ablation/} (A2 × 2
+  models × 10), \texttt{results-v3-m-frontier-qwen37/} (frontier A0 ×
+  10).
+\item
+  \textbf{One command regenerates every table}:
+  \texttt{node\ eval/paper-tables.mjs} prints §5.1, §5.2, §5.2.1, §5.3
+  and §5.4 --- means, standard deviations, evidence coverage, token
+  deltas and all \emph{p}-values --- from the raw files. Nothing in
+  those sections is transcribed by hand.
+\item
+  \textbf{Significance testing is exact, not sampled.} All
+  \emph{p}-values come from \textbf{exhaustive} permutation over all
+  C(20,10) = 184,756 splits, so they are bit-identical on any machine at
+  any time. An earlier draft quoted four-decimal \emph{p}-values from an
+  unseeded 20,000-round Monte Carlo; those digits could not be
+  reproduced by a reader and have been replaced. A \emph{p}-value that
+  only its author can obtain is not evidence.
 \item
   \textbf{Judge fingerprints}: judgeHashW1 / judgeHashW3.
   \textbf{judgeHashW3 changed on 2026-08-13} when
