@@ -86,9 +86,18 @@ Long-Form Text
 Generation}\label{shadowbench-w-state-consistency-as-a-benchmarkable-task-for-long-form-text-generation}
 
 \begin{quote}
-Working draft v0.3 (English) --- for arXiv preprint and ARR Oct 2026
-cycle (deadline 2026-10-12 AoE). Status: draft; \textbf{main-result data
-complete}, method ablations \textbf{not yet run} (declared in §5.3).
+Working draft v0.4 (English) --- for arXiv preprint and ARR Oct 2026
+cycle (deadline 2026-10-12 AoE). Status: draft; main-result data
+complete, \textbf{method ablation run 2026-08-13 and it overturned our
+own attribution} (§5.3). v0.3 → v0.4 changed what this paper claims. Two
+corrections, both against our own interest, both from data in this
+repository: \textbf{(i)} the gain we attributed to the Origin IR state
+layer is almost entirely produced by \emph{requiring the model to
+maintain an explicit state at all} --- a prompt-only arm (A2) captures
+41.3 of the 43.8 points, and the remaining 2.5 are not significant (p =
+0.48 / 0.72); \textbf{(ii)} the ``100\% evidence traceability'' reported
+in v0.3 used a self-selected denominator; measured against the fields
+the benchmark actually asks about, coverage is \textbf{27.5\% / 15.0\%}.
 Main results (§5.1) and cross-model (§5.2) come from
 \texttt{benchmark/shadowbench-w/results-v3-m/} (M-level, 50-chapter ≈95K
 baseline, 10 rounds/arm, both deepseek-v4-flash and qwen-plus, patched
@@ -124,19 +133,35 @@ the evidence-traceability of every state field. We also present the
 under a token budget and validates every state mutation as a transaction
 carrying an evidence chain.
 
-On the \textbf{M-level} task (50-chapter, ≈95K-character baseline) with
-deepseek-v4-flash (10 rounds/arm), the state layer raises W3 state
-accuracy to \textbf{100.0\%} (zero variance), versus 56.3\% for the bare
-model and 70.0\% for a vector-RAG baseline (both p \textless{} 0.0001,
-20,000-round permutation test), and cuts W1 consistency-error density
-from 2.16 to 0.84. The finding holds across two unrelated models: on the
-same M-level protocol, qwen-plus reaches 97.5\% with the state layer
-versus 53.8\% bare and 58.8\% RAG (p \textless{} 0.0001). We also
-declare what the design does \emph{not} yet establish: A3 bundles three
-interventions (a demand for explicit state, a validator, an evidence
-chain), and the prompt-only ablation that would separate them has not
-been run (§5.3). The benchmark, judges, and reference implementation are
-released under Apache-2.0.
+On the \textbf{M-level} task (50-chapter, ≈95K-character baseline, 10
+rounds/arm, two unrelated models), bare models score 56.3\% / 53.8\% on
+W3 and vector RAG does not fix it (70.0\% / 58.8\%). A full state layer
+reaches 100.0\% / 97.5\%. \textbf{But an ablation shows the machinery is
+not what produces this.} A prompt-only arm --- the model is simply told
+to emit and update an explicit world state each chapter, with no
+validator, no evidence chain, and no context compiler --- reaches
+\textbf{97.5\% / 95.0\%}, capturing 41.3 of the state layer's 43.8-point
+advantage on \emph{both} models; the residual 2.5 points are not
+significant (p = 0.48 / 0.72). The prompt-only arm is also
+\textbf{cheaper than the bare baseline} (−9.7\% / −28.2\% tokens), while
+the full state layer costs +13.7\% / +21.1\%.
+
+The premise survives a frontier control: a flagship model (qwen3.7-max)
+writes the best prose we have measured (EPC 0.60) and still scores
+\textbf{56.3\%} on state --- state corruption is a missing mechanism,
+not a capability gap that scale closes.
+
+What the machinery does buy is the thing prompting cannot produce at
+all: an evidence chain. Prompt-only and bare arms have zero evidence
+coverage by construction; the state layer attaches source-traceable
+evidence to \textbf{27.5\% / 15.0\%} of the fields under test --- a real
+categorical difference, and far below the ``100\%'' we reported in v0.3
+under a self-selected denominator. Our headline finding is therefore not
+\emph{``build a state layer''} but \emph{``ask for the state''}: the
+expensive part of the system reproduces almost none of the benefit its
+own authors attributed to it, and ShadowBench-W is what made that
+visible. The benchmark, judges, all four arms, and 80 per-round result
+files are released under Apache-2.0.
 
 \subsection{1. Introduction}\label{introduction}
 
@@ -201,20 +226,27 @@ to answer ``what do I believe now, and why''.
   \textbf{A new benchmark, ShadowBench-W}: a two-scale Chinese corpus
   (S-level ≈20K, M-level ≈95K characters), 5-chapter continuation tasks,
   and two judges. W1 measures consistency errors per contact (EPC); W3
-  measures state-writeback correctness (field-level accuracy + evidence
-  traceability).
+  measures state-writeback correctness --- field-level accuracy,
+  evidence \textbf{coverage}, and evidence \textbf{precision}, reported
+  separately (§3.2). Its first serious use falsified the method its own
+  authors proposed (§5.3), which we regard as the strongest available
+  evidence that it measures something.
 \item
-  \textbf{A reference method, the Origin IR state layer}: a
-  context-compiler (input-side budget compilation) plus a
-  commit-compiler (output-side parsing, validation, evidence retention).
-  State is committed as transactions---rollback-able, evidence-chained,
-  with a human-review layer.
+  \textbf{A negative result about our own method}: the Origin IR state
+  layer (context-compiler + commit-compiler, transactional state with
+  evidence chains) is \emph{not} what produces the accuracy gain. A
+  prompt-only arm reaches within 2.5 points of it on both models (p =
+  0.48 / 0.72) at lower token cost than even the bare baseline. We
+  report this because the benchmark we built is what detected it; a
+  benchmark that cannot embarrass its author is not measuring anything.
 \item
-  \textbf{Empirical evidence}: at M-level (95K chars, deepseek-v4-flash,
-  10 rounds/arm), the state layer reaches \textbf{100\% W3 state
-  accuracy (zero variance)} versus 56.3\% bare and 70.0\% RAG (both p
-  \textless{} 0.0001), and cuts W1 EPC from 2.16 to 0.84---with 100\%
-  evidence traceability, robust across two models.
+  \textbf{A separation of two things the field conflates}: \emph{state
+  accuracy} (``can the system say what it believes'') is obtainable by
+  prompting alone; \emph{evidence traceability} (``can it say why'') is
+  not obtainable by prompting at all, and remains largely unsolved even
+  with machinery --- our own coverage is 27.5\% / 15.0\%. Systems that
+  must justify their beliefs, not merely state them, are where a state
+  layer still has something to prove.
 \end{enumerate}
 
 \subsection{2. Related Work}\label{related-work}
@@ -271,9 +303,11 @@ a validate-and-commit pipeline, and carry evidence, permissions,
 provenance, and validity. Our Origin IR state layer implements exactly
 this discipline in the long-form generation setting, and ShadowBench-W's
 W3 is the first public benchmark that \emph{measures} whether a system
-honors that discipline (state-writeback correctness + evidence
-traceability). MemTX is a protocol design without a public benchmark or
-evaluation data; ShadowBench-W supplies the missing measurement.
+honors it. MemTX is a protocol design without a public benchmark or
+evaluation data; ShadowBench-W supplies the missing measurement --- and
+the measurement's first verdict (§5.3) is that transactional machinery
+buys evidence, not accuracy. Any transactional-memory proposal evaluated
+only against a stateless baseline should be read with that in mind.
 
 \textbf{Document-parsing evaluation (adjacent evidence).} OmniDocBench
 (arXiv 2412.07626, CVPR 2025) shows that document parsing has a public
@@ -330,12 +364,21 @@ evidence in \(D\), and no statement in \(D\) contradicts \(S\).
   100 contacts). Patched vocabulary: 40/40 hits, 25 false-positive traps
   all silent (Run \#29).
 \item
-  \textbf{Judge W3}: state accuracy (field-level match) + evidence
-  traceability (each field traceable to the event/scene that produced
-  it).
+  \textbf{Judge W3}: three numbers, reported separately because
+  reporting one of them is selective disclosure --- \textbf{state
+  accuracy} (field-level match against ground truth); \textbf{evidence
+  coverage} (of the fields under test, how many carry evidence that
+  points back to a source scene --- denominator is the \emph{required}
+  field set); \textbf{evidence precision} (of the evidence the arm
+  \emph{did} supply, how much is source-traceable --- denominator is the
+  arm's own output, hence \texttt{null} when it supplies none). v0.3 of
+  this paper reported precision alone and called it traceability; see
+  §7.2.
 \item
   \textbf{Arms}: A0 = bare model with tail truncation; A1 = cheap vector
-  RAG; A3 = Origin IR state layer.
+  RAG; \textbf{A2 = prompt-only state} (told to emit and update an
+  explicit world state each chapter; no validator, no evidence
+  requirement, no context compiler); A3 = Origin IR state layer.
 \item
   \textbf{Models}: qwen-plus, deepseek-v4-flash (both reasoning models;
   reasoning tokens accounted---see §5.4).
@@ -361,6 +404,15 @@ boundaries)}\label{metric-protocol-honesty-boundaries}
 
 \subsection{4. Method: The Origin IR State
 Layer}\label{method-the-origin-ir-state-layer}
+
+\begin{quote}
+Read this section knowing where §5.3 ends up: on state accuracy,
+everything below is matched by a prompt. We describe it in full anyway,
+because it is the arm that produces evidence chains, because its failure
+is a result of this paper rather than an embarrassment to be trimmed,
+and because the design lessons in §4.3 were paid for and are reusable by
+anyone building the arm that \emph{does} win.
+\end{quote}
 
 \subsubsection{4.1 Architecture}\label{architecture}
 
@@ -411,11 +463,12 @@ failures}\label{design-decisions-learned-from-real-failures}
 
 \begin{quote}
 Main results are from the \textbf{M-level} task (50-chapter,
-≈95K-character baseline, 5-chapter continuation), run on the patched
-hermes HTTP channel (deepseek-v4-flash, 10 rounds per arm). Small-scale
-S-level control (§5.2) and ablations (§5.3) supplement. All numbers from
-\texttt{results-v3-m/} (main) and \texttt{results-log.md} (controls),
-verified against current judge fingerprints.
+≈95K-character baseline, 5-chapter continuation), four arms × two models
+× 10 rounds. §5.2 replicates the whole design on a second model; §5.3 is
+the method ablation and is the section that changed this paper's
+conclusion. All numbers recomputable from \texttt{results-v3-m/}
+(A0/A1/A3) and \texttt{results-v3-m-ablation/} (A2), 80 files, verified
+against current judge fingerprints.
 \end{quote}
 
 \subsubsection{5.1 Main results (deepseek-v4-flash, M-level: 50-chapter
@@ -440,89 +493,183 @@ W1 EPC (↓)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 W3 state accuracy
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Total text
+Evidence coverage
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Mean tokens
+Mean tokens (Δ vs A0)
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-A0 bare (tail truncation) & 10 & 2.16 ± 1.54 & 56.3\% ± 23.2\% & 160,553
-& 88,731 \\
-A1 vector RAG & 10 & 0.82 ± 0.44 & 70.0\% ± 6.1\% & 167,902 & 89,757 \\
+A0 bare (tail truncation) & 10 & 2.16 ± 1.54 & 56.3\% ± 23.2\% & 0\% (by
+construction) & 88,731 (---) \\
+A1 vector RAG & 10 & 0.82 ± 0.44 & 70.0\% ± 6.1\% & 0\% (by
+construction) & 89,757 (+1.2\%) \\
+\textbf{A2 prompt-only state} & 10 & 1.17 ± 0.70 & \textbf{97.5\% ±
+5.0\%} & 0\% (by construction) & \textbf{80,112 (−9.7\%)} \\
 A3 Origin IR state layer & 10 & \textbf{0.84 ± 0.37} & \textbf{100.0\% ±
-0.0\%} & 166,146 & 100,884 \\
+0.0\%} & \textbf{15.0\%} & 100,884 (+13.7\%) \\
 \end{longtable}
 }
 
-Permutation tests (20,000 rounds): W3 A3 vs A0 \textbf{p \textless{}
-0.0001}; W3 A3 vs A1 \textbf{p \textless{} 0.0001}; W3 A1 vs A0 p =
-0.1315 (n.s.).
+Permutation tests (20,000 rounds): W3 A2 vs A0 \textbf{p \textless{}
+0.0001} (Δ = 41.3 pt); W3 A3 vs A0 \textbf{p \textless{} 0.0001} (Δ =
+43.8 pt); \textbf{W3 A3 vs A2 p = 0.4774 (n.s., Δ = 2.5 pt)}; W1 EPC A3
+vs A2 p = 0.2551 (n.s.); W3 A1 vs A0 p = 0.1315 (n.s.).
 
-Three findings:
+Four findings:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \textbf{State correctness is the differentiator.} A3 reaches 100\%
-  state accuracy on all 10 rounds (zero variance); A0 (bare) only
-  56.3\%, A1 (RAG) 70.0\%. RAG helps text (EPC 0.82 ≈ A3's 0.84) but
-  does \textbf{not} fix state (70\% vs 100\%, p \textless{}
-  0.0001)---retrieval returns relevant prose, but nothing writes a
-  \emph{queryable world state} back.
+  \textbf{The demand for state is the differentiator --- not the state
+  layer.} Of A3's 43.8-point advantage over the bare model, \textbf{41.3
+  points (94\%) are reproduced by A2}, which does nothing but instruct
+  the model to emit and update an explicit world state. The 2.5 points
+  that remain are indistinguishable from noise. Whatever the validator,
+  the transaction log, and the evidence chain are worth, it is not state
+  accuracy on this benchmark.
 \item
-  \textbf{Text quality is NOT where the method wins.} A3's EPC (0.84) is
-  61\% lower than A0 (2.16), but statistically indistinguishable from A1
-  (0.82). The Origin IR state layer's advantage is state writeback (W3),
-  not prose generation (W1)---consistent with the S-level finding that
-  W1 and W3 decouple.
+  \textbf{And the cheap arm is cheaper than doing nothing.} A2 uses
+  \textbf{9.7\% fewer tokens than A0}. The bare and RAG arms must
+  reconstruct their state in an end-of-run probe over the full text
+  (§3.3); A2 carries a compact state forward and never pays for that
+  reconstruction. Higher accuracy at negative cost is not a trade-off
+  --- it is a free lunch that the field has been walking past.
+\item
+  \textbf{RAG is the arm that actually fails.} Retrieval returns
+  relevant prose and improves text (EPC 0.82), but leaves state at
+  70.0\% --- below A2's 97.5\% at essentially the same token cost.
+  Retrieving what was written is not the same as maintaining what is
+  believed.
 \item
   \textbf{The gap widens with scale.} At S-level (20K chars) A0 hit
-  75.0\%; at M-level (95K chars) A0 collapses to 56.3\%. A3 holds 100\%
-  at both scales. State corruption is a \emph{scale} defect.
+  75.0\%; at M-level (95K chars) A0 collapses to 56.3\%. State
+  corruption is a \emph{scale} defect --- which is why the demand for
+  explicit state pays off more the longer the horizon.
 \end{enumerate}
 
 \subsubsection{5.2 Cross-model robustness
 (qwen-plus)}\label{cross-model-robustness-qwen-plus}
 
-To test whether the state layer's advantage is model-specific, we re-ran
-the full M-level protocol with qwen-plus (10 rounds/arm, same probe
-protocol, same judge):
+To test whether the effect is model-specific, we re-ran the full M-level
+protocol with qwen-plus (10 rounds/arm, same probe protocol, same
+judge):
 
 {\def\LTcaptype{none} % do not increment counter
-\begin{longtable}[]{@{}lllll@{}}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}@{}}
 \toprule\noalign{}
-Arm & n & W3 state accuracy & W1 EPC & Mean tokens \\
+\begin{minipage}[b]{\linewidth}\raggedright
+Arm
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+n
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+W3 state accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+W1 EPC
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Evidence coverage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Mean tokens (Δ vs A0)
+\end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-A0 bare & 10 & 53.8\% ± 11.3\% & 1.12 ± 0.53 & 58,313 \\
-A1 vector RAG & 10 & 58.8\% ± 13.8\% & 1.22 ± 0.54 & 58,569 \\
+A0 bare & 10 & 53.8\% ± 11.3\% & 1.12 ± 0.53 & 0\% & 58,313 (---) \\
+A1 vector RAG & 10 & 58.8\% ± 13.8\% & 1.22 ± 0.54 & 0\% & 58,569
+(+0.4\%) \\
+\textbf{A2 prompt-only state} & 10 & \textbf{95.0\% ± 8.3\%} & 1.10 ±
+0.84 & 0\% & \textbf{41,885 (−28.2\%)} \\
 A3 Origin IR & 10 & \textbf{97.5\% ± 5.0\%} & \textbf{0.66 ± 0.54} &
-70,605 \\
+\textbf{27.5\%} & 70,605 (+21.1\%) \\
 \end{longtable}
 }
 
-Permutation tests (20,000 rounds): A3 vs A0 \textbf{p \textless{}
-0.0001}; A3 vs A1 \textbf{p \textless{} 0.0001}; A1 vs A0 p = 0.5264
-(n.s.).
+Permutation tests (20,000 rounds): A2 vs A0 \textbf{p \textless{}
+0.0001} (Δ = 41.3 pt); A3 vs A0 \textbf{p \textless{} 0.0001};
+\textbf{A3 vs A2 p = 0.7151 (n.s., Δ = 2.5 pt)}; EPC A3 vs A2 p = 0.2287
+(n.s.); A1 vs A0 p = 0.5264 (n.s.).
 
-\textbf{Robustness conclusion.} The qualitative finding is identical
-across two unrelated models: A3's state-writeback accuracy is
-near-perfect (97.5--100\%) while A0/A1 sit at 54--70\%; the
-A3-vs-baseline gap is significant at p \textless{} 0.0001 in both
-models, and RAG's EPC advantage (when present) does not transfer to
-state correctness. The 100\%→97.5\% drop on qwen is driven by 1--2
-rounds with a single field mismatch (e.g., a character location asserted
-in prose but not declared to the state layer)---the residual,
-declared-error regime, not a systemic failure.
+\textbf{Robustness conclusion --- including the part that goes against
+us.} Every qualitative claim replicates on a second, unrelated model,
+\emph{including the ablation}: the A2-vs-A0 gap is \textbf{41.3 points
+on both models} (to the decimal), and the A3-vs-A2 gap is \textbf{2.5
+points on both}, non-significant in both (p = 0.48 / 0.72). A result
+this stable across models is not a fluke of one decoder. The token
+finding replicates and amplifies: on qwen-plus the prompt-only arm costs
+\textbf{28.2\% less} than the bare baseline while scoring 41 points
+higher.
 
-\subsubsection{\texorpdfstring{5.3 Judge and harness validation ---
-\emph{and the ablation we have not
-run}}{5.3 Judge and harness validation --- and the ablation we have not run}}\label{judge-and-harness-validation-and-the-ablation-we-have-not-run}
+The one dimension that does not replicate-to-zero is evidence: A3
+supplies source-traceable evidence for 27.5\% (qwen) / 15.0\% (deepseek)
+of the fields under test, and A0/A1/A2 supply none on either model. That
+is the honest residual of the state layer --- a categorical capability
+at low coverage, not an accuracy advantage.
+
+\paragraph{5.2.1 Frontier-model control: is state corruption just a
+weak-model
+artifact?}\label{frontier-model-control-is-state-corruption-just-a-weak-model-artifact}
+
+The obvious objection to this paper's premise is that both main models
+are inexpensive ones, and that a frontier model would simply not lose
+track of its world. We ran the bare arm on
+\textbf{qwen3.7-max-2026-06-08}, 10 rounds, same corpus, task and judge:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Arm
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Model
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+n
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+W3 state accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+W1 EPC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A0 bare & deepseek-v4-flash & 10 & 56.3\% ± 23.2\% & 2.16 \\
+A0 bare & qwen-plus & 10 & 53.8\% ± 11.3\% & 1.12 \\
+\textbf{A0 bare} & \textbf{qwen3.7-max (frontier)} & 10 & \textbf{56.3\%
+± 16.1\%} & \textbf{0.60} \\
+\end{longtable}
+}
+
+\textbf{The frontier model writes markedly better prose and is no better
+at state.} EPC falls to 0.60 --- 72\% below deepseek-v4-flash, the best
+text quality of any bare arm we have measured --- while state accuracy
+lands at 56.3\%, indistinguishable from the cheap models and never once
+exceeding 75\% in ten rounds. Scaling the generator improves the thing
+that is easy to see and does not touch the thing this benchmark was
+built to see. State corruption is not a capability gap that a larger
+model closes; it is a \textbf{missing mechanism}, and the cheapest
+sufficient mechanism is a prompt that demands the state (§5.3).
+
+(Only the bare arm was run at this scale; a full four-arm frontier sweep
+is future work. We report the single arm because it is the arm that
+could have falsified the paper's premise, and it did not.)
+
+\subsubsection{5.3 The method ablation --- and, separately,
+judge/harness
+validation}\label{the-method-ablation-and-separately-judgeharness-validation}
 
 The table below is often mistaken for an ablation study. It is not, and
 we label it accordingly: it records \textbf{fixes to the judge and the
@@ -556,38 +703,77 @@ Dual gate (state + text) & errors 1/6/3 → 0/0/0 (3 runs) & --- \\
 \end{longtable}
 }
 
-\textbf{The method ablation is not yet run, and we state the confound it
-leaves open.} A0 and A1 are \emph{asked for} their world state in one
-probe round at the end (§3.3); A3 is \emph{required to maintain} one
-throughout, \emph{and} has it validated, \emph{and} must attach
-evidence. Those are three interventions bundled into one arm. The §5.1
-result therefore cannot yet distinguish:
+\paragraph{The method ablation (run 2026-08-13) --- and what it did to
+our
+claim}\label{the-method-ablation-run-2026-08-13-and-what-it-did-to-our-claim}
 
-\begin{itemize}
-\tightlist
-\item
-  \textbf{(a) the demand} --- merely instructing a model to keep an
-  explicit, queryable state while it writes;
-\item
-  \textbf{(b) the validator} --- rejecting state writes that fail
-  deterministic rules;
-\item
-  \textbf{(c) the evidence chain} --- requiring every field to carry
-  \texttt{valid\_from} and a supporting passage.
-\end{itemize}
+A3 bundles three interventions: \textbf{(a) the demand} --- instructing
+the model to keep an explicit, queryable state while it writes;
+\textbf{(b) the validator} --- rejecting state writes that fail
+deterministic rules; \textbf{(c) the evidence chain} --- requiring each
+field to carry \texttt{valid\_from} and a supporting passage. v0.3 of
+this paper reported the bundle's effect and attributed it, in prose, to
+the machinery. It never separated (a).
 
-The decisive missing arm is \textbf{A2 = prompt-only state maintenance}:
-the model is told to emit and update a JSON world state each chapter,
-with no validator, no evidence requirement, and no context-compiler. If
-A2 approaches A3, the contribution of §5.1 is (a) --- a
-\emph{task-design} finding, and the Origin IR machinery is unnecessary
-for this benchmark. If A2 lands between A0/A1 (54--70\%) and A3
-(97.5--100\%), the gap isolates (b)+(c). Two further arms, A3 minus
-validator and A3 minus evidence chain, would separate (b) from (c).
+\textbf{A2 isolates (a) alone.} Same corpus, same task, same judge, same
+models, 10 rounds each; the arm is a prompt instructing the model to
+emit and update a world state per chapter --- no validator, no evidence
+requirement, no context compiler.
 
-We consider this the single most important open experiment in the paper
-and report the confound rather than let §5.1 be read as stronger than it
-is. Cost is \textasciitilde10 rounds/arm/model on the existing harness.
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+deepseek-v4-flash
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+qwen-plus
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A0 → A2 (the demand alone) & +41.3 pt, p \textless{} 0.0001 & +41.3 pt,
+p \textless{} 0.0001 \\
+A2 → A3 (validator + evidence chain + compiler) & \textbf{+2.5 pt, p =
+0.4774 (n.s.)} & \textbf{+2.5 pt, p = 0.7151 (n.s.)} \\
+Token cost of the demand & \textbf{−9.7\%} vs bare & \textbf{−28.2\%} vs
+bare \\
+Token cost of the machinery & +13.7\% vs bare (+26.0\% vs A2) & +21.1\%
+vs bare (+68.6\% vs A2) \\
+Evidence coverage, A2 vs A3 & 0\% vs 15.0\% & 0\% vs 27.5\% \\
+\end{longtable}
+}
+
+\textbf{Reading, without softening it.} On state accuracy --- the metric
+this paper introduced and built a benchmark around --- \textbf{the
+Origin IR state layer does not beat a prompt}, on either model, at a
+cost premium of 26--69\% over that prompt. The effect we spent the paper
+explaining is 94\% attributable to asking the model for something we had
+never asked the baselines for. Note also that A2 \emph{outperforms A1
+(RAG) by 27--36 points at lower cost}: the relevant comparison for
+practitioners is not ``retrieval vs.~state layer'' but ``asking vs.~not
+asking''.
+
+\textbf{What survives.} Exactly one thing, and it is categorical rather
+than quantitative: A2 cannot produce an evidence chain at all --- not
+poorly, but structurally, because nothing in a prompt-only arm
+distinguishes a belief from its justification. A3 produces one for
+15--27.5\% of the fields under test. A system that must answer
+\emph{``why do you believe that''} still needs machinery; a system that
+must only answer \emph{``what do you believe''} does not. That is a much
+narrower claim than v0.3 made, and it is the one the data supports.
+
+\textbf{What is still not separated.} (b) from (c). Two further arms ---
+A3 minus validator, A3 minus evidence chain --- would tell us whether
+the residual 2.5 points and the evidence capability come from the same
+component. Given that 2.5 points is not significant, the honest
+expectation is that the validator contributes nothing measurable here
+and the evidence chain is doing all the remaining work; we have not run
+it, and we do not claim it.
 
 \subsubsection{5.4 Token accounting (honesty: no selective
 disclosure)}\label{token-accounting-honesty-no-selective-disclosure}
@@ -596,25 +782,52 @@ M-level, deepseek-v4-flash, patched HTTP channel (real \texttt{usage}
 from the API, not estimates), mean tokens per round:
 
 {\def\LTcaptype{none} % do not increment counter
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
 \toprule\noalign{}
-Arm & Mean tokens/round & Δ vs A0 \\
+\begin{minipage}[b]{\linewidth}\raggedright
+Arm
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+deepseek-v4-flash
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Δ vs A0
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+qwen-plus
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Δ vs A0
+\end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-A0 bare & 88,731 & --- \\
-A1 vector RAG & 89,757 & +1.2\% \\
-A3 Origin IR & 100,884 & \textbf{+13.7\%} \\
+A0 bare & 88,731 & --- & 58,313 & --- \\
+A1 vector RAG & 89,757 & +1.2\% & 58,569 & +0.4\% \\
+\textbf{A2 prompt-only state} & \textbf{80,112} & \textbf{−9.7\%} &
+\textbf{41,885} & \textbf{−28.2\%} \\
+A3 Origin IR & 100,884 & +13.7\% & 70,605 & +21.1\% \\
 \end{longtable}
 }
 
-A3 costs +13.7\% tokens over A0 for 100\% vs 56.3\% state accuracy. We
-report the cost \textbf{per model} (deepseek-v4-flash above; qwen-plus
-S-level +25\% in results-log Run \#16) rather than only the favorable
-one---selective disclosure would understate the price of the state
-layer. Earlier figures (+149\% deepseek, old S-level estimates) were
-from the pre-patch CLI-fallback channel and are void.
+The A2 column is the one that changes the practical recommendation. A2
+is not a cheaper approximation of A3 --- it is \textbf{cheaper than
+doing nothing at all}, on both models, while scoring 41 points higher
+than doing nothing. The mechanism is visible in §3.3: stateless arms pay
+for an end-of-run probe over the full text to reconstruct what they
+believe; an arm that carried a compact state forward never incurs that
+cost. Any paper reporting a state-maintenance method against a bare
+baseline without this arm is reporting a cost premium that may not
+exist.
+
+We report cost \textbf{per model and per arm} rather than only the
+favorable combination. Earlier figures (+149\% deepseek, old S-level
+estimates) were from the pre-patch CLI-fallback channel and are void.
+The correct summary is now: the demand costs \emph{less} than nothing,
+and the machinery costs 26--69\% on top of the demand for no significant
+accuracy gain and 15--27.5\% evidence coverage.
 
 \subsubsection{5.5 Known limitations (self-audited, so reviewers do not
 find them
@@ -644,15 +857,25 @@ first)}\label{known-limitations-self-audited-so-reviewers-do-not-find-them-first
   full-text probes, and A0's M-level W3 is 56.3\% ± 23.2\% with real
   variance---the artifact is gone, not averaged over.
 \item
-  \textbf{Bundled intervention, no method ablation yet}: A3 bundles the
-  state demand, the validator, and the evidence chain (§5.3). Until the
-  A2 prompt-only arm is run, §5.1 establishes that \emph{the bundle}
-  works, not \emph{which part} works. We name this first because it is
-  the objection we would raise ourselves.
+  \textbf{Our own method does not survive its ablation on the main
+  metric} (§5.3). We leave this in the limitations list rather than only
+  in the results, because a reader who skims should not be able to miss
+  it. The Origin IR state layer is retained in this paper as the arm
+  that produces evidence chains, not as a state-accuracy method.
 \item
-  \textbf{Single team, two models}: cross-model robustness covers two
-  models only; single-corpus (Chinese fiction). Both are declared
-  bounds, not claims.
+  \textbf{The evidence result is weak in absolute terms}: 15--27.5\%
+  coverage is a capability demonstration, not a solved problem. We do
+  not know whether the shortfall is a model limitation, a prompt-design
+  limitation, or a defect in our commit-compiler; we have not run the
+  experiment that would tell us.
+\item
+  \textbf{(b) and (c) remain entangled}: validator vs.~evidence chain
+  (§5.3, final paragraph).
+\item
+  \textbf{Single team, three models, one corpus}: the full four-arm
+  design ran on two models; a third (frontier) model was run on the bare
+  arm only (§5.2.1). Single corpus, Chinese fiction. Declared bounds,
+  not claims.
 \end{itemize}
 
 \subsection{6. Limitations \& Broader
@@ -680,16 +903,24 @@ Impact}\label{limitations-broader-impact}
 \tightlist
 \item
   \textbf{Code}: public repository (anonymous version strips identity
-  info); all three arms + judges + vocabulary patch. Self-tests, re-run
-  2026-08-12, all green: compiler \textbf{91}, CAD 55, conformance
-  \textbf{87/87}, compiler mutation \textbf{19/19 killed}, judge
-  mutation \textbf{9/9 killed} (§7.1).
+  info); all \textbf{four} arms + judges + vocabulary patch. Self-tests,
+  re-run 2026-08-13, all green: compiler \textbf{91}, CAD 55,
+  conformance \textbf{87/87}, compiler mutation \textbf{19/19 killed},
+  judge mutation \textbf{12/12 killed} (§7.1).
 \item
-  \textbf{Data}: corpus/, world/spec.origin/, results/ (full JSON per
-  round).
+  \textbf{Data}: \texttt{corpus/}, \texttt{world/spec.origin/}, and
+  \textbf{80 per-round result files} --- \texttt{results-v3-m/}
+  (A0/A1/A3 × 2 models × 10) and \texttt{results-v3-m-ablation/} (A2 × 2
+  models × 10). Every cell of §5.1, §5.2, §5.3 and §5.4 is recomputable
+  from these files.
 \item
-  \textbf{Judge fingerprints}: judgeHashW1 / judgeHashW3; fingerprints
-  unchanged after the patch (Run \#29).
+  \textbf{Judge fingerprints}: judgeHashW1 / judgeHashW3.
+  \textbf{judgeHashW3 changed on 2026-08-13} when
+  \texttt{evidenceCoverage} was added (§7.2). State accuracy is
+  unaffected: re-scoring all 80 rounds under the new judge reproduces
+  every previously reported \texttt{stateAccuracy} with zero drift,
+  which is the property that matters and which we checked rather than
+  asserted.
 \end{itemize}
 
 \subsubsection{7.1 Who validates the
@@ -698,22 +929,61 @@ validator?}\label{who-validates-the-validator}
 A self-test that kills no mutant is indistinguishable from no self-test:
 it keeps passing after every refactor while the benchmark quietly hands
 out points to every arm. We therefore mutate the \emph{judges}
-themselves --- nine plausible human errors injected into
-\texttt{ced.mjs} (W1), \texttt{detect-score.mjs} (W2) and
-\texttt{state-diff.mjs} (W3), one at a time, each followed by a full
-self-test run and a revert.
+themselves --- plausible human errors injected into \texttt{ced.mjs}
+(W1), \texttt{detect-score.mjs} (W2) and \texttt{state-diff.mjs} (W3),
+one at a time, each followed by a full self-test run and a revert.
 
 Mutants include: W3 accuracy pinned to full marks, W3 strict comparison
-degraded to string comparison, W3 evidence-traceability loosened, W1
-error count pinned to zero, W1 chain-of-custody check for the Black Key
-removed, and W2 recall computed over \emph{found} rather than
-\emph{planted} errors.
+degraded to string comparison, W3 evidence checks loosened, evidence
+coverage reverted to a self-selected denominator, W1 error count pinned
+to zero, W1 chain-of-custody check for the Black Key removed, and W2
+recall computed over \emph{found} rather than \emph{planted} errors.
 
-\textbf{Result: 9 injected, 9 killed, 0 survived}
-(\texttt{eval/mutation-check.mjs\ -\/-json}). This does not remove the
-judge/gate coupling declared in §5.5 --- it establishes the weaker but
-necessary property that the scoring logic is actually under assertion,
-so a silent regression in the judge cannot inflate any arm.
+\textbf{Result: 12 injected, 12 killed, 0 survived}
+(\texttt{eval/mutation-check.mjs\ -\/-json}). The runner also reports
+\emph{stale} mutants --- anchors that no longer match the source ---
+because a mutation that can never fire would otherwise masquerade as
+coverage; this fired once during the 2026-08-13 judge change and was
+repaired rather than ignored.
+
+This does not remove the judge/gate coupling declared in §5.5. And §7.2
+shows what it does \textbf{not} catch.
+
+\subsubsection{7.2 What mutation testing cannot catch: a metric that was
+wrong by
+definition}\label{what-mutation-testing-cannot-catch-a-metric-that-was-wrong-by-definition}
+
+Version 0.3 of this paper reported \textbf{``100\% evidence
+traceability''} for the state layer. The number was computed correctly,
+was under assertion, survived every mutant, and was wrong to report.
+
+\texttt{evidenceTraceability} divided source-traceable evidence entries
+by \emph{the entries the arm chose to supply}. An arm supplying evidence
+for four of eight required fields, all four well-formed, scored 100\%.
+One of our ten qwen rounds is exactly that case. Arms supplying no
+evidence scored \texttt{null} --- excluded from means rather than
+counted as zero. Measured against the fields the benchmark actually asks
+about, the state layer's coverage is \textbf{27.5\% (qwen) / 15.0\%
+(deepseek)}.
+
+Both numbers are true; they answer different questions. We were
+reporting a \textbf{precision} and reading it as a \textbf{coverage}.
+The judge now emits both, \texttt{evidenceCoverage} counts a field only
+when the evidence key matches the tested \texttt{id.field} exactly
+(evidence for \texttt{char:lin-zheng.location} does not discharge
+\texttt{char:lin-zheng.knows}), and arms with no evidence score 0 rather
+than \texttt{null}.
+
+The methodological point generalizes beyond this paper. Mutation testing
+asks \emph{``does the code still do what the code intends?''} --- it
+cannot ask \emph{``is that intention the right one?''} Our 9/9 kill rate
+was real and told us nothing about this defect, because no mutation of a
+metric's implementation can reveal that the metric's \textbf{definition}
+flatters its author. The check that caught it was recomputing a
+published number from raw data with a denominator chosen by someone
+looking for the flattering assumption --- which, in this case, was the
+same authors, one day later, and is the only reason it is in this paper
+instead of in a reviewer's report.
 
 \subsection{Appendix A: Conformance vectors and mutation
 testing}\label{appendix-a-conformance-vectors-and-mutation-testing}
@@ -764,6 +1034,23 @@ objects)}\label{appendix-b-the-office-dialect-native-documents-verifiable-state-
   10, all 60 runs in \texttt{results-v3-m/}; S-level a1/a3 re-runs in
   \texttt{results-v3/}
 \item[$\boxtimes$]
+  \textbf{Run the A2 prompt-only arm} --- done 2026-08-13, 10 rounds × 2
+  models in \texttt{results-v3-m-ablation/}. \textbf{It overturned the
+  paper's attribution}; §5.3 rewritten, abstract and contributions
+  rewritten, §5.5 leads with it
+\item[$\boxtimes$]
+  \textbf{Fix the evidence metric} --- \texttt{evidenceCoverage} added,
+  \texttt{null}-exemption removed, \texttt{id.field} exact matching, 3
+  new mutants (12/12 killed), zero drift on all 80 rounds' state
+  accuracy (§7.2)
+\item[$\square$]
+  \textbf{Run A3-minus-validator and A3-minus-evidence-chain} ---
+  separates (b) from (c); the last unseparated confound (§5.3)
+\item[$\square$]
+  \textbf{Re-examine why evidence coverage is only 15--27.5\%} --- model
+  limit, prompt-design limit, or a defect in our commit-compiler?
+  Currently unknown and declared as such
+\item[$\boxtimes$]
   Recompute token accounting (full-text probes) --- M-level real usage
   in §5.4
 \item[$\boxtimes$]
@@ -788,9 +1075,6 @@ objects)}\label{appendix-b-the-office-dialect-native-documents-verifiable-state-
 \item[$\square$]
   Figures: arm comparison, state-corruption example (sword transfer
   trajectory) --- before submission
-\item[$\square$]
-  \textbf{Run the A2 prompt-only arm (§5.3)} --- 10 rounds × 2 models;
-  the one experiment that turns §5.3 into a real ablation
 \item[$\boxtimes$]
   LaTeX package builds --- \textbf{fixed 2026-08-12}. The 2026-08-07
   build emitted \texttt{\$\textbackslash{}\textbackslash{}pm\$} /

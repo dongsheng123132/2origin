@@ -83,6 +83,45 @@ evidenced.evidence = {
 const ev = scoreW3(evidenced).evidenceTraceability
 check(Math.abs(ev - 0.5) < 1e-9, '指不回来源的证据不算可追溯', `实际 ${ev}`)
 
+// ②b 证据覆盖率：分母是**必答字段**，不是臂自己上报的那几条（2026-08-13 补）。
+//     旧口径只有 evidenceTraceability 一个数，分母自选 —— 只给 8 个必答字段中的 4 个配证据、
+//     且那 4 条格式合法，就记 100%。实测 A3 十轮里真的出现过这一幕，而论文据此写了
+//     「100% evidence traceability」。两个数都真，但报一个是选择性披露。
+const covOnly = scoreW3(evidenced)
+check(
+  Math.abs(covOnly.evidenceTraceability - 0.5) < 1e-9 && covOnly.evidenceCoverage < covOnly.evidenceTraceability,
+  '分母自选的精确率不得冒充覆盖率（覆盖率必须严格更低）',
+  `精确率 ${covOnly.evidenceTraceability}，覆盖率 ${covOnly.evidenceCoverage}`,
+)
+
+// ②c 给**没被考的字段**配证据不许加分。这是 A3 实测的真实行为：
+//     一轮上报 8 条证据，其中 char:lin-zheng.location、char:pei-zhao.location 等
+//     压根不在必答清单上。按 id 匹配会把它们放行，按 id.field 才挡得住。
+const offTarget = structuredClone(perfect)
+offTarget.evidence = {
+  'obj:black-key.holder': 'scene:03-02', // 命中必答字段
+  'char:lin-zheng.location': 'scene:03-02', // 同 id 但另一个字段：不该加分
+  'char:pei-zhao.location': 'scene:04-01', // 完全不在必答清单上：不该加分
+}
+const off = scoreW3(offTarget)
+check(
+  Math.abs(off.evidenceTraceability - 1) < 1e-9,
+  '三条证据格式都合法，精确率应为 100%',
+  `实际 ${off.evidenceTraceability}`,
+)
+check(
+  Math.abs(off.evidenceCoverage - 1 / off.checked) < 1e-9,
+  '只有落在必答字段上的证据才计入覆盖率（同 id 不同字段也不算）',
+  `实际 ${off.evidenceCoverage}，期望 ${1 / off.checked}`,
+)
+
+// ②d 没有任何证据的臂，覆盖率必须是 0 而不是 null。
+//     null 会被均值计算悄悄排除，等于给「一条证据都不给」发豁免 ——
+//     A0/A1/A2 三个臂正是这种情况，而它们与 A3 的差距恰恰在这一项上。
+const noEv = scoreW3(structuredClone(perfect))
+check(noEv.evidenceTraceability === null, '没上报证据时精确率无定义（null）')
+check(noEv.evidenceCoverage === 0, '没上报证据时覆盖率必须是 0，不能是 null', `实际 ${noEv.evidenceCoverage}`)
+
 // ③ 主指标必须由真实发现数算出来，不能是常数。
 //    上面 [W1] 那段只看了 `findings`（逐章规则命中），从不看聚合值 ——
 //    于是 `epc: 0` 这种最粗暴的送分能一路绿灯进报告。
