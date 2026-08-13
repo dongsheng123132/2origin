@@ -1,0 +1,94 @@
+{
+  "benchmark_id": "bx-es-mini-2026-08",
+  "system": "unspecified",
+  "arm": "A1",
+  "questions": 9,
+  "state_value_accuracy": 0.7777777777777778,
+  "epistemic_status_accuracy": 0.6666666666666666,
+  "hallucination_count": 2,
+  "evidence_coverage": 1,
+  "evidence_precision": 0.8620689655172413,
+  "rows": [
+    {
+      "question_id": "Q-S01-1",
+      "value": "M",
+      "epistemic": "inferred",
+      "value_correct": true,
+      "epistemic_correct": true,
+      "evidence_valid": 4,
+      "evidence_cited": 4
+    },
+    {
+      "question_id": "Q-S01-2",
+      "value": "M",
+      "epistemic": "observed",
+      "value_correct": true,
+      "epistemic_correct": true,
+      "evidence_valid": 1,
+      "evidence_cited": 2
+    },
+    {
+      "question_id": "Q-S02-1",
+      "value": "M",
+      "epistemic": "observed",
+      "value_correct": false,
+      "epistemic_correct": false,
+      "evidence_valid": 8,
+      "evidence_cited": 8
+    },
+    {
+      "question_id": "Q-S02-2",
+      "value": "R",
+      "epistemic": "observed",
+      "value_correct": true,
+      "epistemic_correct": true,
+      "evidence_valid": 0,
+      "evidence_cited": 1
+    },
+    {
+      "question_id": "Q-S03-1",
+      "value": "A_NOT_D",
+      "epistemic": "inferred",
+      "value_correct": false,
+      "epistemic_correct": false,
+      "evidence_valid": 1,
+      "evidence_cited": 1
+    },
+    {
+      "question_id": "Q-S03-2",
+      "value": "A_NOT_D",
+      "epistemic": "observed",
+      "value_correct": true,
+      "epistemic_correct": true,
+      "evidence_valid": 1,
+      "evidence_cited": 2
+    },
+    {
+      "question_id": "Q-S04-1",
+      "value": "INSIDE_A",
+      "epistemic": "observed",
+      "value_correct": true,
+      "epistemic_correct": false,
+      "evidence_valid": 3,
+      "evidence_cited": 3
+    },
+    {
+      "question_id": "Q-S04-2",
+      "value": "INSIDE_A",
+      "epistemic": "inferred",
+      "value_correct": true,
+      "epistemic_correct": true,
+      "evidence_valid": 1,
+      "evidence_cited": 1
+    },
+    {
+      "question_id": "Q-S04-3",
+      "value": "OUTSIDE_A_AT_R",
+      "epistemic": "observed",
+      "value_correct": true,
+      "epistemic_correct": true,
+      "evidence_valid": 6,
+      "evidence_cited": 7
+    }
+  ]
+}

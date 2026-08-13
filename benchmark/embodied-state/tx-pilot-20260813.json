@@ -1,0 +1,108 @@
+{
+  "transaction_id": "tx-embodied-state-pilot-20260813",
+  "operation": "record_embodied_state_pilot",
+  "creates": [
+    { "id": "fact:embodied-state-pilot-20260813", "type": "fact" },
+    { "id": "decision:embodied-state-architecture", "type": "decision" },
+    { "id": "risk:embodied-gate-overconservative", "type": "risk" },
+    { "id": "task:embodied-event-belief-split", "type": "task" }
+  ],
+  "state_changes": [
+    {
+      "object": "fact:embodied-state-pilot-20260813",
+      "field": "kind",
+      "to": "measured",
+      "op": "set"
+    },
+    {
+      "object": "fact:embodied-state-pilot-20260813",
+      "field": "summary",
+      "to": "qwen3.5-omni-plus首轮4场景9题单次试跑：A0/A1/A2/A2G状态值均7/9；认识论状态分别5/9、6/9、5/9、4/9；A0/A1/A2各2次自信编造，探索性语义门禁A2G降为0但误伤2个可答项。n=1，仅为装置验证。",
+      "op": "set"
+    },
+    {
+      "object": "fact:embodied-state-pilot-20260813",
+      "field": "evidence",
+      "to": "benchmark/embodied-state/pilot-report.md；benchmark/embodied-state/results/score-qwen3.5-omni-plus-{a0,a1,a2,a2g}.json",
+      "op": "set"
+    },
+    {
+      "object": "decision:embodied-state-architecture",
+      "field": "status",
+      "to": "decided",
+      "op": "set"
+    },
+    {
+      "object": "decision:embodied-state-architecture",
+      "field": "value",
+      "to": "本象机器人方向采用混合架构：上游SLAM/跟踪/场景图产出观测事件，本象保存事件与证据并确定性归约为当前信念投影；不替代实时几何、规划和安全控制。",
+      "op": "set"
+    },
+    {
+      "object": "decision:embodied-state-architecture",
+      "field": "rationale",
+      "to": "首轮A2只加事务结构未提升准确率；A2G虽阻止编造却因单一location+epistemic字段无法同时表达最后观测和当前信念而误伤，说明必须拆分事件时间、有效时间和信念投影。",
+      "op": "set"
+    },
+    {
+      "object": "decision:embodied-state-architecture",
+      "field": "evidence",
+      "to": "benchmark/embodied-state/pilot-report.md",
+      "op": "set"
+    },
+    {
+      "object": "risk:embodied-gate-overconservative",
+      "field": "status",
+      "to": "open",
+      "op": "set"
+    },
+    {
+      "object": "risk:embodied-gate-overconservative",
+      "field": "severity",
+      "to": "high",
+      "op": "set"
+    },
+    {
+      "object": "risk:embodied-gate-overconservative",
+      "field": "statement",
+      "to": "机器人语义门禁若混淆最后观测与当前信念，会把合法持续推断和重新观测错误降级为UNKNOWN；若只检结构，又会接受有格式但无语义依据的错误事务。",
+      "op": "set"
+    },
+    {
+      "object": "risk:embodied-gate-overconservative",
+      "field": "mitigation",
+      "to": "先实现observation event、belief reducer和current projection三层，并加入可见性/事件级证据校验，再扩大样本；不得按真值答案硬编码门禁。",
+      "op": "set"
+    },
+    {
+      "object": "task:embodied-event-belief-split",
+      "field": "status",
+      "to": "doing",
+      "op": "set"
+    },
+    {
+      "object": "task:embodied-event-belief-split",
+      "field": "owner",
+      "to": "codex",
+      "op": "set"
+    },
+    {
+      "object": "task:embodied-event-belief-split",
+      "field": "summary",
+      "to": "在adapters/embodied实现观测事件→确定性信念归约→当前投影，分开observed_at、valid_at、committed_at和last_observation/current_belief。",
+      "op": "set"
+    },
+    {
+      "object": "task:embodied-event-belief-split",
+      "field": "evidence",
+      "to": "benchmark/embodied-state/pilot-report.md §下一版必须先做的事",
+      "op": "set"
+    }
+  ],
+  "assertions": [
+    "no-ghost-objects",
+    "every-decision-has-rationale",
+    "every-task-has-owner",
+    "every-fact-has-evidence"
+  ]
+}
