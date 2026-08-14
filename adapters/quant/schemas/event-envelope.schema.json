@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benxiang.dev/dialects/quant/v0.1/event-envelope.schema.json",
+  "title": "Benxiang Quant event envelope",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["event_id", "kind", "occurred_at", "received_at", "source", "payload"],
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["market.snapshot", "portfolio.snapshot", "trade.intent", "risk.decision", "order.event", "fill.event"] },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "received_at": { "type": "string", "format": "date-time" },
+    "source": {
+      "type": "object",
+      "required": ["system", "stream", "sequence"],
+      "properties": {
+        "system": { "type": "string", "minLength": 1 },
+        "stream": { "type": "string", "minLength": 1 },
+        "sequence": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "payload": { "type": "object" }
+  },
+  "allOf": [
+    { "if": { "properties": { "kind": { "const": "trade.intent" } } }, "then": { "properties": { "payload": { "$ref": "trade-intent.schema.json" } } } },
+    { "if": { "properties": { "kind": { "const": "order.event" } } }, "then": { "properties": { "payload": { "$ref": "order-event.schema.json" } } } },
+    { "if": { "properties": { "kind": { "const": "fill.event" } } }, "then": { "properties": { "payload": { "$ref": "fill-event.schema.json" } } } }
+  ]
+}

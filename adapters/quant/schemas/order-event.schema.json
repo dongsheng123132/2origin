@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benxiang.dev/dialects/quant/v0.1/order-event.schema.json",
+  "title": "Benxiang Quant OrderEvent payload",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["order_id", "intent_id", "status", "broker_sequence", "cumulative_filled_quantity"],
+  "properties": {
+    "order_id": { "type": "string", "minLength": 1 },
+    "intent_id": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["SUBMITTED", "ACKNOWLEDGED", "PARTIALLY_FILLED", "CANCEL_REQUESTED", "FILLED", "CANCELLED", "REJECTED"] },
+    "broker_sequence": { "type": "integer", "minimum": 1 },
+    "cumulative_filled_quantity": { "type": "integer", "minimum": 0 }
+  }
+}

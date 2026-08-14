@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benxiang.dev/dialects/quant/v0.1/trade-intent.schema.json",
+  "title": "Benxiang Quant TradeIntent payload",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["intent_id", "strategy_ref", "market_snapshot_ref", "portfolio_ref", "symbol", "side", "quantity", "expires_at", "mode"],
+  "properties": {
+    "intent_id": { "type": "string", "minLength": 1 },
+    "strategy_ref": { "type": "string", "minLength": 1 },
+    "market_snapshot_ref": { "type": "string", "minLength": 1 },
+    "portfolio_ref": {
+      "type": "object",
+      "required": ["snapshot_id", "version"],
+      "properties": {
+        "snapshot_id": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "symbol": { "type": "string", "minLength": 1 },
+    "side": { "enum": ["BUY", "SELL"] },
+    "quantity": { "type": "integer", "minimum": 1 },
+    "limit_price": { "type": "number", "exclusiveMinimum": 0 },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "mode": { "enum": ["replay", "paper", "live"] }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benxiang.dev/dialects/quant/v0.1/fill-event.schema.json",
+  "title": "Benxiang Quant FillEvent payload",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["fill_id", "order_id", "intent_id", "symbol", "side", "quantity", "price", "broker_sequence"],
+  "properties": {
+    "fill_id": { "type": "string", "minLength": 1 },
+    "order_id": { "type": "string", "minLength": 1 },
+    "intent_id": { "type": "string", "minLength": 1 },
+    "symbol": { "type": "string", "minLength": 1 },
+    "side": { "enum": ["BUY", "SELL"] },
+    "quantity": { "type": "integer", "minimum": 1 },
+    "price": { "type": "number", "exclusiveMinimum": 0 },
+    "broker_sequence": { "type": "integer", "minimum": 1 }
+  }
+}

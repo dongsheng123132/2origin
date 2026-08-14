@@ -224,7 +224,8 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 │   ├── memory/  #   项目状态：MCP Server（零依赖）+ 回填工具
 │   ├── cad/     #   图纸一致性：DXF 导入器 + 制图规范校验
 │   ├── law/     #   判决依据链：裁判文书导入器 + 引用白名单 + 量刑复算
-│   └── xlsx/    #   表格依赖链：xlsx 导入器 + 公式依赖图 + 五类事故体检
+│   ├── xlsx/    #   表格依赖链：xlsx 导入器 + 公式依赖图 + 五类事故体检
+│   └── quant/   #   量化可靠性（draft）：交易意图 + 重放 + 对账 + 故障注入
 ├── benchmark/   # ShadowBench-W 基准 + 判分器 + 全部原始结果（可复核）
 ├── research/    # 外部格局调研快照（含 2026-08 三线调研与评估）
 ├── outreach/    # 生态互动草稿（天命/MemTX/ConStory-Bench，均未发送）
@@ -251,7 +252,7 @@ node compiler/cli.mjs commit $P tx.json --expect $S --by me   # 唯一的写入�
 `provenance/history.jsonl` 追加，绝不覆写 `graph/objects.jsonl`——当前状态由二者重放得出，
 所以任何一个字段都能回答「凭什么」。加 `--json` 即可当本地 API 给 AI 调用。
 
-四个已跑通的方言：
+四个已跑通的成熟方言，以及一个公开评测中的 draft：
 
 ```bash
 # 图纸一致性（详见 adapters/cad/README.md）
@@ -296,10 +297,19 @@ node adapters/xlsx/project.mjs /tmp/A.origin /tmp/A-v2.xlsx
 # 项目状态（详见 adapters/memory/README.md）
 node compiler/cli.mjs status project.origin        # 本仓库自己的世界状态就在这里
 claude mcp add -s local benxiang -- node <绝对路径>/adapters/memory/mcp-server.mjs <包路径>
+
+# 量化可靠性（v0.1-draft；不预测、不荐股、不含券商写接口）
+npm run test:quant
+node adapters/quant/benchmark.mjs
+#   → 重复/乱序/重启不改业务真值；陈旧行情、幽灵订单、持仓分歧必须被抓住
 ```
 
 四个方言合计只给核心加了 **4 行**（`why` 输出补一列 `basis`）——领域知识进的是**数据**
 （约束表、条文库），不是代码。这是「通用外壳 + 领域方言」在实现上的验收标准。
+
+**Benxiang Quant Dialect 暂不计入上面的成熟方言数。** 它目前只有合成交易日和公开故障集，
+尚无真实券商夹具；但它同样没有修改 `compiler/` 或 `spec/` 核心。最欢迎量化研究员、交易系统
+工程师和风控人员用真实语义反例推翻它，入口见 [`adapters/quant/`](adapters/quant/README.md)。
 
 其中 **xlsx 方言一行核心都没改**（落地时 `git diff --stat compiler/ spec/` 为空）。
 它是四个域里唯一带「算出来的值」和依赖图的——公式依赖直接落在协议本来就有的
