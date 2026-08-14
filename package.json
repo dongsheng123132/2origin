@@ -14,7 +14,8 @@
     "./project": "./compiler/project.mjs",
     "./xlsx": "./adapters/xlsx/import.mjs",
     "./cad": "./adapters/cad/import.mjs",
-    "./law": "./adapters/law/import.mjs"
+    "./law": "./adapters/law/import.mjs",
+    "./quant": "./adapters/quant/index.mjs"
   },
   "scripts": {
     "test": "node compiler/selftest.mjs",
@@ -26,12 +27,13 @@
     "story:write": "node adapters/story/run-chapter.mjs",
     "story:serial": "node adapters/story/pipeline.mjs",
     "test:xlsx": "node adapters/xlsx/selftest.mjs",
+    "test:quant": "node adapters/quant/selftest.mjs",
     "test:e2e": "node adapters/memory/e2e.mjs",
     "test:mutation": "node compiler/mutation-check.mjs",
     "test:conformance": "node spec/conformance/run.mjs",
     "test:a3-equiv": "node benchmark/shadowbench-w/arms/a3-benxiang/equivalence.mjs",
     "test:a2": "node benchmark/shadowbench-w/arms/a2-prompt-state/selftest.mjs",
-    "verify": "npm run test && npm run test:cad && npm run test:law && npm run test:office && npm run test:xlsx && npm run test:e2e && npm run test:conformance && npm run test:mutation && npm run test:a2 && npm run test:a3-projection",
+    "verify": "npm run test && npm run test:cad && npm run test:law && npm run test:office && npm run test:xlsx && npm run test:quant && npm run test:e2e && npm run test:conformance && npm run test:mutation && npm run test:a2 && npm run test:a3-projection",
     "origin": "node compiler/cli.mjs",
     "mcp": "node adapters/memory/mcp-server.mjs",
     "mcp:origin": "node compiler/mcp.mjs",
@@ -62,6 +64,8 @@
     "xlsx",
     "cad",
     "dxf",
+    "quant",
+    "trading-systems",
     "world-model",
     "representation",
     "origin-ir"
