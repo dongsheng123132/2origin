@@ -1,0 +1,502 @@
+{
+  "spec": "2origin/0.2",
+  "kind": "task.origin",
+  "id": "agentteams-bridge",
+  "title": "把本源 AI 计算机接到 AgentTeams 上：发证分离闸门",
+  "goal": "验证一件事：本仓库的治理理念（作者不能给自己发证、观察器不收预期、投影必须披露丢了什么、可审计性来自我们控制不了的东西）能不能在一个第三方多 Agent 平台上成立。落地物是发证分离闸门——学历里的 verified 从此必须带考官身份，且考官身份由平台签发而非进程自称。",
+  "current_state": "【GOAI 初赛已结束】2026-08-16 20:47 完成第 3 次（手册规定的最后一次）提交并成功上传（用户 2026-08-19 当面确认；⚠ 盘上无平台回执物，依据是口头的，不是可复核证据）。提交包 2origin本象计算机-AgentInfra初赛提交包-v3-20260816.zip（10.6MB），必交两样齐备：作品简介 479 字 + 27 页方案 PPT（官方八章结构），另附 Agent Identity 清单、Skill 清单、MCP/RAG/可观测对照、开源披露、复跑记录。平台字段：代码仓库 github.com/dongsheng123132/2origin，Demo 2origin.org。材料里对评委作出的复赛承诺共 6 项、9.3 前交，最重的一条是「可独立运行的 AgentTeams 桥接包 + LICENSE」——当前 code-agentteams 快照依赖 southbridge/ 与 xuetang/，跑不起来，这一点材料里已如实写明。\n\n（以下为初赛前状态，保留）**客户 CAD 案例已升级到对象级回落复核。** 正式包 `cad-window-audit.origin` 保存 776 个对象、388 条关系、8/8 可机器判定约束与 198 条派生变更；194 个 TCH_OPENING 中 4 个为块定义，190 个实际放置对象拆为 168 窗、22 门、unknown=0，且 190/190 已恢复位置锚点。每个 `opening:<handle>` 可独立 `why`，位置由 `tch-opening-anchor-decoder` 派生事务写入并带 basis；交互 HTML 可搜索、点击、高亮回落脱敏原图。精确轮廓/朝向/bbox 尚未恢复，未夸大为已完成。公众号/GitHub 通用案例稿与封面已生成，AI 味 gate 12.2/100；全仓 `npm run verify` 0 失败。",
+  "facts": [
+    {
+      "claim": "本仓库此前的「作者不能给自己发证」只检查有无考试通过记录，不检查考试是谁跑的——多 Agent 下 Worker 可自跑 exam 自发证",
+      "verified": true,
+      "source": "xuetang/learning-core.mjs 的 normalizeForWrite"
+    },
+    {
+      "claim": "AgentTeams 的 Worker 身份由 Matrix homeserver 签发，可经 /_matrix/client/v3/account/whoami 向服务器求证，因此是一个我们控制不了的身份签发者",
+      "verified": true,
+      "source": "https://github.com/agentscope-ai/AgentTeams/blob/main/AGENTS.md"
+    },
+    {
+      "claim": "发证分离闸门的判据套件在本机跑通 21 条全绿，其中 18 条是反向用例",
+      "verified": true,
+      "source": "node agentteams/verify-agentteams.mjs"
+    },
+    {
+      "claim": "判据里的 homeserver 是本仓库自带的测试替身，因此本套绿灯只证明闸门逻辑成立，不证明身份已被外部锚定",
+      "verified": true,
+      "source": "agentteams/stub-homeserver.mjs"
+    },
+    {
+      "claim": "Agent Infra 赛道必选 AgentTeams 框架，初赛截止 2026-08-16，只需作品简介与方案 PPT，可执行代码包在初赛为可选、复赛为必交",
+      "verified": true,
+      "source": "demo/agentteams-bridge/goai-infra-track.txt"
+    },
+    {
+      "claim": "Agent Infra 评审五维权重为场景价值 25 / 多 Agent 协同 25 / Skill 工程体系 25 / 工程落地与安全可审计 20 / 开放开源 5",
+      "verified": true,
+      "source": "demo/agentteams-bridge/goai-infra-track.txt"
+    },
+    {
+      "claim": "本机 Docker CLI 已装成 29.7.2，但 daemon 未起（npipe 连不上）；WSL 的 Ubuntu 发行版因 ext4.vhdx 缺失而不可用",
+      "verified": true,
+      "source": "demo/agentteams-bridge/env-probe.md"
+    },
+    {
+      "claim": "旧路径下 Worker 可自考自判把经验写成 verified，学历里无任何字段能回答「谁发的证」，且北桥会将其作为已验证经验注入下一个会话——实弹退出码 1",
+      "verified": true,
+      "source": "node demo/agentteams-bridge/probe-multiagent-selfcert.mjs"
+    },
+    {
+      "claim": "本机 Docker Desktop 安装实际失败（installer exited with status 1），Docker Inc. 的注册表键未写入、com.docker.service 未注册；Program Files 下的文件是半截残骸，因此 docker --version 有输出并不代表装成了",
+      "verified": true,
+      "source": "C:/Users/ZhuanZ/AppData/Local/Docker/log/host/Docker Desktop.exe.log"
+    },
+    {
+      "claim": "本机 WSL2 本身已失效：新装的 Ubuntu 发行版 vhdx 已生成（1.4G）但启动一律 Wsl/Service/E_UNEXPECTED，wsl --update 卡在提权不返回",
+      "verified": true,
+      "source": "wsl -d Ubuntu -u root -e echo OK（见 demo/agentteams-bridge/env-probe.md）"
+    },
+    {
+      "claim": "公共 Matrix homeserver 已基本全面关闭开放注册：13 个候选逐个用 Client-Server API 探测，0 个允许 m.login.dummy 注册，因此「第三方运营的身份签发者」这一级在本机不可达",
+      "verified": true,
+      "source": "demo/agentteams-bridge/matrix-registration-probe.md"
+    },
+    {
+      "claim": "AgentTeams v1.2.2 已在本机 WSL2 Ubuntu 26.04 + Docker CE 29.7.2 上跑起来：manager / controller / dashboard 三容器，Matrix 网关 127.0.0.1:18080 返回 200",
+      "verified": true,
+      "source": "demo/agentteams-bridge/e2e-real-attestation.mjs"
+    },
+    {
+      "claim": "用 AgentTeams 自带 Tuwunel 签发的两个真身份跑通端到端 7/7：作者拿自己的真令牌给自己发证被拒 self_certification 且学历零改动，换考官身份发证通过并把考官身份与签发者落盘，分离强度 attested_both，学历中无令牌泄露",
+      "verified": true,
+      "source": "node demo/agentteams-bridge/e2e-real-attestation.mjs"
+    },
+    {
+      "claim": "这台 Tuwunel 上 appservice 独占整个用户名空间，持 root 直接 register 任意用户名一律 M_EXCLUSIVE——Worker 铸不出自己的身份是实测事实而非纸面设计",
+      "verified": true,
+      "source": "demo/agentteams-bridge/e2e-real-attestation.mjs"
+    },
+    {
+      "claim": "WSL 的 .wslconfig vmIdleTimeout 不足以保住发行版：设成 8 小时后容器仍在每条命令退出约 16 秒后收到 SIGTERM 并重启，必须用一个脱离调用方会话的常驻进程（Start-Process -WindowStyle Hidden wsl ... sleep infinity）才钉得住",
+      "verified": true,
+      "source": "demo/agentteams-bridge/env-probe.md 与 docker logs agentteams-controller 的 SIGTERM 时间戳"
+    },
+    {
+      "claim": "同一条教训（仪器失效不得读成被测对象属性）在同一天同一仓库复发三次：identity.mjs 的 unreachable 一格、判据框架 stub 同进程被阻塞、e2e 脚本遇 502 仍下判断；第三次已固化为退出码 3 的前置闸门",
+      "verified": true,
+      "source": "node demo/agentteams-bridge/e2e-real-attestation.mjs"
+    },
+    {
+      "claim": "v0.1 的发证闸门漏了一格：考官自己跑考题又自己采信结果，是「作者给自己发证」换了位置。v0.2 拆出取象子命令，整个协议里只有 observe 会执行命令，certify 一行不跑（判据 O1 行为检查 + O1b 源码检查）",
+      "verified": true,
+      "source": "node agentteams/verify-agentteams.mjs"
+    },
+    {
+      "claim": "三个真身份端到端 12/12：作者自证被拒、合法考官无观察也发不出证、作者不许自己观察、取象独立产出依据、考官读依据发证、三身份互不相同且都 attested、观察被核销防重放",
+      "verified": true,
+      "source": "node demo/agentteams-bridge/e2e-real-attestation.mjs"
+    },
+    {
+      "claim": "判据 O1b 第一版对整段源码正则匹配 spawnSync，误伤了注释里引用的那句（注释正是在解释上一版曾有命令执行）——判据该测代码不该测散文，同 governance/verify-selfref.mjs 治的病",
+      "verified": true,
+      "source": "agentteams/verify-agentteams.mjs"
+    },
+    {
+      "claim": "demo/book-project 是仓库里唯一的外部真实业务学历（广州中望龙腾高职教材，22 条已验证事实），核心判断是「教材主要成本不在写内容在保一致，而一致性人眼查不出脚本查得出」，已交付体检报告并量化到可报价",
+      "verified": true,
+      "source": "demo/book-project/task.origin.json"
+    },
+    {
+      "claim": "教材/图纸/小说三个领域跑通同一条三 Agent 链，三个领域用同一个 certify.mjs、同一条闸门、同一份台账，换领域只换 recheck 指向哪个检查器，协议一行没改",
+      "verified": true,
+      "source": "node demo/agentteams-bridge/e2e-crossdomain.mjs"
+    },
+    {
+      "claim": "此前判断「我们一张图纸都没处理过、4 天从零做 DXF 必翻车」是错的：本象协议 adapters/cad 已有可跑的 CAD 方言，55 条自测全过，能句柄驱动地分清移动/加长/删除，且对 DWG 给出可执行转换路径并警告勿用在线转换站",
+      "verified": true,
+      "source": "node adapters/cad/selftest.mjs（D:/uking编程/本象协议）"
+    },
+    {
+      "claim": "这件事的海外行业标准词已核实：长文档一致性=cross-reference integrity check，教材编号=figure and table numbering audit，长篇小说=series bible continuity check，标书=RFP compliance matrix RTM；第四格有 FAR 15.203 法规锚点与 APMP 认证，客户本来就在为它付钱",
+      "verified": false,
+      "source": "降级为假设 2026-08-24：原 source 引用的 PDF（海外产品线分析-术语与GovCon合规矩阵.pdf，2026-08-10）已不在盘上（find 全仓与桌面均无此文件），断言不可复核。若找回原件可重新 verified。"
+    },
+    {
+      "claim": "用同一判分器同一入口判三版红楼梦续写：重写本兑现 3、豆包版 4、我方 w4 12（共 25 条，违反均为 0）。人设六维量表把重写本判为 9.52 完胜豆包 5.42，而在唯一可机判的「判词命运落定」维上排序相反且差距在噪声量级",
+      "verified": true,
+      "source": "demo/agentteams-bridge/hongloumeng-three-way.md"
+    },
+    {
+      "claim": "Agent Infra 初赛必交材料 v1 已生成：作品简介正文 410 字；11 页方案 PPTX 经最终文件重导入逐页渲染 11/11、几何越界 0；本轮闸门重跑 33/33（29 条反向用例）",
+      "verified": true,
+      "source": "agentteams/submission/SUBMISSION-QA.md"
+    },
+    {
+      "claim": "2026-08-13 当前会话恢复 AgentTeams 常驻后，真 Tuwunel 三身份闭环重跑 12/12，教材/CAD/小说跨领域链重跑 3/3（跳过 0、失败 0）",
+      "verified": true,
+      "source": "node demo/agentteams-bridge/e2e-real-attestation.mjs && node demo/agentteams-bridge/e2e-crossdomain.mjs（2026-08-13）"
+    },
+    {
+      "claim": "AgentTeams 运行时已固化为幂等 start / health / stop，实机完整走过启动、健康、停止、预期不健康、恢复在线；四层健康要求 WSL 专用常驻钉、Docker、三个容器和三个 HTTP 入口同时通过，故障注入判据 8/8",
+      "verified": true,
+      "source": "node agentteams/verify-runtime.mjs && node agentteams/runtime.mjs start && node agentteams/runtime.mjs health"
+    },
+    {
+      "claim": "可执行代码包已补 README、配置样例和无密钥 selfcheck；默认自检 3/3、在线自检 4/4，出版社真实教材三身份 Trace 8/8，包含无观察拒证且学历零改动、独立取象、只读发证、防重放和无 token 泄露",
+      "verified": true,
+      "source": "node agentteams/selfcheck.mjs && node agentteams/selfcheck.mjs --live && node agentteams/demo-publishing.mjs"
+    },
+    {
+      "claim": "A-101 CAD 能力测试图按门窗层闭合实体计数为 4 樘窗，而文字标注只有 3 个、唯一编号 2 个；C2 重号且第 4 樘漏编号。图文报告能逐樘落回实体、bbox 与稳定内容指纹；该图明确不是客户原图",
+      "verified": true,
+      "source": "node agentteams/cad-window-audit.mjs && node D:/uking编程/本象协议/adapters/cad/selftest.mjs（55/55）"
+    },
+    {
+      "claim": "Agent Infra 路演演示版已生成 13 页：保留初赛原稿 11 页，新增 CAD 实体证据和运行/业务分账两页；最终文件重导入逐页渲染 13/13，slides_test 无溢出，模板保真检查 0 问题",
+      "verified": true,
+      "source": "agentteams/submission/AgentInfra-证据链-路演演示版.pptx；python slides_test.py；_codex_ppt_agentinfra_demo/qa/template-fidelity-check.json"
+    },
+    {
+      "claim": "Agent Infra 路演证据可视化版已生成 17 页：在原有 CAD 证据之外，新增四层在线、出版社 Trace、真实身份/反向闸门和跨领域复用四页实跑截图；最终文件重导入逐页渲染 17/17，slides_test 无溢出，模板保真检查 0 问题",
+      "verified": true,
+      "source": "agentteams/submission/AgentInfra-证据链-路演演示版-证据可视化.pptx；_codex_ppt_agentinfra_visual/evidence-assets/evidence-data.json；python slides_test.py；_codex_ppt_agentinfra_visual/qa/template-fidelity-check.json"
+    },
+    {
+      "claim": "客户厂房原始 DWG 经本机离线解析：ODA 抽出 194 个天正 TCH_OPENING，其中 4 个属于块定义，模型空间实际放置 190 个；代理载荷用途字段拆为 168 个窗对象、22 个门对象、unknown=0。GNU LibreDWG 独立确认 class 528 总数同为 194，但尚未独立完成 168/22 分类。168 是窗樘/窗洞对象，不是玻璃分格，并包含被建模为窗的百叶窗",
+      "verified": true,
+      "source": "node _codex_cad_lucheng/cad-count-summary.mjs；_codex_cad_lucheng/oda-openings.json；源 DWG SHA-256 2D28F2FDB31484B7522F6E16B2916A239E9C7132BD43EB48CBE063BB92737A56；GNU LibreDWG 0.14 class 528 count=194；ODA File Converter 27.1 TCH_OPENING count=194（2026-08-13）"
+    },
+    {
+      "claim": "Agent Infra 客户 CAD 实证版已生成 18 页：新增第 17 页真实客户 DWG 的 168 窗 / 22 门离线解析截图，第 18 页仍为结论页；最终文件逐页渲染 18/18、slides_test 无溢出、模板保真检查 0 问题",
+      "verified": true,
+      "source": "agentteams/submission/AgentInfra-证据链-路演演示版-客户CAD实证.pptx；python slides_test.py；check_template_fidelity.mjs（2026-08-13）"
+    },
+    {
+      "claim": "客户 CAD 已正式导入本象协议脱敏 `.origin` 包：585 个对象、388 条关系、6/6 可机器判定约束、6 条派生状态变更；windows=168 的 why 链指向 membership:window/*，diagnose 无 error。公开包不含客户名、原文件名、路径、图签、图纸文字或原始代理载荷；四张 WINDOW 图层几何投影无 TEXT/MTEXT/ATTRIB/块名并经视觉检查。全仓 npm run verify 通过",
+      "verified": true,
+      "source": "D:/uking编程/本象协议/cases/cad-window-count.origin；node compiler/cli.mjs status/why/diagnose/limits cases/cad-window-count.origin；node adapters/cad/selftest-tianzheng.mjs（9/9）；npm run verify；projections/sanitized-cad/sanitization.json（2026-08-13）"
+    },
+    {
+      "claim": "客户 CAD 对象级回落复核已跑通：正式 `.origin` 包含 776 个对象、388 条关系、8/8 可机器判定约束与 198 条派生状态变更；190 个模型空间 TCH_OPENING 全部恢复唯一位置锚点，其中 168 窗、22 门。`opening:38A.position_anchor` 可由 why 追到 tch-opening-anchor-decoder、载荷指纹、字段证据与解码器观察。交互图 190 个 marker、handle 搜索/高亮和 SVG 无文字/图片闸门自动验证通过；精确轮廓、朝向与 bbox 仍显式列为未覆盖。公众号/GitHub 通用稿 2356 字，AI 味检测 12.2/100 通过；全仓 npm run verify 0 失败",
+      "verified": true,
+      "source": "D:/uking编程/本象协议/cases/cad-window-audit.origin；node compiler/cli.mjs diagnose/why cases/cad-window-audit.origin；cases/cad-window-audit.origin/projections/object-map.html；node _codex_cad_lucheng/test-object-map.mjs；mp-articles/tech/2026-08-13-cad-168-auditable/ai_score.json；npm run verify（2026-08-13）"
+    },
+    {
+      "claim": "复赛承诺 ④「把 pin 探测与 PATH 告警分离」的代码部分已完成并有反向用例守着。病灶：本机 wsl.exe **无论成功失败都会往 stderr 吐 9 条 \"wsl: Failed to translate 'X:\\…'\"**（映射不到的盘符），而旧的 pinStatus 把整个 stderr 塞进 pin.error —— 于是「pin 没起」与「wsl 自己跑不起来」长得一模一样，正是本仓库明令禁止的「仪器失效冒充被测对象属性」。修法：pin 探测由二值改**三态**——alive:true / alive:false(probe:ok，确实没起，是一次有效观察) / alive:null(probe:failed，探不动，不构成关于 pin 的任何证据)；PATH 告警移到 path_warnings，只出计数与一条样例，绝不进 error/detail。health 退出码随之三分：0 健康 / 3 看见了坏 / 4 探不动。实机验证：pin 现在报 {alive:false, probe:\"ok\", error:null, detail:\"cat: /tmp/shadowos-agentteams-pin.pid: No such file or directory\", path_warnings:{count:9}}。",
+      "verified": true,
+      "source": "node agentteams/verify-runtime.mjs 判据 R9~R13（R10/R12/R13 是反向用例）；把 classifyPin 还原成旧的二值逻辑后五条全红（8/13），证明不是恒绿考题；实机 node agentteams/runtime.mjs health 的 evidence.pin 原文",
+      "when": "2026-08-24T04:30:00+08:00"
+    },
+    {
+      "claim": "⚠ 承诺 ④ 的「稳定 4/4」目前**只完成了代码那一半**：selfcheck 的第 4 项 runtime-live （WSL/Docker/容器/HTTP 四层在线）只在 --live 时加入，实机仍是 3/4 —— 因为 pin 确实没起、三个 HTTP 端点全 fetch failed（Docker 与三个容器倒是都 running）。**这不是探测器的问题，是运行时确实没起**；把它跑成 4/4 需要执行 runtime.mjs start，那会改动本机状态（拉起 WSL 常驻 pin），可用 stop 回滚。此前的「3/4」之所以被记成待修，是因为噪声让人分不清是探测器坏还是服务没起 —— 那一半已经修掉了。",
+      "verified": true,
+      "source": "node agentteams/selfcheck.mjs --live → FAIL runtime-live，exit 1；node agentteams/runtime.mjs health 的 evidence（containers 三个 running、endpoints 三个 fetch failed）",
+      "when": "2026-08-24T04:35:00+08:00"
+    },
+    {
+      "claim": "复赛承诺②③文档草稿落盘：agentteams/docs/ 下插件迁移成本表（29 个 DSH 插件、P0/P1/P2 分级、11.5 人日估算）与 OTel GenAI 映射表（六类台账字段级映射、官方 semconv 快照核对、3.5 人日导出器估算）；均含诚实边界与待真人决策节",
+      "verified": true,
+      "source": "ls agentteams/docs/；node demo/gap-probe/verify-gap-probe.mjs 不适用——证据为文件本体与 refs-otel-genai/_SNAPSHOT.json"
+    }
+  ],
+  "decisions": [
+    {
+      "what": "不新造部件名，把新能力挂在既有的「写入闸门」概念下，目录用第三方的名字 agentteams/",
+      "why": "命名裁决 §5：定义一个名字等于做出一个尚未被验证的存在性主张。这里新增的是一道闸门和一个身份取象器，不是一个新部件；用第三方名字做目录名也更诚实——它是桥不是核心。"
+    },
+    {
+      "what": "身份分 attested / declared / none 三级，只有 attested 才准发证",
+      "why": "与 RFC-0009 区分 expect_sha256（自证的）与 approval:confirm（无出处的）是同一条原则。环境变量 MATRIX_USER_ID 自己 export 一个零成本，据此发证等于没有闸门。"
+    },
+    {
+      "what": "「够不着 homeserver」单独出一格 unreachable，不并进「没有身份」",
+      "why": "同 governance/anchor.mjs 把「核不动」与「没盖章」分开。仪器自己的失效被读成被测对象的属性，会让一次网络抖动变成一次身份缺失的结论。这个坑当天就在判据框架自己身上复发了一次：stub homeserver 起在同进程里，被 spawnSync 阻塞，9 条判据集体误报够不着。"
+    },
+    {
+      "what": "作者身份是 declared 时不拦截，只在学历里落一条 separation_strength=examiner_only",
+      "why": "一个能把自己声明成 A 的进程也能声明成 B，所以指纹不同不等于真是两个 Agent。拦了会让闸门在真实部署前先卡死；不披露则是谎报证明强度。让它显形比让它消失更诚实（同学堂对恒绿考题的处理）。"
+    },
+    {
+      "what": "发证台账走南桥 doWrite append，不自己 appendFileSync",
+      "why": "RFC-0006 §0：各部件各写各的文件 IO 正是「自证」在本仓库复发五次的结构性原因。走南桥才有审计、风险分级、写后回读。"
+    },
+    {
+      "what": "闸门放在跑考试之前，不放在之后",
+      "why": "放在之后的话，自证者虽然拿不到证书，却仍能把 exam.runs 刷上去——考试记录本身就是凭据的一部分。判据 C12 锁住这一点。"
+    }
+  ],
+  "next_steps": [
+    "8 月 16 日前在 GOAI 页面上传作品简介与方案 PPT，并人工核对报名 / 队伍 / 联系方式字段 — user action",
+    "一键 start / health / stop、失败诊断及实机生命周期验收 — completed",
+    "复赛可执行代码包 README、配置样例、无密钥 dry-run / selfcheck、运行证据 — completed",
+    "出版社审稿可执行 Trace 已完成 8/8；如复赛要求视频，再录屏并配旁白 — pending",
+    "客户原始 CAD 已生成脱敏 `.origin`：168 窗 / 22 门，why/diagnose/limits 与无文字原始几何投影均完成 — completed",
+    "在用户明确授权付费模型 key 后接通真实 Agent 推理；否则保持占位符与无计费验证路径 — needs_authority",
+    "复赛前补跨主机身份分离或明确其迁移成本，并完成 OIDC / SPIFFE / K8s SA 至少一个适配样例 — pending",
+    "【复赛承诺清单 · 9.3 前 · 出处均在 GOAI初赛-第3次提交-20260816/】①可独立运行的 AgentTeams 桥接包 + LICENSE（06:26,33；08:104,119 手册 5.2 复赛必交）②逐个插件迁移成本表（04:301；08:63）【草稿已落 agentteams/docs/插件迁移成本表-AgentTeams复赛.md，2026-08-24，含 29 插件实测清单与 npm test 基线】③OTel GenAI 映射表与迁移成本（05:53）【草稿已落 agentteams/docs/OTel-GenAI映射表-AgentTeams复赛.md，2026-08-24，属性名已对官方快照消待核，导出器 3.5 人日估算待批】④运行自检 3/4 修成稳定 4/4，做法是把 pin 探测与 PATH 告警分离（07:88）⑤跨主机身份分离 + OIDC/SPIFFE/K8s SA 至少一个适配样例 ⑥桥接模块开源后判据套件随仓库公开（06:65） — pending",
+    "学历当前 verify-state 判 NOT VERIFIED（复赛前必须清）：有 1 条 fact 的 source 是自然语言断言不可复核——「这件事的海外行业标准词已核实：长文档一致性=cross-reference…」。要么补上可复核物（引到具体文献/命令/判据编号），要么把它降级为假设。不是本轮引入的。"
+  ],
+  "artifacts": [
+    "agentteams/identity.mjs",
+    "agentteams/certify.mjs",
+    "agentteams/verify-agentteams.mjs",
+    "agentteams/stub-homeserver.mjs",
+    "demo/agentteams-bridge/goai-infra-track.txt",
+    "demo/agentteams-bridge/env-probe.md",
+    "agentteams/SKILLS.md",
+    "agentteams/AGENT-IDENTITY.md",
+    "demo/agentteams-bridge/REPORT.md",
+    "demo/agentteams-bridge/certify-ledger.jsonl",
+    "demo/agentteams-bridge/probe-multiagent-selfcert.mjs",
+    "demo/agentteams-bridge/matrix-registration-probe.md",
+    "demo/agentteams-bridge/e2e-real-attestation.mjs",
+    "demo/agentteams-bridge/e2e-crossdomain.mjs",
+    "demo/agentteams-bridge/hongloumeng-three-way.md",
+    "agentteams/runtime.mjs",
+    "agentteams/verify-runtime.mjs",
+    "agentteams/selfcheck.mjs",
+    "agentteams/demo-publishing.mjs",
+    "agentteams/runtime.env.example",
+    "agentteams/README.md",
+    "demo/agentteams-bridge/publishing-demo-ledger.jsonl",
+    "agentteams/cad-window-audit.mjs",
+    "agentteams/submission/cad-window-audit/trace.json",
+    "agentteams/submission/cad-window-audit/CAD窗户计数-图文证据报告.html",
+    "agentteams/submission/cad-window-audit/02-annotated.png",
+    "agentteams/submission/AgentInfra-证据链-路演演示版.pptx",
+    "agentteams/submission/AgentInfra-证据链-路演演示版-证据可视化.pptx",
+    "_codex_ppt_agentinfra_visual/evidence-assets/evidence-data.json",
+    "_codex_ppt_agentinfra_visual/qa/template-fidelity-check.json",
+    "agentteams/submission/AgentInfra-证据链-路演演示版-客户CAD实证.pptx",
+    "_codex_cad_lucheng/cad-window-count-evidence.html",
+    "_codex_cad_lucheng/cad-window-count-evidence.png",
+    "_codex_cad_lucheng/cad-count-summary.mjs",
+    "_codex_cad_lucheng/oda-openings.json",
+    "D:/uking编程/本象协议/cases/cad-window-count.origin",
+    "D:/uking编程/本象协议/cases/cad-window-count.origin/projections/verification-report.html",
+    "D:/uking编程/本象协议/cases/cad-window-count.origin/projections/sanitized-cad/sanitization.json",
+    "D:/uking编程/本象协议/cases/cad-window-audit.origin",
+    "D:/uking编程/本象协议/cases/cad-window-audit.origin/projections/object-map.html",
+    "D:/uking编程/本象协议/mp-articles/tech/2026-08-13-cad-168-auditable/article.html",
+    "D:/uking编程/本象协议/mp-articles/tech/2026-08-13-cad-168-auditable/cover.png"
+  ],
+  "learnings": [
+    {
+      "id": "L-c5cd29ce6a00",
+      "lesson": "凡是「X 不能自己干 Y」的规矩，先查它靠代码成立还是靠「现在只有一个进程」成立；后者在上多 Agent 的第一天失效，且不报错、不变红",
+      "status": "candidate",
+      "recheck": {
+        "kind": "command",
+        "run": "node agentteams/verify-agentteams.mjs",
+        "expect_exit": 0
+      },
+      "author": {
+        "fp": null,
+        "source": "none",
+        "attested": false,
+        "device_id": null,
+        "at": "2026-08-11T16:47:25.44Z"
+      },
+      "origin": {
+        "task": "agentteams-bridge",
+        "when": "2026-08-11T16:47:25.442Z"
+      }
+    },
+    {
+      "id": "L-15343e32b7de",
+      "lesson": "判据框架必须把「仪器自己失效」与「被测对象的属性」分开报；否则一次连不上会被读成一次「对象不存在」的结论",
+      "status": "candidate",
+      "recheck": {
+        "kind": "command",
+        "run": "node agentteams/verify-agentteams.mjs",
+        "expect_exit": 0
+      },
+      "author": {
+        "fp": null,
+        "source": "none",
+        "attested": false,
+        "device_id": null,
+        "at": "2026-08-11T16:47:25.573Z"
+      },
+      "origin": {
+        "task": "agentteams-bridge",
+        "when": "2026-08-11T16:47:25.575Z"
+      }
+    },
+    {
+      "id": "L-1804b37c1150",
+      "lesson": "凭据的强度分级不可由代码自行输出——从进程内部分不出自建签发者与第三方签发者，输出等级即自封；正确做法是记下签发者是谁，把强度判断留给读账的人",
+      "status": "verified",
+      "recheck": {
+        "kind": "command",
+        "run": "node agentteams/verify-agentteams.mjs",
+        "expect_exit": 0
+      },
+      "author": {
+        "fp": "1e1d5e8883770187",
+        "source": "attested",
+        "attested": true,
+        "homeserver": "127.0.0.1:18080",
+        "device_id": "X4iMYjd46e",
+        "at": "2026-08-11T19:39:25.516Z"
+      },
+      "origin": {
+        "task": "agentteams-bridge",
+        "when": "2026-08-11T19:39:25.518Z"
+      },
+      "exam": {
+        "runs": 1,
+        "last_run": "2026-08-11T19:39:44.833Z",
+        "last_result": "pass",
+        "last_detail": "exit=0（期望 0）",
+        "passes": 1,
+        "promoted_at": "2026-08-11T19:39:44.833Z",
+        "examiner": {
+          "fp": "bac122397bc1b61b",
+          "source": "attested",
+          "attested": true,
+          "homeserver": "127.0.0.1:18080",
+          "device_id": "0h9IVKUowZ",
+          "at": "2026-08-11T19:39:42.091Z"
+        },
+        "separation_strength": "attested_both"
+      }
+    },
+    {
+      "id": "L-8eaac9b426c4",
+      "lesson": "仪器自己的失效必须与被测对象的属性用不同的退出码分开；只写进注释的教训会在下一个文件里原样复发，唯有做成前置闸门才拦得住",
+      "status": "verified",
+      "recheck": {
+        "kind": "command",
+        "run": "node demo/agentteams-bridge/e2e-real-attestation.mjs",
+        "expect_exit": 0,
+        "instrument_exits": [
+          3
+        ]
+      },
+      "author": {
+        "fp": "1e1d5e8883770187",
+        "source": "attested",
+        "attested": true,
+        "homeserver": "127.0.0.1:18080",
+        "device_id": "X4iMYjd46e",
+        "at": "2026-08-11T21:49:58.468Z"
+      },
+      "origin": {
+        "task": "agentteams-bridge",
+        "when": "2026-08-11T21:49:58.47Z"
+      },
+      "exam": {
+        "runs": 1,
+        "last_run": "2026-08-11T21:50:01.855Z",
+        "last_result": "pass",
+        "last_detail": "exit=0（期望 0）",
+        "passes": 1,
+        "promoted_at": "2026-08-11T21:50:01.855Z",
+        "examiner": {
+          "fp": "bac122397bc1b61b",
+          "source": "attested",
+          "attested": true,
+          "homeserver": "127.0.0.1:18080",
+          "device_id": "0h9IVKUowZ",
+          "at": "2026-08-11T21:49:58.726Z"
+        },
+        "separation_strength": "attested_both"
+      }
+    },
+    {
+      "id": "L-d709f991040d",
+      "lesson": "独立包验收测试 2026-08-24：本条由包内 stamp 写入",
+      "status": "candidate",
+      "recheck": {
+        "kind": "command",
+        "run": "node agentteams/selfcheck.mjs --dry-run"
+      },
+      "author": {
+        "fp": null,
+        "source": "none",
+        "attested": false,
+        "homeserver": null,
+        "device_id": null,
+        "at": "2026-08-24T12:58:31.990Z"
+      },
+      "origin": {
+        "task": "agentteams-bridge",
+        "when": "2026-08-24T12:58:31.992Z"
+      }
+    },
+    {
+      "id": "L-27deb603d349",
+      "lesson": "独立包三身份全流程验收 2026-08-24（stub homeserver）",
+      "status": "verified",
+      "recheck": {
+        "kind": "command",
+        "run": "node agentteams/selfcheck.mjs --dry-run"
+      },
+      "author": {
+        "fp": "215e0a67c37217b7",
+        "source": "attested",
+        "attested": true,
+        "homeserver": "127.0.0.1:58052",
+        "device_id": "DEV-ALICE",
+        "at": "2026-08-24T13:01:38.371Z"
+      },
+      "origin": {
+        "task": "agentteams-bridge",
+        "when": "2026-08-24T13:01:38.372Z"
+      },
+      "observation": {
+        "observer": {
+          "fp": "f24415aea70500e9",
+          "source": "attested",
+          "attested": true,
+          "homeserver": "127.0.0.1:58052",
+          "device_id": "DEV-BOB",
+          "at": "2026-08-24T13:01:38.717Z"
+        },
+        "result": "pass",
+        "detail": "exit=0（期望 0）",
+        "recheck_fp": "2a7c0d0608b097a0",
+        "consumed_by": "d796ef4e1305f948",
+        "at": "2026-08-24T13:01:38.790Z",
+        "consumed_at": "2026-08-24T13:01:39.143Z"
+      },
+      "exam": {
+        "runs": 1,
+        "last_run": "2026-08-24T13:01:39.143Z",
+        "last_result": "pass",
+        "last_detail": "[观察者 f24415ae…] exit=0（期望 0）",
+        "passes": 1,
+        "promoted_at": "2026-08-24T13:01:39.143Z",
+        "examiner": {
+          "fp": "d796ef4e1305f948",
+          "source": "attested",
+          "attested": true,
+          "homeserver": "127.0.0.1:58052",
+          "device_id": "DEV-CAROL",
+          "at": "2026-08-24T13:01:39.142Z"
+        },
+        "separation_strength": "attested_both",
+        "observer": {
+          "fp": "f24415aea70500e9",
+          "source": "attested",
+          "attested": true,
+          "homeserver": "127.0.0.1:58052",
+          "device_id": "DEV-BOB",
+          "at": "2026-08-24T13:01:38.717Z"
+        }
+      }
+    }
+  ],
+  "version": 58,
+  "updated_at": "2026-08-24T13:01:39.366Z",
+  "content_hash": "333297e55c6fbf1ec11b19696233a8dae4c5df8d437e427f7251cea0000dcb12",
+  "actor": {
+    "harness": "unknown",
+    "model": "unobserved",
+    "model_source": "none",
+    "session_id": "",
+    "at": "2026-08-24T13:01:39.366Z",
+    "by": "agentteams/certify"
+  }
+}

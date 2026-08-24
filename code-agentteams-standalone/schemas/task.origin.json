@@ -1,0 +1,223 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "2origin/task.origin.json",
+  "title": "task.origin — AI 任务状态对象（本境协议 benjing/0.2）",
+  "description": "一个正在进行的 AI 任务的持久状态。目标：关窗再开、换 harness/换模型后，任务靠这份状态续上，而不是靠聊天记录重放。v0.2 相对 v0.1 的增量全部对应实测缺陷，见 rfcs/RFC-0005-benjing-v0.2.md。",
+  "type": "object",
+  "required": [
+    "spec", "kind", "id", "goal", "version", "updated_at", "current_state", "next_steps"
+  ],
+  "properties": {
+    "spec": {
+      "enum": ["2origin/0.1", "2origin/0.2"],
+      "description": "协议版本。0.1 仍可读（向后兼容），新写入一律 0.2。名词冻结，只升版本号不改名"
+    },
+    "kind": { "const": "task.origin", "description": "对象类型。加载器按这个字段认学历，不按文件名——schemas/task.origin.json 曾因同名被当成一份学历" },
+    "id": { "type": "string", "description": "任务唯一 ID，跨会话不变" },
+    "title": { "type": "string", "description": "任务标题" },
+    "goal": { "type": "string", "description": "任务目标（一句话，模型换脑也能看懂）" },
+
+    "version": {
+      "type": "integer",
+      "description": "内容版本号。**由 content_hash 变化驱动，不由会话次数驱动**。v0.1 每次 SessionEnd 无脑 +1，实测内容一字未变 version 从 1 涨到 4，导致版本号既判断不了状态是否变化、也不能用作乐观锁"
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "学历内容指纹：sha256(canonical(状态 - {version,updated_at,content_hash,actor}))。写入学历时作为乐观锁凭据（--expect），语义同影核 v0.2 的 expect_sha256：证明你读过当前内容才准写"
+    },
+    "actor": {
+      "type": "object",
+      "description": "最后写入者。跨模型/跨 harness 继承学历是本架构的核心主张，但 v0.1 状态文件里 0 个 provenance 字段，主张无从举证",
+      "properties": {
+        "harness": { "type": "string", "description": "claude-code / codex / … 由环境变量观测得出" },
+        "model": { "type": "string", "description": "模型名。**观测不到就写 unobserved，不许编** —— 本机 Claude Code 与 codex 均无可靠的模型名环境变量" },
+        "session_id": { "type": "string" },
+        "at": { "type": "string", "description": "ISO 时间" }
+      }
+    },
+
+    "scope": { "type": "string", "description": "旧版自由文本作用域，仅供人读；不再作为跨任务授权依据。跨任务共享与发布只认 governance" },
+    "governance": {
+      "type": "object",
+      "description": "任务隔离与发布边界。字段缺失或声明不自洽时，执行层必须 fail-closed：仅本任务可见、禁止导出",
+      "required": [
+        "tenant_id", "project_id", "visibility", "sensitivity",
+        "context_access", "export_policy", "retention_days"
+      ],
+      "properties": {
+        "tenant_id": { "type": "string", "description": "客户/组织隔离键；不得从路径或标题猜测" },
+        "project_id": { "type": "string", "description": "租户内项目隔离键；跨任务共享必须显式相同" },
+        "visibility": { "enum": ["private", "project", "public"], "description": "private=仅任务，project=同项目，public=可候选公开" },
+        "sensitivity": { "enum": ["public", "internal", "confidential", "restricted"], "description": "restricted 永不跨任务；public 也仍受 context_access/export_policy 约束" },
+        "context_access": { "enum": ["task", "project", "global"], "description": "北桥可把本任务内容注入到哪里" },
+        "export_policy": { "enum": ["deny", "redacted", "allow"], "description": "deny=禁止，redacted=仅安全摘要，allow=仅 public/public 的 allowlist 正文" },
+        "retention_days": { "type": "integer", "minimum": 0, "description": "保留期；0 表示未获授权前不自动清理，不表示永久公开" }
+      }
+    },
+    "created_at": { "type": "string", "description": "ISO 时间" },
+    "updated_at": { "type": "string", "description": "ISO 时间。内容未变则不刷新" },
+
+    "current_state": {
+      "type": "string",
+      "description": "当前状态的一句话描述。不写聊天过程，写『世界此刻是什么样』。"
+    },
+    "facts": {
+      "type": "array",
+      "description": "验证过的事实，不是会话里说过的话。事实有生命周期（学籍 fact/0.1）：一条今天被推翻的事实不该明天还 verified:true 等着被调进上下文——实测 19 份学历 445 条 facts，带生命周期字段的 0 条。",
+      "items": {
+        "type": "object",
+        "required": ["claim", "verified"],
+        "properties": {
+          "claim": { "type": "string" },
+          "verified": { "type": "boolean", "description": "是否被本象观察/测试证实" },
+          "source": {
+            "type": "string",
+            "description": "证据来源。**必须引用可复核物**：文件路径、可重跑的命令、或验证用例编号（如 T3.2）。纯自然语言断言（『我说的』『实测过』）判 unverifiable —— v0.1 只判此字段非空，实测把 9 条 source 全换成胡话判决仍是 VERIFIED"
+          },
+          "source_kind": { "enum": ["file", "command", "testcase", "trace", "mixed"], "description": "可选。缺省时由 source 文本启发式判定" },
+          "actor": { "type": "string", "description": "可选。哪个 harness/模型验证的" },
+          "when": { "type": "string" },
+
+          "status": {
+            "enum": ["active", "stale", "superseded", "refuted"],
+            "description": "生命周期。**缺省即 active**（445 条存量事实没有此字段，不能因协议长出新字段就集体判死）。只有 active 会被北桥调进上下文。stale=钉住的证据物内容变了或不在了，**只能由 fact-recheck 给，作者手写会被压回**（对称学堂『升级只能由考试给』）；superseded=被另一条事实取代；refuted=被推翻。注意 stale ≠ 假：B3.3 锁死了『不许因路径不存在就判假』"
+          },
+          "superseded_by": {
+            "type": "string",
+            "description": "取代者的 factId。status=superseded 时必填且必须指向本学历里真实存在的一条——说不出被谁取代，就只是让它悄悄消失"
+          },
+          "retire": {
+            "type": "object",
+            "description": "退役出处。**推翻一条已验证事实的举证责任，不低于当初确立它的**：status=refuted 时 source 必须过 recheckSource，否则谁都能把碍事的事实标成 refuted 让它从上下文里消失",
+            "properties": {
+              "why": { "type": "string", "description": "凭什么退役" },
+              "source": { "type": "string", "description": "退役依据，判据同 facts.source：必须引用可复核物" },
+              "by": { "type": "string" },
+              "when": { "type": "string" }
+            }
+          },
+          "pin": {
+            "type": "object",
+            "description": "钉住的证据指纹 + 复核账本，只由 southbridge/fact-recheck.mjs 写。**按内容不按时间**：本机 git 没有 remote、commit date 可任意伪造，仓库里任何时间主张都不可外部核验，所以拿 when 做衰减等于把治理层赶出去的病从记忆层放回来。内容指纹不能自签。**为什么不叫 evidence**：actions[].evidence 已经是一个字符串（自由文本的证据描述），同一份 schema 里一名两物正是命名裁决 §4 反复在抓的病——本字段初版就叫 evidence，当天改回",
+            "properties": {
+              "refs": {
+                "type": "array",
+                "description": "验证那一刻，source 解引用得到的每个文件的 sha256",
+                "items": {
+                  "type": "object",
+                  "required": ["ref", "sha256"],
+                  "properties": {
+                    "ref": { "type": "string" },
+                    "sha256": { "type": "string" }
+                  }
+                }
+              },
+              "runs": { "type": "integer" },
+              "last_run": { "type": "string" },
+              "last_result": { "enum": ["intact", "changed", "dangling", "unpinned"], "description": "unpinned=没钉过证据，无法复核。它必须单独出数：不报未测量量，『N 条已验证事实』就会被读成『N 条被证明为真』" },
+              "last_detail": { "type": "string" },
+              "demoted_at": { "type": "string" },
+              "demoted_by": { "type": "string" },
+              "revived_at": { "type": "string" }
+            }
+          }
+        },
+        "if": { "properties": { "verified": { "const": true } } },
+        "then": { "required": ["claim", "verified", "source"] }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "description": "关键决策及理由（commit log，不是聊天记录）",
+      "items": {
+        "type": "object",
+        "required": ["what", "why"],
+        "properties": {
+          "what": { "type": "string" },
+          "why": { "type": "string" },
+          "when": { "type": "string" }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "description": "已执行的动作（影核 action 记录，含结果）",
+      "items": {
+        "type": "object",
+        "required": ["verb", "status"],
+        "properties": {
+          "verb": { "type": "string", "description": "如 document.save / file.write" },
+          "target": { "type": "string" },
+          "status": { "enum": ["done", "failed", "skipped"] },
+          "result": { "type": "string" },
+          "evidence": { "type": "string" }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "description": "产出的文件/产物路径（仓库根相对，或绝对路径）",
+      "items": { "type": "string" }
+    },
+    "verification": {
+      "type": "string",
+      "description": "对整体完成度的验证结论：已验证到什么程度，还差什么"
+    },
+    "next_steps": {
+      "type": "array",
+      "description": "下一步清单。换模型后靠这个接着干",
+      "items": { "type": "string" }
+    },
+    "learnings": {
+      "type": "array",
+      "description": "从这个任务里长出来的经验（学堂 xuetang/0.1）。经验不是笔记：status=verified 只能由 xuetang/exam.mjs 跑通 recheck 之后给，作者不能自己写——写经验的人不能同时判自己合格。",
+      "items": {
+        "type": "object",
+        "required": ["lesson", "status"],
+        "properties": {
+          "id": { "type": "string", "description": "learningId(lesson)：跨学历的同一条经验得到同一个 id，用于去重与考试记账" },
+          "lesson": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "status": { "enum": ["candidate", "verified", "deprecated"] },
+          "origin": {
+            "type": "object",
+            "description": "这条经验是从哪次任务、哪个时刻长出来的",
+            "properties": {
+              "task": { "type": "string" },
+              "when": { "type": "string" }
+            }
+          },
+          "recheck": {
+            "type": "object",
+            "description": "可重跑的动作。fact 的 source 必须引用可复核物；对称地，learning 的 recheck 必须是别人能再跑一遍的命令。没有它，这条经验永远无法被推翻，也就永远不该叫 verified。",
+            "required": ["kind", "run"],
+            "properties": {
+              "kind": { "enum": ["command"] },
+              "run": { "type": "string" },
+              "expect_exit": { "type": "integer" },
+              "expect_stdout": { "type": "string" }
+            }
+          },
+          "exam": {
+            "type": "object",
+            "description": "长循环考试记录，只由 xuetang/exam.mjs 写。一次成功不是永久真理，所以这里记的是次数而不是一个布尔。",
+            "properties": {
+              "runs": { "type": "integer" },
+              "passes": { "type": "integer" },
+              "fails": { "type": "integer" },
+              "errors": { "type": "integer" },
+              "last_run": { "type": "string" },
+              "last_result": { "enum": ["pass", "fail", "error", "unexaminable"] },
+              "last_detail": { "type": "string" },
+              "promoted_at": { "type": "string" },
+              "demoted_at": { "type": "string" },
+              "demoted_by": { "type": "string" }
+            }
+          }
+        },
+        "if": { "properties": { "status": { "const": "verified" } } },
+        "then": { "required": ["recheck", "exam"] }
+      }
+    }
+  }
+}
