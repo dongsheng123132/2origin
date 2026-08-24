@@ -1,0 +1,99 @@
+[
+  {
+    "id": "source-hash-present",
+    "rule": "官方源文件必须带 SHA-256",
+    "check": {
+      "type": "exists",
+      "object": "dwg:us-sandiego-ds3179-template-audit",
+      "field": "source_sha256"
+    }
+  },
+  {
+    "id": "stable-handle-coverage",
+    "rule": "模型空间实体和文字必须全部保留 DXF handle",
+    "check": {
+      "type": "equals",
+      "object": "metric:us-template-understanding",
+      "field": "stable_handle_entities",
+      "value": 136
+    }
+  },
+  {
+    "id": "recognized-unit",
+    "rule": "单位系统必须从 DXF header 明确解析",
+    "check": {
+      "type": "in",
+      "object": "dwg:us-sandiego-ds3179-template-audit",
+      "field": "drawing_unit",
+      "values": [
+        "inch",
+        "foot",
+        "millimeter",
+        "meter"
+      ]
+    }
+  },
+  {
+    "id": "sheet-index-count",
+    "rule": "模板页索引应恢复 9 个条目",
+    "check": {
+      "type": "count",
+      "object": "sheet:*",
+      "equals": 9
+    }
+  },
+  {
+    "id": "sheet-title-required",
+    "rule": "每个页索引条目必须有标题",
+    "check": {
+      "type": "exists",
+      "object": "sheet:*",
+      "field": "title"
+    }
+  },
+  {
+    "id": "sheet-title-unique",
+    "rule": "页索引标题不得重复",
+    "check": {
+      "type": "unique",
+      "object": "sheet:*",
+      "field": "title"
+    }
+  },
+  {
+    "id": "governing-reference-count",
+    "rule": "当前模板明确列出 7 项引用标准",
+    "check": {
+      "type": "count",
+      "object": "reference:*",
+      "equals": 7
+    }
+  },
+  {
+    "id": "governing-reference-number",
+    "rule": "引用标准必须保留文件编号",
+    "check": {
+      "type": "exists",
+      "object": "reference:*",
+      "field": "document_no"
+    }
+  },
+  {
+    "id": "governing-reference-edition",
+    "rule": "引用标准必须保留版本年份",
+    "check": {
+      "type": "exists",
+      "object": "reference:*",
+      "field": "edition"
+    }
+  },
+  {
+    "id": "placeholder-source",
+    "rule": "必填占位字段必须能指回原始 CAD 文字对象",
+    "check": {
+      "type": "exists",
+      "object": "required-field:*",
+      "field": "source_object"
+    }
+  }
+]

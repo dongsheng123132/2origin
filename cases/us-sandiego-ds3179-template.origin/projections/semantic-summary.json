@@ -1,0 +1,123 @@
+{
+  "artifact": "us-sandiego-ds3179-template-audit",
+  "source_sha256": "E29069D53AFF93278C5495F60D7B6324F52884CD5249A01B2FF7C073C9D6E1BA",
+  "dxf_version": "AC1032",
+  "unit": "inch",
+  "layers": 9,
+  "source_entities": 136,
+  "sheet_index": [
+    {
+      "id": "sheet:1",
+      "printed_pages": "1",
+      "title": "COVER SHEET",
+      "discipline_code": null
+    },
+    {
+      "id": "sheet:2-3",
+      "printed_pages": "2-3",
+      "title": "GENERAL NOTES",
+      "discipline_code": null
+    },
+    {
+      "id": "sheet:4",
+      "printed_pages": "4",
+      "title": "MONUMENT PRESERVATION CERTIFICATION",
+      "discipline_code": "G04"
+    },
+    {
+      "id": "sheet:5",
+      "printed_pages": "5",
+      "title": "WATER AND SEWER NOTES",
+      "discipline_code": "G05"
+    },
+    {
+      "id": "sheet:6-9",
+      "printed_pages": "6-9",
+      "title": "ENVIRONMENTAL REQUIREMENTS",
+      "discipline_code": "G06-G09"
+    },
+    {
+      "id": "sheet:10",
+      "printed_pages": "10",
+      "title": "IMPROVEMENT PLAN",
+      "discipline_code": "C01"
+    },
+    {
+      "id": "sheet:11",
+      "printed_pages": "11",
+      "title": "STREET EXCAVATION TABLE",
+      "discipline_code": "C02"
+    },
+    {
+      "id": "sheet:12",
+      "printed_pages": "12",
+      "title": "STRIPING AND STREET LIGHT NOTES",
+      "discipline_code": "T01"
+    },
+    {
+      "id": "sheet:13",
+      "printed_pages": "13",
+      "title": "TRAFFIC CONTROL PLAN",
+      "discipline_code": "TC01"
+    }
+  ],
+  "governing_references": [
+    {
+      "id": "reference:greenbook-2024",
+      "document_no": "ECP040126-01",
+      "title": "STANDARD SPECIFICATIONS FOR PUBLIC WORKS CONSTRUCTION (THE GREENBOOK)",
+      "edition": "2024"
+    },
+    {
+      "id": "reference:whitebook-2024",
+      "document_no": "ECP040126-02",
+      "title": "CITY OF SAN DIEGO STANDARD SPECIFICATIONS FOR PUBLIC WORKS CONSTRUCTION (THE WHITEBOOK)",
+      "edition": "2024"
+    },
+    {
+      "id": "reference:cadd-standards-2018",
+      "document_no": "PWPI010119-04",
+      "title": "CITYWIDE COMPUTER AIDED DESIGN AND DRAFTING (CADD) STANDARDS",
+      "edition": "2018"
+    },
+    {
+      "id": "reference:ca-mutcd-2026",
+      "document_no": "ECPD040126-07",
+      "title": "CALIFORNIA MANUAL ON UNIFORM TRAFFIC CONTROL DEVICES",
+      "edition": "2026"
+    },
+    {
+      "id": "reference:caltrans-spec-2025",
+      "document_no": "ECPD040126-05",
+      "title": "CALIFORNIA DEPARTMENT OF TRANSPORTATION STANDARD SPECIFICATIONS",
+      "edition": "2025"
+    },
+    {
+      "id": "reference:city-standard-drawings-2021",
+      "document_no": "ECPI010122-03",
+      "title": "CITY OF SAN DIEGO STANDARD DRAWINGS FOR PUBLIC WORKS CONSTRUCTION",
+      "edition": "2021"
+    },
+    {
+      "id": "reference:caltrans-standard-plan-2025",
+      "document_no": "ECPD092023-06",
+      "title": "CALTRANS STANDARD PLAN",
+      "edition": "2025"
+    }
+  ],
+  "blank_required_fields": [
+    "NAME OF COMPANY:",
+    "ADDRESS:",
+    "NAME AND TITLE:",
+    "PHONE:",
+    "EMAIL:",
+    "NAME OF COMPANY:",
+    "ADDRESS:",
+    "NAME AND TITLE:",
+    "PHONE:",
+    "EMAIL:",
+    "SITE ADDRESS:",
+    "ASSOCIATED BUILDING PRJ NO:",
+    "ASSOCIATED DISCRETIONARY PRJ NO:"
+  ]
+}

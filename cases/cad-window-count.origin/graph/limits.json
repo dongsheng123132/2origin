@@ -1,0 +1,44 @@
+[
+  {
+    "code": "tianzheng-version-specific-classifier",
+    "kind": "unverified",
+    "scope": "opening:*.classification",
+    "statement": "窗/门分类依赖这份图中天正代理载荷出现的“门窗用途”与“门口线偏移距离”字段；尚未验证所有天正版本都采用相同编码。",
+    "remedy": "收集不同天正版本的脱敏样本，按版本登记解码器并加入交叉测试。"
+  },
+  {
+    "code": "glass-material-not-resolved",
+    "kind": "uncovered",
+    "scope": "metric:door-window-count.windows",
+    "statement": "168 的单位是窗樘/窗洞对象，不是玻璃分格或采购块数；其中包含被建模为窗的百叶窗。",
+    "remedy": "导入门窗材料表，按材质与构造类型继续拆分百叶、幕墙和玻璃窗。"
+  },
+  {
+    "code": "block-owner-file-specific",
+    "kind": "unverified",
+    "scope": "opening:*.owner_space",
+    "statement": "模型空间 owner=2 由本文件离线转换结果确认，不应直接套用到另一份图。",
+    "remedy": "导入下一份图时从 BLOCK_RECORD 表解析 *Model_Space 的 handle，并显式传入。"
+  },
+  {
+    "code": "proxy-geometry-not-carried",
+    "kind": "lossy",
+    "scope": "opening:*",
+    "statement": "本包保留门窗对象身份、分类、图层与代理载荷指纹，但尚未解出每个 TCH_OPENING 的精确几何和位置。",
+    "remedy": "实现对应天正版本的代理几何解码，或在有天正环境中导出可读实体后回填 bbox。"
+  },
+  {
+    "code": "source-withheld",
+    "kind": "uncovered",
+    "scope": "payload",
+    "statement": "客户原始 DWG、文件名、路径、图签与文字没有进入可发布包；包内只能按 SHA-256 对回受控原件。",
+    "remedy": "复核人员在客户授权的本机环境中使用同一 SHA-256 原件重新导入。"
+  },
+  {
+    "code": "crosscheck-total-only",
+    "kind": "uncovered",
+    "scope": "observation:libredwg-class-528",
+    "statement": "GNU LibreDWG 独立链只交叉确认 class 528 对象总数 194；168/22 分类来自 ODA 代理载荷字段，并非两条解析器独立分类。",
+    "remedy": "为 LibreDWG 输出实现同一版本载荷解码，再逐 handle 比较分类。"
+  }
+]

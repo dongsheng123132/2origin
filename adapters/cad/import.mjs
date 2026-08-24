@@ -47,7 +47,17 @@ export function dxfToObjects(dxf, { name }) {
   const objects = [{ id: `dwg:${name}`, type: 'dwg', title: name, dxf_version: dxf.version, has_handles: dxf.hasHandles }]
   const seen = new Map()
 
-  for (const l of dxf.layers) objects.push({ id: `layer:${l.name}`, type: 'layer', name: l.name, color: l.color ?? null })
+  // 有些真实 DXF（包括美国市政官方模板）ENTITIES 会使用未列入 LAYER 表的图层。
+  // 图层表不完备不应让关系悬空：表内保留颜色，表外按实体引用补成 implied layer。
+  const declaredLayers = new Map(dxf.layers.map((l) => [l.name, l]))
+  const usedLayers = new Set([
+    ...dxf.entities.map((e) => e.layer),
+    ...[...dxf.blocks.values()].flatMap((b) => b.entities.map((e) => e.layer)),
+  ].filter(Boolean))
+  for (const name of new Set([...declaredLayers.keys(), ...usedLayers])) {
+    const l = declaredLayers.get(name)
+    objects.push({ id: `layer:${name}`, type: 'layer', name, color: l?.color ?? null, declared_in_table: Boolean(l) })
+  }
 
   // 块定义本身也是对象：换型号、改尺寸时要能回答「哪些图元用了这个块」
   for (const [bname, b] of dxf.blocks ?? []) {

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>本象 CAD 审计：美国准入与 10× 证据状态</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { color-scheme: dark; }
+    body { font-family: Inter, "Noto Sans SC", "Microsoft YaHei", sans-serif; }
+    .grid-bg { background-image: linear-gradient(rgba(56,189,248,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.06) 1px,transparent 1px); background-size:32px 32px; }
+    .glass { background: rgba(15,23,42,.76); backdrop-filter: blur(16px); border: 1px solid rgba(148,163,184,.16); }
+    .tag { border: 1px solid currentColor; border-radius: 999px; padding: .2rem .65rem; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 grid-bg">
+  <main class="max-w-7xl mx-auto px-5 py-10 md:py-16">
+    <header class="glass rounded-3xl p-7 md:p-12 overflow-hidden relative">
+      <div class="absolute -right-20 -top-24 w-96 h-96 rounded-full bg-cyan-500/15 blur-3xl"></div>
+      <div class="relative max-w-4xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="tag text-emerald-300">可进入美国试点</span>
+          <span class="tag text-amber-300">10× 尚待盲测</span>
+          <span class="tag text-cyan-300">本地 / 对象级 / 可追溯</span>
+        </div>
+        <h1 class="text-4xl md:text-7xl font-black tracking-tight leading-[1.06]">能去美国，但先卖<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-300">审计助手</span>，不冒充审批机关</h1>
+        <p class="mt-6 text-lg md:text-2xl text-slate-300 leading-relaxed">当前案例证明了复杂 DWG 的对象化计数、定位和证据回放。它还没有证明美国建筑法规审查能力，也没有产生 10× 的对照实验数据。</p>
+      </div>
+    </header>
+
+    <section class="grid md:grid-cols-4 gap-4 mt-6">
+      <div class="glass rounded-2xl p-6"><div class="text-sm text-slate-400">源对象</div><div class="text-5xl font-black mt-2">194</div><div class="text-sm mt-2 text-slate-400">TCH_OPENING</div></div>
+      <div class="glass rounded-2xl p-6"><div class="text-sm text-slate-400">实际放置</div><div class="text-5xl font-black mt-2">190</div><div class="text-sm mt-2 text-slate-400">排除 4 个块定义模板</div></div>
+      <div class="glass rounded-2xl p-6"><div class="text-sm text-slate-400">分类结果</div><div class="text-5xl font-black mt-2 text-cyan-300">168<span class="text-xl text-slate-400"> / 22</span></div><div class="text-sm mt-2 text-slate-400">窗 / 门，未知 0</div></div>
+      <div class="glass rounded-2xl p-6"><div class="text-sm text-slate-400">位置锚点</div><div class="text-5xl font-black mt-2 text-emerald-300">190/190</div><div class="text-sm mt-2 text-slate-400">逐对象可查询和复核</div></div>
+    </section>
+
+    <section class="glass rounded-3xl p-7 md:p-10 mt-6 border-emerald-400/30">
+      <div class="flex flex-wrap items-start justify-between gap-5">
+        <div>
+          <div class="text-emerald-300 font-bold">FIRST US SMOKE TEST · PASSED</div>
+          <h2 class="text-3xl md:text-4xl font-black mt-2">美国官方 DXF 已进入本象对象链</h2>
+          <p class="mt-3 text-slate-400 max-w-3xl">圣迭戈市官方 DS-3179 Construction Plan 模板，不是自制夹具。现有通用 CAD 导入器无需天正专用规则即可读取。</p>
+        </div>
+        <a href="https://www.sandiego.gov/development-services/forms-publications/design-guidelines-templates" class="px-5 py-3 rounded-xl bg-emerald-400 text-slate-950 font-bold hover:bg-emerald-300">查看官方来源</a>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mt-7">
+        <div class="rounded-2xl bg-slate-900 p-4"><div class="text-xs text-slate-500">DXF VERSION</div><div class="text-2xl font-black mt-1">AC1032</div></div>
+        <div class="rounded-2xl bg-slate-900 p-4"><div class="text-xs text-slate-500">LAYERS</div><div class="text-2xl font-black mt-1">9</div></div>
+        <div class="rounded-2xl bg-slate-900 p-4"><div class="text-xs text-slate-500">OBJECTS</div><div class="text-2xl font-black mt-1">154</div></div>
+        <div class="rounded-2xl bg-slate-900 p-4"><div class="text-xs text-slate-500">GEOMETRY / TEXT</div><div class="text-2xl font-black mt-1">46 / 90</div></div>
+        <div class="rounded-2xl bg-slate-900 p-4"><div class="text-xs text-slate-500">CONSTRAINTS</div><div class="text-2xl font-black mt-1 text-emerald-300">6 / 6</div></div>
+      </div>
+      <p class="mt-5 text-sm text-amber-200">证据边界：这证明美国标准 DXF 的输入兼容性与对象化链路，不证明法规审查准确率，也不是 10×结果。</p>
+    </section>
+
+    <section class="grid lg:grid-cols-2 gap-6 mt-6">
+      <figure class="glass rounded-3xl p-4 md:p-6">
+        <img src="object-map-preview.png" alt="脱敏 CAD 对象地图总览" class="rounded-2xl w-full bg-white" />
+        <figcaption class="mt-4 text-sm text-slate-400">真实脱敏投影：190 个模型空间门窗对象以稳定 handle 落回基础几何。</figcaption>
+      </figure>
+      <figure class="glass rounded-3xl p-4 md:p-6">
+        <img src="object-map-selected-38A.png" alt="单对象审计证据" class="rounded-2xl w-full bg-white" />
+        <figcaption class="mt-4 text-sm text-slate-400">单对象复核：选中 <code class="text-cyan-300">opening:38A</code> 后，可见坐标、解码依据和独立查询命令。</figcaption>
+      </figure>
+    </section>
+
+    <section class="glass rounded-3xl p-7 md:p-10 mt-6">
+      <div class="flex items-end justify-between gap-4 flex-wrap">
+        <div><div class="text-cyan-300 font-bold">CLAIM LEDGER</div><h2 class="text-3xl md:text-4xl font-black mt-2">哪些已经证明，哪些不能说</h2></div>
+        <a href="object-map.html" class="px-5 py-3 rounded-xl bg-cyan-400 text-slate-950 font-bold hover:bg-cyan-300">打开交互对象地图</a>
+      </div>
+      <div class="overflow-x-auto mt-7">
+        <table class="w-full text-left min-w-[760px]">
+          <thead class="text-slate-400 border-b border-slate-700"><tr><th class="py-3">主张</th><th>状态</th><th>证据 / 原因</th></tr></thead>
+          <tbody class="divide-y divide-slate-800">
+            <tr><td class="py-4 font-semibold">168 窗、22 门</td><td><span class="tag text-emerald-300">已验证</span></td><td class="text-slate-300">对象集合、约束、派生事务和位置覆盖可重跑</td></tr>
+            <tr><td class="py-4 font-semibold">每个对象可落回图面</td><td><span class="tag text-emerald-300">已验证</span></td><td class="text-slate-300">190/190 位置锚点；可按 handle 查询 why/history</td></tr>
+            <tr><td class="py-4 font-semibold">两条解析链都确认 168/22</td><td><span class="tag text-rose-300">不能说</span></td><td class="text-slate-300">LibreDWG 仅独立确认总数 194，分类来自 ODA 转换后的代理载荷</td></tr>
+            <tr><td class="py-4 font-semibold">精确轮廓 / 朝向 / bbox</td><td><span class="tag text-rose-300">未恢复</span></td><td class="text-slate-300">当前只有位置锚点；需要匹配天正解释器或更完整实体导出</td></tr>
+            <tr><td class="py-4 font-semibold">比别家整体好 10×</td><td><span class="tag text-amber-300">待实验</span></td><td class="text-slate-300">尚无同图人工计时、盲标真值和竞争工作流对照</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid lg:grid-cols-2 gap-6 mt-6">
+      <div class="glass rounded-3xl p-7 md:p-10">
+        <div class="text-emerald-300 font-bold">US MARKET WEDGE</div>
+        <h2 class="text-3xl font-black mt-2">美国第一单应该卖什么</h2>
+        <ol class="mt-6 space-y-5">
+          <li class="flex gap-4"><span class="w-9 h-9 shrink-0 rounded-full bg-emerald-400 text-slate-950 font-black grid place-items-center">1</span><div><b>CAD/BIM 交付质量审计</b><p class="text-slate-400 mt-1">对象数量、图层/命名、跨图引用、表格一致性、缺失项和可追溯报告。</p></div></li>
+          <li class="flex gap-4"><span class="w-9 h-9 shrink-0 rounded-full bg-cyan-400 text-slate-950 font-black grid place-items-center">2</span><div><b>投标 / GovCon 图纸证据包</b><p class="text-slate-400 mt-1">把检查结果落到对象和原始位置，支持设计团队与 proposal QA 复核。</p></div></li>
+          <li class="flex gap-4"><span class="w-9 h-9 shrink-0 rounded-full bg-amber-300 text-slate-950 font-black grid place-items-center">3</span><div><b>辖区规则预检</b><p class="text-slate-400 mt-1">作为辅助意见，由当地 AHJ 或持证建筑师/工程师最终判断和签署。</p></div></li>
+        </ol>
+        <p class="mt-7 p-4 rounded-2xl bg-rose-500/10 border border-rose-400/20 text-rose-100"><b>暂不销售：</b>“AI 代替美国政府审批”或“自动签章”。美国模型规范由州/地方辖区采纳并可能修改，工程图正式签署还受州级执照制度约束。</p>
+      </div>
+
+      <div class="glass rounded-3xl p-7 md:p-10">
+        <div class="text-amber-300 font-bold">THE 10× GATE</div>
+        <h2 class="text-3xl font-black mt-2">怎样才算真的 10×</h2>
+        <div class="mt-6 space-y-4">
+          <div class="rounded-2xl bg-slate-900 p-5"><div class="text-sm text-slate-400">主指标</div><div class="text-xl font-bold mt-1">争议对象复核时间中位数 ≤ 最佳对照组的 1/10</div></div>
+          <div class="rounded-2xl bg-slate-900 p-5"><div class="text-sm text-slate-400">质量护栏</div><div class="text-xl font-bold mt-1">对象 F1 ≥ 0.98，关键漏项 = 0</div></div>
+          <div class="rounded-2xl bg-slate-900 p-5"><div class="text-sm text-slate-400">证据护栏</div><div class="text-xl font-bold mt-1">稳定 ID + 来源位置 + 依据 + 边界覆盖 ≥ 95%</div></div>
+          <div class="rounded-2xl bg-slate-900 p-5"><div class="text-sm text-slate-400">外推门槛</div><div class="text-xl font-bold mt-1">至少 3 份美国图集同时通过</div></div>
+        </div>
+        <p class="mt-6 text-slate-400">人工 CAD/PDF、通用多模态模型、只报总数脚本、本象对象级审计四组同图盲测。达不到就公开真实倍数，不改口径。</p>
+      </div>
+    </section>
+
+    <section class="glass rounded-3xl p-7 md:p-10 mt-6">
+      <div class="text-cyan-300 font-bold">WHY BENXIANG</div>
+      <h2 class="text-3xl md:text-4xl font-black mt-2">本象的优势在“解析之后”</h2>
+      <div class="grid md:grid-cols-4 gap-4 mt-7">
+        <div class="rounded-2xl bg-slate-900 p-5"><div class="text-cyan-300 font-bold">01 对象不丢</div><p class="text-slate-400 mt-2">总数背后仍保留 168 个窗对象，不被压成一句回答。</p></div>
+        <div class="rounded-2xl bg-slate-900 p-5"><div class="text-cyan-300 font-bold">02 结论可问</div><p class="text-slate-400 mt-2">why/history 返回写入事务、前后值和依据。</p></div>
+        <div class="rounded-2xl bg-slate-900 p-5"><div class="text-cyan-300 font-bold">03 修订可追</div><p class="text-slate-400 mt-2">稳定对象身份为后续差异审查保留锚点。</p></div>
+        <div class="rounded-2xl bg-slate-900 p-5"><div class="text-cyan-300 font-bold">04 边界可见</div><p class="text-slate-400 mt-2">没拿到精确几何就明确写入 limits，不靠营销话术遮掉。</p></div>
+      </div>
+      <p class="mt-7 text-slate-300">ODA、LibreDWG、ezdxf 和大模型负责转换、读取、分析与实现；本象负责把结果变成可持续复核的对象状态。它们是技术栈，不是同一层面的竞争产品。</p>
+    </section>
+
+    <section class="grid md:grid-cols-3 gap-4 mt-6">
+      <a class="glass rounded-2xl p-5 hover:border-cyan-400/60" href="https://www.iccsafe.org/advocacy/code-adoption-resources/"><div class="text-sm text-cyan-300">ICC</div><div class="font-bold mt-1">辖区采纳与本地修订</div></a>
+      <a class="glass rounded-2xl p-5 hover:border-cyan-400/60" href="https://www.gsa.gov/system/files/BIM_Guide_07_v_1.pdf"><div class="text-sm text-cyan-300">GSA BIM Guide</div><div class="font-bold mt-1">native + IFC 协调与自动检查报告</div></a>
+      <a class="glass rounded-2xl p-5 hover:border-cyan-400/60" href="https://ncees.org/licensure"><div class="text-sm text-cyan-300">NCEES</div><div class="font-bold mt-1">工程执照与签署边界</div></a>
+    </section>
+
+    <footer class="py-10 text-center text-sm text-slate-500">本象协议 CAD 对象级审计案例 · 证据状态截至 2026-08-13 · “10×”为预注册假设，未通过前不得当作结果宣传</footer>
+  </main>
+</body>
+</html>

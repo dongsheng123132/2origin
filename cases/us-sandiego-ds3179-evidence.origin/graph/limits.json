@@ -1,0 +1,37 @@
+[
+  {
+    "code": "template-not-completed-project",
+    "kind": "uncovered",
+    "scope": "design-compliance",
+    "statement": "输入是官方空白/示例模板，不是完成设计；可验证模板结构，不能据此评估具体项目设计质量。",
+    "remedy": "导入含完整模型空间、图签和设计内容的美国真实项目图集。"
+  },
+  {
+    "code": "no-ahj-code-ruleset",
+    "kind": "uncovered",
+    "scope": "code-compliance",
+    "statement": "本包尚未导入具体 AHJ 的现行法规条款与项目适用性，因此不作 IBC/IRC/消防/无障碍等法规通过判断。",
+    "remedy": "按州、市、项目类型绑定版本化规则集，并由当地专业人员确认适用范围。"
+  },
+  {
+    "code": "semantic-profile-template-specific",
+    "kind": "unverified",
+    "scope": "semantic:*",
+    "statement": "页索引与引用标准锚点按 DS-3179 2026 模板验证，不能直接外推到其他城市或模板版本。",
+    "remedy": "为新辖区建立独立 profile，并在官方样本上锁定 handle/文本模式测试。"
+  },
+  {
+    "code": "model-space-only-import",
+    "kind": "lossy",
+    "scope": "payload",
+    "statement": "当前通用导入器只把 ENTITIES 段作为可查询实体；块定义内部图元只汇总为 block 对象，未逐个展开。",
+    "remedy": "需要块内审计时，将 BLOCKS 实体按块内稳定身份展开并保留插入变换。"
+  },
+  {
+    "code": "cad-formatting-partially-normalized",
+    "kind": "lossy",
+    "scope": "text:*",
+    "statement": "结构对象保留原始 CAD 文字，语义字段会清理 MTEXT 控制码；排版样式不作为语义真值。",
+    "remedy": "视觉版式复核回到原始官方 DXF 或 CAD 原生渲染。"
+  }
+]

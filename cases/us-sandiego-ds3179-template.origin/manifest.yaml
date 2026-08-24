@@ -1,0 +1,14 @@
+# 本象包（美国市政 CAD 模板解构案例）
+artifact:
+  id: us-sandiego-ds3179-template-audit
+  kind: drawing-audit
+  title: City of San Diego DS-3179 Official Template Audit
+
+payload:
+  uri: ./payloads/3.2026_CP_1.dxf
+  media_type: image/vnd.dxf
+  digest: sha256:e29069d53aff93278c5495f60d7b6324f52884cd5249a01b2ff7c073c9d6e1ba
+
+provenance:
+  source: https://www.sandiego.gov/development-services/forms-publications/design-guidelines-templates
+  history: ./provenance/history.jsonl
