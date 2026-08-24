@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%20101%20%2B%2087%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#快速上手)
+[![verify](https://img.shields.io/badge/verify-91%20%2B%2055%20%2B%2015%20%2B%20104%20%2B%2020%20%2B%2087%20%2B%2025%20%2B%2083%20%C2%B7%20conformance%2087%2F87%20%C2%B7%20mutation%2019%2F19-brightgreen.svg)](#快速上手)
 [![conformance](https://img.shields.io/badge/conformance-87%2F87%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
@@ -255,7 +255,8 @@ Word / CAD / Excel / 视频 / 网页 / 对话历史
 ## 快速上手
 
 ```bash
-npm run verify   # 自测 81 + CAD 44 + 法律 101 + xlsx 87 + MCP 端到端 18 + 一致性 87 + 变异检查 13/13
+npm run verify   # 自测 91 + CAD 55 + 天正 15 + 法律 104 + office 20 + xlsx 87
+                 #               + e2e 25 + a3-projection 83 + 一致性 87/87 + 变异检查 19/19
 
 
 P=spec/examples/sales-2026.origin
