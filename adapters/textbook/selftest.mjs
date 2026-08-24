@@ -13,6 +13,7 @@
  */
 import { buildStructure } from './import.mjs'
 import { STANDARD_SECTIONS } from './dialect.mjs'
+import { normalizeDocumentXml, planFlatten, scanParagraphs } from './normalize.mjs'
 
 let pass = 0
 let fail = 0
@@ -198,6 +199,75 @@ console.log('\n[排版事实 —— 责编意见④]')
   ])
   ok('✗ 表内文字不算进正文字号变体', st.stats.body_size_variants === 1, `实为 ${st.stats.body_size_variants}`)
   ok('表内文字仍算进页数', st.stats.all_chars > st.stats.body_chars)
+}
+
+console.log('\n[正文排版统计的靶子 —— 别数不该数的]')
+{
+  // 图注、组图标注不是正文。混进来的后果：行距永远「不统一」、红点归不了零，
+  // 看上去像稿子没改好——其实是判据在数不该数的东西（与 108 条行内符号假警同族）。
+  const st = run([
+    P('项目一 x'), P('任务一 y'),
+    P('这是一段足够长的正文用于统计字号与行距。', { sizes: ['24'], line: '480/auto' }),
+    P('图1-1 这是一条足够长的图注文字用来凑够字数', { sizes: ['24'], line: '300/auto' }),
+    P('（a）这是一条足够长的组图标注用来凑够字数', { sizes: ['24'], line: '360/auto' }),
+  ])
+  ok('✗ 图注与组图标注不算进正文行距变体', st.stats.linespacing_variants === 1, `实为 ${st.stats.linespacing_variants}`)
+}
+
+console.log('\n[改稿器 normalize —— 改错一处就是改坏一本书]')
+const W = (t, pPr = '', rPr = '') => `<w:p>${pPr ? `<w:pPr>${pPr}</w:pPr>` : ''}<w:r>${rPr ? `<w:rPr>${rPr}</w:rPr>` : ''}<w:t>${t}</w:t></w:r></w:p>`
+{
+  const xml = '<w:body>' + W('【知识链接】') + W('单击【定位】搜索，显示如图4-25所示图幅，这段话足够长。') + '</w:body>'
+  const r = normalizeDocumentXml(xml, { debracket: true })
+  ok('栏目名去掉【】', r.xml.includes('<w:t>知识链接</w:t>'))
+  ok('✗ 正文里的【定位】不许碰', r.xml.includes('单击【定位】搜索'), '软件按钮名被当成栏目名去了括号')
+  ok('栏目名加了黑体', /<w:rPr><w:b\/><w:bCs\/><\/w:rPr><w:t>知识链接/.test(r.xml))
+  ok('栏目名去掉首行缩进', r.xml.includes('w:firstLineChars="0"'))
+}
+{
+  // rPr 子元素有 schema 顺序：rFonts 在 b 之前。插反了 Word 多半容忍——但那是在赌客户的 Word。
+  const xml = '<w:body>' + W('【任务实施】', '', '<w:rFonts w:ascii="宋体"/>') + '</w:body>'
+  const r = normalizeDocumentXml(xml, { debracket: true })
+  ok('黑体插在 rFonts 之后（schema 顺序）', /<w:rFonts[^>]*\/><w:b\/><w:bCs\/>/.test(r.xml), r.xml.slice(0, 160))
+}
+{
+  // 三级表号压两级：4-1-1→4-2，而已存在的两级 4-1 不动。
+  const texts = ['表4-1 精密平口钳信息表', '表4-1-1 固定钳身技术要求', '表4-1-2 量具清单', '表4-2-1 丝杆技术要求']
+  const plan = planFlatten(texts, '表', 4)
+  ok('已有的两级号保持不变', plan.get('4-1') === '4-1', `实为 ${plan.get('4-1')}`)
+  ok('三级号按文档顺序压成两级', plan.get('4-1-1') === '4-2' && plan.get('4-1-2') === '4-3' && plan.get('4-2-1') === '4-4')
+  ok('不空格接表名的表注也认得', planFlatten(['表4-1-4常用铸铁的名称'], '表', 4).get('4-1-4') === '4-1')
+  ok('✗ 正文提到的表号不当成表注', planFlatten(['表4-1的技术要求如下所述'], '表', 4).size === 0)
+}
+{
+  const xml = '<w:body>' + W('表4-1-1 固定钳身技术要求') + W('表4-1-2 量具清单') + W('根据表4-1-1的技术要求完成标注；固定钳身的测绘过程见表4-1-2。') + '</w:body>'
+  const r = normalizeDocumentXml(xml, { tblFlatten: 4 })
+  ok('表注与正文引用一起改', r.xml.includes('<w:t>表4-1 固定钳身技术要求') && r.xml.includes('根据表4-1的技术要求') && r.xml.includes('见表4-2。'), r.xml)
+  ok('✗ 不双重替换（4-1-1→4-1 后不再当 4-1 改一次）', (r.xml.match(/表4-1(?!\d)/g) || []).length === 2, r.xml)
+}
+{
+  // 文本框里嵌套的 w:p：非贪婪正则会在内层 </w:p> 提前收尾，把外层段落截断成两半，
+  // 于是 pPr 插到错误的位置、框里的字被吞掉。深度扫描保证一段就是一段。
+  const nested = '<w:p><w:r><w:t>这是一段足够长的正文，后面挂着一个文本框。</w:t></w:r><w:txbxContent><w:p><w:r><w:t>框里的字</w:t></w:r></w:p></w:txbxContent></w:p>'
+  const xml = '<w:body>' + nested + W('【任务评价】') + '</w:body>'
+  const r = normalizeDocumentXml(xml, { debracket: true })
+  ok('✗ 文本框嵌套不把外层段落切成两段', scanParagraphs(xml).length === 2, `实为 ${scanParagraphs(xml).length}`)
+  ok('✗ 框里的字不被吞掉', r.xml.includes('框里的字'))
+  ok('嵌套段落之后的栏目名照常改', r.xml.includes('<w:t>任务评价</w:t>'))
+}
+{
+  const xml = '<w:body>' + W('这是一段足够长的正文，行距是 1.5 倍需要归一。', '<w:spacing w:line="360" w:lineRule="auto"/>')
+            + W('图1-1 这是一条足够长的图注，行距也是 1.5 倍但不该被改', '<w:spacing w:line="360" w:lineRule="auto"/>') + '</w:body>'
+  const r = normalizeDocumentXml(xml, { line: 480 })
+  ok('正文行距归一', r.stats.line === 1, `实为 ${r.stats.line}`)
+  ok('✗ 图注不被行距归一波及', (r.xml.match(/w:line="360"/g) || []).length === 1)
+}
+{
+  const xml = '<w:body>' + W('这是一段足够长的正文，缩进是杂牌绝对值。', '<w:ind w:firstLine="442"/>')
+            + W('这是一段足够长的正文，本来就没有任何缩进设定。') + '</w:body>'
+  const r = normalizeDocumentXml(xml, { indent: true })
+  ok('杂牌绝对缩进归一为 2 字', r.stats.indent === 1 && r.xml.includes('w:firstLineChars="200"'))
+  ok('✗ 无缩进的段落不硬加缩进', (r.xml.match(/w:firstLineChars="200"/g) || []).length === 1)
 }
 
 console.log(`\n${fail === 0 ? '全部通过' : '有失败'}：${pass} 通过 / ${fail} 失败\n`)

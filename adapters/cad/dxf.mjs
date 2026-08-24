@@ -60,14 +60,16 @@ const nums = (ent, code) => (ent.codes.get(code) ?? []).map(num).filter((x) => x
  *   INSERT   + ATTRIB… + SEQEND   带属性的块引用（组码 66=1 表示后面跟属性）
  * 都靠 pendingOwner 收编，SEQEND 收尾。
  *
- * @returns { version, hasHandles, layers, blocks, entities }
+ * @returns { version, headers, hasHandles, layers, blocks, entities }
  */
 export function parseDxf(text) {
   const pairs = toPairs(text)
   const layers = []
   const entities = []
   const blocks = new Map()
+  const headers = {}
   let version = null
+  let headerVar = null
   let section = null
   let ent = null
   let pendingOwner = null      // 正在收子实体的宿主（POLYLINE 或 INSERT）
@@ -126,7 +128,14 @@ export function parseDxf(text) {
       continue
     }
 
-    if (section === 'HEADER' && code === 1 && pairs[i - 1]?.[1] === '$ACADVER') version = value
+    if (section === 'HEADER') {
+      if (code === 9) headerVar = value
+      else if (headerVar && !Object.hasOwn(headers, headerVar)) {
+        const numeric = num(value)
+        headers[headerVar] = numeric === undefined ? value : numeric
+      }
+      if (code === 1 && pairs[i - 1]?.[1] === '$ACADVER') version = value
+    }
     if (section === 'TABLES' && layerEnt) {
       if (code === 2) layerEnt.name = value
       else if (code === 62) layerEnt.color = num(value)
@@ -158,7 +167,7 @@ export function parseDxf(text) {
   const ents = finish(entities)
 
   return {
-    version,
+    version, headers,
     hasHandles: ents.some((e) => e.handle),
     layers: layers.filter((l) => l.name),
     blocks,

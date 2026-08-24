@@ -1,0 +1,15 @@
+{
+  "system": "gold-format-example",
+  "arm": "A2",
+  "answers": [
+    { "question_id": "Q-S01-1", "value": "M", "epistemic": "inferred", "evidence_events": ["E-S01-INIT"] },
+    { "question_id": "Q-S01-2", "value": "M", "epistemic": "observed", "evidence_events": ["E-S01-STILL"] },
+    { "question_id": "Q-S02-1", "value": "UNKNOWN", "epistemic": "unknown", "evidence_events": ["E-S02-INIT"] },
+    { "question_id": "Q-S02-2", "value": "R", "epistemic": "observed", "evidence_events": ["E-S02-REAPPEAR"] },
+    { "question_id": "Q-S03-1", "value": "UNKNOWN", "epistemic": "unknown", "evidence_events": ["E-S03-A-INIT"] },
+    { "question_id": "Q-S03-2", "value": "A_NOT_D", "epistemic": "observed", "evidence_events": ["E-S03-BOTH"] },
+    { "question_id": "Q-S04-1", "value": "INSIDE_A", "epistemic": "inferred", "evidence_events": ["E-S04-B-IN"] },
+    { "question_id": "Q-S04-2", "value": "INSIDE_A", "epistemic": "inferred", "evidence_events": ["E-S04-B-IN", "E-S04-CARRY"] },
+    { "question_id": "Q-S04-3", "value": "OUTSIDE_A_AT_R", "epistemic": "observed", "evidence_events": ["E-S04-B-OUT"] }
+  ]
+}

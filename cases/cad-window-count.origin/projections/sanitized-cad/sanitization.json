@@ -1,0 +1,75 @@
+{
+  "ok": true,
+  "source_summary_sha256": "260d44d108228219fdfbede8ca40f33524324a9120a1590148959bd6f23f4040",
+  "source_collection": "windowLayerEntities",
+  "source_entity_types": {
+    "LWPOLYLINE": 807,
+    "LINE": 887,
+    "HATCH": 75,
+    "INSERT": 45,
+    "ARC": 4
+  },
+  "included": [
+    "LINE",
+    "LWPOLYLINE",
+    "ARC",
+    "INSERT-as-cross"
+  ],
+  "omitted": [
+    "TEXT",
+    "MTEXT",
+    "ATTRIB",
+    "block-name",
+    "HATCH",
+    "title-block",
+    "all-non-WINDOW-layers"
+  ],
+  "guarantees": [
+    "no-text-elements",
+    "no-images",
+    "no-block-names",
+    "explicit-human-selected-crops"
+  ],
+  "rendered": [
+    {
+      "name": "overview",
+      "crop": [
+        -400000,
+        -280000,
+        850000,
+        390000
+      ],
+      "shapes": 1696
+    },
+    {
+      "name": "details",
+      "crop": [
+        -205000,
+        -270000,
+        100000,
+        85000
+      ],
+      "shapes": 570
+    },
+    {
+      "name": "west",
+      "crop": [
+        -180000,
+        -90000,
+        120000,
+        120000
+      ],
+      "shapes": 170
+    },
+    {
+      "name": "east",
+      "crop": [
+        -10000,
+        -90000,
+        440000,
+        120000
+      ],
+      "shapes": 882
+    }
+  ]
+}

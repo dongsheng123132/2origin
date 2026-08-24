@@ -1,0 +1,34 @@
+{
+  "schema": "cad-audit-claim-policy/v1",
+  "status": "preregistered-not-executed",
+  "updated_at": "2026-08-13",
+  "allowed_now": [
+    "受控复杂 DWG 案例识别到 194 个 TCH_OPENING，其中 4 个位于块定义，190 个位于模型空间",
+    "模型空间对象分类为 168 个窗、22 个门、0 个未分类",
+    "190/190 个模型空间门窗对象已恢复位置锚点并可按对象 ID 查询",
+    "GNU LibreDWG 独立链交叉确认 class 528 总数 194",
+    "现有通用 DXF 导入器已成功导入圣迭戈市官方 DS-3179 模板：AC1032、9 图层、154 对象、6/6 约束可执行",
+    "公开证据包不包含客户原始 DWG、客户名、图签文字和原始路径"
+  ],
+  "hypotheses_requiring_benchmark": [
+    "对象争议复核时间达到 10 倍提升",
+    "图纸修订后的重审时间达到 10 倍提升",
+    "美国图纸上保持相同对象级准确率与证据覆盖率"
+  ],
+  "forbidden_now": [
+    "本象整体比其他 CAD 软件好 10 倍",
+    "本象已经可以替代美国 AHJ 或持证专业人员完成正式法规审查",
+    "两条独立解析链都确认了 168 个窗和 22 个门",
+    "168 是纯玻璃窗、玻璃片或采购构件数量",
+    "已恢复 190 个对象的精确轮廓、朝向和 bbox",
+    "对所有天正版本或所有美国 CAD/BIM 文件都有效"
+  ],
+  "promotion_gate": {
+    "primary_metric": "median_disputed_object_verification_time",
+    "speedup_required": 10,
+    "object_f1_min": 0.98,
+    "critical_omissions_max": 0,
+    "evidence_coverage_min": 0.95,
+    "us_plan_sets_min": 3
+  }
+}

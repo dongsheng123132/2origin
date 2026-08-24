@@ -71,6 +71,23 @@ export const TEXTBOOK_TYPES = ['book', 'proj', 'task', 'sect', 'fig', 'tbl', 'im
 /** 出版社「项目任务式」标准栏目。缺哪个由 task.sections_missing 记录。 */
 export const STANDARD_SECTIONS = ['任务描述', '知识链接', '任务实施', '任务评价', '任务拓展']
 
+/**
+ * 允许被 normalize.mjs 去掉【】的栏目名白名单。
+ *
+ * 为什么要白名单，而不是「把所有【】都去掉」：正文里也有【】——
+ * 实测某教材第 9085 段写着「单击【定位】搜索」，那是软件按钮名，去掉括号就改错了书。
+ * 判据是**整段就是一个白名单里的栏目名**，两个条件缺一不可。
+ *
+ * 比 STANDARD_SECTIONS 宽：这里还收各书自己多出来的栏目（任务目标 / 知识与拓展 /
+ * 三类目标）。它们叫什么、要不要并栏是责编说了算，但「栏目名不带【】」对它们同样成立。
+ */
+export const BRACKETABLE_SECTIONS = [
+  ...STANDARD_SECTIONS,
+  '任务目标', '任务导入', '情景导入', '知识与拓展', '任务总结', '任务测评', '任务分析',
+  '知识目标', '能力目标', '技能目标', '素养目标',
+  '项目简述', '项目载体', '项目要点', '项目目标',
+]
+
 export const textbookManifest = (meta) => `# 本象包（textbook 方言）
 artifact:
   id: ${meta.id}

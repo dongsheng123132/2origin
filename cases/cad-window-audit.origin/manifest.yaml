@@ -1,0 +1,13 @@
+# 本象包（天正 CAD 门窗审计；公开脱敏版）
+artifact:
+  id: cad-window-audit
+  kind: drawing-audit
+  title: 脱敏厂房门窗审计
+
+payload:
+  uri: withheld://sha256/2d28f2fdb31484b7522f6e16b2916a239e9c7132bd43eb48cbe063bb92737a56
+  media_type: image/vnd.dwg
+
+provenance:
+  source: customer-controlled-original
+  history: ./provenance/history.jsonl

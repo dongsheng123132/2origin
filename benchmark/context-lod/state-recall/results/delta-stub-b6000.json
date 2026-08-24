@@ -2,26 +2,8 @@
   "provider": "stub",
   "budget": 6000,
   "repeat": 1,
-  "split": 586,
+  "split": 592,
   "questions": [
-    {
-      "id": "fact:vercel-login-rootcause",
-      "field": "kind",
-      "answer": "observed",
-      "bucket": "变更题"
-    },
-    {
-      "id": "risk:vercel-login-flaky",
-      "field": "status",
-      "answer": "open",
-      "bucket": "变更题"
-    },
-    {
-      "id": "risk:vercel-login-flaky",
-      "field": "severity",
-      "answer": "medium",
-      "bucket": "变更题"
-    },
     {
       "id": "task:relay-qwen-a1a3",
       "field": "status",
@@ -77,75 +59,93 @@
       "bucket": "变更题"
     },
     {
-      "id": "decision:claim-scope",
-      "field": "status",
-      "answer": "decided",
-      "bucket": "未变题"
-    },
-    {
-      "id": "decision:cli-contract",
-      "field": "evidence",
-      "answer": "docs/03-协议草案-v0.1.md 七之二",
-      "bucket": "未变题"
-    },
-    {
-      "id": "task:cad-source-format",
-      "field": "owner",
-      "answer": "用户",
-      "bucket": "未变题"
-    },
-    {
-      "id": "fact:token-overhead",
+      "id": "fact:vercel-project-created",
       "field": "kind",
       "answer": "observed",
-      "bucket": "未变题"
+      "bucket": "变更题"
     },
     {
-      "id": "decision:rules-by-usage",
+      "id": "decision:projection-shader-hook",
+      "field": "status",
+      "answer": "decided",
+      "bucket": "变更题"
+    },
+    {
+      "id": "decision:projection-shader-hook",
+      "field": "decided_at",
+      "answer": "2026-08-08",
+      "bucket": "变更题"
+    },
+    {
+      "id": "decision:explicit-creates",
       "field": "status",
       "answer": "decided",
       "bucket": "未变题"
     },
     {
-      "id": "decision:projector-per-domain",
+      "id": "risk:vendor-absorption",
       "field": "status",
-      "answer": "decided",
+      "answer": "open",
       "bucket": "未变题"
     },
     {
-      "id": "decision:vectors-over-prose",
-      "field": "value",
-      "answer": "规范正文与一致性向量冲突时，以向量为准",
-      "bucket": "未变题"
-    },
-    {
-      "id": "task:law-real-doc-validation",
+      "id": "task:merge-benchmark-lib",
       "field": "owner",
-      "answer": "用户（向律师要料）",
+      "answer": "claude",
       "bucket": "未变题"
     },
     {
-      "id": "fact:xlsx-dialect-measured",
-      "field": "kind",
-      "answer": "observed",
-      "bucket": "未变题"
-    },
-    {
-      "id": "decision:value-boundary-criterion",
+      "id": "decision:cad-layer-in-id",
       "field": "status",
-      "answer": "proposed",
+      "answer": "decided",
       "bucket": "未变题"
     },
     {
-      "id": "task:limits-conformance-vectors",
+      "id": "risk:handwritten-fixture",
+      "field": "severity",
+      "answer": "medium",
+      "bucket": "未变题"
+    },
+    {
+      "id": "task:shadowbench-l",
+      "field": "status",
+      "answer": "open",
+      "bucket": "未变题"
+    },
+    {
+      "id": "task:close-coverage-gaps",
+      "field": "blocking",
+      "answer": "无；但在补上前，不得声称协议保证这两点",
+      "bucket": "未变题"
+    },
+    {
+      "id": "task:public-surface-accuracy-check",
       "field": "title",
-      "answer": "给边界声明补一致性向量",
+      "answer": "公开面数字例行核对",
       "bucket": "未变题"
     },
     {
-      "id": "task:website-2origin-org",
+      "id": "risk:xlsx-formula-rules-unvalidated",
+      "field": "severity",
+      "answer": "medium",
+      "bucket": "未变题"
+    },
+    {
+      "id": "fact:projection-roundtrip",
+      "field": "kind",
+      "answer": "observed",
+      "bucket": "未变题"
+    },
+    {
+      "id": "decision:uking-feedback-loop",
       "field": "status",
-      "answer": "doing",
+      "answer": "decided",
+      "bucket": "未变题"
+    },
+    {
+      "id": "task:macmini-maintainer",
+      "field": "owner",
+      "answer": "claude",
       "bucket": "未变题"
     }
   ],
@@ -153,38 +153,8 @@
     {
       "arm": "D0·全量关键帧",
       "rep": 1,
-      "chars": 7312,
+      "chars": 7340,
       "rows": [
-        {
-          "id": "fact:vercel-login-rootcause",
-          "field": "kind",
-          "answer": "observed",
-          "bucket": "变更题",
-          "got": "observed",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "risk:vercel-login-flaky",
-          "field": "status",
-          "answer": "open",
-          "bucket": "变更题",
-          "got": "open",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "risk:vercel-login-flaky",
-          "field": "severity",
-          "answer": "medium",
-          "bucket": "变更题",
-          "got": "medium",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
         {
           "id": "task:relay-qwen-a1a3",
           "field": "status",
@@ -276,47 +246,37 @@
           "staleAnswer": false
         },
         {
-          "id": "decision:claim-scope",
-          "field": "status",
-          "answer": "decided",
-          "bucket": "未变题",
-          "got": "decided",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "decision:cli-contract",
-          "field": "evidence",
-          "answer": "docs/03-协议草案-v0.1.md 七之二",
-          "bucket": "未变题",
-          "got": "docs/03-协议草案-v0.1.md 七之二",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "task:cad-source-format",
-          "field": "owner",
-          "answer": "用户",
-          "bucket": "未变题",
-          "got": "用户",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "fact:token-overhead",
+          "id": "fact:vercel-project-created",
           "field": "kind",
           "answer": "observed",
-          "bucket": "未变题",
+          "bucket": "变更题",
           "got": "observed",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "decision:rules-by-usage",
+          "id": "decision:projection-shader-hook",
+          "field": "status",
+          "answer": "decided",
+          "bucket": "变更题",
+          "got": "decided",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "decision:projection-shader-hook",
+          "field": "decided_at",
+          "answer": "2026-08-08",
+          "bucket": "变更题",
+          "got": "2026-08-08",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "decision:explicit-creates",
           "field": "status",
           "answer": "decided",
           "bucket": "未变题",
@@ -326,71 +286,111 @@
           "staleAnswer": false
         },
         {
-          "id": "decision:projector-per-domain",
+          "id": "risk:vendor-absorption",
           "field": "status",
-          "answer": "decided",
+          "answer": "open",
           "bucket": "未变题",
-          "got": "decided",
+          "got": "open",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "decision:vectors-over-prose",
-          "field": "value",
-          "answer": "规范正文与一致性向量冲突时，以向量为准",
-          "bucket": "未变题",
-          "got": "规范正文与一致性向量冲突时，以向量为准",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "task:law-real-doc-validation",
+          "id": "task:merge-benchmark-lib",
           "field": "owner",
-          "answer": "用户（向律师要料）",
+          "answer": "claude",
           "bucket": "未变题",
-          "got": "用户（向律师要料）",
+          "got": "claude",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "fact:xlsx-dialect-measured",
-          "field": "kind",
-          "answer": "observed",
-          "bucket": "未变题",
-          "got": "observed",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "decision:value-boundary-criterion",
+          "id": "decision:cad-layer-in-id",
           "field": "status",
-          "answer": "proposed",
+          "answer": "decided",
           "bucket": "未变题",
-          "got": "proposed",
+          "got": "decided",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "task:limits-conformance-vectors",
+          "id": "risk:handwritten-fixture",
+          "field": "severity",
+          "answer": "medium",
+          "bucket": "未变题",
+          "got": "medium",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "task:shadowbench-l",
+          "field": "status",
+          "answer": "open",
+          "bucket": "未变题",
+          "got": "open",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "task:close-coverage-gaps",
+          "field": "blocking",
+          "answer": "无；但在补上前，不得声称协议保证这两点",
+          "bucket": "未变题",
+          "got": "无；但在补上前，不得声称协议保证这两点",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "task:public-surface-accuracy-check",
           "field": "title",
-          "answer": "给边界声明补一致性向量",
+          "answer": "公开面数字例行核对",
           "bucket": "未变题",
-          "got": "给边界声明补一致性向量",
+          "got": "公开面数字例行核对",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "task:website-2origin-org",
-          "field": "status",
-          "answer": "doing",
+          "id": "risk:xlsx-formula-rules-unvalidated",
+          "field": "severity",
+          "answer": "medium",
           "bucket": "未变题",
-          "got": "doing",
+          "got": "medium",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "fact:projection-roundtrip",
+          "field": "kind",
+          "answer": "observed",
+          "bucket": "未变题",
+          "got": "observed",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "decision:uking-feedback-loop",
+          "field": "status",
+          "answer": "decided",
+          "bucket": "未变题",
+          "got": "decided",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "task:macmini-maintainer",
+          "field": "owner",
+          "answer": "claude",
+          "bucket": "未变题",
+          "got": "claude",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
@@ -406,38 +406,8 @@
     {
       "arm": "D1·基帧+差分",
       "rep": 1,
-      "chars": 8421,
+      "chars": 8425,
       "rows": [
-        {
-          "id": "fact:vercel-login-rootcause",
-          "field": "kind",
-          "answer": "observed",
-          "bucket": "变更题",
-          "got": "observed",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "risk:vercel-login-flaky",
-          "field": "status",
-          "answer": "open",
-          "bucket": "变更题",
-          "got": "open",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "risk:vercel-login-flaky",
-          "field": "severity",
-          "answer": "medium",
-          "bucket": "变更题",
-          "got": "medium",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
         {
           "id": "task:relay-qwen-a1a3",
           "field": "status",
@@ -529,47 +499,37 @@
           "staleAnswer": false
         },
         {
-          "id": "decision:claim-scope",
-          "field": "status",
-          "answer": "decided",
-          "bucket": "未变题",
-          "got": "decided",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "decision:cli-contract",
-          "field": "evidence",
-          "answer": "docs/03-协议草案-v0.1.md 七之二",
-          "bucket": "未变题",
-          "got": "docs/03-协议草案-v0.1.md 七之二",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "task:cad-source-format",
-          "field": "owner",
-          "answer": "用户",
-          "bucket": "未变题",
-          "got": "用户",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "fact:token-overhead",
+          "id": "fact:vercel-project-created",
           "field": "kind",
           "answer": "observed",
-          "bucket": "未变题",
+          "bucket": "变更题",
           "got": "observed",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "decision:rules-by-usage",
+          "id": "decision:projection-shader-hook",
+          "field": "status",
+          "answer": "decided",
+          "bucket": "变更题",
+          "got": "decided",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "decision:projection-shader-hook",
+          "field": "decided_at",
+          "answer": "2026-08-08",
+          "bucket": "变更题",
+          "got": "2026-08-08",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "decision:explicit-creates",
           "field": "status",
           "answer": "decided",
           "bucket": "未变题",
@@ -579,71 +539,111 @@
           "staleAnswer": false
         },
         {
-          "id": "decision:projector-per-domain",
+          "id": "risk:vendor-absorption",
           "field": "status",
-          "answer": "decided",
+          "answer": "open",
           "bucket": "未变题",
-          "got": "decided",
+          "got": "open",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "decision:vectors-over-prose",
-          "field": "value",
-          "answer": "规范正文与一致性向量冲突时，以向量为准",
-          "bucket": "未变题",
-          "got": "规范正文与一致性向量冲突时，以向量为准",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "task:law-real-doc-validation",
+          "id": "task:merge-benchmark-lib",
           "field": "owner",
-          "answer": "用户（向律师要料）",
+          "answer": "claude",
           "bucket": "未变题",
-          "got": "用户（向律师要料）",
+          "got": "claude",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "fact:xlsx-dialect-measured",
-          "field": "kind",
-          "answer": "observed",
-          "bucket": "未变题",
-          "got": "observed",
-          "unknown": false,
-          "correct": true,
-          "staleAnswer": false
-        },
-        {
-          "id": "decision:value-boundary-criterion",
+          "id": "decision:cad-layer-in-id",
           "field": "status",
-          "answer": "proposed",
+          "answer": "decided",
           "bucket": "未变题",
-          "got": "proposed",
+          "got": "decided",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "task:limits-conformance-vectors",
+          "id": "risk:handwritten-fixture",
+          "field": "severity",
+          "answer": "medium",
+          "bucket": "未变题",
+          "got": "medium",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "task:shadowbench-l",
+          "field": "status",
+          "answer": "open",
+          "bucket": "未变题",
+          "got": "open",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "task:close-coverage-gaps",
+          "field": "blocking",
+          "answer": "无；但在补上前，不得声称协议保证这两点",
+          "bucket": "未变题",
+          "got": "无；但在补上前，不得声称协议保证这两点",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "task:public-surface-accuracy-check",
           "field": "title",
-          "answer": "给边界声明补一致性向量",
+          "answer": "公开面数字例行核对",
           "bucket": "未变题",
-          "got": "给边界声明补一致性向量",
+          "got": "公开面数字例行核对",
           "unknown": false,
           "correct": true,
           "staleAnswer": false
         },
         {
-          "id": "task:website-2origin-org",
-          "field": "status",
-          "answer": "doing",
+          "id": "risk:xlsx-formula-rules-unvalidated",
+          "field": "severity",
+          "answer": "medium",
           "bucket": "未变题",
-          "got": "doing",
+          "got": "medium",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "fact:projection-roundtrip",
+          "field": "kind",
+          "answer": "observed",
+          "bucket": "未变题",
+          "got": "observed",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "decision:uking-feedback-loop",
+          "field": "status",
+          "answer": "decided",
+          "bucket": "未变题",
+          "got": "decided",
+          "unknown": false,
+          "correct": true,
+          "staleAnswer": false
+        },
+        {
+          "id": "task:macmini-maintainer",
+          "field": "owner",
+          "answer": "claude",
+          "bucket": "未变题",
+          "got": "claude",
           "unknown": false,
           "correct": true,
           "staleAnswer": false

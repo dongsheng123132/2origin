@@ -1,0 +1,581 @@
+{
+  "benchmark_id": "bx-es-mini-2026-08",
+  "model": "qwen3.5-omni-plus",
+  "arm": "A2",
+  "run_kind": "pilot-single-run",
+  "started_at": "2026-08-13T11:36:31.794Z",
+  "status": "complete",
+  "answers": [
+    {
+      "question_id": "Q-S01-1",
+      "value": "M",
+      "epistemic": "inferred",
+      "evidence_seconds": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "explanation": "在视频的前4秒（0-3秒），物体A清晰可见并静止位于位置M。从第4秒开始，画面中央出现黑色遮挡区域，导致无法直接观测到物体A。根据规则，禁止编造遮挡期间的动作，因此基于最后已知的观测状态（在M处静止）进行推断，物体A当前仍位于M处。"
+    },
+    {
+      "question_id": "Q-S01-2",
+      "value": "M",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        10
+      ],
+      "explanation": "在视频的最后（10秒后），遮挡物消失，物体A清晰可见且位于位置M。"
+    },
+    {
+      "question_id": "Q-S02-1",
+      "value": "M",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "explanation": "在视频的前8秒（0.0-7.0），物体A清晰可见并位于位置标签M上。尽管从8.0秒开始画面被黑色区域遮挡，但根据最后观测到的状态，其确定位置为M。"
+    },
+    {
+      "question_id": "Q-S02-2",
+      "value": "R",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        13
+      ],
+      "explanation": "在视频的最后（约13秒），遮挡物消失，物体A清晰可见地出现在位置R的标签附近。"
+    },
+    {
+      "question_id": "Q-S03-1",
+      "value": "A_NOT_D",
+      "epistemic": "inferred",
+      "evidence_seconds": [
+        0,
+        2
+      ],
+      "explanation": "在视频开始时（0-3秒），对象A明确位于M位置。随后（4-7秒）出现遮挡，传感器无法观测。根据规则，由先前状态延续推导属于'inferred'。由于对象A在遮挡前位于M且无证据表明其移动，推断其在遮挡期间仍位于M位置。根据值规范，位于M位置的已知对象A对应值为'A_NOT_D'。"
+    },
+    {
+      "question_id": "Q-S03-2",
+      "value": "A_NOT_D",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        17,
+        18
+      ],
+      "explanation": "在视频开始时，一个标有'A'的盒子位于中间位置。在00:10左右，该盒子被旋转，露出了'D'标记（此时可推断为同一物体）。但在00:17时，一只手将另一个标有'A'的盒子从左侧放入画面，而标有'D'的盒子仍留在中间。由于两个盒子同时出现在画面中且位置不同，证明它们是两个不同的对象。"
+    },
+    {
+      "question_id": "Q-S04-1",
+      "value": "INSIDE_A",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        10
+      ],
+      "explanation": "视频显示物体B在约7秒时被拿起，并在约10秒时被放入盒子A中。到视频结束时，B位于A内部。"
+    },
+    {
+      "question_id": "Q-S04-2",
+      "value": "INSIDE_A",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        10
+      ],
+      "explanation": "在视频第10秒，物体B被明确放入物体A内部。随后物体A发生移动（18-26秒），在此期间B一直位于A内部，状态未发生改变。"
+    },
+    {
+      "question_id": "Q-S04-3",
+      "value": "OUTSIDE_A_AT_R",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        36
+      ],
+      "explanation": "在视频约32秒时，一只手伸入A（绿色盒子）中，并在35-36秒时将B取出并放置在R位置。因此，在视频结束时，B位于A的外部右侧。"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "S01-static-persistence",
+      "turns": [
+        {
+          "question_id": "Q-S01-1",
+          "answer": {
+            "question_id": "Q-S01-1",
+            "value": "M",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "explanation": "在视频的前4秒（0-3秒），物体A清晰可见并静止位于位置M。从第4秒开始，画面中央出现黑色遮挡区域，导致无法直接观测到物体A。根据规则，禁止编造遮挡期间的动作，因此基于最后已知的观测状态（在M处静止）进行推断，物体A当前仍位于M处。"
+          },
+          "raw": {
+            "answer": {
+              "value": "M",
+              "epistemic": "inferred",
+              "evidence_seconds": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "explanation": "在视频的前4秒（0-3秒），物体A清晰可见并静止位于位置M。从第4秒开始，画面中央出现黑色遮挡区域，导致无法直接观测到物体A。根据规则，禁止编造遮挡期间的动作，因此基于最后已知的观测状态（在M处静止）进行推断，物体A当前仍位于M处。"
+            },
+            "transaction": {
+              "expected_state_version": 0,
+              "changes": [
+                {
+                  "object": "A",
+                  "field": "location",
+                  "from": null,
+                  "to": "M",
+                  "epistemic": "inferred",
+                  "evidence_second": 3
+                }
+              ]
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": true,
+            "errors": []
+          },
+          "committed_version": 1,
+          "committed_state": {
+            "A": {
+              "location": "M",
+              "location__epistemic": "inferred",
+              "location__evidence_second": 3
+            }
+          }
+        },
+        {
+          "question_id": "Q-S01-2",
+          "answer": {
+            "question_id": "Q-S01-2",
+            "value": "M",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              10
+            ],
+            "explanation": "在视频的最后（10秒后），遮挡物消失，物体A清晰可见且位于位置M。"
+          },
+          "raw": {
+            "answer": {
+              "value": "M",
+              "epistemic": "observed",
+              "evidence_seconds": [
+                10
+              ],
+              "explanation": "在视频的最后（10秒后），遮挡物消失，物体A清晰可见且位于位置M。"
+            },
+            "transaction": {
+              "expected_state_version": 1,
+              "changes": [
+                {
+                  "object": "A",
+                  "field": "location",
+                  "from": "M",
+                  "to": "M",
+                  "epistemic": "observed",
+                  "evidence_second": 10
+                }
+              ]
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": true,
+            "errors": []
+          },
+          "committed_version": 2,
+          "committed_state": {
+            "A": {
+              "location": "M",
+              "location__epistemic": "observed",
+              "location__evidence_second": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "scenario_id": "S02-hidden-move",
+      "turns": [
+        {
+          "question_id": "Q-S02-1",
+          "answer": {
+            "question_id": "Q-S02-1",
+            "value": "M",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "explanation": "在视频的前8秒（0.0-7.0），物体A清晰可见并位于位置标签M上。尽管从8.0秒开始画面被黑色区域遮挡，但根据最后观测到的状态，其确定位置为M。"
+          },
+          "raw": {
+            "answer": {
+              "value": "M",
+              "epistemic": "observed",
+              "evidence_seconds": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "explanation": "在视频的前8秒（0.0-7.0），物体A清晰可见并位于位置标签M上。尽管从8.0秒开始画面被黑色区域遮挡，但根据最后观测到的状态，其确定位置为M。"
+            },
+            "transaction": {
+              "expected_state_version": 0,
+              "changes": [
+                {
+                  "object": "A",
+                  "field": "location",
+                  "from": null,
+                  "to": "M",
+                  "epistemic": "observed",
+                  "evidence_second": 0
+                }
+              ]
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": true,
+            "errors": []
+          },
+          "committed_version": 1,
+          "committed_state": {
+            "A": {
+              "location": "M",
+              "location__epistemic": "observed",
+              "location__evidence_second": 0
+            }
+          }
+        },
+        {
+          "question_id": "Q-S02-2",
+          "answer": {
+            "question_id": "Q-S02-2",
+            "value": "R",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              13
+            ],
+            "explanation": "在视频的最后（约13秒），遮挡物消失，物体A清晰可见地出现在位置R的标签附近。"
+          },
+          "raw": {
+            "answer": {
+              "value": "R",
+              "epistemic": "observed",
+              "evidence_seconds": [
+                13
+              ],
+              "explanation": "在视频的最后（约13秒），遮挡物消失，物体A清晰可见地出现在位置R的标签附近。"
+            },
+            "transaction": {
+              "expected_state_version": 1,
+              "changes": [
+                {
+                  "object": "A",
+                  "field": "location",
+                  "from": "M",
+                  "to": "R",
+                  "epistemic": "observed",
+                  "evidence_second": 13
+                }
+              ]
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": true,
+            "errors": []
+          },
+          "committed_version": 2,
+          "committed_state": {
+            "A": {
+              "location": "R",
+              "location__epistemic": "observed",
+              "location__evidence_second": 13
+            }
+          }
+        }
+      ]
+    },
+    {
+      "scenario_id": "S03-similar-object-replacement",
+      "turns": [
+        {
+          "question_id": "Q-S03-1",
+          "answer": {
+            "question_id": "Q-S03-1",
+            "value": "A_NOT_D",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              2
+            ],
+            "explanation": "在视频开始时（0-3秒），对象A明确位于M位置。随后（4-7秒）出现遮挡，传感器无法观测。根据规则，由先前状态延续推导属于'inferred'。由于对象A在遮挡前位于M且无证据表明其移动，推断其在遮挡期间仍位于M位置。根据值规范，位于M位置的已知对象A对应值为'A_NOT_D'。"
+          },
+          "raw": {
+            "answer": {
+              "value": "A_NOT_D",
+              "epistemic": "inferred",
+              "evidence_seconds": [
+                0,
+                2
+              ],
+              "explanation": "在视频开始时（0-3秒），对象A明确位于M位置。随后（4-7秒）出现遮挡，传感器无法观测。根据规则，由先前状态延续推导属于'inferred'。由于对象A在遮挡前位于M且无证据表明其移动，推断其在遮挡期间仍位于M位置。根据值规范，位于M位置的已知对象A对应值为'A_NOT_D'。"
+            },
+            "transaction": {
+              "expected_state_version": 0,
+              "changes": [
+                {
+                  "object": "A",
+                  "field": "location",
+                  "from": null,
+                  "to": "M",
+                  "epistemic": "observed",
+                  "evidence_second": 2
+                }
+              ]
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": true,
+            "errors": []
+          },
+          "committed_version": 1,
+          "committed_state": {
+            "A": {
+              "location": "M",
+              "location__epistemic": "observed",
+              "location__evidence_second": 2
+            }
+          }
+        },
+        {
+          "question_id": "Q-S03-2",
+          "answer": {
+            "question_id": "Q-S03-2",
+            "value": "A_NOT_D",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              17,
+              18
+            ],
+            "explanation": "在视频开始时，一个标有'A'的盒子位于中间位置。在00:10左右，该盒子被旋转，露出了'D'标记（此时可推断为同一物体）。但在00:17时，一只手将另一个标有'A'的盒子从左侧放入画面，而标有'D'的盒子仍留在中间。由于两个盒子同时出现在画面中且位置不同，证明它们是两个不同的对象。"
+          },
+          "raw": {
+            "answer": {
+              "value": "A_NOT_D",
+              "epistemic": "observed",
+              "evidence_seconds": [
+                17,
+                18
+              ],
+              "explanation": "在视频开始时，一个标有'A'的盒子位于中间位置。在00:10左右，该盒子被旋转，露出了'D'标记（此时可推断为同一物体）。但在00:17时，一只手将另一个标有'A'的盒子从左侧放入画面，而标有'D'的盒子仍留在中间。由于两个盒子同时出现在画面中且位置不同，证明它们是两个不同的对象。"
+            },
+            "transaction": {
+              "expected_state_version": 1,
+              "changes": [
+                {
+                  "object": "A",
+                  "field": "location",
+                  "from": "M",
+                  "to": "L",
+                  "epistemic": "observed",
+                  "evidence_second": 18
+                }
+              ]
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": true,
+            "errors": []
+          },
+          "committed_version": 2,
+          "committed_state": {
+            "A": {
+              "location": "L",
+              "location__epistemic": "observed",
+              "location__evidence_second": 18
+            }
+          }
+        }
+      ]
+    },
+    {
+      "scenario_id": "S04-containment-carry",
+      "turns": [
+        {
+          "question_id": "Q-S04-1",
+          "answer": {
+            "question_id": "Q-S04-1",
+            "value": "INSIDE_A",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              10
+            ],
+            "explanation": "视频显示物体B在约7秒时被拿起，并在约10秒时被放入盒子A中。到视频结束时，B位于A内部。"
+          },
+          "raw": {
+            "answer": {
+              "value": "INSIDE_A",
+              "epistemic": "observed",
+              "evidence_seconds": [
+                10
+              ],
+              "explanation": "视频显示物体B在约7秒时被拿起，并在约10秒时被放入盒子A中。到视频结束时，B位于A内部。"
+            },
+            "transaction": {
+              "expected_state_version": 0,
+              "changes": [
+                {
+                  "object": "B",
+                  "field": "location",
+                  "from": null,
+                  "to": "INSIDE_A",
+                  "epistemic": "observed",
+                  "evidence_second": 10
+                }
+              ]
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": true,
+            "errors": []
+          },
+          "committed_version": 1,
+          "committed_state": {
+            "B": {
+              "location": "INSIDE_A",
+              "location__epistemic": "observed",
+              "location__evidence_second": 10
+            }
+          }
+        },
+        {
+          "question_id": "Q-S04-2",
+          "answer": {
+            "question_id": "Q-S04-2",
+            "value": "INSIDE_A",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              10
+            ],
+            "explanation": "在视频第10秒，物体B被明确放入物体A内部。随后物体A发生移动（18-26秒），在此期间B一直位于A内部，状态未发生改变。"
+          },
+          "raw": {
+            "answer": {
+              "value": "INSIDE_A",
+              "epistemic": "observed",
+              "evidence_seconds": [
+                10
+              ],
+              "explanation": "在视频第10秒，物体B被明确放入物体A内部。随后物体A发生移动（18-26秒），在此期间B一直位于A内部，状态未发生改变。"
+            },
+            "transaction": {
+              "expected_state_version": 1,
+              "changes": []
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": false,
+            "errors": [
+              "changes missing"
+            ]
+          },
+          "committed_version": 1,
+          "committed_state": {
+            "B": {
+              "location": "INSIDE_A",
+              "location__epistemic": "observed",
+              "location__evidence_second": 10
+            }
+          }
+        },
+        {
+          "question_id": "Q-S04-3",
+          "answer": {
+            "question_id": "Q-S04-3",
+            "value": "OUTSIDE_A_AT_R",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              36
+            ],
+            "explanation": "在视频约32秒时，一只手伸入A（绿色盒子）中，并在35-36秒时将B取出并放置在R位置。因此，在视频结束时，B位于A的外部右侧。"
+          },
+          "raw": {
+            "answer": {
+              "value": "OUTSIDE_A_AT_R",
+              "epistemic": "observed",
+              "evidence_seconds": [
+                36
+              ],
+              "explanation": "在视频约32秒时，一只手伸入A（绿色盒子）中，并在35-36秒时将B取出并放置在R位置。因此，在视频结束时，B位于A的外部右侧。"
+            },
+            "transaction": {
+              "expected_state_version": 1,
+              "changes": [
+                {
+                  "object": "B",
+                  "field": "location",
+                  "from": "INSIDE_A",
+                  "to": "OUTSIDE_A_AT_R",
+                  "epistemic": "observed",
+                  "evidence_second": 36
+                }
+              ]
+            }
+          },
+          "request_id": null,
+          "admission": {
+            "ok": true,
+            "errors": []
+          },
+          "committed_version": 2,
+          "committed_state": {
+            "B": {
+              "location": "OUTSIDE_A_AT_R",
+              "location__epistemic": "observed",
+              "location__evidence_second": 36
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "single run",
+    "staged fixed-camera videos",
+    "no statistical claim"
+  ],
+  "updated_at": "2026-08-13T11:37:41.722Z",
+  "completed_at": "2026-08-13T11:37:41.723Z"
+}

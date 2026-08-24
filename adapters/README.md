@@ -10,5 +10,6 @@
 | `memory/` | Memory | 自研 MCP Server |
 | `cad/` | CAD | FreeCAD / CLI-Anything / Modulor（Phase 4） |
 | `video/` | Video | **已落地（2026-08-09）**：两遍制粗读—精读 + ASR 通道 + 三段式 events/audiences/appraisals，fail-closed 校验器；四篇文档里三篇是负结果（见 [video/README.md](video/README.md)） |
+| `embodied/` | Embodied | **v0.1（2026-08-13）**：机器人语义 observation events → 确定性 belief reducer；分离最后观察/当前信念与三种时间，原始视觉、SLAM 和控制留在外部（见 [embodied/README.md](embodied/README.md)） |
 
 原则：**不重新实现格式解析与渲染，成熟项目一律作为 Adapter 接入**（见 [docs/05-生态对照](../docs/05-生态对照.md)）。

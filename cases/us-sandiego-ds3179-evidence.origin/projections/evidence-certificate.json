@@ -1,0 +1,18 @@
+{
+  "schema": "benxiang-evidence-certificate/v1",
+  "status": "verified-with-declared-limits",
+  "issued_at": "2026-08-13T09:46:40.053Z",
+  "subject": "us-sandiego-ds3179-template-audit",
+  "source_sha256": "E29069D53AFF93278C5495F60D7B6324F52884CD5249A01B2FF7C073C9D6E1BA",
+  "certified_statement": "AI-assisted pipeline read the verifiable structure and semantics of this official CAD template at object level.",
+  "evidence": {
+    "dxf_version": "AC1032",
+    "unit": "inch",
+    "objects": 187,
+    "relations": 319,
+    "sheet_index_entries": 9,
+    "governing_references": 7,
+    "constraints_passed": "10/10"
+  },
+  "disclaimer": "Engineering evidence certificate only; not independent, accredited, governmental, AHJ, architectural, or professional-engineering certification."
+}

@@ -1,0 +1,228 @@
+{
+  "schema_version": "benxiang-embodied-state/0.1",
+  "benchmark_id": "bx-es-mini-2026-08",
+  "status": "pilot",
+  "purpose": "Measure whether a robot-facing system maintains identity, location and containment state while separating world truth from what the robot can legitimately know.",
+  "epistemic_contract": {
+    "observed": "Directly supported by the robot observation stream at or before the checkpoint.",
+    "inferred": "Carried forward or derived from prior observations and declared relations; must not be presented as a fresh observation.",
+    "unknown": "The observation stream does not justify a current value.",
+    "rule": "World truth and robot belief are scored separately. Hidden transitions may never be invented."
+  },
+  "objects": [
+    { "id": "A", "kind": "container", "label": "green box A" },
+    { "id": "B", "kind": "pen", "label": "pen B" },
+    { "id": "C", "kind": "bottle", "label": "bottle C" },
+    { "id": "D", "kind": "container", "label": "green box D", "similar_to": "A" }
+  ],
+  "places": ["L", "M", "R"],
+  "sources": [
+    {
+      "id": "SRC-STATIC",
+      "file": "IMG_8216.MOV",
+      "sha256": "6740b09c9e2de53017bf5e6c541f095f924ffdde396e897410e24641c1571ec6",
+      "duration_s": 14.368345,
+      "role": "truth_master"
+    },
+    {
+      "id": "SRC-HIDDEN-MOVE",
+      "file": "IMG_8217.MOV",
+      "sha256": "8a3ab30556988beec318f091bf196d664340315ed7fbe43eacfc88af1e8b318f",
+      "duration_s": 17.468345,
+      "role": "truth_master"
+    },
+    {
+      "id": "SRC-IDENTITY",
+      "file": "IMG_8214.MOV",
+      "sha256": "8a954c90100f513a4035ecd87f4563b26fa06c14e69ec685843a9ba435a2c2c9",
+      "duration_s": 24.803333,
+      "role": "truth_master"
+    },
+    {
+      "id": "SRC-CONTAINMENT",
+      "file": "IMG_8218.MOV",
+      "sha256": "000e2ad7f733995a94b63556a72e36a040a3b1c4f42b57744fcf00322ece5509",
+      "duration_s": 44.173333,
+      "role": "truth_master"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "S01-static-persistence",
+      "source": "SRC-STATIC",
+      "observation_file": "S01-static-persistence.mp4",
+      "observation_transform": {
+        "kind": "digital_occlusion",
+        "interval_s": [4.0, 10.0],
+        "rect_px": [720, 190, 620, 520],
+        "note": "The truth master stays untouched; only the robot-view derivative is masked."
+      },
+      "truth_events": [
+        { "id": "E-S01-INIT", "t_s": 0.0, "op": "observe", "facts": { "A.exists": true, "A.location": "M" }, "evidence": "SRC-STATIC#t=0.0,3.5" },
+        { "id": "E-S01-STILL", "t_s": 10.2, "op": "observe", "facts": { "A.exists": true, "A.location": "M" }, "evidence": "SRC-STATIC#t=10.2,14.0" }
+      ],
+      "questions": [
+        {
+          "id": "Q-S01-1",
+          "checkpoint_s": 7.0,
+          "prompt": "A当前在哪里？请同时声明这是观察、推断还是未知。",
+          "world_truth": "M",
+          "accepted_values": ["M"],
+          "accepted_epistemic": ["inferred"],
+          "acceptable_evidence_events": ["E-S01-INIT"],
+          "rationale": "A was last observed at M and no observed event supports a move; M is a persistence inference, not a fresh observation."
+        },
+        {
+          "id": "Q-S01-2",
+          "checkpoint_s": 12.0,
+          "prompt": "A当前在哪里？",
+          "world_truth": "M",
+          "accepted_values": ["M"],
+          "accepted_epistemic": ["observed"],
+          "acceptable_evidence_events": ["E-S01-STILL"]
+        }
+      ]
+    },
+    {
+      "id": "S02-hidden-move",
+      "source": "SRC-HIDDEN-MOVE",
+      "observation_file": "S02-hidden-move.mp4",
+      "observation_transform": {
+        "kind": "digital_occlusion",
+        "interval_s": [8.5, 13.0],
+        "rect_px": [650, 160, 1120, 590],
+        "note": "The mask covers A's full M-to-R path while leaving the truth master intact."
+      },
+      "truth_events": [
+        { "id": "E-S02-INIT", "t_s": 0.0, "op": "observe", "facts": { "A.exists": true, "A.location": "M" }, "evidence": "SRC-HIDDEN-MOVE#t=0.0,8.0" },
+        { "id": "E-S02-MOVE", "interval_s": [9.5, 12.5], "op": "move", "facts": { "A.location.from": "M", "A.location.to": "R" }, "evidence": "SRC-HIDDEN-MOVE#t=9.5,12.5" },
+        { "id": "E-S02-REAPPEAR", "t_s": 13.2, "op": "observe", "facts": { "A.exists": true, "A.location": "R" }, "evidence": "SRC-HIDDEN-MOVE#t=13.2,17.0" }
+      ],
+      "questions": [
+        {
+          "id": "Q-S02-1",
+          "checkpoint_s": 11.0,
+          "prompt": "A现在的确定位置是什么？",
+          "world_truth": "IN_TRANSIT_M_TO_R",
+          "accepted_values": ["UNKNOWN"],
+          "accepted_epistemic": ["unknown"],
+          "acceptable_evidence_events": ["E-S02-INIT"],
+          "rationale": "The robot stream hides the transition. Claiming M, R or a path as observed is fabrication."
+        },
+        {
+          "id": "Q-S02-2",
+          "checkpoint_s": 14.5,
+          "prompt": "A重新出现后在哪里？",
+          "world_truth": "R",
+          "accepted_values": ["R"],
+          "accepted_epistemic": ["observed"],
+          "acceptable_evidence_events": ["E-S02-REAPPEAR"]
+        }
+      ]
+    },
+    {
+      "id": "S03-similar-object-replacement",
+      "source": "SRC-IDENTITY",
+      "observation_file": "S03-similar-object-replacement.mp4",
+      "observation_transform": {
+        "kind": "digital_occlusion",
+        "interval_s": [4.25, 9.75],
+        "rect_px": [570, 130, 850, 610],
+        "note": "Removal of A and insertion of similar-looking D are hidden from the robot view."
+      },
+      "truth_events": [
+        { "id": "E-S03-A-INIT", "t_s": 0.0, "op": "observe", "facts": { "A.exists": true, "A.location": "M" }, "evidence": "SRC-IDENTITY#t=0.0,4.0" },
+        { "id": "E-S03-A-REMOVED", "interval_s": [4.5, 6.0], "op": "remove", "facts": { "A.location.from": "M", "A.location.to": "OUTSIDE_WORKSPACE" }, "evidence": "SRC-IDENTITY#t=4.5,6.0" },
+        { "id": "E-S03-D-INSERTED", "interval_s": [8.8, 10.0], "op": "insert", "facts": { "D.exists": true, "D.location": "M", "D.identity_not": "A" }, "evidence": "SRC-IDENTITY#t=8.8,10.0" },
+        { "id": "E-S03-BOTH", "t_s": 18.0, "op": "observe", "facts": { "A.exists": true, "D.exists": true, "A.identity_not": "D" }, "evidence": "SRC-IDENTITY#t=18.0,24.0" }
+      ],
+      "questions": [
+        {
+          "id": "Q-S03-1",
+          "checkpoint_s": 8.0,
+          "prompt": "遮挡区间内，M位置当前是哪一个对象？",
+          "world_truth": "D_ENTERING",
+          "accepted_values": ["UNKNOWN"],
+          "accepted_epistemic": ["unknown"],
+          "acceptable_evidence_events": ["E-S03-A-INIT"],
+          "rationale": "Visual similarity and last-seen location do not prove identity during the hidden replacement."
+        },
+        {
+          "id": "Q-S03-2",
+          "checkpoint_s": 19.0,
+          "prompt": "画面中的两个盒子是同一对象还是两个不同对象？",
+          "world_truth": "A_NOT_D",
+          "accepted_values": ["A_NOT_D"],
+          "accepted_epistemic": ["observed"],
+          "acceptable_evidence_events": ["E-S03-BOTH"]
+        }
+      ]
+    },
+    {
+      "id": "S04-containment-carry",
+      "source": "SRC-CONTAINMENT",
+      "observation_file": "S04-containment-carry.mp4",
+      "observation_transform": {
+        "kind": "natural_occlusion_only",
+        "note": "B becomes naturally invisible after entering A; no synthetic mask is added."
+      },
+      "truth_events": [
+        { "id": "E-S04-INIT", "t_s": 0.0, "op": "observe", "facts": { "A.location": "L", "B.location": "M", "B.inside": null, "C.location": "R" }, "evidence": "SRC-CONTAINMENT#t=0.0,4.0" },
+        { "id": "E-S04-B-IN", "interval_s": [7.5, 12.0], "op": "put_inside", "facts": { "B.inside.from": null, "B.inside.to": "A" }, "evidence": "SRC-CONTAINMENT#t=7.5,12.0" },
+        { "id": "E-S04-CARRY", "interval_s": [19.0, 29.0], "op": "move", "facts": { "A.location.from": "L", "A.location.to": "R", "B.inside": "A", "B.location.derived": "R" }, "evidence": "SRC-CONTAINMENT#t=19.0,29.0" },
+        { "id": "E-S04-B-OUT", "interval_s": [31.0, 40.0], "op": "take_out", "facts": { "B.inside.from": "A", "B.inside.to": null, "B.location": "R" }, "evidence": "SRC-CONTAINMENT#t=31.0,40.0" }
+      ],
+      "questions": [
+        {
+          "id": "Q-S04-1",
+          "checkpoint_s": 15.0,
+          "prompt": "B在哪里？",
+          "world_truth": "INSIDE_A",
+          "accepted_values": ["INSIDE_A"],
+          "accepted_epistemic": ["inferred"],
+          "acceptable_evidence_events": ["E-S04-B-IN"]
+        },
+        {
+          "id": "Q-S04-2",
+          "checkpoint_s": 27.0,
+          "prompt": "A移动过程中，B的状态是什么？",
+          "world_truth": "INSIDE_A",
+          "accepted_values": ["INSIDE_A"],
+          "accepted_epistemic": ["inferred"],
+          "acceptable_evidence_events": ["E-S04-B-IN", "E-S04-CARRY"],
+          "rationale": "Containment persists until an observed removal; B's global location is derived through A, not directly seen."
+        },
+        {
+          "id": "Q-S04-3",
+          "checkpoint_s": 42.0,
+          "prompt": "B是否仍在A里面？",
+          "world_truth": "OUTSIDE_A_AT_R",
+          "accepted_values": ["OUTSIDE_A_AT_R"],
+          "accepted_epistemic": ["observed"],
+          "acceptable_evidence_events": ["E-S04-B-OUT"]
+        }
+      ]
+    }
+  ],
+  "evaluation_arms": [
+    { "id": "A0", "name": "stateless-video-QA", "description": "No maintained state; answer each checkpoint from the available view." },
+    { "id": "A1", "name": "prompt-only-explicit-state", "description": "Model is required to keep an explicit state table, without transactions or validation." },
+    { "id": "A2", "name": "transaction-schema-only-ablation", "description": "State changes use evidence-carrying transactions, but only structural gates are applied." },
+    { "id": "A2G", "name": "benxiang-semantic-gated-state", "description": "Transactions pass field-domain, visibility, freshness and answer-grounding gates; one correction retry is allowed, then the system safely abstains." }
+  ],
+  "metrics": [
+    "state_value_accuracy",
+    "epistemic_status_accuracy",
+    "hallucination_count",
+    "evidence_coverage",
+    "evidence_precision",
+    "invalid_commit_rejection_rate",
+    "update_latency_ms"
+  ],
+  "limitations": [
+    "Four staged clips are a pilot and cannot establish industry-leading performance or statistical significance.",
+    "Object labels and fixed camera simplify identity and geometry.",
+    "This benchmark tests symbolic state maintenance, not SLAM, metric localization, control safety or learned physical dynamics.",
+    "Event boundaries were manually inspected at 0.5-second resolution and should be independently annotated before publication."
+  ]
+}

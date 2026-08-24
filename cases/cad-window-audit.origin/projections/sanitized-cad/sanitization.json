@@ -1,0 +1,68 @@
+{
+  "ok": true,
+  "source_summary_sha256": "37662bdefb87e4c980a09286e60182a14f65b9c5023e6cdd700154686105fec6",
+  "source_collection": "sanitized-basic-geometry.entities",
+  "source_entity_types": {
+    "LWPOLYLINE": 2693,
+    "LINE": 3975,
+    "CIRCLE": 94,
+    "ARC": 21
+  },
+  "anchor_source": "decoded-tch-opening-anchor-map",
+  "anchor_count": 190,
+  "included": [
+    "LINE",
+    "LWPOLYLINE",
+    "ARC",
+    "INSERT-as-cross"
+  ],
+  "omitted": [
+    "TEXT",
+    "MTEXT",
+    "ATTRIB",
+    "block-name",
+    "HATCH",
+    "proxy-binary"
+  ],
+  "guarantees": [
+    "no-text-elements",
+    "no-images",
+    "no-block-names",
+    "explicit-human-selected-crops"
+  ],
+  "rendered": [
+    {
+      "name": "overview",
+      "crop": [
+        -400000,
+        -280000,
+        1250000,
+        670000
+      ],
+      "shapes": 8244,
+      "anchors": 190
+    },
+    {
+      "name": "west",
+      "crop": [
+        -180000,
+        -90000,
+        300000,
+        210000
+      ],
+      "shapes": 1127,
+      "anchors": 62
+    },
+    {
+      "name": "east",
+      "crop": [
+        -10000,
+        -90000,
+        450000,
+        210000
+      ],
+      "shapes": 2474,
+      "anchors": 99
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>本象协议｜真实 CAD 门窗计数验证报告</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#07111f;color:#eaf2ff;font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif}.wrap{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:52px 0 80px}.kicker{font:700 14px Consolas,monospace;color:#61a5ff;letter-spacing:3px}.hero{padding:42px;border:1px solid #213b5d;border-radius:28px;background:linear-gradient(145deg,#102943,#081524);margin-top:18px}.hero h1{font-size:48px;line-height:1.16;margin:0 0 18px}.hero p{font-size:20px;line-height:1.7;color:#b9c9dc;margin:0}.numbers{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0}.num{padding:24px;border:1px solid #29466c;border-radius:18px;background:#0c2038}.num b{display:block;color:#70adff;font:900 42px Consolas,monospace}.num span{color:#b8c7d8}.section{margin-top:46px}.section h2{font-size:29px;margin:0 0 18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.shot{background:#0a1727;border:1px solid #213b5d;border-radius:18px;overflow:hidden}.shot img{display:block;width:100%;height:auto}.shot p{margin:0;padding:14px 18px;color:#9eb1c9;font-size:14px}.proof{padding:22px;border:1px solid #29466c;background:#091827;border-radius:16px;font:16px/1.8 Consolas,"Microsoft YaHei",monospace;white-space:pre-wrap;color:#c9def5}.ok{color:#68d391}.warn{color:#f2cc60}.limits{display:grid;gap:12px}.limit{padding:18px 20px;background:#0c2038;border-left:4px solid #f2cc60;border-radius:10px;color:#c0cfdf;line-height:1.7}.foot{margin-top:50px;padding-top:20px;border-top:1px solid #29466c;color:#7890ad;font-size:14px}@media(max-width:800px){.numbers,.grid{grid-template-columns:1fr 1fr}.hero h1{font-size:36px}}@media(max-width:520px){.numbers,.grid{grid-template-columns:1fr}.hero{padding:26px}}
+</style></head><body><main class="wrap"><div class="kicker">BENXIANG · REAL CAD ORIGIN PACKAGE</div><section class="hero"><h1>这次不是“本象方法”，<br>而是一份真的 <code>.origin</code></h1><p>客户原始 DWG 在本机离线解析；公开包只保存对象身份、来源指纹、计数依据和边界。原图、项目名、文件名、图签与文字均未进入报告。</p></section>
+<section class="numbers"><div class="num"><b>194</b><span>TCH_OPENING</span></div><div class="num"><b>−4</b><span>块定义模板</span></div><div class="num"><b>168</b><span>窗对象</span></div><div class="num"><b>22</b><span>门对象</span></div></section>
+<section class="section"><h2>本象包已经做了什么</h2><div class="proof"><span class="ok">✓</span> objects       585
+<span class="ok">✓</span> relations     388
+<span class="ok">✓</span> constraints   6 / 6 可机器判定
+<span class="ok">✓</span> state changes 6 条派生事务
+<span class="ok">✓</span> diagnose      无 error
+
+why metric:door-window-count.windows
+value  = 168
+by     = deterministic-count-compiler
+basis  = membership:window/*</div></section>
+<section class="section"><h2>原始 CAD 几何投影（已剔除全部文字）</h2><div class="grid"><article class="shot"><img src="sanitized-cad/details.png" alt="门窗详图几何"><p>WINDOW 图层门窗详图区域：只含原始线、多段线、圆弧和匿名插入点。</p></article><article class="shot"><img src="sanitized-cad/east.png" alt="东侧构件几何"><p>WINDOW 图层东侧构件群：无项目名、编号、图签和块名。</p></article><article class="shot"><img src="sanitized-cad/west.png" alt="西侧构件几何"><p>WINDOW 图层西侧构件群：原始几何，不是 AI 重画。</p></article><article class="shot"><img src="sanitized-cad/overview.png" alt="全局几何分布"><p>显式选择范围的全局分布；其他图层全部不进入公开投影。</p></article></div></section>
+<section class="section"><h2>两条解析链，分别证明到哪里</h2><div class="proof">ODA File Converter 27.1 + ezdxf
+  → 194 total / 190 placed / 168 windows / 22 doors
+
+GNU LibreDWG 0.14
+  → 独立确认 class 528 total = 194
+
+<span class="warn">边界：</span>第二条链尚未独立完成 168/22 分类；不能写成“双解析器都独立数出168”。</div></section>
+<section class="section"><h2>公开时必须同时出现的边界</h2><div class="limits"><div class="limit">168 的单位是窗樘/窗洞对象，不是玻璃分格或采购块数；其中包含被建模为窗的百叶窗。</div><div class="limit">当前未解出每个 TCH_OPENING 的精确几何和位置；截图来自同一原始 DWG 的 WINDOW 图层普通几何投影。</div><div class="limit">分类依赖本文件天正代理载荷字段，尚未验证所有天正版本。</div></div></section>
+<div class="foot">源文件按 SHA-256 在客户受控环境中复核；公开包不携带原始资料。结论：这是本象协议真实 CAD 对象计数案例，但不是“已理解所有 CAD”的证明。</div></main></body></html>

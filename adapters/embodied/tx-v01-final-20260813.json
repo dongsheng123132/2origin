@@ -1,0 +1,18 @@
+{
+  "transaction_id": "tx-embodied-v01-final-20260813",
+  "operation": "record_embodied_v01_final_verification",
+  "state_changes": [
+    {
+      "object": "task:embodied-event-belief-split",
+      "field": "evidence",
+      "to": "adapters/embodied/{dialect,reducer,selftest,replay}.mjs；adapters/embodied/fixtures/pilot-events.json；42项自测0失败",
+      "op": "set"
+    },
+    {
+      "object": "fact:embodied-adapter-v01",
+      "field": "evidence",
+      "to": "adapters/embodied/README.md；node adapters/embodied/selftest.mjs=42 passed/0 failed；compiler selftest=91/0；conformance=87/0；mutation=19/19 killed",
+      "op": "set"
+    }
+  ]
+}

@@ -1,0 +1,376 @@
+{
+  "benchmark_id": "bx-es-mini-2026-08",
+  "model": "qwen3.5-omni-plus",
+  "arm": "A0",
+  "run_kind": "pilot-single-run",
+  "started_at": "2026-08-13T11:32:42.875Z",
+  "answers": [
+    {
+      "question_id": "Q-S01-1",
+      "value": "M",
+      "epistemic": "inferred",
+      "evidence_seconds": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "explanation": "在视频的前几秒（0-3秒），物体A清晰可见位于中间位置（M）。从第4秒开始，一个黑色方块遮挡了该区域。由于没有观察到物体移动，根据之前的状态推断，它仍然在M位置。"
+    },
+    {
+      "question_id": "Q-S01-2",
+      "value": "M",
+      "epistemic": "inferred",
+      "evidence_seconds": [
+        0,
+        10
+      ],
+      "explanation": "在视频开始时（0-3秒），物体A清晰可见位于M位置。随后画面被遮挡（4-9秒），但在视频结束时（10-11秒），物体A再次出现在M位置且状态未变。根据物体在遮挡前后的位置一致性，推断其在整个过程中一直停留在M位置。"
+    },
+    {
+      "question_id": "Q-S02-1",
+      "value": "M",
+      "epistemic": "inferred",
+      "evidence_seconds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "explanation": "在视频的前8秒（0-7秒），物体A清晰可见并位于中间位置（M）。从第8秒开始，画面中央出现黑色遮挡区域，导致无法直接观测到物体A。根据规则，禁止编造遮挡期间的动作，因此基于最后观测到的状态进行推断，物体A的位置仍为M。"
+    },
+    {
+      "question_id": "Q-S02-2",
+      "value": "R",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        13
+      ],
+      "explanation": "在视频的最后（约13秒处），遮挡物消失，物体A重新出现在画面中，其位置明确位于标有'R'的纸片附近。"
+    },
+    {
+      "question_id": "Q-S03-1",
+      "value": "A_NOT_D",
+      "epistemic": "inferred",
+      "evidence_seconds": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "explanation": "在视频的前4秒（0-3秒），可以清楚地观察到对象'A'位于M位置。从第4秒开始，画面出现黑色遮挡区域，导致无法直接观测。根据规则，禁止编造遮挡期间的动作，因此基于遮挡前最后已知的状态进行推断，M位置的对象仍然是'A'。由于对象'A'是一个盒子而非'D'，故标记为A_NOT_D。"
+    },
+    {
+      "question_id": "Q-S03-2",
+      "value": "A_NOT_D",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        17,
+        18
+      ],
+      "explanation": "在视频的前半部分（0-9秒），画面中只有一个标记为'A'的盒子。在遮挡期间（4-9秒）及之后，该盒子的标签变为'D'（10秒起）。关键证据出现在17秒左右，一只手将另一个标记为'A'的盒子放入画面左侧，此时画面中同时存在标记为'A'的盒子和标记为'D'的盒子。这直接证明了它们是两个不同的物理对象，而非同一个物体改变了标签。"
+    },
+    {
+      "question_id": "Q-S04-1",
+      "value": "INSIDE_A",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        10,
+        11,
+        12
+      ],
+      "explanation": "视频显示，在约7秒时物体B被拿起，并在10-12秒期间被明确放入盒子A中。由于盒子是不透明的，B在盒内的状态是基于直接观测到的放置动作推断的当前状态。"
+    },
+    {
+      "question_id": "Q-S04-2",
+      "value": "INSIDE_A",
+      "epistemic": "inferred",
+      "evidence_seconds": [
+        12
+      ],
+      "explanation": "在视频0-7秒，物体B位于M位置。在8-11秒，手将B拿起并移向A的上方。在12秒时，手将B放入A中。随后（13-26秒），A被移动到了R位置。由于B在A移动前已被放入A中，且视频中未显示B被取出，因此推断在A移动过程中，B的状态是位于A内部（INSIDE_A）。"
+    },
+    {
+      "question_id": "Q-S04-3",
+      "value": "OUTSIDE_A_AT_R",
+      "epistemic": "observed",
+      "evidence_seconds": [
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "explanation": "在视频的前半部分，物体B被放入盒子A中。但在大约32秒时，一只手伸入盒子A并将物体B取出。从35秒直到视频结束（41秒），物体B清晰可见地被放置在桌子右侧（R区域），位于盒子A的外部。因此，在视频截止时，B不在A里面，而是在A外面的右侧。"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "S01-static-persistence",
+      "turns": [
+        {
+          "question_id": "Q-S01-1",
+          "answer": {
+            "question_id": "Q-S01-1",
+            "value": "M",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "explanation": "在视频的前几秒（0-3秒），物体A清晰可见位于中间位置（M）。从第4秒开始，一个黑色方块遮挡了该区域。由于没有观察到物体移动，根据之前的状态推断，它仍然在M位置。"
+          },
+          "raw": {
+            "value": "M",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "explanation": "在视频的前几秒（0-3秒），物体A清晰可见位于中间位置（M）。从第4秒开始，一个黑色方块遮挡了该区域。由于没有观察到物体移动，根据之前的状态推断，它仍然在M位置。"
+          },
+          "request_id": null
+        },
+        {
+          "question_id": "Q-S01-2",
+          "answer": {
+            "question_id": "Q-S01-2",
+            "value": "M",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              10
+            ],
+            "explanation": "在视频开始时（0-3秒），物体A清晰可见位于M位置。随后画面被遮挡（4-9秒），但在视频结束时（10-11秒），物体A再次出现在M位置且状态未变。根据物体在遮挡前后的位置一致性，推断其在整个过程中一直停留在M位置。"
+          },
+          "raw": {
+            "value": "M",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              10
+            ],
+            "explanation": "在视频开始时（0-3秒），物体A清晰可见位于M位置。随后画面被遮挡（4-9秒），但在视频结束时（10-11秒），物体A再次出现在M位置且状态未变。根据物体在遮挡前后的位置一致性，推断其在整个过程中一直停留在M位置。"
+          },
+          "request_id": null
+        }
+      ]
+    },
+    {
+      "scenario_id": "S02-hidden-move",
+      "turns": [
+        {
+          "question_id": "Q-S02-1",
+          "answer": {
+            "question_id": "Q-S02-1",
+            "value": "M",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "explanation": "在视频的前8秒（0-7秒），物体A清晰可见并位于中间位置（M）。从第8秒开始，画面中央出现黑色遮挡区域，导致无法直接观测到物体A。根据规则，禁止编造遮挡期间的动作，因此基于最后观测到的状态进行推断，物体A的位置仍为M。"
+          },
+          "raw": {
+            "value": "M",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "explanation": "在视频的前8秒（0-7秒），物体A清晰可见并位于中间位置（M）。从第8秒开始，画面中央出现黑色遮挡区域，导致无法直接观测到物体A。根据规则，禁止编造遮挡期间的动作，因此基于最后观测到的状态进行推断，物体A的位置仍为M。"
+          },
+          "request_id": null
+        },
+        {
+          "question_id": "Q-S02-2",
+          "answer": {
+            "question_id": "Q-S02-2",
+            "value": "R",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              13
+            ],
+            "explanation": "在视频的最后（约13秒处），遮挡物消失，物体A重新出现在画面中，其位置明确位于标有'R'的纸片附近。"
+          },
+          "raw": {
+            "value": "R",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              13
+            ],
+            "explanation": "在视频的最后（约13秒处），遮挡物消失，物体A重新出现在画面中，其位置明确位于标有'R'的纸片附近。"
+          },
+          "request_id": null
+        }
+      ]
+    },
+    {
+      "scenario_id": "S03-similar-object-replacement",
+      "turns": [
+        {
+          "question_id": "Q-S03-1",
+          "answer": {
+            "question_id": "Q-S03-1",
+            "value": "A_NOT_D",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "explanation": "在视频的前4秒（0-3秒），可以清楚地观察到对象'A'位于M位置。从第4秒开始，画面出现黑色遮挡区域，导致无法直接观测。根据规则，禁止编造遮挡期间的动作，因此基于遮挡前最后已知的状态进行推断，M位置的对象仍然是'A'。由于对象'A'是一个盒子而非'D'，故标记为A_NOT_D。"
+          },
+          "raw": {
+            "value": "A_NOT_D",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "explanation": "在视频的前4秒（0-3秒），可以清楚地观察到对象'A'位于M位置。从第4秒开始，画面出现黑色遮挡区域，导致无法直接观测。根据规则，禁止编造遮挡期间的动作，因此基于遮挡前最后已知的状态进行推断，M位置的对象仍然是'A'。由于对象'A'是一个盒子而非'D'，故标记为A_NOT_D。"
+          },
+          "request_id": null
+        },
+        {
+          "question_id": "Q-S03-2",
+          "answer": {
+            "question_id": "Q-S03-2",
+            "value": "A_NOT_D",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              17,
+              18
+            ],
+            "explanation": "在视频的前半部分（0-9秒），画面中只有一个标记为'A'的盒子。在遮挡期间（4-9秒）及之后，该盒子的标签变为'D'（10秒起）。关键证据出现在17秒左右，一只手将另一个标记为'A'的盒子放入画面左侧，此时画面中同时存在标记为'A'的盒子和标记为'D'的盒子。这直接证明了它们是两个不同的物理对象，而非同一个物体改变了标签。"
+          },
+          "raw": {
+            "value": "A_NOT_D",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              17,
+              18
+            ],
+            "explanation": "在视频的前半部分（0-9秒），画面中只有一个标记为'A'的盒子。在遮挡期间（4-9秒）及之后，该盒子的标签变为'D'（10秒起）。关键证据出现在17秒左右，一只手将另一个标记为'A'的盒子放入画面左侧，此时画面中同时存在标记为'A'的盒子和标记为'D'的盒子。这直接证明了它们是两个不同的物理对象，而非同一个物体改变了标签。"
+          },
+          "request_id": null
+        }
+      ]
+    },
+    {
+      "scenario_id": "S04-containment-carry",
+      "turns": [
+        {
+          "question_id": "Q-S04-1",
+          "answer": {
+            "question_id": "Q-S04-1",
+            "value": "INSIDE_A",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              10,
+              11,
+              12
+            ],
+            "explanation": "视频显示，在约7秒时物体B被拿起，并在10-12秒期间被明确放入盒子A中。由于盒子是不透明的，B在盒内的状态是基于直接观测到的放置动作推断的当前状态。"
+          },
+          "raw": {
+            "value": "INSIDE_A",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              10,
+              11,
+              12
+            ],
+            "explanation": "视频显示，在约7秒时物体B被拿起，并在10-12秒期间被明确放入盒子A中。由于盒子是不透明的，B在盒内的状态是基于直接观测到的放置动作推断的当前状态。"
+          },
+          "request_id": null
+        },
+        {
+          "question_id": "Q-S04-2",
+          "answer": {
+            "question_id": "Q-S04-2",
+            "value": "INSIDE_A",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              12
+            ],
+            "explanation": "在视频0-7秒，物体B位于M位置。在8-11秒，手将B拿起并移向A的上方。在12秒时，手将B放入A中。随后（13-26秒），A被移动到了R位置。由于B在A移动前已被放入A中，且视频中未显示B被取出，因此推断在A移动过程中，B的状态是位于A内部（INSIDE_A）。"
+          },
+          "raw": {
+            "value": "INSIDE_A",
+            "epistemic": "inferred",
+            "evidence_seconds": [
+              12
+            ],
+            "explanation": "在视频0-7秒，物体B位于M位置。在8-11秒，手将B拿起并移向A的上方。在12秒时，手将B放入A中。随后（13-26秒），A被移动到了R位置。由于B在A移动前已被放入A中，且视频中未显示B被取出，因此推断在A移动过程中，B的状态是位于A内部（INSIDE_A）。"
+          },
+          "request_id": null
+        },
+        {
+          "question_id": "Q-S04-3",
+          "answer": {
+            "question_id": "Q-S04-3",
+            "value": "OUTSIDE_A_AT_R",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41
+            ],
+            "explanation": "在视频的前半部分，物体B被放入盒子A中。但在大约32秒时，一只手伸入盒子A并将物体B取出。从35秒直到视频结束（41秒），物体B清晰可见地被放置在桌子右侧（R区域），位于盒子A的外部。因此，在视频截止时，B不在A里面，而是在A外面的右侧。"
+          },
+          "raw": {
+            "value": "OUTSIDE_A_AT_R",
+            "epistemic": "observed",
+            "evidence_seconds": [
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41
+            ],
+            "explanation": "在视频的前半部分，物体B被放入盒子A中。但在大约32秒时，一只手伸入盒子A并将物体B取出。从35秒直到视频结束（41秒），物体B清晰可见地被放置在桌子右侧（R区域），位于盒子A的外部。因此，在视频截止时，B不在A里面，而是在A外面的右侧。"
+          },
+          "request_id": null
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "single run",
+    "staged fixed-camera videos",
+    "no statistical claim"
+  ],
+  "completed_at": "2026-08-13T11:33:19.936Z"
+}

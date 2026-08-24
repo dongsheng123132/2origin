@@ -1,0 +1,74 @@
+[
+  {
+    "id": "opening-total-matches-metric",
+    "rule": "TCH_OPENING 对象总数必须等于汇总数",
+    "check": {
+      "type": "count",
+      "object": "opening:*",
+      "equals_ref": "metric:door-window-count.total_openings"
+    }
+  },
+  {
+    "id": "placed-matches-metric",
+    "rule": "模型空间放置数必须等于汇总数",
+    "check": {
+      "type": "count",
+      "object": "membership:placed/*",
+      "equals_ref": "metric:door-window-count.placed_openings"
+    }
+  },
+  {
+    "id": "block-definition-matches-metric",
+    "rule": "块定义排除数必须等于汇总数",
+    "check": {
+      "type": "count",
+      "object": "membership:block-definition/*",
+      "equals_ref": "metric:door-window-count.block_definition_only"
+    }
+  },
+  {
+    "id": "window-matches-metric",
+    "rule": "窗对象数必须等于汇总数",
+    "check": {
+      "type": "count",
+      "object": "membership:window/*",
+      "equals_ref": "metric:door-window-count.windows"
+    }
+  },
+  {
+    "id": "door-matches-metric",
+    "rule": "门对象数必须等于汇总数",
+    "check": {
+      "type": "count",
+      "object": "membership:door/*",
+      "equals_ref": "metric:door-window-count.doors"
+    }
+  },
+  {
+    "id": "unknown-matches-metric",
+    "rule": "未分类对象数必须等于汇总数",
+    "check": {
+      "type": "count",
+      "object": "membership:unknown/*",
+      "equals_ref": "metric:door-window-count.unknown"
+    }
+  },
+  {
+    "id": "position-resolved-matches-metric",
+    "rule": "已恢复位置锚点数必须等于汇总数",
+    "check": {
+      "type": "count",
+      "object": "membership:position-resolved/*",
+      "equals_ref": "metric:door-window-count.position_resolved"
+    }
+  },
+  {
+    "id": "position-unresolved-matches-metric",
+    "rule": "未恢复位置锚点数必须等于汇总数",
+    "check": {
+      "type": "count",
+      "object": "membership:position-unresolved/*",
+      "equals_ref": "metric:door-window-count.position_unresolved"
+    }
+  }
+]

@@ -204,6 +204,14 @@ const RE_SECT = new RegExp(`^([【\\[])?(${SECTION_NAMES.join('|')})([】\\]])?$
 /** 目录行：Word 的 TOC 域会把 PAGEREF/HYPERLINK 指令文本一起吐出来，靠它剔目录最稳 */
 const isTocLine = (t) => /PAGEREF|HYPERLINK|TOC \\o/.test(t)
 
+/** 图注 / 表注 / 栏目名 / (a)(b) 组图标注——都不是正文，不参与正文排版统计。 */
+const isCaptionLike = (t) => {
+  const s = t.trim()
+  return /^[图表]\s*\d+\s*[-－—–]/.test(s)
+    || /^【?[\u4e00-\u9fa5]{2,8}】$/.test(s)
+    || /^[（(]\s*[a-zA-Z]\s*[）)]/.test(s)
+}
+
 /**
  * 插图 vs 行内符号的分类规则。**刻意做成数据而不是写死在判据里**，
  * 好让反向用例能换一套规则来打（book/0.1 的做法，照抄）。
@@ -251,13 +259,23 @@ export function buildStructure(parsed, { standardSections, inlineRules = DEFAULT
         else m.in_table = m.in_table || false
         // 记下宿主段落的正文长度，遍历完再统一分类（见下方 role 判定）。
         ;(m.host_text_lens ||= []).push(t.length)
+        // 这张图长在哪个项目哪个任务里。**报价靠它**：软件截图（重绘即错）与制图原理图
+        // （该重绘）差 5 倍工作量，而这两类的分界线基本就是任务边界——
+        // 「中望3D建模」那几个任务整章都是截图。curProj/curTask 取的是**本段之前**的值，
+        // 正是这张图所属的上下文（项目/任务标题在下面几行才被识别，顺序不能反）。
+        if (m.proj == null) { m.proj = curProj; m.task = curTask }
       }
     }
     if (!t) continue
     if (isTocLine(t)) continue // 目录整段跳过
 
     // 排版事实：只统计正文段（表内文字本来就该小，不参与"正文字号是否统一"的判定）
-    if (!inTable && t.length > 8) {
+    //
+    // 图注、栏目名、(a)(b) 组图标注**也不是正文**，一并排除。
+    // 这是与 108 条行内符号假警同一族的错：把不是靶子的东西拿去判靶子的判据，
+    // 结果「行距不统一」永远归不了零——不是稿子没改好，是判据在数不该数的东西。
+    // 判据要与施工对齐：normalize.mjs 改的是哪一批，这里就该数哪一批。
+    if (!inTable && t.length > 8 && !isCaptionLike(t)) {
       for (const s of it.fmt.sizes || []) sizeCount.set(s, (sizeCount.get(s) || 0) + 1)
       if (it.fmt.line) lineCount.set(it.fmt.line, (lineCount.get(it.fmt.line) || 0) + 1)
       bodyChars += t.length
@@ -474,6 +492,7 @@ export function buildOrigin(st, meta, decisions = []) {
       print_min_edge: printable ? m.min_edge : null,
       role: m.role, vector: m.vector, used: m.used, host_text_len: m.host_text_len,
       in_table: m.in_table, captioned: m.captioned,
+      proj: m.proj ?? null, task: m.task ?? null,
       caption_status: m.role !== 'figure' ? 'n/a' : m.captioned ? 'ok' : 'missing',
       table_status: m.role !== 'figure' ? 'n/a' : m.in_table ? 'in_table' : 'ok',
     })
