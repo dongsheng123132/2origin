@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-81%20%2B%2044%20%2B%20101%20%2B%2087%20%2B%2018%20%2B%2013%2F13-brightgreen.svg)](#try-it)
+[![verify](https://img.shields.io/badge/verify-91%20%2B%2055%20%2B%2015%20%2B%20104%20%2B%2020%20%2B%2087%20%2B%2025%20%2B%2083%20%C2%B7%20conformance%2087%2F87%20%C2%B7%20mutation%2019%2F19-brightgreen.svg)](#try-it)
 [![conformance](https://img.shields.io/badge/conformance-87%2F87%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.en.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![中文](https://img.shields.io/badge/docs-%E4%B8%AD%E6%96%87-lightgrey.svg)](README.md)
@@ -20,13 +20,39 @@
 
 ---
 
+> ## ⚠ The claim has been narrowed again (2026-08-13 · A2 ablation · [paper v0.4](benchmark/shadowbench-w/paper/shadowbench-w-paper-en-v0.4.md) §5.3)
+>
+> **Run #27 below is numerically correct and wrongly attributed.** After adding an **A2
+> prompt-only arm** (merely asks the model to write out and update explicit state each
+> chapter — **no validator, no evidence chain, no context compiler**):
+>
+> | Comparison | Effect | Significance (exhaustive permutation, 184,756 splits) |
+> |---|---|---|
+> | A0 → **A2 ("just asking")** | **+41.3 pt** | p = 3.3×10⁻⁵ / 2.2×10⁻⁵ |
+> | A2 → **A3 (full machinery)** | **+2.5 pt** | **p = 0.4737 / 0.7214 — not significant** |
+> | Tokens | A2 **cheaper than the bare model**: −9.7% / −28.2% | A3 costs +26% to +69% over A2 |
+>
+> Reproduced at decimal-level on two unrelated models. **On state accuracy the Origin IR
+> state layer does not beat one sentence of prompt** — 41.3 of the 43.8-point lead (94%)
+> came from "asking the baselines for something they had never been asked for".
+>
+> **The only surviving claim (categorical)**: A2 **structurally cannot produce evidence
+> chains** (the prompt has no "belief vs basis" distinction). A3 gives traceable evidence
+> for **15.0% / 27.5%** of tested fields; **A0/A1/A2 all sit at 0%**.
+> ⇒ **Only a system that must answer "why do you believe it" needs this machinery; one
+> that only answers "what do you believe" does not.**
+>
+> The old numbers are kept, not deleted (a tombstone is not an erasure), but they may no
+> longer be cited as evidence of mechanistic advantage.
+
 ## What the data says
 
-The claim has been **narrowed by experiment** to exactly one dimension: **state tracking**.
+The claim had been **narrowed by experiment** to exactly one dimension: **state tracking** —
+until the A2 ablation above narrowed it further.
 
 **State accuracy (W3)**
 
-**✅ The only currently valid comparison** ([Run #27](benchmark/shadowbench-w/results-log.md), 2026-08-05, after the probe fix)
+⚠ **Attribution withdrawn** — kept as a tombstone ([Run #27](benchmark/shadowbench-w/results-log.md), 2026-08-05, after the probe fix)
 
 | qwen-plus · M-tier (95k chars) · n=6 each | Benxiang | Naive LLM | Vector RAG |
 |---|---|---|---|
@@ -121,7 +147,9 @@ PDFs, images, Markdown and EPUB are **not source files** — they are **projecti
 ## Try it
 
 ```bash
-npm run verify   # self-test 81 + CAD 44 + law 95 + MCP end-to-end 18 + conformance 87 + mutation 13/13
+npm run verify   # selftest 91 + CAD 55 + CAD:tianzheng 15 + law 104 + office 20
+                 #               + xlsx 87 + e2e 25 + a3-projection 83
+                 #               + conformance 87/87 + mutation-check 19/19
 ```
 
 No build step, no dependencies. `mutation-check` is the important one: it deliberately
