@@ -143,12 +143,17 @@ const MUTATIONS = [
 
 ]
 
+// filter: () => true 不是摆设——U-King 便携版 Node(v22.20) 在非 ASCII 工作目录下
+// 走 cpSync 递归复制的内部快路径会无提示崩溃(进程直接死、退出码127、不抛异常),
+// 显式传一个 filter 函数会改走逐条目复制路径,绕开这个雷。官方 Node 不受影响,
+// 但本机 PATH 第一个就是便携版 node,不加这个 npm run verify 根本跑不完。
+const COPY_ALL = { recursive: true, filter: () => true }
 rmSync(LAB, { recursive: true, force: true })
-cpSync(join(ROOT, 'compiler'), join(LAB, 'compiler'), { recursive: true })
-cpSync(join(ROOT, 'spec'), join(LAB, 'spec'), { recursive: true })
+cpSync(join(ROOT, 'compiler'), join(LAB, 'compiler'), COPY_ALL)
+cpSync(join(ROOT, 'spec'), join(LAB, 'spec'), COPY_ALL)
 // 方言的自测也要跑：核心里有些承诺只有 CAD 那边覆盖得到，
 // 只跑 compiler 自测的话，打坏它们会显示成 SURVIVED——那是假的漏网。
-cpSync(join(ROOT, 'adapters'), join(LAB, 'adapters'), { recursive: true })
+cpSync(join(ROOT, 'adapters'), join(LAB, 'adapters'), COPY_ALL)
 
 const pristine = new Map()
 for (const m of new Set(MUTATIONS.map((x) => x.file)))
