@@ -28,6 +28,7 @@
 // 铁律沿用取象：observe 永不接收「你觉得应该是什么」。传参数直接抛错。
 import os from 'node:os';
 import crypto from 'node:crypto';
+import { probeAnchor, resolveAnchorOrder } from './identity-anchors.mjs';
 
 export const SPEC = 'agentteams-bridge/0.1';
 
@@ -53,10 +54,28 @@ export async function observeIdentity(...rest) {
 
   const probes = [];
 
-  // ── 探针 1：问 homeserver。唯一能产出 attested 的一条路 ──────────────────
+  // ── 身份锚：matrix 之外还有 oidc / spiffe / k8s（承诺⑤，跨主机签发者）────
+  // 每条锚都是「问签发者」而不是「自己声明」——与 matrix_whoami 同一强度级别。
+  // 哪条胜出、其余说了什么，全部留在 probes 里，读账的人自己看（投影披露规矩）。
+  const order = resolveAnchorOrder();
+  const explicit = !(order.length === 1 && order[0] === 'matrix' &&
+    String(process.env.AGENTTEAMS_IDENTITY_ANCHOR || 'auto').trim().toLowerCase() === 'auto');
+  let matrixProbedByAnchor = false;
+  let anchorAttested = false;
+  for (const kind of order) {
+    if (kind === 'matrix') matrixProbedByAnchor = true;
+    const r = await probeAnchor(kind);
+    probes.push(r);
+    if (r.ok && r.source === 'attested') { anchorAttested = true; break; }   // 第一条 attested 即定夺
+  }
+
+  // ── 探针 1：问 homeserver。唯一能产出 attested 的旧路径 ──────────────────
+  // 锚层已经探测过 matrix 时跳过：同一问题不问两遍。显式选了别的锚
+  // （AGENTTEAMS_IDENTITY_ANCHOR=oidc 等）时也不回落——确定性优先，
+  // 「配错了悄悄滑到另一条」是本层最不能犯的错。
   const hs = process.env.MATRIX_HOMESERVER_URL || process.env.MATRIX_HOMESERVER || '';
   const token = process.env.MATRIX_ACCESS_TOKEN || '';
-  if (hs && token) {
+  if (!matrixProbedByAnchor && !anchorAttested && !explicit && hs && token) {
     const url = hs.replace(/\/+$/, '') + WHOAMI_PATH;
     try {
       const ac = new AbortController();
@@ -91,7 +110,7 @@ export async function observeIdentity(...rest) {
         reason: `够不着 homeserver：${e.name === 'AbortError' ? `超时 ${TIMEOUT_MS}ms` : e.message}`,
       });
     }
-  } else {
+  } else if (!matrixProbedByAnchor && !anchorAttested && !explicit) {
     probes.push({
       probe: 'matrix_whoami', ok: false,
       reason: `缺 ${!hs ? 'MATRIX_HOMESERVER_URL' : ''}${!hs && !token ? ' 与 ' : ''}${!token ? 'MATRIX_ACCESS_TOKEN' : ''}`,
@@ -117,12 +136,16 @@ export async function observeIdentity(...rest) {
   const dec = probes.find(p => p.ok && p.source === 'declared' && p.probe === 'env_matrix_user_id');
 
   const winner = att || dec || null;
-  const unreachable = probes.some(p => p.probe === 'matrix_whoami' && p.unreachable);
+  // 「够不着」任何一条锚都算仪器失效——不只 matrix。显式选了 k8s 而够不着 apiserver，
+  // 与显式用 matrix 而够不着 homeserver 是同一种「核不动」，必须同样单独标出
+  const unreachable = probes.some(p => p.unreachable === true);
 
   return {
     spec: SPEC,
     id: winner ? winner.id : null,
     device_id: att ? att.device_id : null,
+    // 跨主机锚（oidc/spiffe/k8s）没有 Matrix device_id，如实落 null——不编造占位值
+    anchor: att ? String(att.probe || '').split('_')[0] : (winner ? 'declared' : 'none'),
     source: winner ? winner.source : 'none',
     // attested 是一个**布尔断言**，不是形容词。只有它为 true 才准发证。
     attested: !!att,
@@ -188,12 +211,17 @@ export function identityRecord(observed) {
   const att = observed?.probes?.find(p => p.ok && p.source === 'attested');
   let host = null;
   if (att?.homeserver) {
-    try { host = new URL(att.homeserver).host; } catch { host = null; }
+    try { host = new URL(att.homeserver).host; } catch { host = att.homeserver; }
   }
+  // 锚探针给的已经是 host（hostOf 的产物，如 127.0.0.1:8443）时上面 try 会失败——
+  // 那就原样收下：它本来就是按「记 host 不记完整 URL」的排除规则产出的
   return {
     fp: identityFingerprint(observed?.id),
     source: observed?.source ?? 'none',
     attested: observed?.attested === true,
+    // 哪条锚签发的（matrix/oidc/spiffe/k8s）。跨主机样例的承重字段：
+    // 没有它，「考官身份由平台签发」在学历里就只剩 Matrix 一种可读形态。
+    anchor: att ? String(att.probe || '').split('_')[0] : null,
     // 签发者是谁。attested=true 而 homeserver=null 的记录**不可审计**——
     // 它声称有人签过字，却没留下签字的是谁。
     homeserver: host,

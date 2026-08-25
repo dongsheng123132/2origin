@@ -12,7 +12,11 @@ node agentteams/verify-agentteams.mjs  # 发证闸门判据：33/33
 node agentteams/verify-runtime.mjs     # 运行时契约判据：13/13
 ```
 
-三条全绿即包完好。
+四条全绿即包完好。
+
+`verify-identity-anchors.mjs` 是复赛期新增的跨主机身份锚判据（承诺⑤）：
+OIDC userinfo / SPIFFE JWT-SVID 本地验签 / K8s TokenReview 三种签发者适配，
+发证闸门 G1~G8 零改动兼容。
 
 ## 它做什么
 
@@ -79,18 +83,6 @@ demo/          示例学历与发证台账（可直接对它跑 stamp/observe/ce
   不能证明「身份已被外部锚定」——后者需要真实 Tuwunel + Worker 容器。
 - Windows 上 runtime start 需要 WSL pin（`runtime.mjs start` 会探测并给出三态诊断）；
   dry-run 与全部判据套件跨平台直接可跑。
-
-## 公开仓库同步
-
-本包已作为公开仓 `dongsheng123132/2origin` 的 `code-agentteams-standalone/` 目录发布，
-与提交的代码包 zip 内容一致（差异仅：不含本地备份目录 `demo/.benjing-backups/`）。
-判据套件（33 条发证闸门 + 13 条运行时契约）随本目录公开，任何人可复跑：
-
-```bash
-node agentteams/verify-agentteams.mjs   # 通过 33/33
-node agentteams/verify-runtime.mjs      # 13/13
-node agentteams/selfcheck.mjs           # 3/3（--live 另验 WSL/Docker/容器/HTTP 四层在线）
-```
 
 ## License
 
