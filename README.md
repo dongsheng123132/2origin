@@ -1,8 +1,8 @@
 # Benxiang · 本象协议
 
+[![CI](https://github.com/dongsheng123132/2origin/actions/workflows/ci.yml/badge.svg)](https://github.com/dongsheng123132/2origin/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-91%20%2B%2055%20%2B%2015%20%2B%20104%20%2B%2020%20%2B%2087%20%2B%2025%20%2B%2083%20%C2%B7%20conformance%2087%2F87%20%C2%B7%20mutation%2019%2F19-brightgreen.svg)](#快速上手)
 [![conformance](https://img.shields.io/badge/conformance-87%2F87%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![English](https://img.shields.io/badge/docs-English-lightgrey.svg)](README.en.md)
@@ -357,7 +357,7 @@ node spec/conformance/run.mjs --level core \
 `compiler/mutation-check.mjs` 是验证里最关键的一环：它故意打坏每一条协议承诺，
 同时跑自测与一致性向量，看**谁**抓得到。只被自测抓到的，是**协议的覆盖缺口**——
 那条承诺只约束得了这一份实现，换个人照规范另写一份可以合法做丢。
-当前 13 条变异全部被抓出，其中 2 条属于覆盖缺口，已列在
+当前 19 条变异全部被抓出，其中 2 条属于覆盖缺口，已列在
 [conformance/README §五](spec/conformance/README.md)，未掩盖。**协议只保证向量钉住的部分。**
 
 ## 三条候选 MVP（待定）
@@ -376,7 +376,7 @@ node spec/conformance/run.mjs --level core \
 
 Status: v0.1 — draft spec **plus a runnable reference implementation** (`compiler/`, 81 self-tests across two unrelated domains) and two tiers of controlled experimental data with raw results committed.
 
-**Measured result:** on long-form narrative state tracking, Benxiang reaches 98.9–100% state accuracy across 33 runs on two models. **The control-arm numbers were withdrawn on 2026-08-04**: a self-audit found the probe that collected their state carried no conversation history *and* printed most of the answers in the prompt, so the comparison has to be re-run before any claim of a margin stands. Full numbers, limitations and eight self-caught instrumentation accidents: [README.en.md](README.en.md) · [MANIFESTO.en.md](MANIFESTO.en.md) · [CONTRIBUTING.md](CONTRIBUTING.md).
+**Measured result (A2 ablation):** one sentence of prompt (A0 → A2) accounts for +41.3 points of state accuracy, with a significant permutation result. Adding the full machinery (A2 → A3) adds only +2.5 points, not significant (p = 0.47 / 0.72). Token differences are also not significant, so we claim neither savings nor added cost. The only surviving categorical claim is structural: A2 cannot produce evidence chains, while A3 provides traceable evidence for 15.0% / 27.5% of tested fields and every prompt-only baseline remains at 0%. See [paper v0.4 §5.3](benchmark/shadowbench-w/paper/shadowbench-w-paper-en-v0.4.md#53-the-method-ablation--and-separately-judgeharness-validation) and the [results log](benchmark/shadowbench-w/results-log.md). Earlier results remain below as tombstones; they are not erased or cited as mechanistic advantage.
 
 Docs are primarily in Chinese with bilingual terminology.
 

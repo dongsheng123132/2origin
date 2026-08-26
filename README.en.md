@@ -292,7 +292,7 @@ and get it right.
 protocol makes, one at a time, and runs both the self-tests and the conformance vectors against every
 mutant to see **which of the two catches it**. A mutant caught only by the self-tests marks a
 **coverage gap in the protocol** — that promise constrains this one implementation and nothing else.
-All 13 mutants are currently caught; 2 of them are coverage gaps, listed openly in
+All 19 mutants are currently caught; 2 of them are coverage gaps, listed openly in
 [conformance/README §5](spec/conformance/README.en.md). **The protocol guarantees exactly what the
 vectors pin down, and nothing more.**
 
