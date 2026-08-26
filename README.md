@@ -19,6 +19,10 @@
 ## 60 秒试起来
 
 ```bash
+# 方式一：直接装 CLI（零依赖，已发布到 npm）
+npm i -g benxiang-origin              # 之后所有 `node compiler/cli.mjs` 都可换成 `benxiang`
+
+# 方式二：从源码跑（带示例包与全套判据）
 git clone https://github.com/dongsheng123132/2origin && cd 2origin   # 零依赖，不需要 npm install
 npm run verify                        # 全套判据一次跑完（含一致性 87/87、变异 19/19）
 
