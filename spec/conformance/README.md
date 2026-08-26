@@ -19,11 +19,11 @@
 | 实现 | 语言 | core | full | 适配器 |
 |---|---|---|---|---|
 | 参考实现 | JavaScript | ✅ 79/79 | ✅ 8/8 | [`compiler/conformance-adapter.mjs`](../../compiler/conformance-adapter.mjs) |
-| 第二实现 | Python 3 | ✅ 79/79 | ⊘ 未实现 | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
+| 第二实现 | Python 3 | ⚠ 60/79（19 项声明未实现，未实现 ≠ 通过） | ⊘ 未实现 | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
 
-> 第二实现的诚实边界：两份实现出自同一作者，中间没有信息隔离。它证明的是
-> **这套语义可以在另一门语言里独立成立、向量确实是语言中立的契约**，
-> **不**证明「任何人只读规范就能写对」。后者要等真正的第三方实现来验。
+> 第二实现的诚实边界：两份实现出自同一作者，中间没有信息隔离；且第二实现目前只覆盖部分向量
+> （core 60/79，另 19 项声明未实现）。已通过的部分支持「**向量确实是语言中立的契约**」这一判断；
+> **完整语义能否在另一门语言里独立成立**，要等 19 项补齐；「任何人只读规范就能写对」要等真正的第三方实现来验。
 
 ## 二、两个合规等级
 

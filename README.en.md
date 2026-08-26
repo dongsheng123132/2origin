@@ -110,9 +110,9 @@ The W3 distributions are **identical run for run** (10 perfect + 1 at 87.5% on e
 
 **What we do *not* claim**
 
-- **Not "writes more consistently."** No significant difference from RAG. And on the new instrument W1 is not being interpreted at all yet: the judge's vocabulary recognises only about a third of the ways a violation can be phrased ([Run #23](benchmark/shadowbench-w/results-log.md): 13/40); a patch is validated to 40/40 but **not yet applied**; and worse, `ced.mjs` is **also the source of the Benxiang arm's admission gate** ([Run #26](benchmark/shadowbench-w/results-log.md)) — the same rulebook is a shield for one arm and a ruler for all three, so any deterministic-channel comparison carries a circularity.
+- **Not "writes more consistently."** No significant difference from RAG. And on the new instrument W1 is not being interpreted at all yet: the judge's vocabulary recognises only about a third of the ways a violation can be phrased ([Run #23](benchmark/shadowbench-w/results-log.md): 13/40); the patch was validated to 40/40 and then applied ([Run #29](benchmark/shadowbench-w/results-log.md)), after which Benxiang's W1 edge disappeared anyway; and worse, `ced.mjs` is **also the source of the Benxiang arm's admission gate** ([Run #26](benchmark/shadowbench-w/results-log.md)) — the same rulebook is a shield for one arm and a ruler for all three, so any deterministic-channel comparison carries a circularity.
 - **Not "saves tokens" — and no longer "more expensive" either.** Measured at matched conditions: 64612 vs 57598 = **+12.2%, p = 0.5253, not significant**. The "+25% / +75% / +149%" published here earlier all came from the old probe or a single run and are **withdrawn** — back then the control arms' probe was nearly free because it carried no context.
-- **Cross-model still does not hold.** The deepseek control arms have not been re-run on the fixed probe.
+- **Cross-model claims await third-party replication.** The full three-arm × two-model re-run is complete ([paper §7](benchmark/shadowbench-w/paper/shadowbench-w-paper-en-v0.4.md)); what no outside party has yet reproduced is the comparison itself.
 - **n=6, one model.** This round's conclusion rests on W3 only (W3 compares structured state fields, not prose, so it is unaffected by the vocabulary problem).
 
 ---
@@ -279,13 +279,13 @@ read cases on stdin, write results on stdout — can certify itself on the spot.
 ```bash
 npm run test:conformance                       # JavaScript reference: 87/87 (core 79 + full 8)
 node spec/conformance/run.mjs --level core \
-  --adapter "python spec/conformance/implementations/python/adapter.py"   # second impl: 79/79
+  --adapter "python spec/conformance/implementations/python/adapter.py"   # second impl: 60/79 core (19 ops declared unimplemented)
 ```
 
 The [Python second implementation](spec/conformance/implementations/python/benxiang.py) is about
-250 lines with zero dependencies and passes the same vectors. The honest boundary: both
-implementations were written by the same author, so what it demonstrates is that **the vectors are
-genuinely a language-neutral contract** — it does **not** demonstrate that anyone can read the spec
+250 lines with zero dependencies ; it currently passes **60/79 core**, with 19 adapter-declared unimplemented operations (unimplemented ≠ passing), so it does not yet count as conformant. The honest boundary: both
+implementations were written by the same author; a partial second implementation backs only the narrower claim that **the vectors are
+genuinely a language-neutral contract** — not full independent conformance, and not that anyone can read the spec
 and get it right.
 
 `compiler/mutation-check.mjs` is the part that matters most. It deliberately breaks each promise the
@@ -307,7 +307,7 @@ What exists: a protocol draft, a working reference implementation with cross-dom
 
 **What does not exist yet:**
 
-1. **A valid three-arm comparison.** The Benxiang arm is now complete on both models (qwen n=10–11, deepseek n=10 at 98.8% ± 3.95), but **both control arms were withdrawn with Run #18 and have not been re-run**. Until they are, this project has within-arm distributions and no comparison at all — including the comparisons that would flatter it.
+1. **A valid three-arm comparison.** The Benxiang arm is now complete on both models (qwen n=10–11, deepseek n=10 at 98.8% ± 3.95), The full re-run — three arms × two models × 10 rounds under the patched judge — is complete and published in [paper §7](benchmark/shadowbench-w/paper/shadowbench-w-paper-en-v0.4.md); what it has not yet had is **third-party replication**, including of the comparisons that would flatter it.
 2. Production-grade adapters for real formats.
 3. Any real user.
 

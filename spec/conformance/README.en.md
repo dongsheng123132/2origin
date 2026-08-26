@@ -24,12 +24,14 @@ Current status:
 | Implementation | Language | core | full | Adapter |
 |---|---|---|---|---|
 | Reference | JavaScript | ✅ 79/79 | ✅ 8/8 | [`compiler/conformance-adapter.mjs`](../../compiler/conformance-adapter.mjs) |
-| Second | Python 3 | ✅ 79/79 | ⊘ not implemented | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
+| Second | Python 3 | ⚠ 60/79 (19 ops declared unimplemented; unimplemented ≠ passing) | ⊘ not implemented | [`implementations/python/adapter.py`](implementations/python/adapter.py) |
 
 > **Honest boundary on the second implementation:** both implementations were written by the same
-> author, with no information isolation between them. What it demonstrates is that **this semantics
-> stands up independently in another language, and that the vectors really are a language-neutral
-> contract.** It does **not** demonstrate that "anyone can read the spec and get it right."
+> author, with no information isolation between them; and the second implementation covers only part
+> of the suite (core 60/79, 19 ops declared unimplemented). What has passed supports the claim that
+> **the vectors really are a language-neutral contract**; whether the full semantics stands up
+> independently awaits the missing 19 operations, and "anyone can read the spec and get it right"
+> awaits a genuine third-party implementation.
 > That claim needs a genuine third-party implementation — which does not exist yet.
 
 ## 2. Two conformance levels
