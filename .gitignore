@@ -42,6 +42,8 @@ skills-lock.json
 
 # 一次性脚本的临时输出
 h
+# 浏览器自动化留下的 Edge profile（110MB 级，CAD 卡片渲染实验产物，可随时重建）
+.tmp-edge-cad-card/
 
 # 凭证
 .secrets/
