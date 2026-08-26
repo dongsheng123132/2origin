@@ -5,8 +5,8 @@
   "type": "module",
   "license": "Apache-2.0",
   "bin": {
-    "origin": "./compiler/cli.mjs",
-    "origin-mcp": "./compiler/mcp.mjs"
+    "benxiang": "./compiler/cli.mjs",
+    "benxiang-mcp": "./compiler/mcp.mjs"
   },
   "exports": {
     ".": "./compiler/index.mjs",

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-// origin —— 本象包的命令行入口。
+// benxiang —— 本象包的命令行入口。（历史名 origin，为避开 npm 已有同名命令而改）
 //
 // 协议把「证据链」当作核心承诺，那么「这个值凭什么是这个值」就必须是**一条命令**，
 // 而不是一段需要写代码才能读出来的内部结构。子命令各对应一个问题：
 //
-//   origin status   <pkg>              这个包里有什么？
-//   origin why      <pkg> <obj.field>  这个值凭什么是这个值？
-//   origin history  <pkg> [过滤]       都改过什么、谁改的？
-//   origin replay   <pkg> [--until]    某一刻的世界长什么样？
+//   benxiang status   <pkg>              这个包里有什么？
+//   benxiang why      <pkg> <obj.field>  这个值凭什么是这个值？
+//   benxiang history  <pkg> [过滤]       都改过什么、谁改的？
+//   benxiang replay   <pkg> [--until]    某一刻的世界长什么样？
 //   origin diagnose <pkg>              这个包现在健不健康？
 //   origin limits   <pkg>              这个包保证不了什么？
 //   origin commit   <pkg> <tx.json>    把一个语义事务落进去（唯一的写入口）
