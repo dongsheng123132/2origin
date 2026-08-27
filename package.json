@@ -45,7 +45,13 @@
   "files": [
     "compiler/",
     "spec/",
-    "adapters/",
+    "adapters/**/*.mjs",
+    "adapters/**/spec/**",
+    "adapters/law/lawdb.json",
+    "adapters/memory/benxiang-seed.json",
+    "!adapters/**/fixtures/**",
+    "!adapters/**/pkg.origin/**",
+    "!adapters/**/README.md",
     "docs/",
     "LICENSE",
     "README.md"

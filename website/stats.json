@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-08-27T11:43:24.864Z",
+  "commit": "aaf5f648",
+  "serials": [
+    {
+      "id": "yueluo",
+      "title": "月落渡口",
+      "genre": "悬疑志怪",
+      "chapters_verified": 4,
+      "chapter_list": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "words": 9518,
+      "drafts": [],
+      "last_chapter": 14,
+      "last_at": "2026-08-27T10:59:52.852Z"
+    },
+    {
+      "id": "rules",
+      "title": "规则怪谈·无限层",
+      "genre": "规则怪谈",
+      "chapters_verified": 6,
+      "chapter_list": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "words": 15613,
+      "drafts": [],
+      "last_chapter": 6,
+      "last_at": "2026-08-06T01:18:31.122Z"
+    },
+    {
+      "id": "zs",
+      "title": "The Slots（实验）",
+      "genre": "英文试验",
+      "chapters_verified": 6,
+      "chapter_list": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "words": 56458,
+      "drafts": [],
+      "last_chapter": 6,
+      "last_at": "2026-08-06T02:05:38.510Z"
+    }
+  ],
+  "totals": {
+    "chapters_verified": 16,
+    "words": 81589
+  },
+  "drift_rate": null,
+  "cadence": [
+    {
+      "sha": "0f1e86c5",
+      "at": "2026-08-07 02:21:26 +0800",
+      "subject": "归档：月落渡口 ch13/14 草稿 + rk 连载 ch04-06 + 论文 v0.3 引文实查 + S级补跑结果 +"
+    },
+    {
+      "sha": "4f48d457",
+      "at": "2026-08-06 10:17:00 +0800",
+      "subject": "修复 hermes 通道 config 解析：JS 正则无 \\Z（Python 才有），(?=^\\S|\\Z) 里 \\Z "
+    },
+    {
+      "sha": "90ab25b2",
+      "at": "2026-08-06 08:30:35 +0800",
+      "subject": "The Zero Slot 英文连载：zs-run.mjs（数值账本门禁：str+agi+int+vit+wis+sta"
+    },
+    {
+      "sha": "2501bba1",
+      "at": "2026-08-06 07:41:49 +0800",
+      "subject": "OriginWriter 写作引擎 + origin-office 统一 CLI + Shadow Memory MCP"
+    }
+  ]
+}

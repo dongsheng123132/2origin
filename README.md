@@ -182,4 +182,14 @@ Docs are primarily in Chinese with bilingual terminology.
 
 ## License
 
+### 许可证适用表
+
+| 路径 | 许可证 | 备注 |
+|---|---|---|
+| 除下列例外外的仓库内容 | Apache-2.0 | 代码、规范与文档；见 [LICENSE](LICENSE)。 |
+| `novels/` | CC BY-NC-ND 4.0 | 原创叙事正文与 `.origin` 内容物，公开可验证、非商用，不可改写。 |
+| `adapters/story/rk/`、`adapters/story/zs/` | CC BY-NC-ND 4.0 | 原创叙事正文与 `.origin` 内容物；同上。 |
+
+宣传措辞纪律：`novels/` 内容应称为「公开可验证、非商用」，不得称为 open source。
+
 **Apache-2.0**（见 [LICENSE](LICENSE)）。示例与测试语料按 docs/07 的约定分别采用 MIT 与 CC0——语料由世界规格构造生成，不含第三方版权文本。详见 [07-开源与商业](docs/07-开源与商业.md)。

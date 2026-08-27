@@ -157,6 +157,9 @@ async function completeViaHttp(cfg, modelOverride, prompt, maxTokens, timeoutMs)
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), timeoutMs)
   try {
+    // 流式（SSE）：node undici 对非流式响应的 headers 超时硬编码 300s，长生成
+    // （>5 分钟、十级 output token）会 UND_ERR_HEADERS_TIMEOUT（2026-08-27 白鼓续写实测）
+    // ——响应头立即到达即不撞该限制，正文边生成边收。缓冲后返回与旧非流式同构。
     const res = await fetch(`${cfg.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${cfg.apiKey}` },
@@ -164,28 +167,59 @@ async function completeViaHttp(cfg, modelOverride, prompt, maxTokens, timeoutMs)
         model: modelOverride ?? cfg.defaultModel,
         max_tokens: maxTokens,
         messages: [{ role: 'user', content: prompt }],
+        stream: true,
       }),
       signal: ctrl.signal,
     })
     if (!res.ok) throw new Error(`hermes 端点 ${res.status}: ${(await res.text()).slice(0, 400)}`)
-    const data = await res.json()
-    const raw = data.choices?.[0]?.message?.content ?? ''
-    let parsed = null
-    const m = raw.match(/\{[\s\S]*\}/)
-    if (m) try { parsed = JSON.parse(m[0]) } catch {}
-    return {
-      raw,
-      parsed,
-      // 空 raw 时唯一能区分「被截断」与「模型真没说话」的线索：length 表示配额耗尽，
-      // 对带思维链的模型意味着 reasoning 吃光了 max_tokens，正文根本没开始写
-      finishReason: data.choices?.[0]?.finish_reason ?? null,
-      usage: {
-        inputTokens: data.usage?.prompt_tokens ?? estTokens(prompt),
-        outputTokens: data.usage?.completion_tokens ?? estTokens(raw),
-        reasoningTokens: data.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
-        ms: Date.now() - t0,
-      },
+
+    // SSE 解析：拼接 delta.content，追踪 finish_reason；[DONE] 结束。
+    const reader = res.body.getReader()
+    const dec = new TextDecoder()
+    let buf = ''
+    let raw = ''
+    let finishReason = null
+    let usageRaw = null
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buf += dec.decode(value, { stream: true })
+      let nl
+      while ((nl = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, nl).trim()
+        buf = buf.slice(nl + 1)
+        if (!line.startsWith('data:')) continue
+        const payload = line.slice(5).trim()
+        if (payload === '[DONE]') { reader.releaseLock(); return finalize() }
+        let j
+        try { j = JSON.parse(payload) } catch {}
+        if (!j?.choices?.length) continue
+        const delta = j.choices[0].delta?.content
+        if (delta) raw += delta
+        if (j.choices[0].finish_reason) finishReason = j.choices[0].finish_reason
+        if (j.usage) usageRaw = j.usage
+      }
     }
+    // 流可能不带 [DONE] 就结束——归一化同一出口
+    function finalize() {
+      let parsed = null
+      const m = raw.match(/\{[\s\S]*\}/)
+      if (m) try { parsed = JSON.parse(m[0]) } catch {}
+      return {
+        raw,
+        parsed,
+        // 空 raw 时唯一能区分「被截断」与「模型真没说话」的线索：length 表示配额耗尽，
+        // 对带思维链的模型意味着 reasoning 吃光了 max_tokens，正文根本没开始写
+        finishReason,
+        usage: {
+          inputTokens: usageRaw?.prompt_tokens ?? estTokens(prompt),
+          outputTokens: usageRaw?.completion_tokens ?? estTokens(raw),
+          reasoningTokens: usageRaw?.completion_tokens_details?.reasoning_tokens ?? 0,
+          ms: Date.now() - t0,
+        },
+      }
+    }
+    return finalize()
   } finally {
     clearTimeout(timer)
   }

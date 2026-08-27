@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我们能解决什么 — 2Origin 本象协议</title>
+<meta name="description" content="以可验证对象、关系与约束，处理叙事、判决、表格、CAD、教材和项目状态。">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>2Origin</span><span class="zh-name">本象协议</span></a>
+  <div class="nav-links"><a href="manifesto.html" class="hide-sm">宣言</a><a href="solutions.html" class="hide-sm">解决方案</a><a href="cases.html" class="hide-sm">案例</a><a href="challenge.html" class="hide-sm">白鼓挑战</a><a href="../demo/index.html" class="hide-sm">法律 Demo</a><a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a><a class="lang-switch" href="../solutions.html">EN</a></div>
+</div></nav>
+
+<header class="page-hero"><div class="page-hero-inner">
+  <div class="breadcrumb"><a href="index.html">2Origin</a> / 解决方案</div>
+  <h1>我们能解决什么</h1>
+  <p class="sub">不是让 AI 猜一个结果；而是把领域事实、依赖、约束和依据保存为可核验对象。违规不写入，并说明为什么。</p>
+</div></header>
+
+<section class="section"><div class="prose">
+  <h2>方言矩阵</h2>
+  <table class="data-table">
+    <thead><tr><th>方言</th><th>输入</th><th>机器判据</th><th>输出证据</th></tr></thead>
+    <tbody>
+      <tr><td>叙事 / 白鼓</td><td>长篇连载</td><td>五道门禁 + 伏笔状态机</td><td>每章世界状态可用 Node 验证。例：未回收伏笔却标记“已解决”时，事务零写入并退回。</td></tr>
+      <tr><td>判决依据链</td><td>裁判文书</td><td>量刑法定区间约束</td><td>违规零写入 + 拒绝依据。例：自首减 55% 超过法定 40% 上限，当场拒绝。</td></tr>
+      <tr><td>表格依赖链</td><td>Excel 公式表</td><td><code>relations</code> 依赖图</td><td>“这个数由哪 10 个人工录入决定”。例：公式引用断裂时，不生成看似正确的追溯链。</td></tr>
+      <tr><td>CAD 审图</td><td>DWG / DXF 窗洞构件</td><td>对象级约束</td><td>审计清单 + 位置锚点。例：没有可追溯源对象的窗洞计数，零写入并报缺失锚点。</td></tr>
+      <tr><td>教材体检</td><td>DOCX 插图规范</td><td>图号 / 引用一致性</td><td>体检报告（红点清单）。例：正文引用不存在的图号，拒绝把该稿标为通过。</td></tr>
+      <tr><td>项目状态</td><td>聊天记录</td><td>状态事务幂等</td><td>MCP 秒恢复。例：陈旧事务的 <code>expected_state_version</code> 不匹配时零写入并返回冲突。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>先看一个可运行的拒绝</h2>
+  <p>法律方言的关键不在“生成一份判决”，而在拒绝没有依据的写入。浏览器本地演示把自首减免故意改到上限之外，立即给出法定区间与拒绝理由。</p>
+  <div class="hero-cta"><a class="btn btn-primary" href="../demo/index.html">打开法律依据链 Demo</a><a class="btn btn-ghost" href="cases.html" style="border-color:var(--gold);color:var(--gold-deep)">查看可跑案例</a></div>
+
+  <h2>联系</h2>
+  <p><a href="mailto:hi@2origin.org">hi@2origin.org</a> · <a href="https://github.com/dongsheng123132/2origin/issues" target="_blank" rel="noopener">GitHub Issues ↗</a></p>
+</div></section>
+
+<footer class="footer"><div class="footer-inner"><div><div class="brand-line">2Origin <span class="zh">本象协议</span></div><p>保存本象，按需投影。</p></div><div><h4>项目</h4><a href="cases.html">案例</a><a href="challenge.html">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a></div></div><div class="footer-bottom"><div class="in"><span>© 2026 2Origin 协议 · Apache-2.0</span><span>本象协议 · Benxiang · Origin IR</span></div></div></footer>
+</body>
+</html>

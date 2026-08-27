@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>案例 — 2Origin 本象协议</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<nav class="nav"><div class="nav-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>2Origin</span><span class="zh-name">本象协议</span></a><div class="nav-links"><a href="solutions.html" class="hide-sm">解决方案</a><a href="cases.html" class="hide-sm">案例</a><a href="challenge.html" class="hide-sm">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a><a class="lang-switch" href="../cases.html">EN</a></div></div></nav>
+<header class="page-hero"><div class="page-hero-inner"><div class="breadcrumb"><a href="index.html">2Origin</a> / 案例</div><h1>案例墙</h1><p class="sub">每张卡只给三件事：问题、可跑命令、可回看的证据。</p></div></header>
+<section class="section"><div class="grid-3">
+  <article class="card"><div class="tag">Law</div><h3>判决书量刑依据链</h3><p><strong>问题：</strong>自首、从犯等量刑调节能否逐项落在法定区间内？</p><p><code>node adapters/law/import.mjs adapters/law/fixtures/B-缺陷.txt /tmp/B.origin</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/law/fixtures" target="_blank" rel="noopener">证据：公开 fixture ↗</a></p></article>
+  <article class="card"><div class="tag">XLSX</div><h3>表格依赖链</h3><p><strong>问题：</strong>预算表里的一个公式数字究竟由哪些人工输入决定？</p><p><code>node adapters/xlsx/import.mjs adapters/xlsx/fixtures/A-合规.xlsx /tmp/A.origin</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/xlsx/fixtures" target="_blank" rel="noopener">证据：公开 fixture ↗</a></p></article>
+  <article class="card"><div class="tag">CAD</div><h3>CAD 窗洞审计</h3><p><strong>问题：</strong>窗洞对象是否能按源实体复核，而非靠截图计数？</p><p><code>node adapters/cad/import.mjs adapters/cad/fixtures/A-101.dxf /tmp/A-101.origin --name A-101</code></p><p><a href="blog/cad-ai-audit.html">证据：脱敏审计博文与 fixture →</a></p></article>
+  <article class="card"><div class="tag">Textbook</div><h3>教材图片体检</h3><p><strong>问题：</strong>某出版社工程制图教材 3 份稿件的图号与正文引用是否一致？</p><p><code>node adapters/textbook/import.mjs adapters/office/fixtures/synthetic.docx --json</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/office/fixtures" target="_blank" rel="noopener">证据：合成 fixture ↗</a></p></article>
+  <article class="card"><div class="tag">Story</div><h3>白鼓叙事状态</h3><p><strong>问题：</strong>长篇连载的伏笔、秘密和人物状态能否逐章验证？</p><p><code>node adapters/story/cli.mjs state novels/月落渡口.origin</code></p><p><a href="challenge.html">证据：白鼓挑战规则 →</a></p></article>
+</div></section>
+<footer class="footer"><div class="footer-inner"><div><div class="brand-line">2Origin <span class="zh">本象协议</span></div><p>保存本象，按需投影。</p></div><div><h4>项目</h4><a href="solutions.html">解决方案</a><a href="challenge.html">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a></div></div><div class="footer-bottom"><div class="in"><span>© 2026 2Origin 协议 · Apache-2.0</span><span>本象协议 · Benxiang · Origin IR</span></div></div></footer>
+</body></html>

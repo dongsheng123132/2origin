@@ -74,21 +74,21 @@
     95.8% ± 5.9 vs 52.1% ± 19.7 / 58.3% ± 11.8，p = 0.0024。全球没有第二家做「状态写回验证」的基准——
     考题是我们定义的，标准制定权在我们手里。</p>
 
-    <h2>现在的进度（2026-08-06 实测）</h2>
-    <table class="data-table">
-      <thead><tr><th>连载</th><th>进度</th></tr></thead>
-      <tbody>
-        <tr><td>《月落渡口》· 悬疑志怪</td><td>2 章 · 4,347 字</td></tr>
-        <tr><td>《规则怪谈·无限层》· 规则怪谈</td><td>4 章 · 11,671 字</td></tr>
-      </tbody>
-    </table>
-    <p class="note"><strong>drift-rate</strong>（模型记错前值率）<strong>8.3%</strong>，可观测、逐章下降、目标归零。</p>
-    <div class="milestones">
-      <div class="milestone"><div class="dist">现在</div><h3>两部连载</h3><p>状态开源可验证</p></div>
-      <div class="milestone"><div class="dist">下一步</div><h3>10 万字</h3><p>公开里程碑</p></div>
-      <div class="milestone"><div class="dist">再然后</div><h3>100 万字</h3><p>百万字不失忆</p></div>
-      <div class="milestone"><div class="dist">目标</div><h3>破 22,400 页</h3><p>超越人类纪录</p></div>
-    </div>
+    <h2>现在的进度（数字由 <code>scripts/challenge-stats.mjs</code> 生成，不手写）</h2>
+        <div id="progress"><p>正在读取 <code>stats.json</code>…</p></div>
+        <p class="note" id="drift-note">drift-rate（模型记错前值率）：上次实测 8.3%（2026-08-06；Run 编号未留存），
+        随下个里程碑按同协议重测后以「Run 编号 + 日期」更新。无编号的裸数字不上墙。</p>
+        <div class="milestones">
+          <div class="milestone"><div class="dist">现在</div><h3 id="m-now">…</h3><p>每章世界状态可 clone 验证</p></div>
+          <div class="milestone"><div class="dist">M1</div><h3>20 章已验证</h3><p>主指标：可验证章数（字数只是副指标）</p></div>
+          <div class="milestone"><div class="dist">M2</div><h3>50 章已验证</h3><p>百万字不失忆的中途站</p></div>
+          <div class="milestone"><div class="dist">M3</div><h3>100 章已验证</h3><p>超过人类长篇平均长度的数量级</p></div>
+          <div class="milestone"><div class="dist">终极</div><h3>破 22,400 页</h3><p>超越人类纪录，且全程可验证</p></div>
+        </div>
+
+        <h2>连载节奏（cadence）</h2>
+        <p class="note">公开停更比假装连续更值钱。停更区间如实标注：</p>
+        <ul id="cadence"><li>加载中…</li></ul>
 
     <h2>规则（挑战本身也要可验证）</h2>
     <ol>
@@ -106,7 +106,7 @@
     <div class="honesty">
       <h3>诚实边界</h3>
       <ul>
-        <li><strong>目标尚未达成——这是挑战，不是成绩单。</strong>现在约 1.6 万字，里程碑在前方。</li>
+        <li><strong>目标尚未达成——这是挑战，不是成绩单。</strong>现在 <span id="now-words">…</span>，里程碑在前方。</li>
         <li>实测基于单一模型（deepseek-v4-flash）、自造夹具。</li>
         <li>「98.9% vs 75%」是自建基准 ShadowBench-W 的口径，非第三方评测。</li>
         <li>Venmurasu 事实已核实（26 卷 / 约 22,400 页 / 2014–2020，单人完成，Wikipedia 2026-08-06）。</li>
@@ -146,6 +146,37 @@
     </div>
   </div>
 </footer>
+
+<script>
+// 数字全部来自 scripts/challenge-stats.mjs 生成的 stats.json（不手写）
+fetch('./stats.json').then(function (r) { return r.json() }).then(function (s) {
+  var rows = s.serials.map(function (x) {
+    return '<tr><td>' + x.title + ' · ' + x.genre + '</td><td>' + x.chapters_verified +
+      ' 章已验证 · ' + x.words.toLocaleString() + ' 字符' +
+      (x.drafts.length ? ' · ' + x.drafts.length + ' 章草稿未计' : '') + '</td></tr>'
+  }).join('')
+  document.getElementById('progress').innerHTML =
+    '<table class="data-table"><thead><tr><th>连载</th><th>进度</th></tr></thead><tbody>' + rows +
+    '<tr><td><strong>合计</strong></td><td><strong>' + s.totals.chapters_verified +
+    ' 章已验证 · ' + s.totals.words.toLocaleString() + ' 字符</strong></td></tr></tbody></table>'
+  document.getElementById('m-now').textContent = s.totals.chapters_verified + ' 章已验证 · ' + s.totals.words.toLocaleString() + ' 字符'
+  document.getElementById('now-words').textContent = s.totals.chapters_verified + ' 章已验证、约 ' + (s.totals.words / 10000).toFixed(1) + ' 万字符'
+  var items = []
+  var cs = s.cadence
+  if (cs.length) {
+    // 最新章提交至今的停更区间（诚实标注）
+    items.push('<li><code>' + cs[0].sha + '</code> ' + cs[0].at.slice(0, 10) + ' — ' + cs[0].subject + '</li>')
+    for (var i = 1; i < cs.length; i++) {
+      var gap = (new Date(cs[i - 1].at) - new Date(cs[i].at)) / 86400000
+      if (gap > 7) items.push('<li class="note">▮ 停更 ' + Math.round(gap) + ' 天（' + cs[i].at.slice(0, 10) + ' → ' + cs[i - 1].at.slice(0, 10) + '）' + (cs[i].at.slice(0, 10) >= '2026-08-06' ? '：GOAI 复赛备赛期' : '') + '</li>')
+      items.push('<li><code>' + cs[i].sha + '</code> ' + cs[i].at.slice(0, 10) + ' — ' + cs[i].subject + '</li>')
+    }
+  }
+  document.getElementById('cadence').innerHTML = items.join('') || '<li>（暂无提交记录）</li>'
+}).catch(function (e) {
+  document.getElementById('progress').innerHTML = '<p class="note">stats.json 读取失败：' + e.message + '</p>'
+})
+</script>
 
 </body>
 </html>

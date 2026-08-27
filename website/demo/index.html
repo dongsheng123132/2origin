@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量刑依据链 Demo — 2Origin</title>
+<meta name="description" content="本地浏览器中的本象法律方言量刑依据链演示。">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="../zh/index.html"><span class="brand-mark" aria-hidden="true"></span><span>2Origin</span><span class="zh-name">本象协议</span></a>
+  <div class="nav-links"><a href="../zh/solutions.html" class="hide-sm">解决方案</a><a href="../zh/cases.html" class="hide-sm">案例</a><a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a></div>
+</div></nav>
+
+<header class="page-hero"><div class="page-hero-inner">
+  <div class="breadcrumb"><a href="../zh/index.html">2Origin</a> / 法律 Demo</div>
+  <h1>量刑依据链：越界，当场退回</h1>
+  <p class="sub">仅浏览器本地演示，不上传任何数据。示例均为虚构文本，不构成法律意见或裁判工具。</p>
+</div></header>
+
+<section class="section"><div class="prose">
+  <label for="sample-select"><strong>预置判决样例</strong></label>
+  <select id="sample-select" aria-label="选择预置判决样例">
+    <option value="lawful">样例一：自首减 35%（合法）</option>
+    <option value="illegal">样例二：自首减 55%（违法）</option>
+    <option value="accomplice">样例三：从犯减轻 50%（合法）</option>
+  </select>
+  <p id="judgment-text" class="note"></p>
+  <div class="hero-cta"><button id="force-violation" class="btn btn-primary" type="button">故意改成超上限</button><button id="restore-sample" class="btn btn-ghost" type="button" style="border-color:var(--gold);color:var(--gold-deep)">恢复预置样例</button></div>
+  <div id="result" aria-live="polite"></div>
+</div></section>
+
+<section class="section tight"><div class="two-col">
+  <div><div class="card"><div class="tag">Origin package</div><h2>本象包对象树</h2><div id="object-tree"></div></div></div>
+  <div><div class="card"><div class="tag">Why</div><h2>依据链</h2><div id="why-chain"></div></div></div>
+</div></section>
+
+<footer class="footer"><div class="footer-inner"><div><div class="brand-line">2Origin <span class="zh">本象协议</span></div><p>保存本象，按需投影。</p></div><div><h4>继续查看</h4><a href="../zh/solutions.html">解决方案</a><a href="../zh/cases.html">案例</a></div></div><div class="footer-bottom"><div class="in"><span>仅本地浏览器演示</span><span>不上传任何数据</span></div></div></footer>
+<script src="law-demo.js"></script>
+</body>
+</html>

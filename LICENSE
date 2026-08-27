@@ -1,4 +1,13 @@
 
+NOTICE: SCOPE EXCEPTIONS
+
+The original narrative prose and .origin package contents under novels/ and
+adapters/story/{rk,zs}/ are licensed under Creative Commons
+Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0),
+not under this Apache License. They are not open source; publicly verifiable but may not be
+used commercially or adapted. All other repository content is licensed under
+Apache-2.0.
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
