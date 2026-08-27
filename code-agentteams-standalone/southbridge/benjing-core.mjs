@@ -245,11 +245,44 @@ export function readState(p) {
  * 语义和影核 v0.2 的 expect_sha256 一致：证明你读过当前内容，才准写。
  */
 export function putState(p, next, { expect = null, actor = null } = {}) {
-  let current = null;
-  if (fs.existsSync(p)) {
-    try { current = readState(p); }
-    catch (e) { return { status: 'failed', reason: 'current state unparseable: ' + e.message }; }
+  // 乐观锁能识别「我读盘后，别人写过」；但两位写者若同时读到同一份内容，仍会
+  // 一起通过 expect 并依次覆盖。锁必须包住**读 → 比 → 写 → 回读**整个临界区，
+  // 而不是只包 writeAtomic 那一瞬间。锁名由绝对路径派生，避免不同学历互相串锁。
+  //
+  // Windows 锁身份必须**规范化物理路径**：NTFS 默认大小写不敏感，`demo/x` 与
+  // `DEMO/X` 是同一文件，但 path.resolve 字符串不同 → 两把锁 → 两个进程可同时
+  // 进临界区（sol R6 抓出）。realpathSync.native 拿到物理路径后小写归一，junction
+  // 边界仍不可完全消除（需要的话在文档里声明），但大小写别名这一层必须堵住。
+  let absolute = path.resolve(p);
+  try { absolute = fs.realpathSync.native(absolute); } catch { /* 文件可能尚不存在：退回 resolve 结果 */ }
+  const lockKey = absolute.toLowerCase();
+  const lockPath = path.join(
+    path.dirname(absolute),
+    `${crypto.createHash('sha256').update(lockKey).digest('hex')}.lock`,
+  );
+  let lockFd;
+  try {
+    lockFd = fs.openSync(lockPath, 'wx');
+  } catch (e) {
+    // Windows 上另一个进程正 close/unlink 同一个 wx 锁时，Node 有时返回 EPERM
+    // 而非 EEXIST；这仍是「没有取得锁」，不能误读成一般写入失败或放行继续写。
+    if (e?.code === 'EEXIST' || e?.code === 'EPERM') {
+      return {
+        status: 'diverged',
+        reason: '学历写入锁被并发占用（另一个进程正在写同一份学历）',
+        disk_unchanged: true,
+      };
+    }
+    return { status: 'failed', reason: '创建学历写入锁失败: ' + e.message, disk_unchanged: true };
   }
+
+  try {
+    // 取得锁后才读盘：等待锁期间可能已有写者完成，不能沿用任何锁前快照。
+    let current = null;
+    if (fs.existsSync(p)) {
+      try { current = readState(p); }
+      catch (e) { return { status: 'failed', reason: 'current state unparseable: ' + e.message }; }
+    }
 
   if (current && expect !== null && expect !== current.computed) {
     return {
@@ -428,6 +461,10 @@ export function putState(p, next, { expect = null, actor = null } = {}) {
     status: changed ? 'done' : 'unchanged', content_hash: newHash, version: body.version,
     backup_path: backupPath, manifest,
   };
+  } finally {
+    try { fs.closeSync(lockFd); } catch { /* 已关闭或 close 失败时仍尝试清理锁文件 */ }
+    try { fs.unlinkSync(lockPath); } catch { /* 不掩盖主写入结果；下次会 fail-closed 为 diverged */ }
+  }
 }
 
 /**

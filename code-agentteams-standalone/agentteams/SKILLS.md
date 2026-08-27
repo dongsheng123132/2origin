@@ -17,7 +17,7 @@
 | 写学历 | `xueji.append` / `xueji.set` / `xueji.put` | 一切状态变更的唯一通道 |
 | 读世界 | `quxiang.observe` / `quxiang.reobserve` | 唯一的观察者 |
 | 装上下文 | `northbridge.boot` / `northbridge.request` | 唯一的上下文投影器 |
-| 发证 | `certify.stamp` / `certify.observe` / `certify.certify` / `certify.whoami` | 唯一的升降级通道 |
+| 发证 | `certify.stamp` / `certify.observe` / `certify.certify` / `certify.audit` / `certify.whoami` | 唯一的升降级通道与独立审计入口 |
 | 运行 | `runtime.start` / `runtime.health` / `runtime.stop` | WSL、Docker、容器、HTTP 的四层生命周期 |
 | 复核 | `fact.recheck` / `xuetang.exam` | 事实与经验的生命周期 |
 | 判据 | 15 个 `verify-*.mjs` 套件 | 所有主张的可证伪面 |
@@ -127,7 +127,7 @@ node agentteams/certify.mjs certify --state <s> --learning <id>
 - **安全边界**：四道闸全部在**跑考试之前**（否则自证者虽拿不到证书仍能刷考试次数，判据 `C12`）；
   身份只有 `attested` 才准发证，`declared` 不算；作者是 `declared` 时不拦但必须落
   `separation_strength: examiner_only`——**不披露就是谎报证明强度**
-- **验证方式**：`node agentteams/verify-agentteams.mjs`（33 条，29 条反向用例）；
+- **验证方式**：`node agentteams/verify-agentteams.mjs`（50 条，44 条反向用例；以实跑输出为准）；
   `node demo/agentteams-bridge/e2e-real-attestation.mjs`（真实 Tuwunel 三身份 12/12）
 - **⚠ 已知强度上限**：单元判据里的 homeserver 是自带 stub，只证明**闸门逻辑**；
   实机链使用 AgentTeams 自带 Tuwunel，证明进程隔离与用户名空间隔离，不等于第三方运营的身份锚
@@ -141,6 +141,17 @@ node agentteams/certify.mjs certify --state <s> --learning <id>
   在出现第二个真实签发者之前，写「支持多种身份源」就是一句没有判据的话。
 - **实弹**：`node demo/agentteams-bridge/probe-multiagent-selfcert.mjs`
   （复现旧路径下 Worker 自考自判 → 落盘 verified → 北桥注入的完整链路，退出码 1 = 洞仍在）
+
+### `certify.audit` — 独立审计已发证记录
+
+```bash
+node agentteams/certify.mjs audit --state <学历路径> --learning <id>
+```
+
+- **用途**：以第四个、已签发且不与作者/观察者/考官重合的身份，复核同一条学历中的证书、观察来源与人工批准物证。
+- **人工确认口径**：声明式批准回执闸门——防止批准者标识与考官标识相同；回执绑定学历、经验与时间并留内容哈希；拒绝时学历零改动。不主张「验证批准者是人类」。
+- **输入输出**：stdout 一行 `certify.result` JSON；只读学历，审计结论追加进认证台账。
+- **失败处理**：身份服务不可达退出 `4` 并显式 `unreachable:true`；身份未签发、角色重合、证书/观察/人工回执不一致退出 `2`。审计逐项输出 findings，任一失败即拒绝，不把仪器失效读成经验失败。
 
 ## 7. `runtime.start` / `runtime.health` / `runtime.stop` — 一键生命周期
 
@@ -156,7 +167,7 @@ node agentteams/runtime.mjs stop
 - **成功判据**：专用 WSL pin、Docker daemon、三个容器、三个 HTTP 入口四层同时健康
 - **失败处理**：`health` 不健康退出 3；动作失败退出 4，并给出失败 stage；URL 诊断会脱敏
 - **幂等与回滚**：重复 start 不重复启动；stop 先停容器再停专用 pin，不误杀别的 WSL 会话
-- **验证方式**：`node agentteams/verify-runtime.mjs`（8 条，含 Docker 不可达、HTTP 假活、停止顺序与无副作用 dry-run）
+- **验证方式**：`node agentteams/verify-runtime.mjs`（含 Docker 不可达、HTTP 假活、停止顺序与无副作用 dry-run；条数以实跑输出为准）
 - **无密钥总检**：`node agentteams/selfcheck.mjs`；加 `--live` 才检查当前部署
 
 ## 8. `fact.recheck` — 事实也会过期
@@ -185,7 +196,7 @@ node xuetang/exam.mjs [--dry-run]
 - **已知洞（写在协议里，不藏）**：挂一个恒绿命令（`node --version`）就能骗过考试。
   v0.1 不假装解决，只让它**可见可数**：只有被观察到红过至少一次的考题才算 `proven`，
   其余标 `unproven` 并单独计数
-- **验证方式**：`node xuetang/verify-xuetang.mjs`（33 条）
+- **验证方式**：`node xuetang/verify-xuetang.mjs`（主仓才有，独立包不含此套件；条数以实跑输出为准）
 
 ## 10. 判据套件 ×15 — 所有主张的可证伪面
 
@@ -238,6 +249,6 @@ node governance/anchor.mjs build|stamp|upgrade|verify
   `agentteams-bridge/0.1` …）。**协议号变更必须伴随判据套件变更**，否则那个版本号没有含义
 - 回滚：南桥每次覆盖写前自动备份到 `southbridge/.backups/`，学籍写前备份到 `demo/.benjing-backups/`，
   返回值里带 `backup_path` 与 `undo_hint`——**reversible 是物证不是形容词**
-- 开源分发：Apache-2.0（与 AgentTeams 一致），依赖仅 Node 标准库，无第三方运行时依赖
+- 开源分发：AgentTeams 桥接包 MIT（见独立包 LICENSE），依赖仅 Node 标准库，无第三方运行时依赖
 - ⚠ 历史备份与锚点快照里的旧命名**永远不改**——改一个字节 `.ots` 就失效。
   `demo/.benjing-backups/` 这个目录名因此永久保留旧名：**化石不是债，是证据链完整的证明**

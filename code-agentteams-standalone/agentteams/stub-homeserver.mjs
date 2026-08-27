@@ -23,10 +23,15 @@ const TOKENS = {
   'tok-alice': '@worker-alice:test.local',      // 作者
   'tok-bob': '@worker-bob:test.local',          // 考官
   'tok-carol': '@worker-carol:test.local',      // 取象（v0.2 新增的第三个职能）
+  'tok-dave': '@worker-dave:test.local',        // 审计（四角色演示）
   // tok-empty 故意返回 200 但不带 user_id：制造「存在性检查冒充验证」的反向用例
 };
 
 const server = http.createServer((req, res) => {
+  if (req.url.startsWith('/_matrix/client/versions')) {
+    res.writeHead(200, { 'content-type': 'application/json' }).end('{"versions":["v1.1"]}');
+    return;
+  }
   if (!req.url.startsWith('/_matrix/client/v3/account/whoami')) {
     res.writeHead(404, { 'content-type': 'application/json' }).end('{}');
     return;

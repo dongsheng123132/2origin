@@ -57,7 +57,7 @@ catch (error) {
 
 const checks = [
   { id: 'runtime-contract', label: '运行控制契约与故障注入', args: ['agentteams/verify-runtime.mjs'], expectExit: 0 },
-  { id: 'certification-gate', label: '三身份发证闸门与反向用例', args: ['agentteams/verify-agentteams.mjs'], expectExit: 0 },
+  { id: 'four-role-certification-exceptions', label: '四角色发证、人工确认与异常反向用例', args: ['agentteams/verify-agentteams.mjs'], expectExit: 0, timeoutMs: 360_000 },
   { id: 'runtime-plan', label: '启动计划可解析且无副作用', args: ['agentteams/runtime.mjs', 'start', '--dry-run'], expectExit: 0 },
 ];
 if (args.live) checks.push({ id: 'runtime-live', label: 'WSL/Docker/容器/HTTP 四层在线', args: ['agentteams/runtime.mjs', 'health'], expectExit: 0, timeoutMs: 30_000 });

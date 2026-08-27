@@ -92,7 +92,7 @@ AgentTeams 恰好是：Worker 的 Matrix 身份由 homeserver 签发，
 | **禁止** | 修改被判对象；**执行任何命令**（v0.2 起，判据 `O1b` 逐字检查 `cmdCertify` 段内不得出现 `spawnSync`/`execSync`/`exec(`） |
 | **权限边界** | 只能改学历里 `learnings[].status`、`exam`、`observation.consumed_by` 三处；八道闸门全部在写盘之前：G1 考官须 attested / G2 须知作者 / G3 考官≠作者 / G4 recheck 形式可跑 / G5 必须有观察记录 / G6 观察者须 attested 且 ≠作者≠考官 / G7 观察须对应当前考题（改题即作废）/ G8 观察未被用过（防重放） |
 | **状态流转** | `pass` → candidate 升 verified；`fail` → verified 当场降 candidate；`error` → 不升不降 |
-| **异常分支** | 够不着 homeserver → 报 `examiner_unreachable` 并**拒绝发证**，但不判经验对错（仪器失效 ≠ 被测对象的属性） |
+| **异常分支** | 够不着 homeserver → 报 `examiner_unreachable`、退出 `4` 并拒绝发证，但不判经验对错（仪器失效 ≠ 被测对象的属性） |
 | **它凭什么不能作弊** | 身份必须 `attested`（问过 homeserver），`declared` 不算；拒绝发证也要留台账（判据 `C7`）——只在通过时记账的账本，记的是喜报不是历史 |
 
 ## 4. 审计 Agent · Auditor（第四个，可选但强烈建议）
@@ -100,12 +100,12 @@ AgentTeams 恰好是：Worker 的 Matrix 身份由 homeserver 签发，
 | 项 | 内容 |
 |---|---|
 | **AgentTeams 载体** | Worker，或由 Manager 定时触发 |
-| **职责** | 带外对账 + 证据锚定。回答「这一轮里，谁说的话和盘上的现实对不上」 |
-| **输入** | 整个仓库 |
-| **输出** | `oob/crosscheck.jsonl`；`governance/anchors/<内容哈希>.json(.ots)` |
-| **可用工具** | `oob/crosscheck.mjs`、`southbridge/fact-recheck.mjs`、`governance/anchor.mjs stamp/upgrade/verify` |
+| **职责** | 只读复核已发证记录：证书、观察、角色分离与人工确认回执必须内部一致 |
+| **输入** | 学历路径 + learning id（需要复核回执哈希时带回执路径） |
+| **输出** | `certify.result` JSON（逐项 findings）与认证台账 |
+| **可用工具** | `agentteams/certify.mjs audit` |
 | **禁止** | 修复它发现的分歧（发现者不做修复，否则「分歧数=0」会变成它的 KPI） |
-| **异常分支** | 退出码 1 = 有分歧待解释，交回房间给人；锚定退出码 5 = 够不着日历服务器（仪器失效），6 = 只有日历承诺尚未进块 |
+| **异常分支** | 退出码 2 = 有分歧待解释/审计拒绝（身份未签发、角色重合、证书不一致、人工回执缺失），交回房间给人；退出码 4 = 仪器故障（身份服务不可达、超时）；锚定退出码 5 = 够不着日历服务器（仪器失效），6 = 只有日历承诺尚未进块 |
 
 ---
 
@@ -139,7 +139,7 @@ Examiner 发证（certify.mjs certify，身份=自己）
       └─ error → 不升不降
       │
       ▼
-Auditor 对账（学历声称 ↔ 影核审计 ↔ 磁盘实数）→ 分歧退出码 1
+Auditor 对账（学历声称 ↔ 影核审计 ↔ 磁盘实数）→ 分歧退出码 2
       │
       ▼
 Auditor 锚定（证据集合指纹 → OpenTimestamps → 比特币区块头）
@@ -181,13 +181,13 @@ grin.hu / dendrite.matrix.org / envs.net …），**0 个允许 `m.login.dummy` 
 
 ## 7. 目前的证明强度，以及它的上限
 
-- ✅ 闸门逻辑成立：`node agentteams/verify-agentteams.mjs` 为 33/33，其中 29 条是反向用例。
+- ✅ 闸门逻辑成立：`node agentteams/verify-agentteams.mjs` 为 50/50，其中 44 条是反向用例（以实跑输出为准）。
 - ✅ 真身份闭环成立：本机 AgentTeams v1.2.2 自带 Tuwunel 签发三个不同身份，
   `node demo/agentteams-bridge/e2e-real-attestation.mjs` 为 12/12；作者自证、无观察发证、
   作者自观察和观察重放都被拒绝。
 - ✅ 重启可复现：`node agentteams/provision-identities.mjs` 可在令牌目录被系统清理后重新签发三身份，
   令牌只落本机临时目录，stdout 只输出不可逆指纹。
-- ⚠️ 判据里的 homeserver 仍是本仓库 stub，所以那套 33/33 只证明闸门逻辑；
+- ⚠️ 判据里的 homeserver 仍是本仓库 stub，所以那套 50/50 只证明闸门逻辑；
   12/12 才是真 Tuwunel 身份链。
 - ⚠️ Tuwunel 由我们自己部署，强度来自进程与签发权隔离，不来自“第三方运营”。
   因此可以主张“平台签发且 Worker 不能伪造三身份”，不主张“第三方身份锚定”。

@@ -1,18 +1,21 @@
 # AgentTeams 桥接包（可独立运行）
 
 这是「2origin 本象计算机」的 AgentTeams 交付验证基础设施独立包。
-**本目录自含全部依赖**：把本目录整个拷到任何有 Node.js >= 22 的机器上即可运行，
+**本目录自含全部依赖**：把本目录整个拷到任何有 Node.js >= 18 的机器上即可运行，
 不需要原仓库的其他部分。
 
 ## 一分钟验证
 
 ```bash
-node agentteams/selfcheck.mjs          # 自检：3/3
-node agentteams/verify-agentteams.mjs  # 发证闸门判据：33/33
-node agentteams/verify-runtime.mjs     # 运行时契约判据：13/13
+node agentteams/verify-agentteams.mjs
+node agentteams/verify-runtime.mjs
+node agentteams/verify-identity-anchors.mjs
+node agentteams/selfcheck.mjs
+node agentteams/demo-four-roles.mjs
+node agentteams/demo-publishing.mjs --identity-mode auto
 ```
 
-四条全绿即包完好。
+上述六条均退出 `0` 即包完好；各判据脚本自行报告实际判据数（当前发证闸门为 50 条）。
 
 `verify-identity-anchors.mjs` 是复赛期新增的跨主机身份锚判据（承诺⑤）：
 OIDC userinfo / SPIFFE JWT-SVID 本地验签 / K8s TokenReview 三种签发者适配，
@@ -20,18 +23,19 @@ OIDC userinfo / SPIFFE JWT-SVID 本地验签 / K8s TokenReview 三种签发者�
 
 ## 它做什么
 
-把「Worker 说做完了」改造成一条**可核验的三身份状态流**：
+把「Worker 说做完了」改造成一条**可核验的四角色状态流**：
 
 | 身份 | 能做什么 | 不能做什么 |
 |---|---|---|
 | Executor（作者） | 只能登记 `candidate` 经验 | 不能给自己发 `verified` |
 | Sensor（取象） | **唯一**被允许执行检查命令的角色 | 不判分 |
 | Examiner（考官） | 只读观察记录、判升降级 | 不执行任何命令 |
+| Auditor（审计） | 逐项校验证书、观察与人工回执一致性 | 不兼任前三个角色 |
 
 三个身份由 Matrix homeserver 签发的 attested 身份担任；无 attested 身份时闸门
 fail-closed（拒绝发证并说明理由），而不是降级放行。
 
-## 三身份实弹演示（可选）
+## 四角色演示（可选）
 
 需要三个不同的身份。没有真实 Tuwunel 时可用自带测试替身（`stub-homeserver.mjs`，
 它只用于走通代码路径，其绿灯**不证明**任何身份强度——见该文件头注）：
@@ -41,7 +45,7 @@ fail-closed（拒绝发证并说明理由），而不是降级放行。
 node agentteams/stub-homeserver.mjs
 # 输出 {"ready":true,"url":"http://127.0.0.1:PORT"}
 
-# 终端 2/3/4：三个身份各自 export 后依次执行
+# 终端 2/3/4/5：四个身份各自 export 后依次执行
 export MATRIX_HOMESERVER_URL=http://127.0.0.1:PORT
 export MATRIX_ACCESS_TOKEN=tok-alice
 node agentteams/certify.mjs stamp --state demo/agentteams-bridge/task.origin.json \
@@ -86,4 +90,5 @@ demo/          示例学历与发证台账（可直接对它跑 stamp/observe/ce
 
 ## License
 
-MIT
+AgentTeams 桥接包独立分发物：MIT（LICENSE 随独立包与公开仓 `code-agentteams-standalone/`）；
+本仓库其余内容：Apache-2.0（见根目录 LICENSE）。

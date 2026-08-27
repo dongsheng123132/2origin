@@ -1,0 +1,8 @@
+{
+  "title": "AgentTeams 出版复核样稿",
+  "isbn": "978-1234567890",
+  "chapters": [
+    { "number": 1, "title": "独立观察" },
+    { "number": 2, "title": "可审计认证" }
+  ]
+}

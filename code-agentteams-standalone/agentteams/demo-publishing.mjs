@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { readState } from '../southbridge/benjing-core.mjs';
 import { learningId } from '../xuetang/learning-core.mjs';
@@ -14,12 +14,25 @@ import { learningId } from '../xuetang/learning-core.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SPEC = 'agentteams-publishing-demo/0.1';
 const CERTIFY = path.join(ROOT, 'agentteams/certify.mjs');
-const HS = process.env.MATRIX_HOMESERVER_URL || 'http://127.0.0.1:18080';
-const TOKDIR = process.env.AT_TOKEN_DIR || path.join(process.env.LOCALAPPDATA || os.tmpdir(), 'Temp', 'at-tokens');
+let HS = process.env.MATRIX_HOMESERVER_URL || 'http://127.0.0.1:18080';
+let TOKDIR = process.env.AT_TOKEN_DIR || path.join(process.env.LOCALAPPDATA || os.tmpdir(), 'Temp', 'at-tokens');
+let ownedStub = null;
+let ownedTokens = null;
 const LEDGER = process.env.AT_PUBLISHING_LEDGER || 'demo/agentteams-bridge/publishing-demo-ledger.jsonl';
-const CHECKER = 'demo/book-project/verify-book.mjs';
+const UPSTREAM_CHECKER = 'demo/book-project/verify-book.mjs';
+const FALLBACK_CHECKER = 'agentteams/publishing-checker.mjs demo/agentteams-bridge/publishing-check-fixture.json';
+// 公开桥接包不携带主仓的出版社项目时仍可完整复现。主仓有真实检查器则优先它；
+// fallback 检查样稿的 ISBN、章节序号与标题唯一性，不把「总能绿」伪装成检查器。
+const CHECKER = fs.existsSync(path.join(ROOT, UPSTREAM_CHECKER)) ? UPSTREAM_CHECKER : FALLBACK_CHECKER;
+const requestedIdentityMode = (() => {
+  const i = process.argv.indexOf('--identity-mode');
+  const mode = i < 0 ? 'auto' : process.argv[i + 1];
+  return ['auto', 'configured', 'stub'].includes(mode) ? mode : null;
+})();
 
 function finish(result, code) {
+  try { ownedStub?.kill(); } catch { /* ignore */ }
+  try { if (ownedTokens) fs.rmSync(ownedTokens, { recursive: true, force: true }); } catch { /* ignore */ }
   process.stdout.write(`${JSON.stringify({ spec: SPEC, kind: 'demo.result', ...result })}\n`);
   process.exit(code);
 }
@@ -34,7 +47,7 @@ function invoke(args, role) {
   const r = spawnSync(process.execPath, [CERTIFY, ...args], {
     cwd: ROOT,
     encoding: 'utf8',
-    timeout: 300_000,
+    timeout: 330_000,
     windowsHide: true,
     env: {
       ...process.env,
@@ -54,15 +67,47 @@ async function preflight() {
   const timer = setTimeout(() => controller.abort(), 10_000);
   try {
     const response = await fetch(`${HS}/_matrix/client/versions`, { signal: controller.signal });
-    if (!response.ok) finish({ status: 'instrument_unavailable', reason: `homeserver HTTP ${response.status}` }, 3);
+    return response.ok;
   } catch (error) {
-    finish({ status: 'instrument_unavailable', reason: `homeserver unreachable: ${String(error.message || error).slice(0, 160)}` }, 3);
+    return false;
   } finally { clearTimeout(timer); }
 }
 
-await preflight();
-const checkerAbs = path.join(ROOT, CHECKER);
-if (!fs.existsSync(checkerAbs)) finish({ status: 'instrument_unavailable', reason: `checker missing: ${CHECKER}` }, 3);
+async function ensureInstrument() {
+  const roles = ['sos-author', 'sos-observer', 'sos-examiner'];
+  if (!requestedIdentityMode) throw new Error('--identity-mode 只能是 configured、stub 或 auto');
+  const tokenDirConfigured = !!process.env.AT_TOKEN_DIR && roles.some(role => fs.existsSync(path.join(TOKDIR, `${role}.token`)));
+  const realConfigured = !!process.env.MATRIX_HOMESERVER_URL || tokenDirConfigured;
+  const instrumentReady = roles.every(role => fs.existsSync(path.join(TOKDIR, `${role}.token`))) && await preflight();
+  if (requestedIdentityMode === 'configured' || (requestedIdentityMode === 'auto' && realConfigured)) {
+    if (instrumentReady) return 'configured';
+    throw new Error('configured identity instrument unavailable: homeserver preflight or required tokens failed');
+  }
+  // 自包含复现只在显式 stub，或 auto 且没有任何真实配置时启用。已经配置过真实
+  // 环境时绝不静默降级，否则一次网络故障会伪装成 stub 的绿灯。
+  ownedTokens = fs.mkdtempSync(path.join(os.tmpdir(), 'at-publishing-tokens-'));
+  fs.writeFileSync(path.join(ownedTokens, 'sos-author.token'), 'tok-alice');
+  fs.writeFileSync(path.join(ownedTokens, 'sos-observer.token'), 'tok-carol');
+  fs.writeFileSync(path.join(ownedTokens, 'sos-examiner.token'), 'tok-bob');
+  ownedStub = spawn(process.execPath, [path.join(ROOT, 'agentteams/stub-homeserver.mjs')], {
+    cwd: ROOT, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true,
+  });
+  const ready = await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('stub homeserver 5 秒内未就绪')), 5000);
+    ownedStub.stdout.once('data', data => { clearTimeout(timer); resolve(String(data)); });
+    ownedStub.once('error', reject);
+  });
+  HS = JSON.parse(ready).url;
+  TOKDIR = ownedTokens;
+  if (!await preflight()) throw new Error('self-contained stub homeserver unavailable');
+  return 'stub';
+}
+
+const identityMode = await ensureInstrument().catch(error =>
+  finish({ status: 'instrument_unavailable', reason: String(error.message || error), identity_mode: requestedIdentityMode }, 3));
+const checkerFile = CHECKER.split(/\s+/)[0];
+const checkerAbs = path.join(ROOT, checkerFile);
+if (!fs.existsSync(checkerAbs)) finish({ status: 'instrument_unavailable', reason: `checker missing: ${checkerFile}` }, 3);
 
 const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'at-publishing-'));
 const statePath = path.join(sandbox, 'task.origin.json');
@@ -133,6 +178,7 @@ try {
     ],
     final: { learning_id: lid, status: learning?.status || null, separation_strength: learning?.exam?.separation_strength || null },
     audit_ledger: LEDGER,
+    identity_mode: identityMode,
   };
   fs.rmSync(sandbox, { recursive: true, force: true });
   finish(result, ok ? 0 : 1);
