@@ -152,7 +152,7 @@ async function readHermesModelConfig() {
 }
 
 /** 主通道：OpenAI 兼容 HTTP（无 argv 上限，真实 token 用量） */
-async function completeViaHttp(cfg, modelOverride, prompt, maxTokens, timeoutMs) {
+export async function completeViaHttp(cfg, modelOverride, prompt, maxTokens, timeoutMs) {
   const t0 = Date.now()
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), timeoutMs)
@@ -168,39 +168,64 @@ async function completeViaHttp(cfg, modelOverride, prompt, maxTokens, timeoutMs)
         max_tokens: maxTokens,
         messages: [{ role: 'user', content: prompt }],
         stream: true,
+        // OpenAI-compatible endpoints normally omit the final usage-only frame
+        // unless explicitly requested. Without it, cost data would silently
+        // degrade to a character estimate while being labelled as real usage.
+        stream_options: { include_usage: true },
       }),
       signal: ctrl.signal,
     })
     if (!res.ok) throw new Error(`hermes 端点 ${res.status}: ${(await res.text()).slice(0, 400)}`)
 
     // SSE 解析：拼接 delta.content，追踪 finish_reason；[DONE] 结束。
+    if (!res.body) throw new Error('hermes 端点返回了空响应体（无法解析 SSE）')
     const reader = res.body.getReader()
     const dec = new TextDecoder()
     let buf = ''
     let raw = ''
     let finishReason = null
     let usageRaw = null
-    for (;;) {
-      const { done, value } = await reader.read()
-      if (done) break
-      buf += dec.decode(value, { stream: true })
-      let nl
-      while ((nl = buf.indexOf('\n')) >= 0) {
-        const line = buf.slice(0, nl).trim()
-        buf = buf.slice(nl + 1)
-        if (!line.startsWith('data:')) continue
-        const payload = line.slice(5).trim()
-        if (payload === '[DONE]') { reader.releaseLock(); return finalize() }
-        let j
-        try { j = JSON.parse(payload) } catch {}
-        if (!j?.choices?.length) continue
-        const delta = j.choices[0].delta?.content
-        if (delta) raw += delta
-        if (j.choices[0].finish_reason) finishReason = j.choices[0].finish_reason
-        if (j.usage) usageRaw = j.usage
-      }
+    let sawDone = false
+    const consumeLine = (source) => {
+      const line = source.trim()
+      if (!line || line.startsWith(':') || !line.startsWith('data:')) return false
+      const payload = line.slice(5).trim()
+      if (payload === '[DONE]') return true
+      let j
+      try { j = JSON.parse(payload) }
+      catch { throw new Error(`hermes SSE 帧不是合法 JSON: ${payload.slice(0, 200)}`) }
+      if (j?.error) throw new Error(`hermes SSE 错误: ${j.error.message ?? JSON.stringify(j.error)}`)
+      // usage 常在 choices: [] 的独立尾帧，必须先取，不能被 choices 守卫跳过。
+      if (j?.usage) usageRaw = j.usage
+      const choice = j?.choices?.[0]
+      if (!choice) return false
+      const delta = choice.delta?.content
+      if (delta) raw += delta
+      if (choice.finish_reason) finishReason = choice.finish_reason
+      return false
     }
-    // 流可能不带 [DONE] 就结束——归一化同一出口
+    try {
+      readLoop: for (;;) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buf += dec.decode(value, { stream: true })
+        let nl
+        while ((nl = buf.indexOf('\n')) >= 0) {
+          const line = buf.slice(0, nl)
+          buf = buf.slice(nl + 1)
+          if (consumeLine(line)) { sawDone = true; break readLoop }
+        }
+      }
+      // EOF 也可能承载最后一个无换行帧；TextDecoder 必须 flush 掉末尾多字节字符。
+      if (!sawDone) {
+        buf += dec.decode()
+        if (buf.trim()) sawDone = consumeLine(buf)
+      }
+      if (!sawDone && !finishReason)
+        throw new Error('hermes SSE 流不完整：未收到 [DONE] 或 finish_reason')
+    } finally {
+      reader.releaseLock()
+    }
     function finalize() {
       let parsed = null
       const m = raw.match(/\{[\s\S]*\}/)
@@ -215,6 +240,7 @@ async function completeViaHttp(cfg, modelOverride, prompt, maxTokens, timeoutMs)
           inputTokens: usageRaw?.prompt_tokens ?? estTokens(prompt),
           outputTokens: usageRaw?.completion_tokens ?? estTokens(raw),
           reasoningTokens: usageRaw?.completion_tokens_details?.reasoning_tokens ?? 0,
+          estimated: !usageRaw,
           ms: Date.now() - t0,
         },
       }

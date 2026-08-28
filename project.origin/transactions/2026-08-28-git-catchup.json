@@ -1,0 +1,11 @@
+{
+  "transaction_id": "tx-backfill-git-20260824-27",
+  "operation": "backfill",
+  "target": "module:benxiang",
+  "creates": [{ "id": "fact:git-catchup-20260824-27", "type": "fact" }],
+  "state_changes": [
+    { "object": "fact:git-catchup-20260824-27", "field": "kind", "to": "observed" },
+    { "object": "fact:git-catchup-20260824-27", "field": "summary", "to": "2026-08-24 至 2026-08-27 的 21 个提交此前未写入项目状态；本条仅回填可由 Git 逐项复核的提交范围，不对其含义作事后推断。" },
+    { "object": "fact:git-catchup-20260824-27", "field": "evidence", "to": ["git:cb5e5e010817a36229f9c30499a4c57341864d17", "git:af1b6d4712afe5a790b66f3af3d9664f8971da4b", "git:c47ee713852aa1997409368860369d4d55afb93f", "git:5115482a990bd70905fcfa484f81479a94fbc869", "git:1797f59c9df400ad171f28705f6bfa7aac057966", "git:6f1d20f1845f526239e1ba958900fc4734d671b6", "git:92785d98f5b4d4d2b4ae860cbfd4bae3a8e26821", "git:1189fe21a396c99476168e9714e8c6915a5a082d", "git:b68f4c1d0788a0218353e5eb021831a426d9832c", "git:8af50bd086d47f3645b5c1b9691c99160389e182", "git:33a3ec4a14788070ab794c168e1414c2a52d7c52", "git:1a23cd3046955e6727edeade935a48f2defde71f", "git:45a1de67fafe8e45c19e12fa250729300a8a05f7", "git:56a53a3889ab8ee489f555d5a2f926952a1f0d49", "git:2d69c6804a10f8dfd793b932c21cacbea7ff05f6", "git:f538a2573c474297920768dd74bffd1cc01d2682", "git:dc185a08bcc5b34369c521b7f2e169fb2ec69f21", "git:aaf5f6484752a27d9634b3abacb3c99de310c49c", "git:dc39e2d6e0db928f13daa8fd8ab11aa8290c46e0", "git:01da9ff6c2c471446172fcd2c1d6e6d4c43cb052"] }
+  ]
+}
