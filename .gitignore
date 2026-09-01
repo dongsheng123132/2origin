@@ -36,7 +36,13 @@ benchmark/shadowbench-w/results/*.judged.json
 
 # 本机 AI 工具装进来的第三方技能包与其锁文件。属于开发者的工具环境，不是本协议的一部分，
 # 且体积以 MB 计（含图片资源）。换一台机器不需要它们也能 npm run verify 全绿。
-.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/origin-writer/
+!.agents/skills/benxiang-memory/
+!.agents/skills/benxiang-protocol/
+!.agents/skills/origin-office/
 .claude/
 skills-lock.json
 
