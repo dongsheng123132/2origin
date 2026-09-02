@@ -145,7 +145,7 @@ pre.tree .leaf { color: var(--gold); } pre.tree .root { color: #f0d060; font-wei
     <div class="panel">
       <div class="panel-head"><div><div class="tag">Stale</div><h2>改一个数，看谁变脏了</h2></div></div>
       <div class="panel-body">
-        <p class="note" style="margin-top:0">本象不重算公式（边界 <code>xlsx-no-recalc</code>）。它做的是另一件事：顺着依赖图正向传播，把「缓存值已经不可信」的公式格全部点名。</p>
+        <p class="note" style="margin-top:0">本象不重算公式（边界 <code>xlsx-no-recalc</code>）。它做的是另一件事：顺着依赖图正向传播，把「缓存值已经不可信」的公式格全部点名。<br>下面看到的 <code>假设!B3</code> 当前值 <b>0.06</b> 已经是案例包定稿状态——案例历史记录着它由 0.05 改到 0.06 那一次（README 里描述的正是这次改动），本页不重演那一次，而是让你现在再模拟一次新的改动，看传播会怎么发生。</p>
         <div class="ctrl" style="margin-top:12px">
           <label>人工录入格 <select id="stale-select"></select></label>
           <span>当前 <b id="stale-cur" style="font-family:var(--mono)"></b></span>
@@ -366,15 +366,28 @@ pre.tree .leaf { color: var(--gold); } pre.tree .root { color: #f0d060; font-wei
 
   // ── 过期传播 ──────────────────────────────────────────────
   const refStale = DATA.reference.stale_after_tx
+  function suggestedValue(id) {
+    const cur = state[id].value
+    if (id === refStale.trigger.object) return refStale.trigger.to === cur ? 0.07 : refStale.trigger.to
+    return typeof cur === 'number' ? Math.round((cur + 1) * 1e6) / 1e6 : 1
+  }
   function onStalePick() {
     const id = $('#stale-select').value
     $('#stale-cur').textContent = fmt(state[id])
     $('#stale-new').value = ''
-    $('#stale-new').placeholder = id === refStale.trigger.object ? String(refStale.trigger.to === state[id].value ? 0.07 : refStale.trigger.to) : '新值'
+    $('#stale-new').placeholder = String(suggestedValue(id))
   }
   function runStale() {
     const id = $('#stale-select').value
-    const nv = $('#stale-new').value === '' ? $('#stale-new').placeholder : $('#stale-new').value
+    const raw = $('#stale-new').value === '' ? $('#stale-new').placeholder : $('#stale-new').value
+    const nv = Number(raw)
+    const cur = state[id].value
+    if (Number.isFinite(nv) && nv === cur) {
+      $('#stale-summary').innerHTML = `<b>${esc(E.short(id))}</b> 的值本来就是 <b>${esc(fmt(state[id]))}</b>，改成同一个数不构成改动，没有格子会变脏。换一个不同的值再试。`
+      staleIds = new Set(); changedId = null; $('#stale-list').innerHTML = ''
+      renderTabs(); renderGrid()
+      return
+    }
     const stale = E.staleCells(origin, [id])
     staleIds = new Set(stale); changedId = id
     const list = $('#stale-list'); list.innerHTML = ''
@@ -384,10 +397,14 @@ pre.tree .leaf { color: var(--gold); } pre.tree .root { color: #f0d060; font-wei
       const ref = refStale.stale_cells.map((c) => c.id).sort()
       const same = JSON.stringify(ref) === JSON.stringify(stale)
       cmp = same ? ` <span class="ok">与案例包 stale-after-tx.json 记录的 ${refStale.stale_count} 格完全一致。</span>` : ` <span class="bad">与案例包记录（${refStale.stale_count} 格）不一致！</span>`
+    } else if (stale.length === 0) {
+      cmp = id === 'cell:假设!B/2'
+        ? ' <span style="color:var(--text-faint)">这不是 demo 坏了：这一格（税率）没有任何公式格引用它——案例 README 里的 D7 缺陷正是"本该按列取税率却整列用错列取了折扣率"，税率格因此在这份工作簿里从未被真正用到，属于本方言明确"查不到"的边界之一，见下方「不能推出」。</span>'
+        : ' <span style="color:var(--text-faint)">这不是 demo 坏了：这份工作簿里没有任何公式格直接或间接引用这一格，所以传播为空——0 是正确答案，不是漏检。</span>'
     } else {
       cmp = ' <span style="color:var(--text-faint)">（案例包只记录了 假设!B3 的那次传播；其余格子的数字由本页现算，无参照。）</span>'
     }
-    $('#stale-summary').innerHTML = `把 <b>${esc(E.short(id))}</b> 从 <b>${esc(fmt(state[id]))}</b> 改成 <b>${esc(nv)}</b>：<b>${stale.length}</b> 个公式格的缓存值过期。${cmp}`
+    $('#stale-summary').innerHTML = `把 <b>${esc(E.short(id))}</b> 从 <b>${esc(fmt(state[id]))}</b> 改成 <b>${esc(raw)}</b>：<b>${stale.length}</b> 个公式格的缓存值过期。${cmp}`
     renderTabs(); renderGrid()
   }
   function clearStale() { staleIds = new Set(); changedId = null; $('#stale-list').innerHTML = ''; $('#stale-summary').textContent = '还没有改动。'; renderTabs(); renderGrid() }
