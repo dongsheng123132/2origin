@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>连载状态 Demo：伏笔、秘密与门禁 — 2Origin 本象协议</title>
+<meta name="description" content="在浏览器里回放《月落渡口》真实在跑连载的状态历史，拖动时间轴看谁知道了什么、试提交一笔违规事务看门禁怎么拒绝、查看六个伏笔的埋设与回收进度。纯本地计算，无后端。">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.demo-intro { margin-top: 0; }
+.demo-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-top: 28px; }
+.demo-metrics .m { background: var(--paper-2); padding: 14px 16px; }
+.demo-metrics .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--ink); }
+.demo-metrics .lbl { font-size: 12px; color: var(--text-faint); margin-top: 2px; }
+
+.panel { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-card); overflow: hidden; margin-top: 24px; }
+.panel-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.panel-head h2 { font-family: var(--serif); font-size: 19px; color: var(--ink); }
+.panel-head .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-deep); }
+.panel-body { padding: 16px 18px; }
+
+.ctrl { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 14px; color: var(--text-soft); }
+.ctrl input[type=range] { width: 100%; }
+.ctrl select { font-family: var(--mono); font-size: 13.5px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--text); }
+.btn-sm { padding: 7px 16px; font-size: 13.5px; border-radius: 8px; border: 1px solid var(--gold); background: var(--gold); color: #111113; font-weight: 600; cursor: pointer; font-family: var(--sans); }
+.btn-sm.ghost { background: transparent; color: var(--gold-deep); }
+.btn-sm:hover { filter: brightness(1.05); }
+
+.tl-track { position: relative; margin-top: 18px; }
+.tl-label { font-family: var(--mono); font-size: 12.5px; color: var(--text-soft); margin-top: 8px; display: flex; justify-content: space-between; }
+.tl-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+.tl-badge.imported { background: rgba(128,98,12,.15); color: #80620c; }
+.tl-badge.observed { background: rgba(29,107,69,.18); color: #1d6b45; }
+
+.tl-event { margin-top: 14px; padding: 12px 14px; border-left: 3px solid var(--gold); background: var(--paper); border-radius: 0 8px 8px 0; font-size: 13.5px; }
+.tl-event .who { font-family: var(--mono); font-size: 11.5px; color: var(--text-faint); margin-top: 4px; }
+
+.grid-wrap { overflow: auto; }
+table.state-tbl { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 4px; }
+table.state-tbl th, table.state-tbl td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+table.state-tbl th { background: var(--paper); color: var(--text-faint); font-size: 11px; font-weight: 500; }
+table.state-tbl td.id { font-family: var(--mono); color: var(--ink); font-weight: 600; white-space: nowrap; }
+table.state-tbl td.changed { background: rgba(29,107,69,.16); }
+
+.hook-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; background: var(--paper); }
+.hook-card h4 { margin: 0 0 4px; font-size: 14.5px; color: var(--ink); }
+.hook-card .meta { font-family: var(--mono); font-size: 11.5px; color: var(--text-faint); }
+.hook-card .status { display: inline-block; margin-top: 6px; font-size: 12px; padding: 2px 9px; border-radius: 999px; }
+.hook-card .status.unresolved { background: rgba(154,59,44,.12); color: #9a3b2c; }
+.hook-card .status.notplanted { background: rgba(0,0,0,.06); color: var(--text-faint); }
+.hook-card .tie { font-size: 12.5px; color: var(--text-soft); margin-top: 6px; }
+
+.tx-box { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--paper); margin-top: 12px; }
+.tx-box h4 { margin: 0 0 6px; font-size: 14.5px; color: var(--ink); }
+.tx-box p { font-size: 13px; color: var(--text-soft); }
+.tx-result { margin-top: 10px; padding: 10px 12px; border-radius: 8px; font-size: 13.5px; font-family: var(--mono); }
+.tx-result.pass { background: rgba(29,107,69,.14); color: #1d6b45; }
+.tx-result.fail { background: rgba(154,59,44,.14); color: #9a3b2c; }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>2Origin</span><span class="zh-name">本象协议</span></a><div class="nav-links"><a href="solutions.html" class="hide-sm">解决方案</a><a href="cases.html" class="hide-sm">案例</a><a href="showcase.html" class="hide-sm">能力展厅</a><a href="challenge.html" class="hide-sm">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a><a class="lang-switch" href="../cases.html">EN</a></div></div></nav>
+
+<header class="page-hero"><div class="page-hero-inner"><div class="breadcrumb"><a href="index.html">2Origin</a> / 案例 / 连载状态</div><h1>《月落渡口》：谁知道了什么，改一下会不会破功</h1><p class="sub">这不是合成演示数据——下面的对象、历史、约束全部来自真实在跑的连载案例包 <code>novels/月落渡口.origin</code>，含 2026-08-05 至 2026-09-01 之间几个 AI 后端实际提交、经过门禁复核的真实章节事务。三个面板全部在你的浏览器里现算，不上传任何东西，也没有后端。</p></div></header>
+
+<section class="section demo-intro">
+  <div class="demo-metrics">
+    <div class="m"><div class="num">19</div><div class="lbl">history 条历史事件</div></div>
+    <div class="m"><div class="num">10 / 9</div><div class="lbl">导入基线 / 真实事务提交（imported / observed）</div></div>
+    <div class="m"><div class="num">6</div><div class="lbl">条硬约束（不得破的禁区）</div></div>
+    <div class="m"><div class="num">6</div><div class="lbl">条伏笔（5 已埋未收 · 1 待埋 · 见下）</div></div>
+  </div>
+  <p class="note" style="margin-top:16px">history 里 seq 1–10（第 2–10 章）是案例初建时从外部世界规格夹具批量导入的基线，标 <code>kind:imported</code>，没有经过事务门禁；seq 11–19（第 11–15 章）才是真正由 hermes 各后端提交、经过门禁复核的 <code>kind:observed</code> 事务——下面时间轴用颜色区分这两类，不把"夹具说的"和"机器审过的"混为一谈。</p>
+</section>
+
+<section class="section">
+  <div class="panel">
+    <div class="panel-head"><h2>01 · 状态时间轴</h2><span class="tag">Timeline replay</span></div>
+    <div class="panel-body">
+      <p style="font-size:13.5px;color:var(--text-soft)">拖动滑块，逐条重放 19 条历史事件，看指定对象的字段如何一步步被 <code>fold()</code> 折出当前值——追加类字段（如"知道了什么"）按集合去重追加，其余字段整体替换，与后端 <code>compiler/commit-compiler.mjs</code> 的语义一致。</p>
+      <div class="ctrl" style="margin-top:14px">
+        <input type="range" id="tl-slider" min="0" max="19" value="19">
+      </div>
+      <div class="tl-label"><span id="tl-pos">第 19 步 / 共 19</span><span id="tl-badge" class="tl-badge observed">observed</span></div>
+      <div class="tl-event" id="tl-event"></div>
+      <div class="ctrl" style="margin-top:14px">
+        <label>聚焦对象 <select id="tl-focus"></select></label>
+      </div>
+      <div class="grid-wrap" style="margin-top:10px;overflow:auto;max-height:360px">
+        <table class="state-tbl" id="tl-table"></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="panel">
+    <div class="panel-head"><h2>02 · 试提交一笔事务</h2><span class="tag">Gate sandbox</span></div>
+    <div class="panel-body">
+      <p style="font-size:13.5px;color:var(--text-soft)">下面两笔事务取自案例包自带的示例脚本（<code>novels/demo-scripts/</code>），页面按文件里 <code>text</code> 字段写的说明呈现，不按文件名猜——文件名容易读反。判定逻辑：把 <code>state_changes</code> 折进当前 canon 状态，再跑全部 6 条约束，任何一条不满足就整笔事务判违规。</p>
+      <div class="tx-box">
+        <h4 id="tx-a-title"></h4>
+        <p id="tx-a-text"></p>
+        <button class="btn-sm" id="tx-a-run">试提交这笔事务</button>
+        <div class="tx-result" id="tx-a-result" style="display:none"></div>
+      </div>
+      <div class="tx-box">
+        <h4 id="tx-b-title"></h4>
+        <p id="tx-b-text"></p>
+        <button class="btn-sm ghost" id="tx-b-run">试提交这笔事务</button>
+        <div class="tx-result" id="tx-b-result" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="panel">
+    <div class="panel-head"><h2>03 · 伏笔看板</h2><span class="tag">Foreshadowing</span></div>
+    <div class="panel-body">
+      <p style="font-size:13.5px;color:var(--text-soft)">案例包里 6 个 <code>hook:*</code> 对象记录着伏笔的埋设章、计划回收章与当前状态；其中两条（<code>hook:shen-yan-suspicion</code>、<code>hook:a-zhi-witness</code>）被硬约束直接钉死"不得回收"——回收即等于剧透，门禁会拒绝对应事务。这份看板本身不参与门禁计算，只是如实读出 <code>graph/objects.jsonl</code> 里 hook 类对象的当前记录。</p>
+      <div id="hooks" style="margin-top:14px"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="honesty">
+    <h3>不能推出</h3>
+    <ul>
+      <li>约束只判定"事务里声明的状态字段"，不理解正文文字本身——如果某一章正文写漏了嘴，但提交事务没如实声明这次知识变化，这 6 条约束抓不到。真正扫正文的是另一套中文正则规则（CED），且明确写着未做集外验证（新写法、新说法大概率漏检）。本页只演示状态层门禁，不演示 CED。</li>
+      <li>history 里 seq 1–10 是批量导入的基线，不代表"模型写了对应正文并被机器核验过"；只有 seq 11–19 具备完整事务提交语义，评估"模型写作有没有守约束"应只看这 9 条。</li>
+      <li>两笔示例事务的预期结果（拒绝 / 通过）来自案例包自带脚本的说明文字，本页只是如实重算判定结果，不代表任意自定义事务都能这样清楚地落在"一定拒绝"或"一定通过"的两端。</li>
+      <li>本页面完全在浏览器本地计算，不接收上传，也不会把任何输入发回服务器；<a href="https://github.com/dongsheng123132/2origin/tree/main/novels/月落渡口.origin" target="_blank" rel="noopener">完整案例包（含正文与历史）在 GitHub ↗</a>，可用 <code>node website/zh/demo-story/verify.mjs</code> 交叉核对本页计算结果。</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="footer"><div class="footer-inner"><div><div class="brand-line">2Origin <span class="zh">本象协议</span></div><p>保存本象，按需投影。</p></div><div><h4>项目</h4><a href="solutions.html">解决方案</a><a href="challenge.html">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a></div></div><div class="footer-bottom"><div class="in"><span>© 2026 2Origin 协议 · Apache-2.0</span><span>本象协议 · Benxiang · Origin IR</span></div></div></footer>
+
+<script src="demo-story/data.js"></script>
+<script src="demo-story/engine.js"></script>
+<script>
+(function () {
+  const D = window.STORY_DEMO_DATA
+  const E = window.StoryEngine
+  const $ = (s) => document.querySelector(s)
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+  const fmt = (v) => v === undefined ? '—' : Array.isArray(v) ? '[' + v.join(', ') + ']' : String(v)
+
+  const steps = E.replaySteps(D.objects, D.history)
+
+  // ---- 01 时间轴 ----
+  const focusables = D.objects.filter((o) => o._type === 'char' || o._type === 'obj').map((o) => o.id)
+  $('#tl-focus').innerHTML = focusables.map((id) => `<option value="${esc(id)}"${id === 'char:lin-zheng' ? ' selected' : ''}>${esc(id)}</option>`).join('')
+
+  function renderTimeline() {
+    const n = Number($('#tl-slider').value)
+    const state = steps[n]
+    $('#tl-pos').textContent = `第 ${n} 步 / 共 19`
+    if (n === 0) {
+      $('#tl-badge').textContent = '起始状态'
+      $('#tl-badge').className = 'tl-badge imported'
+      $('#tl-event').innerHTML = '<b>起始状态</b>：案例图谱的基线快照（对应第 1 章末，尚未套用任何 history 事件）。'
+    } else {
+      const h = D.history[n - 1]
+      $('#tl-badge').textContent = h.kind
+      $('#tl-badge').className = 'tl-badge ' + h.kind
+      const who = h.kind === 'imported' ? `导入自 ${h.tx || ''}（by ${h.by}，无事务门禁）` : `真实事务 ${h.tx}（by ${h.by}${h.at ? '，' + h.at : ''}）`
+      $('#tl-event').innerHTML = `<b>第 ${h.chapter} 章 · seq ${h.seq}</b> — ${esc(h.object)}.${esc(h.field)} ${h.op === 'append' ? '追加' : '改为'} <code>${esc(fmt(h.to))}</code><div class="who">${esc(who)}</div>`
+    }
+    const focus = $('#tl-focus').value
+    const obj = state[focus] || {}
+    const prevObj = n > 0 ? (steps[n - 1][focus] || {}) : {}
+    const keys = Object.keys(obj)
+    $('#tl-table').innerHTML = '<tr><th>字段</th><th>当前值</th></tr>' + keys.map((k) => {
+      const changed = n > 0 && JSON.stringify(obj[k]) !== JSON.stringify(prevObj[k])
+      return `<tr><td class="id">${esc(k)}</td><td class="${changed ? 'changed' : ''}">${esc(fmt(obj[k]))}</td></tr>`
+    }).join('')
+  }
+  $('#tl-slider').addEventListener('input', renderTimeline)
+  $('#tl-focus').addEventListener('change', renderTimeline)
+  renderTimeline()
+
+  // ---- 02 事务沙盒 ----
+  const finalState = steps[steps.length - 1]
+  function setupTx(prefix, tx, expectAccept) {
+    $(`#${prefix}-title`).textContent = tx.transaction_id
+    $(`#${prefix}-text`).textContent = tx.text
+    $(`#${prefix}-run`).addEventListener('click', () => {
+      const r = E.diagnoseTx(finalState, tx.state_changes, D.constraints)
+      const box = $(`#${prefix}-result`)
+      box.style.display = 'block'
+      if (r.accepted) {
+        box.className = 'tx-result pass'
+        box.textContent = '✓ 通过 — 6 条约束全部满足，事务可以落盘。' + (expectAccept === false ? '（与示例脚本预期不符，见下方"不能推出"）' : '')
+      } else {
+        box.className = 'tx-result fail'
+        box.textContent = '✗ 被拒绝 — 违反：' + r.violated.map((v) => `${v.id}（${v.rule}）`).join('；') + (expectAccept === true ? '（与示例脚本预期不符）' : '')
+      }
+    })
+  }
+  setupTx('tx-a', D.demo_txs.legal_example, false)
+  setupTx('tx-b', D.demo_txs.accepted_example, true)
+
+  // ---- 03 伏笔看板 ----
+  const hooks = D.objects.filter((o) => o._type === 'hook')
+  const tieMap = {}
+  for (const c of D.constraints) if (c.check && c.check.object && c.check.object.startsWith('hook:')) tieMap[c.check.object] = c
+  $('#hooks').innerHTML = hooks.map((h) => {
+    const tie = tieMap[h.id]
+    const statusCls = h.status === 'planted_unresolved' ? 'unresolved' : 'notplanted'
+    const statusText = h.status === 'planted_unresolved' ? '已埋设 · 未回收' : '尚未埋设'
+    return `<div class="hook-card"><h4>${esc(h.id)} · ${esc(h.summary)}</h4><div class="meta">setup 第 ${h.setup_chapter ?? '—'} 章 → payoff 第 ${h.payoff_chapter ?? '未定'} 章 · tier: ${esc(h.tier)}</div><span class="status ${statusCls}">${statusText}</span>${tie ? `<div class="tie">硬约束绑定：<code>${esc(tie.id)}</code> — ${esc(tie.rule)}</div>` : ''}</div>`
+  }).join('')
+})()
+</script>
+</body></html>
