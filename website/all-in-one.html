@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2Origin 本象协议 · 一页总览</title>
-<meta name="description" content="本象协议双语一页版：首页 / 宣言 / 解决方案 / 案例 / 白鼓挑战 / 法律Demo / 长期任务。">
+<meta name="description" content="本象协议双语一页版：持久对象状态、语义事务、确定性门禁、证据链与可运行案例。">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111113'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23c9a227'/%3E%3C/svg%3E">
 <style>
@@ -24,7 +24,7 @@
 .tabx-lang{display:flex;gap:4px}
 .tabx-lang button{appearance:none;border:1px solid rgba(250,249,246,.25);background:none;
   color:rgba(250,249,246,.7);font-size:12.5px;padding:4px 10px;border-radius:999px;
-  cursor:pointer;font-family:inherit;transition:all .15s}
+  cursor:pointer;font-family:inherit;transition:all .15s;min-height:44px}
 .tabx-lang button:hover{border-color:var(--gold);color:var(--gold)}
 .tabx-lang button.active{background:var(--gold);color:var(--ink);border-color:var(--gold);
   font-weight:700}
@@ -35,13 +35,172 @@
 .tabx-tabs::-webkit-scrollbar{display:none}
 .tabx-tab{appearance:none;border:0;background:none;font-family:inherit;font-size:15px;
   color:rgba(250,249,246,.6);padding:10px 18px 12px;cursor:pointer;white-space:nowrap;
-  border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+  border-bottom:2px solid transparent;transition:color .15s,border-color .15s;min-height:44px}
 .tabx-tab:hover{color:#faf9f6}
 .tabx-tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
 .tabx-panel{display:none}
 .tabx-panel.active{display:block;animation:tabx-fade .25s ease}
 @keyframes tabx-fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@media(max-width:640px){.tabx-tab{padding:10px 13px 12px;font-size:14px}}
+.tabx-panel,.tabx-panel>*,.tabx-panel .section,.tabx-panel .hero-inner,.tabx-panel .page-hero-inner,
+.tabx-panel .two-col>*,.tabx-panel .pipeline,.tabx-panel .chips,.tabx-panel .chip,.tabx-panel .prose{min-width:0}
+.tabx-panel .pipeline .flow{max-width:100%}
+.hero-proof-note{margin-top:14px;color:rgba(250,249,246,.62);font-size:12.5px}
+.hero-proof-note a{color:var(--gold);text-decoration:none}
+.state-compare{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.state-pill{border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-family:var(--mono);font-size:11.5px;color:var(--text-soft)}
+.state-pill.candidate{border-color:var(--gold);color:var(--gold-deep)}
+.tabx-story-link{display:inline-flex;align-items:center;color:rgba(250,249,246,.6);padding:10px 18px 12px;
+  min-height:44px;border-bottom:2px solid transparent;text-decoration:none;white-space:nowrap;font-size:15px}
+.tabx-story-link:hover,.tabx-story-link:focus-visible{color:#faf9f6;border-bottom-color:rgba(201,162,39,.5)}
+.tabx-story-link.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+.home-p1 .story-screen{position:relative;border-top:1px solid var(--line);scroll-margin-top:116px}
+.home-p1 .story-screen:first-of-type{border-top:0}
+.home-p1>.hero:not(.p1-hero),.home-p1>#home-zh-problem,.home-p1>#home-zh-protocol,.home-p1>#home-zh-evidence,
+.home-p1>#home-zh-dialects,.home-p1>#home-zh-challenge,.home-p1>#home-zh-roadmap{display:none}
+.screen-head{display:grid;grid-template-columns:74px minmax(0,1fr);gap:24px;align-items:start;margin-bottom:34px}
+.screen-no{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;color:var(--gold-deep);padding-top:8px}
+.screen-no::after{content:" / 10";color:var(--text-faint)}
+.screen-copy{max-width:720px}
+.screen-copy .sec-lead{max-width:42em}
+.home-hero-layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(360px,4fr);gap:58px;align-items:center}
+.home-p1 .hero h1{max-width:9.5em}
+.hero-promise{margin-top:18px;font-family:var(--mono);font-size:12.5px;line-height:1.8;color:rgba(250,249,246,.64)}
+.hero-tx-card{border:1px solid rgba(250,249,246,.16);border-radius:16px;background:rgba(17,17,19,.72);
+  box-shadow:0 26px 70px rgba(0,0,0,.26);overflow:hidden}
+.hero-tx-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;
+  border-bottom:1px solid rgba(250,249,246,.1);font-family:var(--mono);font-size:11.5px;color:rgba(250,249,246,.58)}
+.hero-tx-body{padding:20px 20px 22px;display:grid;gap:12px}
+.hero-tx-row{border:1px solid rgba(250,249,246,.1);border-radius:10px;padding:14px 15px;background:rgba(250,249,246,.025)}
+.hero-tx-row strong{display:block;font-size:12px;color:var(--gold);font-family:var(--mono);letter-spacing:.6px}
+.hero-tx-row code{display:block;margin-top:7px;color:rgba(250,249,246,.86);font-family:var(--mono);font-size:12.5px;line-height:1.65;white-space:normal}
+.hero-tx-row.is-rejected{border-color:rgba(176,64,48,.65);background:rgba(176,64,48,.08)}
+.hero-tx-row.is-committed{border-color:rgba(201,162,39,.55);background:rgba(201,162,39,.08)}
+.hero-tx-foot{padding:0 20px 20px;font-size:12.5px;color:rgba(250,249,246,.56)}
+.plain-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.plain-card{padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.plain-card .plain-label{font-family:var(--mono);font-size:11px;letter-spacing:1.2px;color:var(--gold-deep)}
+.plain-card h3{margin-top:9px;font-size:18px;color:var(--ink)}
+.plain-card p{margin-top:8px;color:var(--text-soft);font-size:14px;line-height:1.72}
+.one-line-answer{margin-top:26px;padding:22px 24px;border-left:4px solid var(--gold);background:var(--ink);color:var(--paper);
+  border-radius:0 12px 12px 0;font-family:var(--serif);font-size:clamp(19px,2.2vw,25px);line-height:1.6}
+.demo-shell{display:grid;grid-template-columns:230px minmax(0,1fr);border:1px solid var(--line);border-radius:16px;
+  overflow:hidden;background:var(--paper);box-shadow:var(--shadow-card)}
+.demo-steps{padding:18px;background:var(--paper-2);border-right:1px solid var(--line);display:grid;gap:7px;align-content:start}
+.demo-step{appearance:none;border:1px solid transparent;background:transparent;text-align:left;padding:12px 13px;border-radius:9px;
+  color:var(--text-soft);font-family:var(--sans);font-size:13.5px;line-height:1.35;cursor:pointer;min-height:48px}
+.demo-step span{display:block;font-family:var(--mono);font-size:10.5px;color:var(--text-faint);margin-bottom:3px}
+.demo-step:hover{border-color:var(--line);color:var(--ink)}
+.demo-step.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.demo-step.active span{color:var(--gold)}
+.demo-stage{padding:30px;min-height:470px;display:flex;flex-direction:column}
+.demo-panel{display:none;flex:1}
+.demo-panel.active{display:block}
+.demo-kicker{font-family:var(--mono);font-size:11.5px;color:var(--gold-deep);letter-spacing:1.2px}
+.demo-panel h3{font-family:var(--serif);font-size:28px;line-height:1.3;color:var(--ink);margin-top:8px}
+.demo-panel>p{margin-top:12px;color:var(--text-soft);max-width:48em}
+.state-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:24px}
+.state-card{border:1px solid var(--line);border-radius:11px;padding:18px;background:var(--paper-2)}
+.state-card h4{font-family:var(--mono);font-size:11px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase}
+.state-card pre{margin-top:11px;white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--text)}
+.state-card.candidate{border-color:var(--gold);background:#fdfaf0}
+.state-card.rejected{border-color:#b04030;background:#fff4f1}
+.state-card.committed{border-color:var(--gold);background:#fdfaf0}
+.result-line{display:flex;gap:10px;align-items:flex-start;margin-top:18px;padding:14px 16px;border-radius:9px;font-size:13.5px;line-height:1.65}
+.result-line strong{flex:0 0 auto}
+.result-line.reject{background:#fff0ed;color:#8f3024;border:1px solid #e2b6ae}
+.result-line.pass{background:#f7f1db;color:#6f570d;border:1px solid #dac46e}
+.why-list{margin-top:22px;border-top:1px solid var(--line)}
+.why-row{display:grid;grid-template-columns:140px minmax(0,1fr);gap:20px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.why-row span:first-child{font-family:var(--mono);font-size:11.5px;color:var(--text-faint)}
+.demo-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:22px;margin-top:24px;border-top:1px solid var(--line)}
+.demo-progress{font-family:var(--mono);font-size:12px;color:var(--text-faint)}
+.demo-control-buttons{display:flex;gap:8px}
+.mini-btn{appearance:none;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  min-height:44px;padding:9px 15px;font-weight:600;cursor:pointer}
+.mini-btn:hover,.mini-btn:focus-visible{border-color:var(--gold)}
+.mini-btn.primary{background:var(--gold);border-color:var(--gold)}
+.capability-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.capability-card{border-top:3px solid var(--ink);padding:20px 2px 0}
+.capability-card .cap-question{font-family:var(--mono);font-size:11px;color:var(--gold-deep);letter-spacing:1px}
+.capability-card h3{font-size:19px;color:var(--ink);margin-top:7px}
+.capability-card p{font-size:14px;color:var(--text-soft);line-height:1.72;margin-top:8px}
+.capability-list{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.capability-row{display:grid;grid-template-columns:200px minmax(0,1fr) 156px;gap:22px;align-items:center;padding:19px 22px;border-top:1px solid var(--line)}
+.capability-row:first-child{border-top:0}
+.capability-row h3{font-size:16px;color:var(--ink)}
+.capability-row p{font-size:13.5px;color:var(--text-soft);line-height:1.65}
+.evidence-badge{justify-self:start;display:inline-flex;align-items:center;min-height:30px;padding:5px 9px;border:1px solid var(--line);
+  border-radius:999px;font-family:var(--mono);font-size:10.5px;letter-spacing:.6px;color:var(--text-soft);white-space:nowrap}
+.evidence-badge.gold{border-color:var(--gold);color:var(--gold-deep)}
+.evidence-badge.none{border-color:#d7a39c;color:#8f3024}
+.evidence-ladder{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.evidence-level{border:1px solid var(--line);border-radius:12px;padding:20px;background:var(--paper)}
+.evidence-level .level{font-family:var(--mono);font-size:11px;color:var(--gold-deep)}
+.evidence-level h3{font-size:17px;margin-top:8px;color:var(--ink)}
+.evidence-level p{font-size:13.5px;color:var(--text-soft);margin-top:8px;line-height:1.65}
+.evidence-level.is-missing{border-style:dashed;opacity:.78}
+.fact-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:12px;overflow:hidden;margin-top:28px}
+.fact-item{background:var(--paper);padding:19px 20px}
+.fact-item strong{display:block;font-family:var(--mono);font-size:21px;color:var(--ink)}
+.fact-item span{font-size:12.5px;color:var(--text-soft)}
+.case-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.case-card{border:1px solid var(--line);border-radius:13px;padding:22px;background:var(--paper)}
+.case-card h3{font-size:18px;color:var(--ink)}
+.case-card dl{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px 12px;margin-top:16px;font-size:13.5px}
+.case-card dt{font-family:var(--mono);font-size:11px;color:var(--text-faint);padding-top:2px}
+.case-card dd{color:var(--text-soft);line-height:1.65}
+.case-card a{display:inline-flex;margin-top:16px;color:var(--gold-deep);font-size:13.5px;font-weight:700;text-decoration:none}
+.challenge-band{background:var(--ink);color:var(--paper);border-radius:16px;padding:34px}
+.challenge-band .sec-title{color:var(--paper)}
+.challenge-band .sec-lead{color:rgba(250,249,246,.72)}
+.challenge-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:26px;background:rgba(250,249,246,.12);
+  border:1px solid rgba(250,249,246,.12);border-radius:12px;overflow:hidden}
+.challenge-stat{background:rgba(17,17,19,.76);padding:20px}
+.challenge-stat strong{display:block;font-family:var(--mono);font-size:24px;color:var(--paper)}
+.challenge-stat span{font-size:12.5px;color:rgba(250,249,246,.58)}
+.gate-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.gate-list span{border:1px solid rgba(250,249,246,.16);border-radius:999px;padding:6px 10px;font-size:12px;color:rgba(250,249,246,.72)}
+.honest-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);gap:36px}
+.claim-list{display:grid;gap:12px;margin-top:24px}
+.claim{padding:17px 18px;border-left:3px solid var(--gold);background:var(--paper-2);font-size:14px;color:var(--text-soft);line-height:1.7}
+.no-claim{border:1px solid var(--line);border-radius:14px;padding:24px;background:var(--paper)}
+.no-claim h3{font-family:var(--serif);font-size:21px;color:var(--ink)}
+.no-claim ul{margin:14px 0 0 18px;color:var(--text-soft);font-size:13.5px;line-height:1.82}
+.quickstart-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:26px}
+.terminal-card{border-radius:14px;overflow:hidden;background:var(--ink);color:var(--paper)}
+.terminal-top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:13px 17px;border-bottom:1px solid rgba(250,249,246,.1);
+  font-family:var(--mono);font-size:11px;color:rgba(250,249,246,.55)}
+.terminal-card pre{padding:22px;overflow-x:auto;white-space:pre;font-family:var(--mono);font-size:13px;line-height:1.8}
+.terminal-card .mini-btn{min-height:36px;padding:6px 11px;background:transparent;color:var(--paper);border-color:rgba(250,249,246,.22);font-size:12px}
+.quick-notes{display:grid;gap:12px}
+.quick-note{border:1px solid var(--line);border-radius:12px;padding:18px}
+.quick-note strong{display:block;color:var(--ink);font-size:14px}
+.quick-note span{display:block;color:var(--text-soft);font-size:13px;line-height:1.65;margin-top:5px}
+@media(max-width:900px){
+  .home-hero-layout,.honest-layout,.quickstart-layout{grid-template-columns:1fr}
+  .home-hero-layout{gap:38px}.home-p1 .hero h1{max-width:13em}
+  .plain-grid,.capability-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .evidence-ladder{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .capability-row{grid-template-columns:170px minmax(0,1fr)}.capability-row .evidence-badge{grid-column:2}
+}
+@media(max-width:820px){
+  .tabx-panel .pipeline .flow{white-space:pre-wrap;overflow-wrap:anywhere}
+  .tabx-panel .data-table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tabx-panel .prose code,.tabx-panel .card code{overflow-wrap:anywhere;word-break:break-word}
+}
+@media(max-width:640px){
+  .tabx-brand{padding-left:16px;padding-right:16px;gap:10px}
+  .tabx-right{gap:8px}
+  .tabx-tab{padding:10px 13px 12px;font-size:14px}
+  .tabx-tabs{padding-left:16px;padding-right:16px}
+  .tabx-story-link{padding:10px 13px 12px;font-size:14px}
+  .screen-head{grid-template-columns:1fr;gap:5px}.screen-no{padding-top:0}
+  .demo-shell{grid-template-columns:1fr}.demo-steps{grid-template-columns:repeat(6,minmax(118px,1fr));overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .demo-stage{padding:22px;min-height:520px}.state-grid,.plain-grid,.capability-grid,.case-grid,.fact-strip,.challenge-stats{grid-template-columns:1fr}
+  .evidence-ladder{grid-template-columns:1fr}.capability-row{grid-template-columns:1fr;gap:8px}.capability-row .evidence-badge{grid-column:1}
+  .why-row{grid-template-columns:1fr;gap:3px}.challenge-band{padding:26px 22px}.terminal-card pre{font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -54,21 +213,225 @@
         <button data-lang="zh">中文</button>
         <button data-lang="en">EN</button>
       </div>
-      <a class="gh" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </div>
   <nav class="tabx-tabs" aria-label="页面切换">
 <button class="tabx-tab" data-tab="home" data-zh="首页" data-en="Home">首页</button>
-<button class="tabx-tab" data-tab="manifesto" data-zh="宣言" data-en="Manifesto">宣言</button>
-<button class="tabx-tab" data-tab="solutions" data-zh="解决方案" data-en="Solutions">解决方案</button>
+<a class="tabx-story-link" href="#home-zh-demo" data-zh="90 秒演示" data-en="How it works" data-zh-target="home-zh-demo" data-en-target="home-en-protocol">90 秒演示</a>
+<a class="tabx-story-link" href="#home-zh-capabilities" data-zh="能力与证据" data-en="Capabilities & evidence" data-zh-target="home-zh-capabilities" data-en-target="home-en-evidence">能力与证据</a>
 <button class="tabx-tab" data-tab="cases" data-zh="案例" data-en="Cases">案例</button>
 <button class="tabx-tab" data-tab="challenge" data-zh="白鼓挑战" data-en="Challenge">白鼓挑战</button>
-<button class="tabx-tab" data-tab="demo" data-zh="法律Demo" data-en="Law Demo">法律Demo</button>
-<button class="tabx-tab" data-tab="longrun" data-zh="长期任务" data-en="Long-Run">长期任务</button>
+<a class="tabx-story-link" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener" data-zh="GitHub ↗" data-en="GitHub ↗">GitHub ↗</a>
   </nav>
 </header>
 
-<section class="tabx-panel" data-panel="home" data-lang="zh">
+<section class="tabx-panel home-p1" data-panel="home" data-lang="zh">
+
+<header class="hero p1-hero story-screen" id="home-zh-start" data-story-screen="01">
+  <div class="hero-inner">
+    <div class="home-hero-layout">
+      <div>
+        <div class="eyebrow">01 / 10 · BENXIANG · ORIGIN IR · v0.1</div>
+        <h1>让 AI 的每一次<br>写入，都能回答：<br><span class="grad">凭什么。</span></h1>
+        <p class="sub">本象把项目状态保存在可验证的 <code>.origin</code> 包中。AI 只提交“想改什么”的事务；规则通过才写入，拒绝时原状态不变。</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#home-zh-demo">看 90 秒真实演示</a>
+          <a class="btn btn-ghost" href="#home-zh-start-verify">3 分钟亲手验证</a>
+        </div>
+        <p class="hero-promise">先看一次拒绝，再理解协议。浏览器演示只在本地运行，不上传数据。</p>
+      </div>
+      <div class="hero-tx-card" aria-label="候选事务被门禁拒绝，已提交状态保持不变">
+        <div class="hero-tx-top"><span>decision:release-scope</span><span>committed · seq 42</span></div>
+        <div class="hero-tx-body">
+          <div class="hero-tx-row"><strong>01 · 当前事实</strong><code>status: proposed<br>owner: agent:planner</code></div>
+          <div class="hero-tx-row is-rejected"><strong>02 · 候选事务被拒绝</strong><code>status → decided<br>rationale: missing · REJECTED</code></div>
+          <div class="hero-tx-row is-committed"><strong>03 · 已提交状态</strong><code>status: proposed · seq: 42<br>0 byte written</code></div>
+        </div>
+        <div class="hero-tx-foot">候选不是事实。只有通过门禁的事务，才能改变世界状态。</div>
+      </div>
+    </div>
+    <div class="hero-metrics" aria-label="当前仓库验证摘要">
+      <div class="metric"><div class="num">87/87</div><div class="lbl">JS 一致性向量</div></div>
+      <div class="metric"><div class="num">19/19</div><div class="lbl">协议变异已捕获</div></div>
+      <div class="metric"><div class="num">4</div><div class="lbl">已跑通方言</div></div>
+      <div class="metric"><div class="num">0</div><div class="lbl">npm 运行依赖</div></div>
+    </div>
+    <p class="hero-proof-note">这些数字是协议与本地测试证据，不等于生产部署。<a href="#home-zh-honest">查看诚实边界 ↓</a></p>
+  </div>
+</header>
+
+<section class="section story-screen" id="home-zh-problem-p1" data-story-screen="02">
+  <div class="screen-head"><div class="screen-no">02</div><div class="screen-copy">
+    <div class="sec-kicker">为什么需要</div>
+    <h2 class="sec-title">聊天可以清空，世界不能失忆。</h2>
+    <p class="sec-lead">大模型擅长生成下一段文字，却不会天然维护一个长期一致、可追责、可并发修改的项目世界。</p>
+  </div></div>
+  <div class="plain-grid">
+    <article class="plain-card"><div class="plain-label">状态</div><h3>项目不能只活在聊天里</h3><p>对象、关系、约束和决策需要独立保存。换会话、换模型后，世界仍然存在。</p></article>
+    <article class="plain-card"><div class="plain-label">写入</div><h3>AI 不能直接覆盖事实</h3><p>AI 先提交候选事务：改什么、为什么、谁负责。规则不通过，零字节写入。</p></article>
+    <article class="plain-card"><div class="plain-label">证据</div><h3>结果必须能追问“为什么”</h3><p>每个字段都能回到来源、事务、责任者与校验规则，而不是让模型事后编解释。</p></article>
+  </div>
+  <div class="one-line-answer">本象做的事很简单：把 AI 的“生成结果”，变成系统可以接受或拒绝的“候选变更”。</div>
+</section>
+
+<section class="section story-screen" id="home-zh-demo" data-story-screen="03">
+  <div class="screen-head"><div class="screen-no">03</div><div class="screen-copy">
+    <div class="sec-kicker">90 秒演示</div>
+    <h2 class="sec-title">一次变更，六步交代清楚。</h2>
+    <p class="sec-lead">点完六步，你会看到：候选如何被拒绝、补全后如何提交、最终值如何追到证据，以及旧状态写入为什么会冲突。</p>
+  </div></div>
+  <div class="demo-shell" data-origin-demo>
+    <div class="demo-steps" role="tablist" aria-label="事务演示步骤">
+      <button class="demo-step active" type="button" role="tab" aria-selected="true" data-demo-step="0"><span>STEP 01</span>当前状态</button>
+      <button class="demo-step" type="button" role="tab" aria-selected="false" data-demo-step="1"><span>STEP 02</span>候选事务</button>
+      <button class="demo-step" type="button" role="tab" aria-selected="false" data-demo-step="2"><span>STEP 03</span>门禁拒绝</button>
+      <button class="demo-step" type="button" role="tab" aria-selected="false" data-demo-step="3"><span>STEP 04</span>补全并提交</button>
+      <button class="demo-step" type="button" role="tab" aria-selected="false" data-demo-step="4"><span>STEP 05</span>Why 证据链</button>
+      <button class="demo-step" type="button" role="tab" aria-selected="false" data-demo-step="5"><span>STEP 06</span>并发冲突</button>
+    </div>
+    <div class="demo-stage">
+      <div class="demo-panel active" role="tabpanel" data-demo-panel="0">
+        <div class="demo-kicker">先读事实</div><h3>发布范围还只是提案。</h3><p>世界水位是 seq 42。下面任何候选事务，都必须以这个已提交状态为起点。</p>
+        <div class="state-grid"><div class="state-card committed"><h4>已提交对象</h4><pre>object: decision:release-scope
+status: proposed
+owner: agent:planner
+seq: 42</pre></div><div class="state-card"><h4>当前含义</h4><pre>事实：尚未决定
+责任者：agent:planner
+下一次写入必须基于 seq 42</pre></div></div>
+      </div>
+      <div class="demo-panel" role="tabpanel" data-demo-panel="1">
+        <div class="demo-kicker">AI 提交意图</div><h3>候选想把“提案”改成“已决定”。</h3><p>但它没有给出理由。候选只是请求，不是已经发生的事实。</p>
+        <div class="state-grid"><div class="state-card committed"><h4>已提交状态</h4><pre>status: proposed
+seq: 42</pre></div><div class="state-card candidate"><h4>候选事务</h4><pre>target: decision:release-scope
+change: proposed → decided
+rationale: missing
+base_seq: 42</pre></div></div>
+      </div>
+      <div class="demo-panel" role="tabpanel" data-demo-panel="2">
+        <div class="demo-kicker">确定性门禁</div><h3>缺少理由，事务被退回。</h3><p>界面同时保留候选与事实，避免“文字说拒绝，对象却已经变了”的假拒绝。</p>
+        <div class="state-grid"><div class="state-card committed"><h4>已提交状态 · 未改变</h4><pre>status: proposed
+seq: 42</pre></div><div class="state-card rejected"><h4>被拒候选</h4><pre>status: decided
+rationale: missing
+result: REJECTED</pre></div></div>
+        <div class="result-line reject"><strong>拒绝</strong><span><code>decision-rationale-required</code> 未通过；原状态不变，seq 仍为 42，写入 0 字节。</span></div>
+      </div>
+      <div class="demo-panel" role="tabpanel" data-demo-panel="3">
+        <div class="demo-kicker">补全后重试</div><h3>理由完整，事务才成为事实。</h3><p>通过门禁后，状态更新并留下新的事务序列。</p>
+        <div class="state-grid"><div class="state-card candidate"><h4>补全的事务</h4><pre>change: proposed → decided
+rationale: 首版仅保留协议内核、CLI
+与可复现实验</pre></div><div class="state-card committed"><h4>新的已提交状态</h4><pre>status: decided
+owner: agent:planner
+seq: 45</pre></div></div>
+        <div class="result-line pass"><strong>通过</strong><span>事务写入 seq 43–45，并进入 append-only 证据链。</span></div>
+      </div>
+      <div class="demo-panel" role="tabpanel" data-demo-panel="4">
+        <div class="demo-kicker">从值追到依据</div><h3>现在可以回答：这个值凭什么。</h3><p>Why 不是模型生成的解释，而是提交时留下的结构化事实。</p>
+        <div class="why-list"><div class="why-row"><span>current value</span><span>decided</span></div><div class="why-row"><span>changed by</span><span>agent:planner</span></div><div class="why-row"><span>transaction</span><span>tx:release-scope-0043</span></div><div class="why-row"><span>source</span><span>PROJECT_BRIEF.md#release-boundary</span></div><div class="why-row"><span>validated by</span><span>decision-rationale-required</span></div><div class="why-row"><span>sequence</span><span>43–45</span></div></div>
+      </div>
+      <div class="demo-panel" role="tabpanel" data-demo-panel="5">
+        <div class="demo-kicker">多人写入保护</div><h3>基于旧世界的事务不能静默覆盖新事实。</h3><p>另一个 Agent 仍基于 seq 42 提交，但当前世界已经到了 seq 45。</p>
+        <div class="state-grid"><div class="state-card rejected"><h4>过期候选</h4><pre>base_seq: 42
+requested status: archived</pre></div><div class="state-card committed"><h4>当前世界</h4><pre>status: decided
+current_seq: 45
+result: unchanged</pre></div></div>
+        <div class="result-line reject"><strong>冲突</strong><span>请重新读取 seq 45 后再提交；系统不会替多个 Agent 猜谁应该覆盖谁。</span></div>
+      </div>
+      <div class="demo-controls"><span class="demo-progress" aria-live="polite">步骤 1 / 6</span><div class="demo-control-buttons"><button class="mini-btn" type="button" data-demo-prev disabled>上一步</button><button class="mini-btn primary" type="button" data-demo-next>下一步</button></div></div>
+    </div>
+  </div>
+  <p class="note">这是浏览器内的解释性演示，不是一次生产服务调用。它呈现的是协议语义：拒绝零写入、成功可追溯、旧 seq 冲突。</p>
+</section>
+
+<section class="section story-screen" id="home-zh-capabilities" data-story-screen="04">
+  <div class="screen-head"><div class="screen-no">04</div><div class="screen-copy"><div class="sec-kicker">核心能力</div><h2 class="sec-title">不是更大的 JSON，而是持久的对象层。</h2><p class="sec-lead">六个问题，正好对应本象的六项核心能力。</p></div></div>
+  <div class="capability-grid">
+    <article class="capability-card"><div class="cap-question">项目存在哪里？</div><h3>持久世界状态</h3><p>对象、关系、约束和边界保存在 <code>.origin</code> 包中，不依赖某次聊天。</p></article>
+    <article class="capability-card"><div class="cap-question">AI 怎么修改？</div><h3>语义事务</h3><p>提交对象级变更，不直接覆盖最终文件；意图、责任者和依据一起进入事务。</p></article>
+    <article class="capability-card"><div class="cap-question">谁决定能不能写？</div><h3>确定性门禁</h3><p>规则不通过，原状态不动；通过后才生成新的已提交事实。</p></article>
+    <article class="capability-card"><div class="cap-question">结果凭什么？</div><h3>Why 证据链</h3><p>从当前字段回到来源、事务、责任者和规则，不靠模型事后编故事。</p></article>
+    <article class="capability-card"><div class="cap-question">多个 Agent 冲突怎么办？</div><h3>旧状态写入保护</h3><p>基于旧 seq 的事务会被拒绝，避免多个 Agent 静默覆盖彼此结果。</p></article>
+    <article class="capability-card"><div class="cap-question">做不到的事怎么说？</div><h3>边界也是状态</h3><p>未实现能力、适用范围与限制和对象一起保存，不能做什么也可查询。</p></article>
+  </div>
+</section>
+
+<section class="section story-screen" id="home-zh-runnable" data-story-screen="05">
+  <div class="screen-head"><div class="screen-no">05</div><div class="screen-copy"><div class="sec-kicker">今天能跑什么</div><h2 class="sec-title">先看能做什么，再看证据到哪一级。</h2><p class="sec-lead">“跑通”不是一个等级。下面把协议测试、合成样例、真实文件和实验明确分开。</p></div></div>
+  <div class="capability-list">
+    <div class="capability-row"><h3>协议 / CLI</h3><p>查看状态、追问 Why、读取边界、运行整仓验证。</p><span class="evidence-badge gold">PROTOCOL TEST</span></div>
+    <div class="capability-row"><h3>Shadow Memory MCP</h3><p>在 Agent 会话中查询状态、提交事务、追溯历史和诊断包。</p><span class="evidence-badge gold">E2E SELFTEST</span></div>
+    <div class="capability-row"><h3>CAD / 法律 / XLSX</h3><p>把几何、条款、公式与来源映射成可验证对象；当前主要是仓库样例。</p><span class="evidence-badge">SYNTHETIC FIXTURE</span></div>
+    <div class="capability-row"><h3>Origin Office</h3><p>解析 DOCX / PPTX 原生结构，保存对象关系与结构哈希并复核。</p><span class="evidence-badge gold">REAL FILE + SELFTEST</span></div>
+    <div class="capability-row"><h3>OriginWriter</h3><p>按章节事务写作，对正文、状态、伏笔、时间线和禁区一起过门禁。</p><span class="evidence-badge">EXPERIMENTAL</span></div>
+    <div class="capability-row"><h3>AgentTeams</h3><p>对多 Agent 交付物做独立验证；它是独立生态，不是协议内核。</p><span class="evidence-badge">LOCAL VALIDATION</span></div>
+  </div>
+  <p class="note">四个 Agent 工作流入口：<code>benxiang-protocol</code>、<code>benxiang-memory</code>、<code>origin-office</code>、<code>origin-writer</code>。</p>
+</section>
+
+<section class="section story-screen" id="home-zh-evidence-p1" data-story-screen="06">
+  <div class="screen-head"><div class="screen-no">06</div><div class="screen-copy"><div class="sec-kicker">证据阶梯</div><h2 class="sec-title">先看证据，再看愿景。</h2><p class="sec-lead">证据等级越高，能支持的结论越多；低一级证据不能自动升级成生产能力。</p></div></div>
+  <div class="evidence-ladder">
+    <article class="evidence-level"><div class="level">LEVEL 01</div><h3>协议测试</h3><p>证明规则按预期执行；不能推出已经在真实业务上线。</p></article>
+    <article class="evidence-level"><div class="level">LEVEL 02</div><h3>合成样例</h3><p>证明已知场景可跑；不能推出覆盖真实世界分布。</p></article>
+    <article class="evidence-level"><div class="level">LEVEL 03</div><h3>真实文件 / 实验</h3><p>证明处理过真实来源或可复现实验；不等于真实用户与 SLA。</p></article>
+    <article class="evidence-level is-missing"><div class="level">LEVEL 04 · 未达到</div><h3>生产证据</h3><p>需要部署、用户、监控和运行记录；当前仓库没有这一级证据。</p></article>
+  </div>
+  <div class="fact-strip">
+    <div class="fact-item"><strong>87 / 87</strong><span>JavaScript 参考实现一致性向量</span></div>
+    <div class="fact-item"><strong>19 / 19</strong><span>协议变异已捕获；2 项仅 selftest 捕获，投影层另有 1 个已知覆盖缺口</span></div>
+    <div class="fact-item"><strong>60 / 79</strong><span>Python 第二实现；19 项未实现，不算完整兼容</span></div>
+  </div>
+  <div class="hero-cta"><a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin/blob/main/spec/conformance/README.md" target="_blank" rel="noopener">查看一致性与覆盖缺口</a><a class="btn btn-ghost" href="https://github.com/dongsheng123132/2origin/blob/main/benchmark/shadowbench-w/results-log.md" target="_blank" rel="noopener" style="border-color:var(--gold);color:var(--gold-deep)">查看实验记录</a></div>
+</section>
+
+<section class="section story-screen" id="home-zh-cases" data-story-screen="07">
+  <div class="screen-head"><div class="screen-no">07</div><div class="screen-copy"><div class="sec-kicker">案例</div><h2 class="sec-title">问题、动作、证据，三件事说清楚。</h2><p class="sec-lead">案例不是宣传故事。每一张卡都告诉你本象做了什么，以及证据停在哪一级。</p></div></div>
+  <div class="case-grid">
+    <article class="case-card"><h3>项目记忆</h3><dl><dt>问题</dt><dd>新会话容易丢失关键决策。</dd><dt>动作</dt><dd>把会话变化提交为持久对象。</dd><dt>返回</dt><dd>当前值、事务序列、责任者、来源与限制。</dd><dt>证据</dt><dd><span class="evidence-badge">E2E SELFTEST</span></dd></dl><a href="https://github.com/dongsheng123132/2origin/blob/main/adapters/memory/README.md" target="_blank" rel="noopener">查看 Shadow Memory →</a></article>
+    <article class="case-card"><h3>Office 文档</h3><dl><dt>问题</dt><dd>转成纯文本后，章节、表格和勾选框关系丢失。</dd><dt>动作</dt><dd>解析 DOCX / PPTX 原生结构并保存结构哈希。</dd><dt>返回</dt><dd>章节、条目、表格、勾选框与复核结果。</dd><dt>证据</dt><dd><span class="evidence-badge">REAL FILE + SELFTEST</span></dd></dl><a href="https://github.com/dongsheng123132/2origin/blob/main/adapters/office/README.md" target="_blank" rel="noopener">查看转换证据 →</a></article>
+    <article class="case-card"><h3>CAD</h3><dl><dt>问题</dt><dd>几何变化难说明意图、约束与责任者。</dd><dt>动作</dt><dd>把零件、特征和约束映射为对象事务。</dd><dt>返回</dt><dd>候选事务、门禁结果、序列与 Why 链。</dd><dt>证据</dt><dd><span class="evidence-badge">SYNTHETIC FIXTURE</span></dd></dl><a href="https://github.com/dongsheng123132/2origin/blob/main/adapters/cad/README.md" target="_blank" rel="noopener">查看 CAD 方言 →</a></article>
+    <article class="case-card"><h3>法律</h3><dl><dt>问题</dt><dd>候选条款可能违反比例或上位规则。</dd><dt>动作</dt><dd>用规则对象运行确定性门禁。</dd><dt>返回</dt><dd>原状态、候选状态、冲突规则与拒绝理由。</dd><dt>证据</dt><dd><span class="evidence-badge">SYNTHETIC FIXTURE</span></dd></dl><a href="#demo">打开拒绝态 Demo →</a></article>
+    <article class="case-card"><h3>XLSX</h3><dl><dt>问题</dt><dd>数值、公式和来源在复制后彼此分离。</dd><dt>动作</dt><dd>把工作簿结构、字段语义和来源关系放入对象层。</dd><dt>返回</dt><dd>单元格语义、来源关系、变更事务与限制。</dd><dt>证据</dt><dd><span class="evidence-badge">SYNTHETIC FIXTURE</span></dd></dl><a href="https://github.com/dongsheng123132/2origin/blob/main/adapters/xlsx/README.md" target="_blank" rel="noopener">查看 XLSX 方言 →</a></article>
+  </div>
+</section>
+
+<section class="section story-screen" id="home-zh-challenge-p1" data-story-screen="08">
+  <div class="challenge-band">
+    <div class="screen-head"><div class="screen-no">08</div><div class="screen-copy"><div class="sec-kicker">EXPERIMENTAL · LONG-FORM WRITING</div><h2 class="sec-title">不是生成一百万字，而是让每一章都可验证。</h2><p class="sec-lead">OriginWriter 把正文、角色状态、时间线、伏笔和禁区一起提交；五类门禁都通过，章节才进入正式世界状态。</p></div></div>
+    <div class="challenge-stats"><div class="challenge-stat"><strong id="p1-challenge-chapters">读取中…</strong><span>已验证章节</span></div><div class="challenge-stat"><strong id="p1-challenge-words">读取中…</strong><span>已验证字数</span></div><div class="challenge-stat"><strong id="p1-challenge-freshness">读取中…</strong><span>统计文件更新时间</span></div></div>
+    <div class="gate-list" aria-label="OriginWriter 五类门禁"><span>禁区检查</span><span>伏笔状态机</span><span>角色一致性</span><span>时间线一致性</span><span>正文与状态对照</span></div>
+    <p class="hero-proof-note" id="p1-challenge-boundary">这是可复现实验，不是生产写作服务；数字来自统计文件，不手填。</p>
+    <div class="hero-cta"><a class="btn btn-primary" href="#challenge">查看挑战当前状态</a><a class="btn btn-ghost" href="https://github.com/dongsheng123132/2origin/blob/main/adapters/story/README.md" target="_blank" rel="noopener">查看 OriginWriter 自测</a></div>
+  </div>
+</section>
+
+<section class="section story-screen" id="home-zh-honest" data-story-screen="09">
+  <div class="honest-layout">
+    <div>
+      <div class="screen-head"><div class="screen-no">09</div><div class="screen-copy"><div class="sec-kicker">诚实状态</div><h2 class="sec-title">我们不主张什么。</h2><p class="sec-lead">本象当前最重要的能力，是让结果可验证；这不等于所有效果指标都已经证明。</p></div></div>
+      <div class="claim-list"><div class="claim"><strong>A0 → A2：</strong>只加“显式维护状态”的提示词，状态准确率 +41.3 个百分点，当前实验显著。</div><div class="claim"><strong>A2 → A3：</strong>再加入校验器、证据链与编译器，+2.5 个百分点；当前实验不显著。</div><div class="claim"><strong>仍成立的差异：</strong>提示词组证据覆盖率为 0%；本象实验为 15.0% / 27.5%。</div></div>
+    </div>
+    <aside class="no-claim"><h3>当前不能推出</h3><ul><li>不能推出已经节省 token。</li><li>不能推出已经提高行文一致性。</li><li>没有生产适配器、真实用户规模或生产 SLA 证据。</li><li>Python 第二实现尚未完整兼容。</li><li>合成 fixture 不是实际业务验证。</li><li>selftest 独有覆盖不是完整协议覆盖。</li></ul><a href="https://github.com/dongsheng123132/2origin/blob/main/benchmark/shadowbench-w/paper/shadowbench-w-paper-en-v0.4.md" target="_blank" rel="noopener" style="display:inline-flex;margin-top:18px;color:var(--gold-deep);font-weight:700;text-decoration:none">阅读完整实验结果 →</a></aside>
+  </div>
+</section>
+
+<section class="section story-screen" id="home-zh-start-verify" data-story-screen="10">
+  <div class="screen-head"><div class="screen-no">10</div><div class="screen-copy"><div class="sec-kicker">快速开始</div><h2 class="sec-title">三分钟，亲手验证一次零写入。</h2><p class="sec-lead">最可靠的入口是克隆源码后运行整仓门禁；示例对象随仓库一起提供，不依赖页面里的手写数据。</p></div></div>
+  <div class="quickstart-layout">
+    <div class="terminal-card"><div class="terminal-top"><span>source verification · Node.js 18+</span><button class="mini-btn" type="button" data-copy-target="quickstart-code">复制命令</button></div><pre id="quickstart-code">git clone https://github.com/dongsheng123132/2origin.git
+cd 2origin
+npm install
+npm run verify
+
+# 查看示例世界与证据链
+node compiler/cli.mjs status spec/examples/sales-2026.origin
+node compiler/cli.mjs why \
+  spec/examples/sales-2026.origin \
+  projection:revenue-trend.chart</pre></div>
+    <div class="quick-notes"><div class="quick-note"><strong>你会看到什么</strong><span>整仓测试结果、示例对象当前状态，以及字段对应的来源与事务证据。</span></div><div class="quick-note"><strong>你不会得到什么</strong><span>这不是生产部署证明，也不会自动连接你的真实业务数据。</span></div><div class="quick-note"><strong>先从哪里读</strong><span><a href="https://github.com/dongsheng123132/2origin#readme" target="_blank" rel="noopener" style="color:var(--gold-deep)">README</a> → <a href="https://github.com/dongsheng123132/2origin/blob/main/docs/03-%E5%8D%8F%E8%AE%AE%E8%8D%89%E6%A1%88-v0.1.md" target="_blank" rel="noopener" style="color:var(--gold-deep)">协议草案</a> → <a href="https://github.com/dongsheng123132/2origin/blob/main/spec/conformance/README.md" target="_blank" rel="noopener" style="color:var(--gold-deep)">一致性向量</a></span></div></div>
+  </div>
+  <div class="hero-cta"><a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">在 GitHub 上验证</a><a class="btn btn-ghost" href="#home-zh-honest" style="border-color:var(--gold);color:var(--gold-deep)">再看一次诚实边界</a></div>
+  <p class="one-line-answer" style="margin-top:46px">聊天是操作窗口，<code>.origin</code> 才是项目世界。</p>
+</section>
 
 <header class="hero">
   <div class="hero-inner">
@@ -81,11 +444,12 @@
       <a class="btn btn-ghost" href="#manifesto">读宣言</a>
     </div>
     <div class="hero-metrics">
-      <div class="metric"><div class="num">95.8%<em>±5.9</em></div><div class="lbl">状态准确率 · 本象（Run #27）</div></div>
-      <div class="metric"><div class="num">52.1%</div><div class="lbl">裸模型 · 同一道题</div></div>
-      <div class="metric"><div class="num">58.3%</div><div class="lbl">向量 RAG · 同一道题</div></div>
-      <div class="metric"><div class="num">p=0.0024</div><div class="lbl">置换检验 vs 本象</div></div>
+      <div class="metric"><div class="num">87/87</div><div class="lbl">JS 一致性向量 · 协议测试</div></div>
+      <div class="metric"><div class="num">19/19</div><div class="lbl">协议变异已捕获 · 2 项仅自测覆盖</div></div>
+      <div class="metric"><div class="num">4</div><div class="lbl">已跑通方言 · CAD / 法律 / XLSX / 项目记忆</div></div>
+      <div class="metric"><div class="num">0</div><div class="lbl">npm 运行依赖</div></div>
     </div>
+    <p class="hero-proof-note">当前口径以仓库验证结果为准。<a href="https://github.com/dongsheng123132/2origin#诚实状态我们两次推翻了自己" target="_blank" rel="noopener">查看诚实边界 ↗</a></p>
   </div>
 </header>
 
@@ -190,57 +554,38 @@
 
 <section class="section" id="home-zh-evidence">
   <div class="sec-kicker">证据</div>
-  <h2 class="sec-title">状态追踪，实测——以及我们如实不主张什么<span class="zh">Measured, and bounded</span></h2>
-  <p class="sec-lead">对外主张已按实验结果收窄到<strong>一个</strong>维度：状态追踪。考题：在 9.5 万字的长篇叙事里，
-  黑钥匙此刻在谁手里、谁知道了那个秘密、哪些伏笔还没收。</p>
+  <h2 class="sec-title">实验结论已经收窄：价值在证据链，不在更高准确率<span class="zh">Measured, then narrowed</span></h2>
+  <p class="sec-lead">最终 A2 消融把“显式维护状态”的提示词，与本象完整机制拆开测量。结果不支持把旧 Run #27 当作本象机制本身的优势。</p>
 
   <table class="data-table">
-    <caption>ShadowBench-W · Run #27（2026-08-05）· 当前唯一有效对照口径 · qwen-plus · 9.5 万字 · 各 n=6</caption>
-    <thead><tr><th>W3 状态准确率</th><th>本象</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
+    <caption>ShadowBench-W · A2 消融 · 2026-08-13 · 两模型、各 n=10</caption>
+    <thead><tr><th>对比</th><th>状态准确率效应</th><th>穷举置换检验</th><th>结论</th></tr></thead>
     <tbody>
-      <tr><td>得分</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
-      <tr><td>置换检验 vs 本象</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+      <tr><td>A0 → A2：只增加“显式维护状态”的提示词</td><td class="hl">+41.3 pt</td><td>p = 3.3×10⁻⁵</td><td class="hl">显著</td></tr>
+      <tr><td>A2 → A3：再加入校验器、证据链与编译器</td><td>+2.5 pt</td><td>p = 0.47 / 0.72</td><td class="dim">不显著</td></tr>
     </tbody>
   </table>
 
-  <p class="note"><strong>先把不利的说在前面。</strong>字段级看，本象在 <code>black-key.holder</code> 上是
-  <strong>4/6，比两条对照臂的 5/6 都差</strong>——而那恰恰是唯一能从近文直接读出来的字段。
-  优势全部集中在两条对照臂同时近乎全灭的那两格：</p>
-
   <table class="data-table">
-    <thead><tr><th>字段</th><th>裸模型</th><th>RAG</th><th>本象</th></tr></thead>
+    <caption>当前仍成立的分类性差异</caption>
+    <thead><tr><th>能力</th><th>提示词基线</th><th>A3 本象机制</th></tr></thead>
     <tbody>
-      <tr><td><code>black-key.holder</code>（最后一次转交就写在自己正文里）</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
-      <tr><td><code>bai-yao.secret_betrayal</code>（跨几十章累积的秘密）</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
-      <tr><td><code>hook:shen-yan-suspicion.status</code>（从不存在于任何一段文字里）</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      <tr><td>受测字段可溯源证据覆盖率</td><td>0%</td><td class="hl">15.0% / 27.5%</td></tr>
+      <tr><td>能否从字段追到来源、事务与校验</td><td>结构上不能</td><td class="hl">可以</td></tr>
     </tbody>
   </table>
 
   <blockquote class="pull">
-    「能从自己刚写的正文里读出来的状态，检索和裸模型都够用，本象不占便宜；
-    需要跨全书累积、且从不在任何一段文字里被陈述的状态，只有状态机答得出来。」
+    「只回答‘你信什么’，一句明确提示词可能已经够用；必须回答‘你为什么信’，才需要校验器、证据链与编译器。」
   </blockquote>
-
-  <table class="data-table">
-    <caption>臂内跨模型（Run #19，各 n=11）——跨模型主张中立住的那一半</caption>
-    <thead><tr><th></th><th>qwen-plus</th><th>deepseek-v4-flash</th><th>置换检验</th></tr></thead>
-    <tbody>
-      <tr><td><strong>W3 状态准确率</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>均值差 0.0000 · <strong>p = 1.0000</strong></td></tr>
-      <tr><td><strong>W1 EPC</strong>（正文，越低越好）</td><td>0.20</td><td>0.55</td><td>均值差 −0.35 · <strong>p = 0.0392</strong></td></tr>
-    </tbody>
-  </table>
-
-  <p class="note strong">状态层的正确性与底模无关，正文层的质量与底模显著相关。
-  这正是「协议」该有的性质：不依赖底下那台机器有多强。而且是 11 对 11——不是 n=1。</p>
 
   <div class="honesty">
     <h3>我们不主张什么</h3>
     <ul>
-      <li><strong>不主张「写得更一致」。</strong>正文一致性与向量 RAG 无显著差异（qwen p=0.1852、deepseek p=0.3341）。</li>
-      <li><strong>不主张「更省 Token」——也不再承认「更贵」。</strong>同口径实测 +12.2%，p = 0.5253，不显著。</li>
-      <li><strong>跨模型只成立一半。</strong>立住的是臂内；对照臂在第二个模型上作废，必须重跑。</li>
-      <li><strong>没有生产级适配器，没有真实用户。</strong>这个项目的可信度建立在把边界说清楚上。</li>
-      <li><strong>那堵 75% 的墙是假的。</strong>对照臂的零方差是提示词模板把答案印在了题面上——我们自查抓出来的。</li>
+      <li><strong>不主张完整机制显著提高状态准确率。</strong>A2 → A3 只有 +2.5 pt，当前不显著。</li>
+      <li><strong>不主张更省 Token，也不主张写得更一致。</strong>现有实验不足以支持这两项优势。</li>
+      <li><strong>没有生产级适配器或真实用户规模证据。</strong>协议测试不能替代生产验证。</li>
+      <li><strong>旧 Run #27 只保留为实验历史。</strong>它不再作为机制归因或首屏证明。</li>
     </ul>
   </div>
 </section>
@@ -279,14 +624,15 @@
         <caption>一致性测试集——「协议」与「一个库」的分界线</caption>
         <thead><tr><th></th><th>向量</th></tr></thead>
         <tbody>
-          <tr><td>语言无关的测试向量（数据，不是代码）</td><td class="hl">68 / 68</td></tr>
-          <tr><td>JavaScript 参考实现</td><td>68 / 68</td></tr>
-          <tr><td>Python 第二实现（约 250 行，零依赖）</td><td>60 / 60 core</td></tr>
-          <tr><td>参考实现第三方依赖</td><td>0</td></tr>
+          <tr><td>语言无关的一致性向量（数据，不是代码）</td><td class="hl">87</td></tr>
+          <tr><td>JavaScript 参考实现</td><td class="hl">87 / 87</td></tr>
+          <tr><td>Python 第二实现（约 250 行，零依赖）</td><td>60 / 79 · 19 项未实现</td></tr>
+          <tr><td>协议变异检查</td><td>19 / 19 · 其中 2 项仅自测覆盖</td></tr>
+          <tr><td>npm 运行依赖</td><td>0</td></tr>
         </tbody>
       </table>
       <p class="note">任何实现只要写一个几十行的适配器就能当场自证合规——
-      标准是那 68 条向量，不是「本象」这两个字。</p>
+      标准是当前 87 条向量，不是「本象」这两个字。Python 补齐前不算合规实现。</p>
     </div>
     <div class="honesty">
       <h3>为什么叫「协议」而不是「一个库」</h3>
@@ -297,19 +643,17 @@
 </section>
 
 <section class="section" id="home-zh-challenge">
-  <div class="sec-kicker">最难的一场考试</div>
+  <div class="sec-kicker">实验性长篇写作</div>
   <h2 class="sec-title">白鼓挑战<span class="zh">The White Drum Challenge</span></h2>
-  <p class="sec-lead">人类最长的长篇小说叫 <strong>Venmurasu</strong>（泰米尔语「白鼓」）——26 卷，约 22,400 页，
-  一个人，写了六年半。现在 AI 要挑战这个纪录，但我们给自己加了一个人类作者不需要面对的难度：
-  <strong>每一章的世界状态，都必须可验证。</strong></p>
+  <p class="sec-lead"><strong>Venmurasu</strong>（泰米尔语「白鼓」）是本实验采用的超长篇公开参照：26 卷，约 22,400 页，
+  由单一作者持续写作六年半。本挑战额外要求：<strong>每一章的世界状态，都必须可验证。</strong></p>
   <div class="milestones">
-    <div class="milestone"><div class="dist">现在</div><h3>两部连载在跑</h3><p>《月落渡口》2 章 · 《规则怪谈·无限层》4 章 · 状态开源可验证</p></div>
+    <div class="milestone"><div class="dist">现在</div><h3 id="home-challenge-zh-now">正在读取当前进度…</h3><p id="home-challenge-zh-detail">数字来自 <code>zh/stats.json</code>，不手写。</p></div>
     <div class="milestone"><div class="dist">下一步</div><h3>10 万字</h3><p>第一个公开里程碑</p></div>
     <div class="milestone"><div class="dist">再然后</div><h3>100 万字</h3><p>百万字不失忆</p></div>
     <div class="milestone"><div class="dist">目标</div><h3>破 22,400 页</h3><p>超越人类纪录，且全程可验证</p></div>
   </div>
-  <p class="note" style="margin-top:22px">drift-rate（模型记错前值率）8.3%，可观测、逐章下降、目标归零。
-  每章：正文 + 世界状态 + git 证据链。 <a href="#challenge" style="color:var(--gold-deep);font-weight:600">看挑战规则 →</a></p>
+  <p class="note" style="margin-top:22px">这是可复现实验，不是生产写作服务。每章：正文 + 世界状态 + git 证据链；drift-rate 等待按同协议重新测量后再上墙。 <a href="#challenge" style="color:var(--gold-deep);font-weight:600">看挑战规则 →</a></p>
 </section>
 
 <section class="section tight" id="home-zh-roadmap">
@@ -337,11 +681,12 @@
       <a class="btn btn-ghost" href="#manifesto">The Manifesto</a>
     </div>
     <div class="hero-metrics">
-      <div class="metric"><div class="num">95.8%<em>±5.9</em></div><div class="lbl">State accuracy · Benxiang (Run #27)</div></div>
-      <div class="metric"><div class="num">52.1%</div><div class="lbl">Bare model · same task</div></div>
-      <div class="metric"><div class="num">58.3%</div><div class="lbl">Vector RAG · same task</div></div>
-      <div class="metric"><div class="num">p=0.0024</div><div class="lbl">Permutation test vs. Benxiang</div></div>
+      <div class="metric"><div class="num">87/87</div><div class="lbl">JS conformance vectors · protocol test</div></div>
+      <div class="metric"><div class="num">19/19</div><div class="lbl">Protocol mutations caught · 2 selftest-only gaps</div></div>
+      <div class="metric"><div class="num">4</div><div class="lbl">Runnable dialects · CAD / law / XLSX / project memory</div></div>
+      <div class="metric"><div class="num">0</div><div class="lbl">npm runtime dependencies</div></div>
     </div>
+    <p class="hero-proof-note">Current figures follow the repository verification record. <a href="https://github.com/dongsheng123132/2origin#honest-status-we-overturned-ourselves-twice" target="_blank" rel="noopener">Read the honest boundaries ↗</a></p>
   </div>
 </header>
 
@@ -450,57 +795,38 @@
 
 <section class="section" id="home-en-evidence">
   <div class="sec-kicker">The evidence</div>
-  <h2 class="sec-title">State tracking, measured — and what it does not claim<span class="zh">只主张状态追踪，且如实报告不主张什么</span></h2>
-  <p class="sec-lead">The claim has been narrowed by experiment to exactly one dimension: <strong>state tracking</strong>.
-  Task: across a 95k-character narrative, who holds the key right now, who learned the secret, which planted threads are still open.</p>
+  <h2 class="sec-title">The result narrowed: the value is evidence, not a proven accuracy lift<span class="zh">实验结论已经收窄</span></h2>
+  <p class="sec-lead">The final A2 ablation separates an explicit-state prompt from the full Benxiang machinery. It does not support treating the old Run #27 result as the mechanism's own advantage.</p>
 
   <table class="data-table">
-    <caption>ShadowBench-W · Run #27 (2026-08-05) · the only currently valid comparison · qwen-plus · 95k chars · n=6 each</caption>
-    <thead><tr><th>W3 state accuracy</th><th>Benxiang</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+    <caption>ShadowBench-W · A2 ablation · 2026-08-13 · two models, n=10 each</caption>
+    <thead><tr><th>Comparison</th><th>State-accuracy effect</th><th>Exact permutation</th><th>Conclusion</th></tr></thead>
     <tbody>
-      <tr><td>Score</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
-      <tr><td>Permutation test vs. Benxiang</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+      <tr><td>A0 → A2: add only an explicit-state prompt</td><td class="hl">+41.3 pt</td><td>p = 3.3×10⁻⁵</td><td class="hl">Significant</td></tr>
+      <tr><td>A2 → A3: add validator, evidence chain and compiler</td><td>+2.5 pt</td><td>p = 0.47 / 0.72</td><td class="dim">Not significant</td></tr>
     </tbody>
   </table>
 
-  <p class="note"><strong>The unfavourable part first.</strong> Field by field, Benxiang scores <strong>4/6</strong> on
-  <code>black-key.holder</code> — worse than either control arm's 5/6 — and that is exactly the one field recoverable
-  from the prose the arm just wrote. Its whole advantage lives in the two fields where both controls collapse:</p>
-
   <table class="data-table">
-    <thead><tr><th>Field</th><th>Bare</th><th>RAG</th><th>Benxiang</th></tr></thead>
+    <caption>The categorical difference that still holds</caption>
+    <thead><tr><th>Capability</th><th>Prompt-only baselines</th><th>A3 Benxiang</th></tr></thead>
     <tbody>
-      <tr><td><code>black-key.holder</code> — last handover written in its own prose</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
-      <tr><td><code>bai-yao.secret_betrayal</code> — a secret accumulated over dozens of chapters</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
-      <tr><td><code>hook:shen-yan-suspicion.status</code> — never stated in any passage at all</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      <tr><td>Traceable evidence coverage over tested fields</td><td>0%</td><td class="hl">15.0% / 27.5%</td></tr>
+      <tr><td>Can a field trace to source, transaction and validation?</td><td>Structurally no</td><td class="hl">Yes</td></tr>
     </tbody>
   </table>
 
   <blockquote class="pull">
-    “State you can read back from your own recent prose: retrieval and a bare model both suffice, and Benxiang has no edge.
-    State that must be accumulated across the whole book and is never stated in any one passage: only the state machine answers it.”
+    “If the system only answers ‘what do you believe,’ an explicit prompt may be enough. The machinery is needed when it must also answer ‘why should anyone believe it?’”
   </blockquote>
-
-  <table class="data-table">
-    <caption>Within-arm, cross-model (Run #19, n=11 each) — the half of the cross-model claim that holds</caption>
-    <thead><tr><th></th><th>qwen-plus</th><th>deepseek-v4-flash</th><th>Permutation test</th></tr></thead>
-    <tbody>
-      <tr><td><strong>W3 state accuracy</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>diff 0.0000 · <strong>p = 1.0000</strong></td></tr>
-      <tr><td><strong>W1 EPC</strong> (prose, lower is better)</td><td>0.20</td><td>0.55</td><td>diff −0.35 · <strong>p = 0.0392</strong></td></tr>
-    </tbody>
-  </table>
-
-  <p class="note strong">State-layer correctness is independent of the base model; prose-layer quality is not.
-  That is the property a protocol ought to have: it does not depend on how strong the machine underneath is. And it is 11 against 11 — not an n=1.</p>
 
   <div class="honesty">
     <h3>What we do not claim</h3>
     <ul>
-      <li><strong>Not “writes more consistently.”</strong> Prose consistency shows no significant difference from vector RAG (qwen p=0.1852, deepseek p=0.3341).</li>
-      <li><strong>Not “saves tokens” — and no longer “more expensive” either.</strong> At matched conditions: +12.2%, p = 0.5253, not significant.</li>
-      <li><strong>Cross-model holds only halfway.</strong> What holds is within-arm. The control arms on the second model are void and must be re-run.</li>
-      <li><strong>No production adapters, no real users.</strong> The credibility of this project rests on stating its limits precisely.</li>
-      <li><strong>The 75% wall was fake.</strong> The control arms' zero variance was the probe template printing the answer key — our own self-audit found it.</li>
+      <li><strong>Not a proven state-accuracy lift from the full machinery.</strong> A2 → A3 is +2.5 pt and not significant.</li>
+      <li><strong>Not fewer tokens and not more consistent prose.</strong> Current experiments do not support either advantage.</li>
+      <li><strong>No production adapters or evidence of real-user scale.</strong> Protocol tests are not production validation.</li>
+      <li><strong>Run #27 is experiment history only.</strong> It is no longer used as causal attribution or hero proof.</li>
     </ul>
   </div>
 </section>
@@ -540,14 +866,15 @@
         <caption>Conformance — the line that makes this a protocol, not a library</caption>
         <thead><tr><th></th><th>Vectors</th></tr></thead>
         <tbody>
-          <tr><td>Language-neutral test vectors (data, not code)</td><td class="hl">68 / 68</td></tr>
-          <tr><td>JavaScript reference implementation</td><td>68 / 68</td></tr>
-          <tr><td>Python second implementation (~250 lines, zero deps)</td><td>60 / 60 core</td></tr>
-          <tr><td>Reference-implementation dependencies</td><td>0</td></tr>
+          <tr><td>Language-neutral conformance vectors (data, not code)</td><td class="hl">87</td></tr>
+          <tr><td>JavaScript reference implementation</td><td class="hl">87 / 87</td></tr>
+          <tr><td>Python second implementation (~250 lines, zero deps)</td><td>60 / 79 · 19 unimplemented</td></tr>
+          <tr><td>Protocol mutation checks</td><td>19 / 19 · 2 selftest-only gaps</td></tr>
+          <tr><td>npm runtime dependencies</td><td>0</td></tr>
         </tbody>
       </table>
       <p class="note">Any implementation that writes a small adapter can prove conformance on the spot —
-      the standard is the 68 vectors, not the name.</p>
+      the standard is the current set of 87 vectors, not the name. Python is not conformant until the remaining 19 are implemented.</p>
     </div>
     <div class="honesty">
       <h3>Why “protocol” and not “library”</h3>
@@ -559,19 +886,16 @@
 </section>
 
 <section class="section" id="home-en-challenge">
-  <div class="sec-kicker">The hardest test</div>
+  <div class="sec-kicker">Experimental long-form writing</div>
   <h2 class="sec-title">The White Drum Challenge<span class="zh">白鼓挑战</span></h2>
-  <p class="sec-lead">The longest novel ever written by a human is <strong>Venmurasu</strong> — “the white drum” in
-  Tamil — 26 volumes, ~22,400 pages, one person, six and a half years. AI now challenges that record, with one
-  difficulty a human author never faced: <strong>the world state of every chapter must be verifiable.</strong></p>
+  <p class="sec-lead"><strong>Venmurasu</strong> — “the white drum” in Tamil — is the public long-form reference for this experiment: 26 volumes and roughly 22,400 pages. Our added constraint is simple: <strong>the world state of every chapter must be verifiable.</strong></p>
   <div class="milestones">
-    <div class="milestone"><div class="dist">now</div><h3>Two serials running</h3><p>《月落渡口》2 ch · 《规则怪谈·无限层》4 ch · state open-source, verifiable</p></div>
+    <div class="milestone"><div class="dist">now</div><h3 id="home-challenge-en-now">Loading current progress…</h3><p id="home-challenge-en-detail">Figures come from <code>zh/stats.json</code>, never hand-written.</p></div>
     <div class="milestone"><div class="dist">next</div><h3>100k characters</h3><p>first public milestone</p></div>
     <div class="milestone"><div class="dist">then</div><h3>1,000k characters</h3><p>a million without amnesia</p></div>
     <div class="milestone"><div class="dist">goal</div><h3>Beyond 22,400 pages</h3><p>beating the human record, verifiably</p></div>
   </div>
-  <p class="note" style="margin-top:22px">drift-rate — the model’s rate of misremembering prior values — is 8.3%,
-  observable, falling chapter by chapter, and aimed at zero. Every chapter: prose + world state + git evidence chain.
+  <p class="note" style="margin-top:22px">This is a reproducible experiment, not a production writing service. Every chapter carries prose, world state and a git evidence chain; drift-rate stays off the page until it is re-measured under the same protocol.
   <a href="#challenge" style="color:var(--gold-deep);font-weight:600">Read the rules →</a></p>
 </section>
 
@@ -639,43 +963,25 @@
     查不过就带着证据退回重写。这不是不信任模型，而是<strong>把「说到」和「做到」分开记账</strong>。</p>
 
     <h2>四、今天的证据</h2>
-    <p>对外主张已按实验结果收窄到一个维度：<strong>状态追踪</strong>——在长篇叙事里，
-    关键物品此刻在谁手里、谁知道了那个秘密、哪些伏笔还没收。</p>
+    <p>最终 A2 消融把“要求模型显式维护状态”与“完整本象机制”拆开测量。结果迫使我们再次收窄主张：</p>
 
     <table class="data-table">
-      <caption>Run #27（2026-08-05）· 当前唯一有效对照口径 · qwen-plus · 9.5 万字 · 各 n=6</caption>
-      <thead><tr><th>W3 状态准确率</th><th>本象</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
+      <caption>ShadowBench-W · A2 消融 · 2026-08-13 · 两模型、各 n=10</caption>
+      <thead><tr><th>对比</th><th>效应</th><th>显著性</th></tr></thead>
       <tbody>
-        <tr><td>得分</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
-        <tr><td>置换检验</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+        <tr><td>A0 → A2：只增加显式状态提示词</td><td class="hl">+41.3 pt</td><td>p = 3.3×10⁻⁵，显著</td></tr>
+        <tr><td>A2 → A3：再加入完整机制</td><td>+2.5 pt</td><td>p = 0.47 / 0.72，不显著</td></tr>
       </tbody>
     </table>
-    <p>对照臂这一次拿到了自己写的全部两万字，题面上一个答案都没有，八个字段全问。
-    本象仍然领先 43.8 / 37.5 个百分点。</p>
-    <blockquote>「那堵 75% 的墙是假的，但墙后面的东西是真的。」</blockquote>
-    <p><strong>先说不利的一条：</strong>本象在 <code>black-key.holder</code> 上是 4/6，比两条对照臂的 5/6 都差——
-    而那恰恰是唯一能从近文直接读出来的字段。优势全部集中在两条对照臂同时近乎全灭的那两格：</p>
+    <p>准确率上，完整机制相对显式状态提示词的增量尚未被证明。仍然成立的是结构性差异：</p>
     <table class="data-table">
-      <thead><tr><th>字段</th><th>裸模型</th><th>RAG</th><th>本象</th></tr></thead>
+      <thead><tr><th>能力</th><th>提示词基线</th><th>A3 本象机制</th></tr></thead>
       <tbody>
-        <tr><td><code>black-key.holder</code>（最后一次转交就写在自己正文里）</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
-        <tr><td><code>bai-yao.secret_betrayal</code>（跨几十章累积的秘密）</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
-        <tr><td><code>hook:shen-yan-suspicion.status</code>（从不存在于任何一段文字里）</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+        <tr><td>受测字段可溯源证据覆盖率</td><td>0%</td><td class="hl">15.0% / 27.5%</td></tr>
+        <tr><td>从字段追到来源、事务与校验</td><td>结构上不能</td><td class="hl">可以</td></tr>
       </tbody>
     </table>
-    <p><em>「这条线收了没有」</em>不是任何一段文字里的事实，它是账本。检索能捞回写着它的段落——
-    如果有的话；可根本没有那样一段。</p>
-
-    <p><strong>跨模型只成立一半。</strong>立住的是臂内——A3 自己在两个模型上的表现，不经过探询调用。
-    同口径重打分后 11 对 11：</p>
-    <table class="data-table">
-      <thead><tr><th></th><th>qwen-plus（n=11）</th><th>deepseek-v4-flash（n=11）</th><th>置换检验</th></tr></thead>
-      <tbody>
-        <tr><td><strong>W3 状态准确率</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>均值差 0.0000 · <strong>p = 1.0000</strong></td></tr>
-        <tr><td><strong>W1 EPC</strong>（正文，越低越好）</td><td>0.20</td><td>0.55</td><td>均值差 −0.35 · <strong>p = 0.0392</strong></td></tr>
-      </tbody>
-    </table>
-    <blockquote>「状态层的正确性与底模无关，正文层的质量与底模显著相关。」</blockquote>
+    <blockquote>「只回答‘你信什么’的系统未必需要这套机器；必须回答‘你为什么信’的系统才需要。」</blockquote>
 
     <h2>五、为什么这不是一个小说工具</h2>
     <p>一个方言成功可能是巧合，<strong>两个才是协议</strong>。协议的形状是「通用外壳 + 领域方言」：
@@ -695,13 +1001,10 @@
     <h2>七、我们不主张什么</h2>
     <p>这个项目的可信度建立在把边界说清楚上。</p>
     <ul>
-      <li><strong>不主张「写得更一致」。</strong>正文一致性与向量 RAG 无显著差异。</li>
-      <li><strong>不主张「更省 Token」——也不再承认「更贵」。</strong>同口径实测 +12.2%，p = 0.5253，不显著。</li>
-      <li><strong>跨模型只成立一半。</strong>立住的是臂内；对照臂须重跑。</li>
-      <li><strong>没有生产级适配器，没有真实用户。</strong>CAD、Office 目前只是方言登记表上的一行字。</li>
-      <li><strong>那堵 75% 的墙是假的。</strong>六起仪器事故全部自查出来并公开。
-      一个错误的负面结果，比一个错误的正面结果更难被质疑。我们把这些都记下来，因为对一个基准而言，
-      <strong>仪器的诚实度就是全部资产</strong>。</li>
+      <li><strong>不主张完整机制显著提高状态准确率。</strong>A2 → A3 的 +2.5 pt 当前不显著。</li>
+      <li><strong>不主张更省 Token，也不主张写得更一致。</strong></li>
+      <li><strong>没有生产级适配器或真实用户规模证据。</strong></li>
+      <li><strong>旧 Run #27 不删除，但只作为实验墓碑。</strong>当前口径以 A2 消融和论文 §5 为准。</li>
     </ul>
 
     <div class="hero-cta" style="margin-top:44px">
@@ -767,44 +1070,25 @@ projection ⇏ the origin  ❌ irreversible</pre>
     for “claimed” and “verified”.</strong></p>
 
     <h2>IV · What has actually been demonstrated</h2>
-    <p>The claim has been narrowed by experiment to exactly one dimension: <strong>state tracking</strong> —
-    across long-form narrative, who holds the key right now, who learned the secret, which planted threads are still open.</p>
+    <p>The final A2 ablation separates “ask the model to maintain explicit state” from the full Benxiang machinery. The result forced another narrowing of the claim:</p>
 
     <table class="data-table">
-      <caption>Run #27 (2026-08-05) — the only currently valid comparison · qwen-plus · 95k chars · n=6 each</caption>
-      <thead><tr><th>W3 state accuracy</th><th>Benxiang</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+      <caption>ShadowBench-W · A2 ablation · 2026-08-13 · two models, n=10 each</caption>
+      <thead><tr><th>Comparison</th><th>Effect</th><th>Significance</th></tr></thead>
       <tbody>
-        <tr><td>Score</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
-        <tr><td>Permutation test</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+        <tr><td>A0 → A2: explicit-state prompt only</td><td class="hl">+41.3 pt</td><td>p = 3.3×10⁻⁵, significant</td></tr>
+        <tr><td>A2 → A3: add the full machinery</td><td>+2.5 pt</td><td>p = 0.47 / 0.72, not significant</td></tr>
       </tbody>
     </table>
-    <p>This time the control arms got every character they had just written, no answer anywhere in the prompt,
-    and all eight fields asked. Benxiang still leads by 43.8 and 37.5 points.</p>
-    <blockquote>“The 75% wall was fake. What stood behind it is real.”</blockquote>
-    <p><strong>The unfavourable part first:</strong> Benxiang scores 4/6 on <code>black-key.holder</code> —
-    worse than either control arm — and that is exactly the field recoverable from the prose it just wrote.
-    Its whole advantage lives in the two fields where both controls collapse:</p>
+    <p>The full machinery's added accuracy over an explicit-state prompt is not yet proven. The structural difference that remains is evidence:</p>
     <table class="data-table">
-      <thead><tr><th>Field</th><th>Bare</th><th>RAG</th><th>Benxiang</th></tr></thead>
+      <thead><tr><th>Capability</th><th>Prompt-only baselines</th><th>A3 Benxiang</th></tr></thead>
       <tbody>
-        <tr><td><code>black-key.holder</code> (last handover written in its own prose)</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
-        <tr><td><code>bai-yao.secret_betrayal</code> (secret accumulated over dozens of chapters)</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
-        <tr><td><code>hook:shen-yan-suspicion.status</code> (never stated in any passage)</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+        <tr><td>Traceable evidence coverage over tested fields</td><td>0%</td><td class="hl">15.0% / 27.5%</td></tr>
+        <tr><td>Trace a field to source, transaction and validation</td><td>Structurally no</td><td class="hl">Yes</td></tr>
       </tbody>
     </table>
-    <p><em>“Has this thread been paid off”</em> is not a fact in any passage. It is a ledger entry. Retrieval can
-    fetch the passage that says so — except none exists.</p>
-
-    <p><strong>The cross-model comparison holds only halfway.</strong> What holds is the within-arm comparison,
-    A3 against itself on two models, which never touches the probe. After a uniform rescore, 11 runs against 11:</p>
-    <table class="data-table">
-      <thead><tr><th></th><th>qwen-plus (n=11)</th><th>deepseek-v4-flash (n=11)</th><th>Permutation test</th></tr></thead>
-      <tbody>
-        <tr><td><strong>W3 state accuracy</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>diff 0.0000 · <strong>p = 1.0000</strong></td></tr>
-        <tr><td><strong>W1 EPC</strong> (prose, lower is better)</td><td>0.20</td><td>0.55</td><td>diff −0.35 · <strong>p = 0.0392</strong></td></tr>
-      </tbody>
-    </table>
-    <blockquote>“State-layer correctness is independent of the base model; prose-layer quality is not.”</blockquote>
+    <blockquote>“A system that only answers ‘what do you believe’ may not need this machinery. A system that must answer ‘why should anyone believe it’ does.”</blockquote>
 
     <h2>V · Why this is not a novel-writing tool</h2>
     <p>One dialect working could be a coincidence. <strong>Two is a protocol.</strong> The shape is
@@ -828,13 +1112,10 @@ projection ⇏ the origin  ❌ irreversible</pre>
     <h2>VII · What we do not claim</h2>
     <p>The credibility of this project rests on stating its limits precisely.</p>
     <ul>
-      <li><strong>Not “writes more consistently.”</strong> No significant difference from vector RAG.</li>
-      <li><strong>Not “saves tokens” — but no longer “more expensive” either.</strong> +12.2%, p = 0.5253, not significant.</li>
-      <li><strong>Cross-model holds only halfway.</strong> The within-arm half holds; the comparison half awaits control-arm re-runs.</li>
-      <li><strong>No production adapters, no real users.</strong> CAD and Office are, today, a line in a table.</li>
-      <li><strong>The 75% wall was fake.</strong> Six instrumentation accidents are all self-caught and published.
-      An erroneous negative result is harder to question than an erroneous positive one. We publish all of it,
-      because for a benchmark <strong>the honesty of the instrument is the entire asset</strong>.</li>
+      <li><strong>Not a proven state-accuracy lift from the full machinery.</strong> A2 → A3 is +2.5 pt and not significant.</li>
+      <li><strong>Not fewer tokens and not more consistent prose.</strong></li>
+      <li><strong>No production adapters or evidence of real-user scale.</strong></li>
+      <li><strong>Run #27 is retained, but only as an experiment tombstone.</strong> The current claim follows the A2 ablation and paper §5.</li>
     </ul>
 
     <div class="hero-cta" style="margin-top:44px">
@@ -915,20 +1196,19 @@ projection ⇏ the origin  ❌ irreversible</pre>
   <div class="page-hero-inner">
     <div class="breadcrumb"><a href="#home">2Origin</a> / 白鼓挑战</div>
     <h1>白鼓挑战</h1>
-    <p class="sub">AI 挑战人类最长小说纪录，状态全程可验证。<br>
-    全球最难的 AI 写作考题：一致性。全球第一个敢这么做的挑战。</p>
+    <p class="sub"><strong>实验性挑战：</strong>把每一章写作变成可验证事务，公开正文、世界状态与门禁结果。</p>
   </div>
 </header>
 
 <section class="section">
   <div class="prose">
-    <h2>人类最长的长篇小说</h2>
-    <p>人类最长的长篇小说，叫 <strong>Venmurasu</strong>（泰米尔语「白鼓」）。
-    26 卷，约 22,400 页。一个人，写了六年半。</p>
+    <h2>公开参照：Venmurasu</h2>
+    <p><strong>Venmurasu</strong>（泰米尔语「白鼓」）是本挑战采用的超长篇公开参照：
+    26 卷，约 22,400 页，由单一作者持续写作六年半。</p>
     <p>它是人类耐力的纪念碑——写到第 20 卷还记得第 1 卷的人物，这本身就是奇迹。</p>
 
-    <h2>现在，AI 要挑战这个纪录——而且更难</h2>
-    <p>我们给自己加了一个人类作者不需要面对的难度：</p>
+    <h2>挑战目标：每章状态都可验证</h2>
+    <p>我们为长篇生成加入一条可机器复核的约束：</p>
     <blockquote>「每一章的世界状态，都必须可验证。」</blockquote>
     <p>写到第 100 万字时，第 3 章埋的伏笔还记得收，第 9 章受的伤还记得疼，
     谁在什么时候知道了什么，全都查得出来——不是靠模型记性好，是靠门禁把关。</p>
@@ -945,25 +1225,22 @@ projection ⇏ the origin  ❌ irreversible</pre>
       <li><strong>伏笔状态机</strong>——埋下的线头，收没收、还开着。</li>
       <li><strong>正文对照</strong>——正文说的和状态记的必须一致。</li>
     </ol>
-    <p>这不是「生成 100 万字」——生成器一天能吐 100 万字，但第 5 万字就穿帮。
-    这是<strong>「AI 写出 100 万字还不穿帮」</strong>，是 AI 写作的珠穆朗玛峰。</p>
+    <p>这不是单纯追求生成字数，而是要求正文与世界状态逐章一致、失败可解释、提交可回放。</p>
 
-    <h2>诚实的基线</h2>
-    <p>自建基准 ShadowBench-W 上，本方法的状态回写准确率：</p>
+    <h2>诚实的实验结论</h2>
+    <p>最终 A2 消融显示：显式状态提示词贡献了主要准确率提升，完整机制的额外准确率增量目前不显著。</p>
     <table class="data-table">
-      <thead><tr><th></th><th>2Origin 状态层</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
+      <thead><tr><th>对比</th><th>效应</th><th>显著性</th></tr></thead>
       <tbody>
-        <tr><td>状态回写准确率（33 轮系列）</td><td class="hl">98.9%</td><td>75.0%</td><td>75.0%</td></tr>
+        <tr><td>A0 → A2：显式状态提示词</td><td class="hl">+41.3 pt</td><td>p = 3.3×10⁻⁵，显著</td></tr>
+        <tr><td>A2 → A3：完整本象机制</td><td>+2.5 pt</td><td>p = 0.47 / 0.72，不显著</td></tr>
       </tbody>
     </table>
-    <p class="note">⚠️ 这是自建基准的口径，非第三方评测。探询修复后的权威对比（Run #27）为
-    95.8% ± 5.9 vs 52.1% ± 19.7 / 58.3% ± 11.8，p = 0.0024。全球没有第二家做「状态写回验证」的基准——
-    考题是我们定义的，标准制定权在我们手里。</p>
+    <p class="note">⚠️ 这是自建基准，非第三方评测。当前仍成立的分类性差异是证据链：提示词基线的受测字段证据覆盖率为 0%，A3 为 15.0% / 27.5%。旧 Run #27 只保留为实验历史。</p>
 
     <h2>现在的进度（数字由 <code>scripts/challenge-stats.mjs</code> 生成，不手写）</h2>
         <div id="challenge-zh-progress"><p>正在读取 <code>stats.json</code>…</p></div>
-        <p class="note" id="challenge-zh-drift-note">drift-rate（模型记错前值率）：上次实测 8.3%（2026-08-06；Run 编号未留存），
-        随下个里程碑按同协议重测后以「Run 编号 + 日期」更新。无编号的裸数字不上墙。</p>
+        <p class="note" id="challenge-zh-drift-note">drift-rate（模型记错前值率）：当前没有带 Run 编号的有效结果。随下个里程碑按同协议重测后，再以「Run 编号 + 日期」更新。</p>
         <div class="milestones">
           <div class="milestone"><div class="dist">现在</div><h3 id="challenge-zh-m-now">…</h3><p>每章世界状态可 clone 验证</p></div>
           <div class="milestone"><div class="dist">M1</div><h3>20 章已验证</h3><p>主指标：可验证章数（字数只是副指标）</p></div>
@@ -993,8 +1270,8 @@ projection ⇏ the origin  ❌ irreversible</pre>
       <h3>诚实边界</h3>
       <ul>
         <li><strong>目标尚未达成——这是挑战，不是成绩单。</strong>现在 <span id="challenge-zh-now-words">…</span>，里程碑在前方。</li>
-        <li>实测基于单一模型（deepseek-v4-flash）、自造夹具。</li>
-        <li>「98.9% vs 75%」是自建基准 ShadowBench-W 的口径，非第三方评测。</li>
+        <li>这是自建基准与项目实验，不是第三方评测或生产服务。</li>
+        <li>不主张完整机制显著提高状态准确率，也不主张更省 Token 或写得更一致。</li>
         <li>Venmurasu 事实已核实（26 卷 / 约 22,400 页 / 2014–2020，单人完成，Wikipedia 2026-08-06）。</li>
       </ul>
     </div>
@@ -1020,6 +1297,14 @@ fetch('zh/stats.json').then(function (r) { return r.json() }).then(function (s) 
     ' 章已验证 · ' + s.totals.words.toLocaleString() + ' 字符</strong></td></tr></tbody></table>'
   document.getElementById('challenge-zh-m-now').textContent = s.totals.chapters_verified + ' 章已验证 · ' + s.totals.words.toLocaleString() + ' 字符'
   document.getElementById('challenge-zh-now-words').textContent = s.totals.chapters_verified + ' 章已验证、约 ' + (s.totals.words / 10000).toFixed(1) + ' 万字符'
+  document.getElementById('home-challenge-zh-now').textContent = s.totals.chapters_verified + ' 章已验证'
+  document.getElementById('home-challenge-zh-detail').textContent = s.serials.length + ' 个实验序列 · ' + s.totals.words.toLocaleString() + ' 字符 · 数据生成于 ' + s.generated_at.slice(0, 10)
+  document.getElementById('home-challenge-en-now').textContent = s.totals.chapters_verified + ' verified chapters'
+  document.getElementById('home-challenge-en-detail').textContent = s.serials.length + ' experimental serials · ' + s.totals.words.toLocaleString() + ' characters · generated ' + s.generated_at.slice(0, 10)
+  document.getElementById('p1-challenge-chapters').textContent = s.totals.chapters_verified + ' 章'
+  document.getElementById('p1-challenge-words').textContent = s.totals.words.toLocaleString() + ' 字符'
+  document.getElementById('p1-challenge-freshness').textContent = s.generated_at.slice(0, 10)
+  document.getElementById('p1-challenge-boundary').textContent = '这是可复现实验，不是生产写作服务；数据由 stats.json 生成，当前统计 commit ' + s.commit + '。'
   var items = []
   var cs = s.cadence
   if (cs.length) {
@@ -1034,6 +1319,10 @@ fetch('zh/stats.json').then(function (r) { return r.json() }).then(function (s) 
   document.getElementById('challenge-zh-cadence').innerHTML = items.join('') || '<li>（暂无提交记录）</li>'
 }).catch(function (e) {
   document.getElementById('challenge-zh-progress').innerHTML = '<p class="note">stats.json 读取失败：' + e.message + '</p>'
+  document.getElementById('p1-challenge-chapters').textContent = '待刷新'
+  document.getElementById('p1-challenge-words').textContent = '待刷新'
+  document.getElementById('p1-challenge-freshness').textContent = '读取失败'
+  document.getElementById('p1-challenge-boundary').textContent = '统计文件当前不可读；不沿用历史数字。'
 })
 </script>
 </section>
@@ -1043,21 +1332,20 @@ fetch('zh/stats.json').then(function (r) { return r.json() }).then(function (s) 
   <div class="page-hero-inner">
     <div class="breadcrumb"><a href="#home">2Origin</a> / The Challenge</div>
     <h1>The White Drum Challenge</h1>
-    <p class="sub">AI challenges the longest novel ever written by a human — with one difficulty a human author
-    never faced: <strong>the world state of every chapter must be verifiable.</strong></p>
+    <p class="sub"><strong>Experimental challenge:</strong> every chapter becomes a verifiable transaction with public prose, world state and gate results.</p>
   </div>
 </header>
 
 <section class="section">
   <div class="prose">
-    <h2>The longest book ever written by a human</h2>
-    <p>The longest novel in the world is called <strong>Venmurasu</strong> — Tamil for “the white drum.”
-    26 volumes, roughly 22,400 pages. One person, six and a half years.</p>
+    <h2>Public reference: Venmurasu</h2>
+    <p><strong>Venmurasu</strong> — Tamil for “the white drum” — is the long-form public reference used by this challenge:
+    26 volumes, roughly 22,400 pages, written by one author over six and a half years.</p>
     <p>It is a monument to human endurance — to still remember the characters of volume 1 while writing
     volume 20 is itself a miracle.</p>
 
-    <h2>Now AI takes the same test — with extra difficulty</h2>
-    <p>We are adding a difficulty a human author never faces:</p>
+    <h2>The target: verifiable state in every chapter</h2>
+    <p>We add one machine-checkable constraint to long-form generation:</p>
     <blockquote>“The world state of every chapter must be verifiable.”</blockquote>
     <p>At one million characters, the foreshadowing planted in chapter 3 must still be paid off, the injury
     from chapter 9 must still hurt, and who knew what, and when — every bit of it checkable. Not because the
@@ -1076,27 +1364,22 @@ fetch('zh/stats.json').then(function (r) { return r.json() }).then(function (s) 
       <li><strong>Foreshadowing state machine</strong> — planted threads tracked, paid off or still open.</li>
       <li><strong>Prose-vs-state check</strong> — what the text says agrees with what the state says.</li>
     </ol>
-    <p>This is not “generate a million characters” — a generator can vomit a million characters in a day
-    and fall apart at the 50-thousandth. This is <strong>AI writing a million characters without falling apart</strong>,
-    the Everest of AI writing.</p>
+    <p>This is not a raw character-count target. Prose and world state must agree chapter by chapter, failures must be explainable, and every accepted change must be replayable.</p>
 
-    <h2>The honest baseline</h2>
-    <p>Against a self-built benchmark (ShadowBench-W), the method's <strong>state write-back accuracy</strong>:</p>
+    <h2>The honest experiment result</h2>
+    <p>The final A2 ablation shows that the explicit-state prompt accounts for most of the accuracy lift; the full machinery's added accuracy is not significant in the current experiment.</p>
     <table class="data-table">
-      <thead><tr><th></th><th>2Origin state layer</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+      <thead><tr><th>Comparison</th><th>Effect</th><th>Significance</th></tr></thead>
       <tbody>
-        <tr><td>State accuracy (33-run series)</td><td class="hl">98.9%</td><td>75.0%</td><td>75.0%</td></tr>
+        <tr><td>A0 → A2: explicit-state prompt</td><td class="hl">+41.3 pt</td><td>p = 3.3×10⁻⁵, significant</td></tr>
+        <tr><td>A2 → A3: full Benxiang machinery</td><td>+2.5 pt</td><td>p = 0.47 / 0.72, not significant</td></tr>
       </tbody>
     </table>
-    <p class="note">⚠️ This is the instrument of our own benchmark — not a third-party evaluation. The definitive
-    comparison after the probe fix (Run #27) is 95.8% ± 5.9 vs 52.1% ± 19.7 / 58.3% ± 11.8, p = 0.0024. Nobody else
-    runs a “state write-back correctness” benchmark — we defined the exam, and the standard-setting power is ours.</p>
+    <p class="note">⚠️ This is a self-built benchmark, not third-party evaluation. The categorical difference that still holds is evidence: prompt-only baselines cover 0% of tested fields with traceable evidence; A3 covers 15.0% / 27.5%. Run #27 remains experiment history only.</p>
 
     <h2>Where we stand now (numbers generated by <code>scripts/challenge-stats.mjs</code>, never hand-written)</h2>
         <div id="challenge-en-progress"><p>Loading <code>stats.json</code>…</p></div>
-        <p class="note" id="challenge-en-drift-note">drift-rate — the rate at which the model misremembers a prior value — was last
-        measured at <strong>8.3%</strong> (2026-08-06; run id not retained). It is re-measured at each milestone under the
-        same protocol and published with a run id + date. Unnumbered bare numbers do not go on this page.</p>
+        <p class="note" id="challenge-en-drift-note">drift-rate — the rate at which the model misremembers a prior value — currently has no valid result with a retained run id. It will return only after a same-protocol re-measurement with run id and date.</p>
         <div class="milestones">
           <div class="milestone"><div class="dist">now</div><h3 id="challenge-en-m-now">…</h3><p>every chapter's state is clone-and-verify</p></div>
           <div class="milestone"><div class="dist">M1</div><h3>20 verified chapters</h3><p>primary metric: verifiable chapters (char count is secondary)</p></div>
@@ -1127,8 +1410,8 @@ fetch('zh/stats.json').then(function (r) { return r.json() }).then(function (s) 
       <h3>Honest boundaries</h3>
       <ul>
         <li><strong>This is a challenge, not a report card.</strong> The target has not been reached. We are at <span id="challenge-en-now-words">…</span>; the milestones are ahead.</li>
-        <li>Measurements rest on a single model (deepseek-v4-flash) and self-made fixtures.</li>
-        <li>“98.9% vs 75%” is the ShadowBench-W instrument of our own design — not third-party evaluation.</li>
+        <li>This is a self-built benchmark and project experiment, not third-party evaluation or a production service.</li>
+        <li>We do not claim a significant state-accuracy lift from the full machinery, fewer tokens, or more consistent prose.</li>
         <li>Venmurasu facts verified: 26 volumes / ~22,400 pages / 2014–2020, single author (Wikipedia, 2026-08-06).</li>
       </ul>
     </div>
@@ -1170,7 +1453,7 @@ fetch('stats.json').then(function (r) { return r.json() }).then(function (s) {
 })
 </script>
 </section>
-<section class="tabx-panel" data-panel="demo" data-lang="zh">
+<section class="tabx-panel" data-panel="demo">
 
 <header class="page-hero"><div class="page-hero-inner">
   <div class="breadcrumb"><a href="#home">2Origin</a> / 法律 Demo</div>
@@ -1179,7 +1462,7 @@ fetch('stats.json').then(function (r) { return r.json() }).then(function (s) {
 </div></header>
 
 <section class="section"><div class="prose">
-  <label for="sample-select"><strong>预置判决样例</strong></label>
+  <label for="sample-select"><strong>预置候选事务</strong></label>
   <select id="sample-select" aria-label="选择预置判决样例">
     <option value="lawful">样例一：自首减 35%（合法）</option>
     <option value="illegal">样例二：自首减 55%（违法）</option>
@@ -1191,11 +1474,11 @@ fetch('stats.json').then(function (r) { return r.json() }).then(function (s) {
 </div></section>
 
 <section class="section tight"><div class="two-col">
-  <div><div class="card"><div class="tag">Origin package</div><h2>本象包对象树</h2><div id="object-tree"></div></div></div>
-  <div><div class="card"><div class="tag">Why</div><h2>依据链</h2><div id="why-chain"></div></div></div>
+  <div><div class="card"><div class="tag">Committed state</div><h2>已提交对象树</h2><p class="note">这里只显示已提交事实；候选事务被拒绝时，本栏必须保持不变。</p><div id="object-tree"></div></div></div>
+  <div><div class="card"><div class="tag">Candidate / Why</div><h2>候选事务与依据链</h2><div id="why-chain"></div></div></div>
 </div></section>
 
-<script src="demo/law-demo.js"></script>
+<script src="demo/law-demo.js?v=p0-20260902"></script>
 </section>
 <section class="tabx-panel" data-panel="longrun" data-lang="zh">
 <style>
@@ -1273,6 +1556,7 @@ setInterval(load, 60000); // 每分钟刷新
   var tabs   = Array.prototype.slice.call(document.querySelectorAll('.tabx-tab'));
   var panels = Array.prototype.slice.call(document.querySelectorAll('.tabx-panel'));
   var langBtns = Array.prototype.slice.call(document.querySelectorAll('.tabx-lang button'));
+  var storyLinks = Array.prototype.slice.call(document.querySelectorAll('.tabx-story-link'));
   var TITLES = { zh: '2Origin 本象协议 · 一页总览', en: '2Origin Protocol · All-in-One' };
   var lang = 'zh';
 
@@ -1280,27 +1564,60 @@ setInterval(load, 60000); // 每分钟刷新
     try { return localStorage.getItem('tabx-lang'); } catch (e) { return null; }
   }
 
-  function show(key) {
-    var t = tabs.filter(function (x) { return x.dataset.tab === key })[0] || tabs[0];
-    tabs.forEach(function (x) { x.classList.toggle('active', x === t); });
-    panels.forEach(function (p) {
-      p.classList.toggle('active', p.dataset.panel === t.dataset.tab &&
-        (!p.dataset.lang || p.dataset.lang === lang));
+  function show(key, resetScroll) {
+    var t = tabs.filter(function (x) { return x.dataset.tab === key })[0];
+    tabs.forEach(function (x) {
+      var selected = x === t;
+      x.classList.toggle('active', selected);
+      if (selected) x.setAttribute('aria-current', 'page');
+      else x.removeAttribute('aria-current');
     });
-    window.scrollTo({ top: 0 });
+    panels.forEach(function (p) {
+      var visible = p.dataset.panel === key && (!p.dataset.lang || p.dataset.lang === lang);
+      p.classList.toggle('active', visible);
+      p.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    });
+    if (resetScroll !== false) window.scrollTo({ top: 0 });
   }
   function current() {
     var k = location.hash.replace('#', '');
-    return tabs.some(function (x) { return x.dataset.tab === k }) ? k : tabs[0].dataset.tab;
+    if (panels.some(function (x) { return x.dataset.panel === k })) return k;
+    if (k.indexOf('home-') === 0) return 'home';
+    return tabs[0].dataset.tab;
+  }
+  function route() {
+    var raw = location.hash.replace('#', '');
+    var section = raw.indexOf('home-') === 0 ? document.getElementById(raw) : null;
+    show(current(), !section);
+    storyLinks.forEach(function (a) {
+      var target = lang === 'zh' ? a.dataset.zhTarget : a.dataset.enTarget;
+      var selected = Boolean(target && target === raw);
+      a.classList.toggle('active', selected);
+      if (selected) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+    if (section) {
+      tabs.forEach(function (t) { t.classList.remove('active'); t.removeAttribute('aria-current'); });
+    }
+    if (section) requestAnimationFrame(function () { section.scrollIntoView({ block: 'start' }); });
   }
   function applyLang(l) {
     lang = l;
     try { localStorage.setItem('tabx-lang', l); } catch (e) {}
     document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
     document.title = TITLES[l];
-    langBtns.forEach(function (b) { b.classList.toggle('active', b.dataset.lang === l); });
+    langBtns.forEach(function (b) {
+      var selected = b.dataset.lang === l;
+      b.classList.toggle('active', selected);
+      b.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    });
     tabs.forEach(function (t) { t.textContent = l === 'zh' ? t.dataset.zh : t.dataset.en; });
-    show(current());
+    storyLinks.forEach(function (a) {
+      a.textContent = l === 'zh' ? a.dataset.zh : a.dataset.en;
+      var target = l === 'zh' ? a.dataset.zhTarget : a.dataset.enTarget;
+      if (target) a.setAttribute('href', '#' + target);
+    });
+    route();
   }
 
   tabs.forEach(function (t) {
@@ -1316,11 +1633,59 @@ setInterval(load, 60000); // 每分钟刷新
     var k = a.getAttribute('href').slice(1);
     if (tabs.some(function (x) { return x.dataset.tab === k })) { e.preventDefault(); location.hash = k; }
   });
-  window.addEventListener('hashchange', function () { show(current()); });
+  window.addEventListener('hashchange', route);
 
   var saved = storedLang();
   applyLang(saved === 'zh' || saved === 'en' ? saved
     : ((navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en'));
+})();
+</script>
+<script>
+(function () {
+  var demo = document.querySelector('[data-origin-demo]');
+  if (demo) {
+    var stepButtons = Array.prototype.slice.call(demo.querySelectorAll('[data-demo-step]'));
+    var stepPanels = Array.prototype.slice.call(demo.querySelectorAll('[data-demo-panel]'));
+    var prev = demo.querySelector('[data-demo-prev]');
+    var next = demo.querySelector('[data-demo-next]');
+    var progress = demo.querySelector('.demo-progress');
+    var index = 0;
+    function selectStep(nextIndex, moveFocus) {
+      index = Math.max(0, Math.min(stepButtons.length - 1, nextIndex));
+      stepButtons.forEach(function (button, i) {
+        var selected = i === index;
+        button.classList.toggle('active', selected);
+        button.setAttribute('aria-selected', selected ? 'true' : 'false');
+        button.setAttribute('tabindex', selected ? '0' : '-1');
+      });
+      stepPanels.forEach(function (panel, i) { panel.classList.toggle('active', i === index); });
+      prev.disabled = index === 0;
+      next.disabled = index === stepButtons.length - 1;
+      next.textContent = index === stepButtons.length - 1 ? '演示完成' : '下一步';
+      progress.textContent = '步骤 ' + (index + 1) + ' / ' + stepButtons.length;
+      if (moveFocus) stepButtons[index].focus();
+    }
+    stepButtons.forEach(function (button, i) {
+      button.addEventListener('click', function () { selectStep(i, false); });
+      button.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') { event.preventDefault(); selectStep(index + 1, true); }
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') { event.preventDefault(); selectStep(index - 1, true); }
+      });
+    });
+    prev.addEventListener('click', function () { selectStep(index - 1, false); });
+    next.addEventListener('click', function () { selectStep(index + 1, false); });
+    selectStep(0, false);
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy-target]')).forEach(function (button) {
+    button.addEventListener('click', function () {
+      var target = document.getElementById(button.dataset.copyTarget);
+      if (!target || !navigator.clipboard) { button.textContent = '请手动复制'; return; }
+      navigator.clipboard.writeText(target.textContent).then(function () {
+        button.textContent = '已复制';
+        setTimeout(function () { button.textContent = '复制命令'; }, 1600);
+      }).catch(function () { button.textContent = '请手动复制'; });
+    });
+  });
 })();
 </script>
 </body>

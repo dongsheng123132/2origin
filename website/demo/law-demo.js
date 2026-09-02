@@ -36,9 +36,23 @@ const SAMPLES = {
   },
 };
 
-let active = structuredClone(SAMPLES.lawful);
-const percent = (n) => `${Math.abs(n * 100)}%`;
-const rangeText = (factor) => `${factor.min * 100}% ～ ${factor.max * 100}%`;
+function committedStateFor(key) {
+  const state = structuredClone(SAMPLES[key]);
+  if (key === 'illegal') {
+    state.factors[0].ratio = -0.35;
+    state.declaredMonths = 7;
+    state.decision = '有期徒刑七个月';
+  }
+  return state;
+}
+
+let selectedKey = 'lawful';
+let committed = committedStateFor(selectedKey);
+let candidate = structuredClone(SAMPLES[selectedKey]);
+const percentNumber = (n) => Math.round(n * 1000) / 10;
+const percent = (n) => `${percentNumber(Math.abs(n)).toLocaleString('zh-CN', { maximumFractionDigits: 1 })}%`;
+const signedPercent = (n) => `${n < 0 ? '减少' : '增加'} ${percent(n)}`;
+const rangeText = (factor) => `${percentNumber(factor.min).toLocaleString('zh-CN', { maximumFractionDigits: 1 })}% ～ ${percentNumber(factor.max).toLocaleString('zh-CN', { maximumFractionDigits: 1 })}%`;
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 function checkFactor(item) {
@@ -47,67 +61,75 @@ function checkFactor(item) {
   if (item.ratio < rule.min || item.ratio > rule.max) {
     return { pass: false, rule, reason: `“${item.name}${item.ratio < 0 ? '减少' : '增加'}${percent(item.ratio)}”超出法定范围 ${rangeText(rule)}` };
   }
-  if (rule.requiresLaw && !active.laws.includes(rule.requiresLaw)) {
+  if (rule.requiresLaw && !candidate.laws.includes(rule.requiresLaw)) {
     return { pass: false, rule, reason: `认定“${item.name}”须引用 ${rule.requiresLaw}，当前裁判依据缺失` };
   }
   return { pass: true, rule, reason: '在法定范围内，且所需条文已在裁判依据中出现' };
 }
 
 function adjustedMonths() {
-  const total = active.factors.reduce((sum, item) => sum + item.ratio, 0);
-  return { total, adjusted: active.baseMonths * (1 + total) };
+  const total = candidate.factors.reduce((sum, item) => sum + item.ratio, 0);
+  return { total, adjusted: candidate.baseMonths * (1 + total) };
 }
 
 function renderTree() {
-  const factors = active.factors.map((f) => `<li><code>factor:${escapeHtml(f.name)}</code> · ratio ${f.ratio}</li>`).join('');
-  document.querySelector('#object-tree').innerHTML = `<ul><li><code>case:${escapeHtml(active.person)}</code><ul><li><code>person:${escapeHtml(active.person)}</code></li><li>裁判依据<ul>${active.laws.map((law) => `<li><code>${escapeHtml(law)}</code></li>`).join('')}</ul></li><li>量刑情节<ul>${factors}</ul></li><li><code>sentence:declared</code> · ${escapeHtml(active.decision)}</li></ul></li></ul>`;
+  const factors = committed.factors.map((f) => `<li><code>factor:${escapeHtml(f.name)}</code> · ${signedPercent(f.ratio)}</li>`).join('');
+  document.querySelector('#object-tree').innerHTML = `<ul><li><code>case:${escapeHtml(committed.person)}</code><ul><li><code>person:${escapeHtml(committed.person)}</code></li><li>裁判依据<ul>${committed.laws.map((law) => `<li><code>${escapeHtml(law)}</code></li>`).join('')}</ul></li><li>量刑情节<ul>${factors}</ul></li><li><code>sentence:declared</code> · ${escapeHtml(committed.decision)}</li></ul></li></ul>`;
 }
 
 function renderWhy() {
-  const checks = active.factors.map((item) => {
+  const checks = candidate.factors.map((item) => {
     const checked = checkFactor(item);
     const rule = checked.rule ?? FACTORS[item.name];
     const status = checked.pass ? '通过' : '拒绝';
     const cls = checked.pass ? 'hl' : 'dim';
     return `<tr><td>${escapeHtml(item.name)}</td><td>${item.ratio < 0 ? '减少' : '增加'} ${percent(item.ratio)}</td><td>${escapeHtml(rule?.rule ?? '无对应规则')}<br><code>${escapeHtml(rule?.requiresLaw ?? '无独立条文')}</code></td><td class="${cls}"><strong>${status}</strong><br>${escapeHtml(checked.reason)}</td></tr>`;
   }).join('');
-  document.querySelector('#why-chain').innerHTML = `<table class="data-table"><thead><tr><th>量刑情节</th><th>本案调节</th><th>法定区间 / 条文</th><th>结论</th></tr></thead><tbody>${checks}</tbody></table>`;
+  const committedFactors = committed.factors.map((item) => `${escapeHtml(item.name)} ${signedPercent(item.ratio)}`).join('；');
+  const candidateFactors = candidate.factors.map((item) => `${escapeHtml(item.name)} ${signedPercent(item.ratio)}`).join('；');
+  document.querySelector('#why-chain').innerHTML = `<div class="state-compare"><span class="state-pill">已提交：${committedFactors}</span><span class="state-pill candidate">候选：${candidateFactors}</span></div><table class="data-table"><thead><tr><th>量刑情节</th><th>候选调节</th><th>法定区间 / 条文</th><th>结论</th></tr></thead><tbody>${checks}</tbody></table>`;
 }
 
 function renderResult() {
-  const results = active.factors.map(checkFactor);
+  const results = candidate.factors.map(checkFactor);
   const failure = results.find((r) => !r.pass);
   const calculation = adjustedMonths();
-  const withinDeclared = Math.abs(active.declaredMonths - calculation.adjusted) / calculation.adjusted <= 0.20;
+  const withinDeclared = Math.abs(candidate.declaredMonths - calculation.adjusted) / calculation.adjusted <= 0.20;
   const result = document.querySelector('#result');
   if (failure || !withinDeclared) {
-    const reason = failure?.reason ?? `拟宣告刑 ${active.declaredMonths} 个月偏离调节结果 ${calculation.adjusted.toFixed(1)} 个月超过 20%`;
-    result.innerHTML = `<div class="honesty"><h3>✕ 事务已退回：违规零写入</h3><p><strong>拒绝理由：</strong>${escapeHtml(reason)}。</p><p>对象树和原状态保持不变；只有修正后重新提交的事务才可能写入。</p></div>`;
+    const reason = failure?.reason ?? `拟宣告刑 ${candidate.declaredMonths} 个月偏离调节结果 ${calculation.adjusted.toFixed(1)} 个月超过 20%`;
+    const committedFactors = committed.factors.map((item) => `${item.name}${signedPercent(item.ratio)}`).join('；');
+    result.dataset.status = 'rejected';
+    result.innerHTML = `<div class="honesty"><h3>✕ 候选事务已退回：违规零写入</h3><p><strong>拒绝理由：</strong>${escapeHtml(reason)}。</p><p><strong>已提交状态：</strong>${escapeHtml(committedFactors)}，对象树保持不变。只有修正后的新候选事务通过门禁，才可能写入。</p></div>`;
   } else {
-    result.innerHTML = `<div class="honesty"><h3>✓ 预检通过：可提交事务</h3><p>调节合计 ${percent(calculation.total)}，基准刑 ${active.baseMonths} 个月，调节后 ${calculation.adjusted.toFixed(1)} 个月；拟宣告 ${active.declaredMonths} 个月在 20% 容许偏离内。</p></div>`;
+    result.dataset.status = 'passed';
+    result.innerHTML = `<div class="honesty"><h3>✓ 预检通过：候选事务尚未提交</h3><p>调节合计 ${signedPercent(calculation.total)}，基准刑 ${candidate.baseMonths} 个月，调节后 ${calculation.adjusted.toFixed(1)} 个月；拟宣告 ${candidate.declaredMonths} 个月在 20% 容许偏离内。</p><p>本地演示只做预检，不会自动改写左侧已提交对象树。</p></div>`;
   }
 }
 
 function render() {
-  document.querySelector('#judgment-text').textContent = active.text;
+  document.querySelector('#judgment-text').textContent = candidate.text;
   renderTree();
   renderWhy();
   renderResult();
 }
 
 document.querySelector('#sample-select').addEventListener('change', (event) => {
-  active = structuredClone(SAMPLES[event.target.value]);
+  selectedKey = event.target.value;
+  committed = committedStateFor(selectedKey);
+  candidate = structuredClone(SAMPLES[selectedKey]);
   render();
 });
 document.querySelector('#restore-sample').addEventListener('click', () => {
-  active = structuredClone(SAMPLES[document.querySelector('#sample-select').value]);
+  candidate = structuredClone(SAMPLES[selectedKey]);
   render();
 });
 document.querySelector('#force-violation').addEventListener('click', () => {
-  const item = active.factors[0];
+  candidate = structuredClone(committed);
+  const item = candidate.factors[0];
   const rule = FACTORS[item.name];
   item.ratio = rule.min < 0 ? rule.min - 0.15 : rule.max + 0.15;
-  active.text += `\n【演示改写】将“${item.name}”调节改为 ${item.ratio < 0 ? '减少' : '增加'}${percent(item.ratio)}，故意越界。`;
+  candidate.text += `\n【候选改写】将“${item.name}”调节改为 ${signedPercent(item.ratio)}，故意越界。`;
   render();
 });
 
