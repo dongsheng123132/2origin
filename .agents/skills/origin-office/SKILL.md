@@ -1,7 +1,7 @@
 ---
 name: origin-office
 description: 原生文档（docx/pptx）→ 可验证的对象——转换即语义事务。零依赖解析 docx 的章/条/段落/表格（合并单元格展开、勾选框保留）与 pptx 的幻灯片/形状/表格（占位符类型、gridSpan 合并），每处结构一个对象建成本象包，SHA-256 结构指纹入库，verify 可验证「包与源文件一致」（篡改即检出）。行业火力全在 PDF 扫描件（OCR 有物理误差），原生电子文档的无损结构化没人认真做——本象做「把字变成可验证状态的对象」。当需要把 docx/pptx 转成 AI 可锚定、可验证的结构，或做文档版本追踪/条款级引用时使用。
-version: 1.1.0
+version: 1.1.1
 slug: origin-office
 license: Apache-2.0
 displayName: origin-office 原生文档可验证结构化
@@ -84,12 +84,3 @@ npm run test:office    # 20 项：docx 结构还原 11 + pptx 解析 5 + 统一 
 - xlsx 方言：电子表格（公式依赖图）有独立导入器 adapters/xlsx/。
 
 ---
-
-## 想一键装好全部 AI 工具？
-
-U-King 装机管家帮你在 Windows/macOS 上对话式装好 Codex / Claude Code / OpenClaw / Hermes，
-自动配置国内可用模型驱动，装完即用、不用翻墙。
-
-👉 免费下载：https://u-claw.org.cn/download/U-King-Setup.exe
-🌐 官网：https://u-king.org
-📮 联系：hefangsheng@gmail.com（微信 hecare888）

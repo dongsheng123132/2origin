@@ -1,7 +1,7 @@
 ---
 name: benxiang-memory
 description: Shadow Memory —— 把聊天历史持续提交为世界状态，新会话秒恢复。MCP Server（stdio，零依赖）：项目状态持久化在 .origin 包里，AI 不再「记住」什么，开工前 origin_state 取投影，收工时 origin_commit 提交语义事务。事务过确定性门禁才落盘，状态不会因模型记错而腐坏；每个字段都能回答「凭什么是这个值」。当新会话丢失上下文、多 agent 协作状态漂移、项目进度需要持久化与追责时使用。
-version: 1.1.0
+version: 1.1.1
 slug: benxiang-memory
 license: Apache-2.0
 displayName: Shadow Memory 项目状态持久化
@@ -100,12 +100,3 @@ npm run test:e2e     # 真起子进程走 stdio JSON-RPC 打一整轮，25 项�
 - OriginWriter（origin-writer）：同一套机制的写作领域应用——长篇小说的世界状态持久化。
 
 ---
-
-## 想一键装好全部 AI 工具？
-
-U-King 装机管家帮你在 Windows/macOS 上对话式装好 Codex / Claude Code / OpenClaw / Hermes，
-自动配置国内可用模型驱动，装完即用、不用翻墙。
-
-👉 免费下载：https://u-claw.org.cn/download/U-King-Setup.exe
-🌐 官网：https://u-king.org
-📮 联系：hefangsheng@gmail.com（微信 hecare888）

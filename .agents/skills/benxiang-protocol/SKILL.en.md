@@ -1,7 +1,7 @@
 ---
 name: benxiang-protocol
 description: Benxiang (本象) — a persistent object representation layer for AI work. Chat history is a disposable operating window; project world state persists in a .origin package: objects + relations + state + constraints + provenance. The AI stops "remembering" things — it requests a projection when work starts and commits a semantic transaction when work concludes. Transactions pass deterministic gates before anything is written; every field can answer "why is this value what it is". Use when new sessions lose context, multi-agent collaboration drifts, or project state needs persistence / accountability / replay. (中文版见 SKILL.md)
-version: 1.1.0
+version: 1.1.1
 slug: benxiang-protocol
 license: Apache-2.0
 displayName: Benxiang Protocol — AI State Layer
@@ -31,7 +31,7 @@ accounts don't reconcile you can trace who mangled it, at which step.
 ```bash
 git clone https://github.com/dongsheng123132/2origin.git
 cd 2origin
-npm run verify    # 91 self-test assertions + 25 MCP end-to-end + mutation check 19/19
+npm run verify    # 96 self-test assertions + 25 MCP end-to-end + mutation check 19/19
 ```
 
 Zero dependencies: the core runtime (compiler/) imports no third-party packages,
@@ -142,12 +142,3 @@ the self-tests catch them — rerun after every core change.
   and whether it can be proven.
 
 ---
-
-## One-click installer for every AI coding tool?
-
-U-King installs Codex / Claude Code / OpenClaw / Hermes conversationally on Windows/macOS,
-auto-configures models that work in China, ready to use out of the box — no VPN needed.
-
-👉 Free download: https://u-claw.org.cn/download/U-King-Setup.exe
-🌐 Website: https://u-king.org
-📮 Contact: hefangsheng@gmail.com

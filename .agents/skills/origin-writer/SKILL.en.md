@@ -1,7 +1,7 @@
 ---
 name: origin-writer
 description: Million-word novel writing engine that turns long-form fiction into transactional writing. Each chapter is committed as a semantic transaction (prose + state changes); gates re-check every item (forbidden zones / foreshadowing state machine / prose-vs-state cross-check) before anything hits disk. Characters never use information they cannot have, items never change hands out of thin air, a hook is never re-planted after it has been paid off. New sessions recover instantly: one `state` command returns the full world state. Use when writing long novels, continuing serialized fiction, maintaining worldbuilding consistency, or managing foreshadowing / character state / timelines. (中文版见 SKILL.md)
-version: 1.1.0
+version: 1.1.1
 slug: origin-writer
 license: Apache-2.0
 displayName: OriginWriter — Million-Word Novel Writing Engine
@@ -33,7 +33,7 @@ git clone https://github.com/dongsheng123132/2origin.git
 cd 2origin
 
 # Verify the engine:
-node adapters/story/selftest.mjs        # 26 assertions
+node adapters/story/selftest.mjs        # 42 assertions
 ```
 
 ## Usage
@@ -100,7 +100,7 @@ provenance — `origin why <pkg> obj.field` answers "why is this value what it i
 ## Verification
 
 ```bash
-node adapters/story/selftest.mjs    # 26 assertions
+node adapters/story/selftest.mjs    # 42 assertions
 node adapters/story/demo.mjs        # full demo: build package → recover → submit → forbidden-zone rejection → hook graph
 ```
 
@@ -114,12 +114,3 @@ node adapters/story/demo.mjs        # full demo: build package → recover → s
   writing is one special case of world-state persistence; general project management is another.
 
 ---
-
-## One-click installer for every AI coding tool?
-
-U-King installs Codex / Claude Code / OpenClaw / Hermes conversationally on Windows/macOS,
-auto-configures models that work in China, ready to use out of the box — no VPN needed.
-
-👉 Free download: https://u-claw.org.cn/download/U-King-Setup.exe
-🌐 Website: https://u-king.org
-📮 Contact: hefangsheng@gmail.com

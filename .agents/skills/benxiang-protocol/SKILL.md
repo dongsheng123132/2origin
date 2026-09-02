@@ -1,7 +1,7 @@
 ---
 name: benxiang-protocol
 description: 本象协议（Benxiang）—— AI 时代的持久对象表示层。聊天记录是一次性的操作窗口，项目世界状态持久存在于 .origin 包里：对象 + 关系 + 状态 + 约束 + 来源。AI 不再「记住」什么——开工前申请一份投影，收工时提交一个语义事务。事务过确定性门禁才落盘，每个字段都能回答「凭什么是这个值」。当新会话丢失上下文、多 agent 协作状态漂移、需要对项目状态做持久化/追责/回放时使用。
-version: 1.1.0
+version: 1.1.1
 slug: benxiang-protocol
 license: Apache-2.0
 displayName: 本象协议 Benxiang 状态层
@@ -28,7 +28,7 @@ AI 不再「记住」什么——开工前申请一份投影，收工时提交�
 ```bash
 git clone https://github.com/dongsheng123132/2origin.git
 cd 2origin
-npm run verify    # 自测 91 项 + MCP 端到端 25 项 + 变异检查 19/19
+npm run verify    # 自测 96 项 + MCP 端到端 25 项 + 变异检查 19/19
 ```
 
 零依赖：核心运行时（compiler/）不引任何第三方包，可直接独立核对。
@@ -128,12 +128,3 @@ MCP 端到端（e2e）+ 一致性向量（conformance）+ 变异检查（mutatio
 - 叠象（Redline）：状态、差异、证据与版本层——改了什么、对不对、能否证明。
 
 ---
-
-## 想一键装好全部 AI 工具？
-
-U-King 装机管家帮你在 Windows/macOS 上对话式装好 Codex / Claude Code / OpenClaw / Hermes，
-自动配置国内可用模型驱动，装完即用、不用翻墙。
-
-👉 免费下载：https://u-claw.org.cn/download/U-King-Setup.exe
-🌐 官网：https://u-king.org
-📮 联系：hefangsheng@gmail.com（微信 hecare888）

@@ -1,7 +1,7 @@
 ---
 name: origin-writer
 description: 百万字小说写作引擎——把长篇写作变成事务性写作。AI 每写一章提交一个语义事务（正文+状态变更），门禁逐条复核（禁区/伏笔状态机/正文对照）后才落盘。角色不会突然用上他不知道的信息，物品不会凭空易主，伏笔不会收了又埋。新会话秒恢复：state 一条命令拿到全部世界状态。当需要写长篇小说、续写长篇、维护小说世界观一致性、管理伏笔/人物状态/时间线时使用。
-version: 1.1.0
+version: 1.1.1
 slug: origin-writer
 license: Apache-2.0
 displayName: OriginWriter 百万字小说写作引擎
@@ -29,7 +29,7 @@ git clone https://github.com/dongsheng123132/2origin.git
 cd 2origin
 
 # 验证引擎可用：
-node adapters/story/selftest.mjs        # 26 项自测
+node adapters/story/selftest.mjs        # 42 项自测
 ```
 
 ## 用
@@ -94,7 +94,7 @@ specDir/
 ## 验证
 
 ```bash
-node adapters/story/selftest.mjs    # 26 项断言
+node adapters/story/selftest.mjs    # 42 项断言
 node adapters/story/demo.mjs        # 完整演示（建包→恢复→提交→禁区拒绝→伏笔图谱）
 ```
 
@@ -106,12 +106,3 @@ node adapters/story/demo.mjs        # 完整演示（建包→恢复→提交→
   一个特例，通用项目管理是另一个。
 
 ---
-
-## 想一键装好全部 AI 工具？
-
-U-King 装机管家帮你在 Windows/macOS 上对话式装好 Codex / Claude Code / OpenClaw / Hermes，
-自动配置国内可用模型驱动，装完即用、不用翻墙。
-
-👉 免费下载：https://u-claw.org.cn/download/U-King-Setup.exe
-🌐 官网：https://u-king.org
-📮 联系：hefangsheng@gmail.com（微信 hecare888）

@@ -169,7 +169,8 @@ const COMMANDS = {
 }
 
 if (flags.has('--version')) { process.stdout.write(VERSION + '\n'); process.exit(0) }
-if (flags.has('-h') || flags.has('--help') || !args.length) { process.stdout.write(USAGE + '\n'); process.exit(args.length ? 0 : 2) }
+const wantsHelp = flags.has('-h') || flags.has('--help')
+if (wantsHelp || !args.length) { process.stdout.write(USAGE + '\n'); process.exit(wantsHelp ? 0 : 2) }
 
 const cmd = args[0]
 if (!COMMANDS[cmd]) die(2, `未知子命令「${cmd}」。可用：${Object.keys(COMMANDS).join(' / ')}`)

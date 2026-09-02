@@ -1,7 +1,7 @@
 ---
 name: origin-office
 description: Native documents (docx/pptx) → verifiable objects — conversion IS the semantic transaction. Zero-dependency parsing of docx chapters/articles/paragraphs/tables (merged cells expanded, checkboxes preserved) and pptx slides/shapes/tables (placeholder types, gridSpan merges). Each structure becomes one object in a Benxiang package; a SHA-256 structure fingerprint is recorded, and `verify` proves the package matches the source file (tampering detected). The industry aims its firepower at scanned PDFs (OCR has physical error); lossless structuring of native electronic documents is what nobody does seriously — Benxiang turns words into verifiable state objects. Use when docx/pptx must become AI-anchorable, verifiable structure, or for document version tracking / clause-level citation. (中文版见 SKILL.md)
-version: 1.1.0
+version: 1.1.1
 slug: origin-office
 license: Apache-2.0
 displayName: origin-office — Verifiable Structuring of Native Documents
@@ -89,12 +89,3 @@ and Seafarer Management" red-header document → 409 structural objects (6 chapt
 - xlsx dialect: spreadsheets (formula dependency graph) have a dedicated importer at adapters/xlsx/.
 
 ---
-
-## One-click installer for every AI coding tool?
-
-U-King installs Codex / Claude Code / OpenClaw / Hermes conversationally on Windows/macOS,
-auto-configures models that work in China, ready to use out of the box — no VPN needed.
-
-👉 Free download: https://u-claw.org.cn/download/U-King-Setup.exe
-🌐 Website: https://u-king.org
-📮 Contact: hefangsheng@gmail.com
