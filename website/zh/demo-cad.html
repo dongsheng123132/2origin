@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CAD 版本对比 Demo：同一根梁移动了，机器还认得出来 — 2Origin 本象协议</title>
+<meta name="description" content="在浏览器里对两版真实 DXF 图纸（C-101 / C-101-v2）跑版本对比：靠稳定实体句柄而不是几何内容识别同一个对象，报出移动、改尺寸、删除，画出可视化差异图。纯本地计算，无后端。">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.demo-intro { margin-top: 0; }
+.demo-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-top: 28px; }
+.demo-metrics .m { background: var(--paper-2); padding: 14px 16px; }
+.demo-metrics .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--ink); }
+.demo-metrics .lbl { font-size: 12px; color: var(--text-faint); margin-top: 2px; }
+
+.panel { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-card); overflow: hidden; margin-top: 24px; }
+.panel-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.panel-head h2 { font-family: var(--serif); font-size: 19px; color: var(--ink); }
+.panel-head .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-deep); }
+.panel-body { padding: 16px 18px; }
+
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-soft); margin-top: 10px; }
+.legend i { display: inline-block; width: 13px; height: 13px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; border: 1px solid var(--line); }
+.legend .stable { background: rgba(0,0,0,.06); }
+.legend .changed { background: rgba(185,138,20,.35); }
+.legend .removed { background: rgba(154,59,44,.2); border-style: dashed; }
+.legend .added { background: rgba(29,107,69,.25); }
+
+.plan-wrap { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; margin-top: 14px; overflow: auto; }
+.plan-wrap svg { display: block; }
+.plan-wrap rect.ent { stroke-width: 1.5; cursor: pointer; }
+.plan-wrap rect.ent.stable { fill: rgba(0,0,0,.05); stroke: var(--line); }
+.plan-wrap rect.ent.changed { fill: rgba(185,138,20,.28); stroke: #b98a14; }
+.plan-wrap rect.ent.removed { fill: rgba(154,59,44,.12); stroke: #9a3b2c; stroke-dasharray: 5 3; }
+.plan-wrap rect.ent.added { fill: rgba(29,107,69,.22); stroke: #1d6b45; }
+.plan-wrap text.lbl { font-family: var(--mono); font-size: 10px; fill: var(--text-soft); pointer-events: none; }
+
+table.diff-tbl { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 4px; }
+table.diff-tbl th, table.diff-tbl td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+table.diff-tbl th { background: var(--paper); color: var(--text-faint); font-size: 11px; font-weight: 500; }
+table.diff-tbl td.id { font-family: var(--mono); color: var(--ink); font-weight: 600; white-space: nowrap; }
+table.diff-tbl td.tag { font-family: var(--mono); font-size: 11px; text-transform: uppercase; }
+table.diff-tbl tr.changed td.tag { color: #80620c; }
+table.diff-tbl tr.removed td.tag { color: #9a3b2c; }
+table.diff-tbl tr.added td.tag { color: #1d6b45; }
+table.diff-tbl .diffline { font-family: var(--mono); font-size: 12px; color: var(--text-soft); }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>2Origin</span><span class="zh-name">本象协议</span></a><div class="nav-links"><a href="solutions.html" class="hide-sm">解决方案</a><a href="cases.html" class="hide-sm">案例</a><a href="showcase.html" class="hide-sm">能力展厅</a><a href="challenge.html" class="hide-sm">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a><a class="lang-switch" href="../cases.html">EN</a></div></div></nav>
+
+<header class="page-hero"><div class="page-hero-inner"><div class="breadcrumb"><a href="index.html">2Origin</a> / 案例 / CAD 版本对比</div><h1>图纸改了一版，机器怎么知道哪根梁被挪了</h1><p class="sub">下面对比的两份 DXF 是仓库里公开的真实 fixture <code>C-101.dxf</code> / <code>C-101-v2.dxf</code>——不是合成数据。解析用的是与命令行 <code>node adapters/cad/import.mjs</code> 完全同一段代码（<code>parseDxf</code> + <code>dxfToObjects</code>），对比逻辑照抄 <code>adapters/cad/diff.mjs</code>。全部在你的浏览器里现算，没有后端。</p></div></header>
+
+<section class="section demo-intro">
+  <div class="demo-metrics">
+    <div class="m"><div class="num" id="m-changed">—</div><div class="lbl">处修改（同一实体句柄，字段变了）</div></div>
+    <div class="m"><div class="num" id="m-added">—</div><div class="lbl">处新增</div></div>
+    <div class="m"><div class="num" id="m-removed">—</div><div class="lbl">处删除</div></div>
+    <div class="m"><div class="num" id="m-stable">—</div><div class="lbl">处不变</div></div>
+  </div>
+  <p class="note" style="margin-top:16px">这两份图纸是 <b>AC1015（R13 以上）</b>，图元带真正的实体句柄，所以"同一根梁"在两版之间靠句柄识别，挪动了也认得出来——不会被误判成"删了一根、加了一根"。如果换成没有句柄的 R12 图纸（案例墙上的 A-101/B-201 就是），版本对比会退化成纯粹的几何内容比对，见下方"不能推出"。</p>
+</section>
+
+<section class="section">
+  <div class="panel">
+    <div class="panel-head"><h2>01 · 差异可视化</h2><span class="tag">C-101 → C-101-v2</span></div>
+    <div class="panel-body">
+      <p style="font-size:13.5px;color:var(--text-soft)">底图是新版（C-101-v2）的实际坐标（单位 mm），按真实 bbox 画出每个图元；虚线红框是旧版里存在、新版里已经删除的图元，叠加在它原本的位置上。鼠标悬停查看对象 ID 与坐标。</p>
+      <div class="legend">
+        <span><i class="stable"></i>不变</span>
+        <span><i class="changed"></i>修改（移动/改尺寸）</span>
+        <span><i class="removed"></i>已删除（虚线，旧版位置）</span>
+        <span><i class="added"></i>新增</span>
+      </div>
+      <div class="plan-wrap"><svg id="plan-svg" width="640" height="420" viewBox="0 0 640 420"></svg></div>
+      <div id="hover-info" style="margin-top:8px;font-family:var(--mono);font-size:12.5px;color:var(--text-soft);min-height:20px"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="panel">
+    <div class="panel-head"><h2>02 · 逐条差异</h2><span class="tag">field-level diff</span></div>
+    <div class="panel-body">
+      <table class="diff-tbl" id="diff-table"></table>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="honesty">
+    <h3>不能推出</h3>
+    <ul>
+      <li>版本对比依赖稳定对象 ID。这两份 fixture 是 R13+ DXF、带真实实体句柄，ID 才能稳定跨版本对齐；如果换成 R12（无句柄）图纸，几何一变 ID 就变，对比会退化成"删了一个、加了一个"——不是 bug，是格式本身的限制，导入器会如实标记 <code>id_basis:"content"</code>，本页两份 fixture 均无此标记。</li>
+      <li>对比只覆盖机器能提取的字段（图层、坐标、长度、编号），不理解设计意图——B03 变宽了 500mm 是设计升级还是画错了，机器不判断，只报"变了"。</li>
+      <li>这不是工程审图、签章或合规工具，案例墙上的窗洞审计案例范围同样有限，均不能替代人工审图。</li>
+      <li>本页面完全在浏览器本地计算，不接收上传；<a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/cad/fixtures" target="_blank" rel="noopener">两份 fixture 原文件在 GitHub ↗</a>，可用 <code>node website/zh/demo-cad/verify.mjs</code> 交叉核对本页计算结果与命令行 <code>adapters/cad/diff.mjs</code> 的输出是否一致。</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="footer"><div class="footer-inner"><div><div class="brand-line">2Origin <span class="zh">本象协议</span></div><p>保存本象，按需投影。</p></div><div><h4>项目</h4><a href="solutions.html">解决方案</a><a href="challenge.html">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a></div></div><div class="footer-bottom"><div class="in"><span>© 2026 2Origin 协议 · Apache-2.0</span><span>本象协议 · Benxiang · Origin IR</span></div></div></footer>
+
+<script src="demo-cad/data.js"></script>
+<script src="demo-cad/engine.js"></script>
+<script>
+(function () {
+  const D = window.CAD_DEMO_DATA
+  const E = window.CadEngine
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+  const fmt = (v) => v === null || v === undefined ? '(无)' : Array.isArray(v) ? '[' + v.join(',') + ']' : String(v)
+
+  const r = E.comparePackages(D.old, D.neu)
+  document.getElementById('m-changed').textContent = r.changed.length
+  document.getElementById('m-added').textContent = r.added.length
+  document.getElementById('m-removed').textContent = r.removed.length
+  document.getElementById('m-stable').textContent = r.stable.length
+
+  // ---- 差异表 ----
+  const rows = []
+  for (const c of r.changed) rows.push({ cls: 'changed', tag: '修改', id: c.id, detail: c.diffs.map((d) => `${d.field}: ${fmt(d.from)} → ${fmt(d.to)}`).join('；') })
+  for (const a of r.added) rows.push({ cls: 'added', tag: '新增', id: a.id, detail: JSON.stringify(a.state) })
+  for (const x of r.removed) rows.push({ cls: 'removed', tag: '删除', id: x.id, detail: JSON.stringify(x.state) })
+  document.getElementById('diff-table').innerHTML = '<tr><th>类型</th><th>对象 ID</th><th>差异</th></tr>' +
+    rows.map((row) => `<tr class="${row.cls}"><td class="tag">${row.tag}</td><td class="id">${esc(row.id)}</td><td class="diffline">${esc(row.detail)}</td></tr>`).join('')
+
+  // ---- SVG 平面图 ----
+  const changedIds = new Set(r.changed.map((c) => c.id))
+  const bboxOf = (o) => o && Array.isArray(o.bbox) ? o.bbox : null
+
+  // 用整张图的墙体范围定坐标系（取新版 WALL1 的 bbox，没有就退到默认画布）
+  const wall = D.neu.find((o) => o.id.includes('WALL1')) || D.old.find((o) => o.id.includes('WALL1'))
+  const extent = bboxOf(wall) || [0, 0, 12000, 7200]
+  const pad = 400
+  const W = extent[2] - extent[0] + pad * 2
+  const H = extent[3] - extent[1] + pad * 2
+  const svg = document.getElementById('plan-svg')
+  const scale = 640 / W
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`)
+  svg.setAttribute('width', '100%')
+  svg.setAttribute('height', Math.round(H * scale))
+
+  const toSvgY = (y) => (extent[3] - extent[1]) - (y - extent[1]) + pad // 翻转 y 轴，CAD 向上为正、SVG 向下为正
+
+  function drawRect(bbox, cls, id, extra) {
+    if (!bbox) return
+    const [x0, y0, x1, y1] = bbox
+    const rx = x0 - extent[0] + pad, ry = toSvgY(y1)
+    const rw = Math.max(x1 - x0, 20), rh = Math.max(y1 - y0, 20)
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    rect.setAttribute('class', 'ent ' + cls)
+    rect.setAttribute('x', rx); rect.setAttribute('y', ry)
+    rect.setAttribute('width', rw); rect.setAttribute('height', rh)
+    rect.addEventListener('mouseenter', () => {
+      document.getElementById('hover-info').textContent = `${id}  bbox=[${bbox.join(',')}]  ${extra || ''}`
+    })
+    svg.appendChild(rect)
+  }
+
+  for (const o of D.neu) {
+    if (o.type !== 'ent') continue
+    const cls = changedIds.has(o.id) ? 'changed' : (r.added.some((a) => a.id === o.id) ? 'added' : 'stable')
+    drawRect(bboxOf(o), cls, o.id, o.entity)
+  }
+  for (const x of r.removed) {
+    drawRect(bboxOf(x.object), 'removed', x.id, '(旧版位置，新版已删除)')
+  }
+})()
+</script>
+</body></html>
