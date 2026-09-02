@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AgentTeams：让多个 AI 一起干活的发证闸门 — 2Origin 本象协议</title>
+<meta name="description" content="本象协议不是只能一个 AI 单独用。AgentTeams 是同一套发证协议接上的多智能体运行层：身份分离、观察防重放、教材/CAD/小说共用一条闸门。四段实跑证据，全部标注实测日期，不是宣传稿。">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.at-block { margin-top: 40px; }
+.at-block:first-of-type { margin-top: 8px; }
+.at-block h2 { font-family: var(--serif); font-size: 22px; color: var(--ink); margin-bottom: 6px; }
+.at-block .sub { color: var(--text-soft); font-size: 15px; margin-bottom: 16px; }
+.at-shot { display: block; width: 100%; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-card); }
+.at-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-top: 14px; }
+.at-cards .c { background: var(--paper-2); padding: 12px 16px; }
+.at-cards .c b { display: block; font-family: var(--mono); font-size: 17px; color: var(--ink); margin-bottom: 2px; }
+.at-cards .c span { font-size: 12.5px; color: var(--text-faint); white-space: pre-line; }
+.at-caveat { margin-top: 12px; font-size: 13px; color: var(--text-faint); border-left: 3px solid var(--gold); padding: 6px 12px; background: var(--paper-2); border-radius: 0 8px 8px 0; }
+.at-links { margin-top: 10px; font-size: 13.5px; }
+@media (max-width: 800px) { .at-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>2Origin</span><span class="zh-name">本象协议</span></a><div class="nav-links"><a href="solutions.html" class="hide-sm">解决方案</a><a href="cases.html" class="hide-sm">案例</a><a href="showcase.html" class="hide-sm">能力展厅</a><a href="challenge.html" class="hide-sm">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a><a class="lang-switch" href="../cases.html">EN</a></div></div></nav>
+
+<header class="page-hero"><div class="page-hero-inner"><div class="breadcrumb"><a href="index.html">2Origin</a> / AgentTeams</div><h1>AgentTeams：多个 AI 一起干活，怎么证明没人在撒谎</h1><p class="sub">本象协议本身只回答"这份文件里有什么"。AgentTeams 是接在协议上的一层多智能体运行层：谁改的、谁看的、谁签的证，三个身份必须互不相同，且全程留痕可复核。下面四段都是实跑记录，标了实测日期——不是效果图。</p></div></header>
+
+<section class="section tight at-block">
+  <div class="sec-kicker">01 · 在线不是"看起来在线"</div>
+  <h2>四层同时通过，不是端口通了就算完成</h2>
+  <p class="sub">健康检查同时看 WSL 常驻钉、Docker、三个容器状态、三个 HTTP 入口——任一层失败就判 unhealthy，不把"端口通"当成"服务好了"。</p>
+  <img class="at-shot" src="agentteams/assets/runtime-live.png" alt="AgentTeams 四层在线健康检查实跑截图">
+  <div class="at-cards">
+    <div class="c"><b>3 个容器</b><span>controller / manager / dashboard&#10;均 running，restart=0</span></div>
+    <div class="c"><b>HTTP 200</b><span>Matrix 46ms · Manager 17ms&#10;Dashboard 18ms</span></div>
+    <div class="c"><b>四层闸门</b><span>任一层失败即 unhealthy&#10;不把端口通当成任务完成</span></div>
+  </div>
+  <div class="at-caveat">实测时间 2026-08-13。复核：<code>node agentteams/runtime.mjs health</code></div>
+</section>
+
+<section class="section tight at-block">
+  <div class="sec-kicker">02 · 拒绝也要留痕，不只是通过的那条路</div>
+  <h2>出版社教材审稿闭环：五步 trace，含两次故意拒批</h2>
+  <p class="sub">执行者登记候选、考官在没有观察记录时提前发证被拒、观察者补上观察、正式发证、把用过的观察拿去重放又被拒——成功和拒绝都进同一条台账，拒绝分支全程学历零改动。</p>
+  <img class="at-shot" src="agentteams/assets/publishing-trace.png" alt="出版社真实教材审稿三身份 Trace 实跑截图">
+  <div class="at-cards">
+    <div class="c"><b>8 / 8</b><span>登记、拒批、取象、发证&#10;防重放、身份分离、零 token</span></div>
+    <div class="c"><b>拒批 2 次</b><span>无观察拒批；旧观察重放拒批&#10;两次都不改学历</span></div>
+    <div class="c"><b>三身份</b><span>Executor / Sensor / Examiner&#10;指纹分别落盘</span></div>
+  </div>
+  <div class="at-caveat">实测时间 2026-08-13。复核：<code>node agentteams/demo-publishing.mjs</code></div>
+</section>
+
+<section class="section tight at-block">
+  <div class="sec-kicker">03 · 真正的安全证据来自失败分支</div>
+  <h2>身份闭环 12/12，反向闸门当前已扩容到 50/50（44 条故意造假）</h2>
+  <p class="sub">绿灯不是只跑正例得到的：自证、冒名、重放观察、绕过考题都被专门设计的反向用例去撞，撞不过才算数。截图定格在扩容前的 33/33（29 条反向）那一版；套件在 2026-08-28 只增未减扩到了 50 条，口径以现在的仓库为准。</p>
+  <img class="at-shot" src="agentteams/assets/identity-gates.png" alt="Tuwunel 三身份与发证分离闸门反向用例实跑截图">
+  <div class="at-cards">
+    <div class="c"><b>12 / 12</b><span>三个 homeserver 签发身份&#10;作者、取象、考官互不相同</span></div>
+    <div class="c"><b>50 / 50</b><span>发证闸门全绿（现行）&#10;其中 44 条反向用例故意造假</span></div>
+    <div class="c"><b>零改动</b><span>自证与无观察被拒时&#10;学历字节和考试次数不变</span></div>
+  </div>
+  <div class="at-caveat">身份闭环实测 2026-08-13（截图口径 33/33）；闸门数字为 2026-08-28 之后的仓库现状，未重新截图。证明强度上限：截图这轮用的是本进程起的 stub homeserver，只证明闸门逻辑成立，不证明身份已被外部锚定——那需要真 Tuwunel + 真 Worker 容器。复核：<code>node agentteams/verify-agentteams.mjs</code></div>
+</section>
+
+<section class="section tight at-block">
+  <div class="sec-kicker">04 · 不是一个 Demo，是同一条闸门换了三次检查器</div>
+  <h2>教材、CAD 图纸、小说续写，走的是同一个 certify.mjs</h2>
+  <p class="sub">这张截图直接呼应本站案例墙——xlsx、CAD、textbook、story 四个方言在协议层各自独立，但接到 AgentTeams 之后，发证闸门、台账格式、三身份分离规则完全共用一份代码，换领域只换 recheck 指向哪个检查器。第四格 RFP 合规矩阵还没做，如实留空，不进演示。</p>
+  <img class="at-shot" src="agentteams/assets/cross-domain.png" alt="教材、CAD 与小说跨领域同协议实跑截图">
+  <div class="at-cards">
+    <div class="c"><b>教材</b><span>真实客户稿件&#10;figure &amp; table numbering audit</span></div>
+    <div class="c"><b>CAD</b><span>DXF 图纸&#10;cross-reference integrity check</span></div>
+    <div class="c"><b>小说</b><span>续写文本&#10;series bible / continuity check</span></div>
+  </div>
+  <div class="at-caveat">实测时间 2026-08-13，3/3 通过，跳过 0，失败 0。复核：<code>node demo/agentteams-bridge/e2e-crossdomain.mjs</code></div>
+</section>
+
+<section class="section tight">
+  <div class="honesty">
+    <h3>不能推出</h3>
+    <ul>
+      <li>本页不是"多 Agent 实时协作"的模拟或效果图——展示的是已经发生过的运行过程，事后留痕、事后可核，不是正在直播的过程。</li>
+      <li>身份闭环与反向闸门这两段截图用的是本进程内起的 stub Matrix homeserver（Tuwunel），证明的是<strong>闸门逻辑成立</strong>，不证明<strong>外部身份系统已锚定</strong>——真要做到后者需要独立部署的 Tuwunel 服务持续在线，当前未常驻。</li>
+      <li>反向闸门数字有历史漂移：截图定格在 8/13 的 33/33（29 条反向），仓库现在是 50/50（44 条反向）。本页两个数字都标了各自的实测日期，不要把截图里的数字当成现在的数字。</li>
+      <li>跨领域证据只覆盖了教材、CAD、小说三个领域；招投标 RFP 合规矩阵那一格还没做，不算已完成能力。</li>
+    </ul>
+    <p class="at-links">下面两个链接是原始会审记录的可视化回放，不是为本页重做的演示：<a href="agentteams-review.html">多 Agent 协作监督面板 →</a> · <a href="agentteams-review-realtask.html">真实任务协作链（含人工拒绝节点）→</a></p>
+  </div>
+</section>
+
+<footer class="footer"><div class="footer-inner"><div><div class="brand-line">2Origin <span class="zh">本象协议</span></div><p>保存本象，按需投影。</p></div><div><h4>项目</h4><a href="solutions.html">解决方案</a><a href="challenge.html">白鼓挑战</a><a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a></div></div><div class="footer-bottom"><div class="in"><span>© 2026 2Origin 协议 · Apache-2.0</span><span>本象协议 · Benxiang · Origin IR</span></div></div></footer>
+</body></html>

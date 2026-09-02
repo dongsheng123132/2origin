@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2Origin · 多 Agent 协作监督面板</title>
+<style>
+:root{--bg:#f4f6fa;--panel:#ffffff;--line:#e2e8f0;--ink:#1a2333;--muted:#64748b;--blue:#2f6fed;--navy:#1e3a5f;--green:#18864b;--red:#c0392b;--amber:#b45309;--shadow:0 1px 3px rgba(30,58,95,.08),0 8px 24px rgba(30,58,95,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 Inter,"Microsoft YaHei",system-ui,sans-serif}.shell{max-width:1280px;margin:auto;padding:28px 22px 56px}
+/* 深蓝题头 + 红标线（制式） */
+.banner{background:var(--navy);color:#fff;border-radius:12px 12px 0 0;border-top:5px solid #c0392b;padding:22px 26px 18px;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+.banner .eyebrow{color:#9fc1ff;font-size:12px;font-weight:700;letter-spacing:.14em}
+.banner h1{margin:5px 0 7px;font-size:clamp(22px,3vw,32px);letter-spacing:-.02em;line-height:1.2}
+.banner .claim{color:#dbe8ff;margin:0;max-width:640px;font-size:14px}
+.banner-stats{display:flex;gap:22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:12px 18px}
+.stat b{display:block;font-size:22px;color:#fff}.stat span{font-size:11px;color:#b9cdf2}
+.actors-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;vertical-align:middle}.avatar{width:30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}.avatar-name{font-size:12px}.avatar-sep{color:#9fb4d8}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);margin-top:16px;overflow:hidden}
+.card-head{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;gap:12px}.card-head h2{margin:0;font-size:16px;color:var(--navy)}.card-head .hint{color:var(--muted);font-size:12px}
+.card-body{padding:16px 20px}
+/* 参与方条 */
+.participants{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+/* 三组泳道（等距事件槽，根治重叠） */
+.group{border:1px solid var(--line);border-left:5px solid var(--gcolor);border-radius:9px;background:var(--panel);padding:13px 16px;margin-top:12px}
+.group:first-of-type{margin-top:0}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}.group-index{width:26px;height:26px;border-radius:50%;background:var(--gcolor);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.group-head h3{margin:0;font-size:15px}.group-blurb{color:var(--muted);font-size:12px}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px}
+.slot{border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:8px;padding:9px 11px;background:#fbfcfe;cursor:pointer;transition:transform .08s,box-shadow .08s;position:relative}
+.slot:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(30,58,95,.12)}
+.slot.no-go{border-top-color:var(--red);background:#fdf3f2}
+.slot:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.slot-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.slot-top time{font:700 11px ui-monospace,Consolas,monospace;color:var(--muted)}
+.badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;letter-spacing:.04em}
+.badge.ok{background:#e4f4ea;color:var(--green)}.badge.no-go{background:#f9e2df;color:var(--red)}
+.slot-actor{font-size:11px;color:var(--blue);font-weight:600;margin-bottom:2px}
+.slot-action{font-size:12px;line-height:1.35;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.slot-artifact{font-size:10px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.none{color:var(--muted);font-size:12px;margin:6px 0}
+/* 会审回合条 */
+.reviews{display:flex;gap:9px;align-items:stretch;flex-wrap:wrap}
+.review{flex:1;min-width:118px;border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#fbfcfe;display:flex;flex-direction:column;gap:2px}
+.review b{font-size:12px;color:var(--navy)}.review span{font-size:11px;color:var(--muted)}.review em{font-style:normal;font-weight:700;font-size:11px;color:var(--green)}
+.review.good{border-top:3px solid var(--red);background:#fdf3f2}.review.good em{color:var(--red)}
+.review.ok{border-top:3px solid var(--blue)}.review.pass{border-top:3px solid var(--green);background:#f0f9f4}.review.pass em{color:var(--green)}
+/* 痛点卡 */
+.pain-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pain-card{border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:8px;padding:13px 15px;background:#fbfcfe}
+.pain-no{font:700 11px ui-monospace,Consolas,monospace;color:var(--blue);letter-spacing:.06em}
+.pain-card h4{margin:6px 0 0;font-size:14px;line-height:1.4}
+.pain-evidence{margin:9px 0 0;padding-top:8px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}.pain-evidence b{color:var(--navy)}
+/* 人机闭环 */
+.loop{display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
+.loop-copy{flex:1;min-width:200px}.loop-copy h2{margin:0 0 3px;font-size:15px;color:var(--navy)}.loop-copy p{margin:0;color:var(--muted);font-size:12px}
+.loop-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.loop-node{background:#eef2f9;border:1px solid #d5e0f0;border-radius:99px;padding:6px 11px;font-size:12px;color:var(--navy);white-space:nowrap}
+.loop-node.human{border-color:#e2b44c;background:#fdf6e3;color:#8a5a00}
+.loop-arrow{color:#9db2cf;font-weight:700}
+/* 详情 */
+.detail{display:none;position:fixed;z-index:30;width:min(420px,calc(100vw - 30px));background:#fff;border:1px solid #d3def2;border-top:4px solid var(--blue);border-radius:10px;padding:16px;box-shadow:0 18px 50px rgba(30,58,95,.22)}
+.detail.open{display:block}.detail h3{margin:0 0 10px;font-size:15px;color:var(--navy);padding-right:40px}
+.detail p{margin:8px 0;color:var(--ink);font-size:13px}
+.detail .meta-label{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.detail .close{position:absolute;top:10px;right:12px;border:1px solid var(--line);background:#f4f6fa;border-radius:6px;padding:3px 9px;cursor:pointer;color:var(--navy)}
+.detail .verdict-big{font-size:18px;font-weight:800}
+.detail .no-go-text{color:var(--red)}.detail .ok-text{color:var(--green)}
+@media(max-width:760px){.pain-grid{grid-template-columns:1fr}.banner{flex-direction:column;align-items:flex-start}.slots{grid-template-columns:1fr}.loop{flex-direction:column;align-items:flex-start}.loop-flow{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div style="background:#fbf6ea;border-bottom:1px solid #e2d9bd;padding:10px 22px;font:13px system-ui,sans-serif;color:#5c4d1f;display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+  <a href="agentteams.html" style="color:#8a6d1f;font-weight:600;text-decoration:none">← 回到 AgentTeams 说明页</a>
+  <span>本页是 2026-08-28 一次真实会审的原始留痕回放，不是模拟数据，也不是实时协作——展示的是已发生过程事后可核的记录。</span>
+</div>
+<main class="shell">
+  <header class="banner">
+    <div>
+      <div class="eyebrow">GOAI 2026 复赛 Demo · 多 Agent 协作监督</div>
+      <h1>让协作过程成为可参与、可会审的证据</h1>
+      <p class="claim">可视化是让人参与 AI 协作的前提；人也是参与会审的一个 AI。</p>
+    </div>
+    <div class="banner-stats">
+      <div class="stat"><b>13</b><span>真实事件</span></div>
+      <div class="stat"><b>6</b><span>参与角色</span></div>
+      <div class="stat"><b>2</b><span>NO-GO 亮红</span></div>
+      <div class="stat"><b>3</b><span>会审回合</span></div>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="card-head"><h2>参与方</h2><span class="hint">真实角色：人发出方向，AI 执行与判定，判据套件做机器验收</span></div>
+    <div class="card-body participants"><span class="avatar" style="--ac:#f5a623" title="需求方 / 最终会审人">贺方</span><span class="avatar-name">贺方升</span><span class="avatar-sep">·</span><span class="avatar" style="--ac:#4d7cff" title="编排 / 验收 / 修复执行">He</span><span class="avatar-name">Hermes 主控</span><span class="avatar-sep">·</span><span class="avatar" style="--ac:#6fbf73" title="落代码主力">Co</span><span class="avatar-name">Codex terra</span><span class="avatar-sep">·</span><span class="avatar" style="--ac:#b06fd9" title="独立评审 / 反单源偏见">Cl</span><span class="avatar-name">Claude opus</span><span class="avatar-sep">·</span><span class="avatar" style="--ac:#e05a5a" title="终审 / 顽固缺陷复核">gp</span><span class="avatar-name">gpt-5.6-sol</span><span class="avatar-sep">·</span><span class="avatar" style="--ac:#5ab0c8" title="可复跑验证器">判据</span><span class="avatar-name">判据套件</span></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>协作时间线（按角色分组 · 等距事件槽）</h2><span class="hint">悬停或点击事件查看产物与细节 · 红 = 会审 NO-GO</span></div>
+    <div class="card-body"><section class="group" data-group="human" style="--gcolor:#f5a623">
+    <div class="group-head"><span class="group-index">1</span><div><h3>人</h3><span class="group-blurb">方向与终裁 · 贺方升（人）</span></div></div>
+    <div class="slots"><article class="slot ok" data-event="0" tabindex="0">
+      <div class="slot-top"><time>20:00</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">贺方升（人）</div>
+      <div class="slot-action">参会带回评委口径：OTel 可按标准语义实测、场景要多、痛点要可视化</div>
+      <div class="slot-artifact">答疑会录音</div>
+    </article><article class="slot ok" data-event="12" tabindex="0">
+      <div class="slot-top"><time>22:55</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">贺方升（人）</div>
+      <div class="slot-action">会审收官（人=参与会审的 AI）：双 GO 终裁进档案</div>
+      <div class="slot-artifact">学历 agentteams-bridge v65</div>
+    </article></div>
+  </section><section class="group" data-group="exec" style="--gcolor:#4d7cff">
+    <div class="group-head"><span class="group-index">2</span><div><h3>执行 AI</h3><span class="group-blurb">编排 · 落代码 · 验收修复 · Hermes 主控（GLM-5.3Flash）、Codex terra（gpt-5.6-terra）</span></div></div>
+    <div class="slots"><article class="slot ok" data-event="1" tabindex="0">
+      <div class="slot-top"><time>20:10</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">Hermes 主控（GLM-5.3Flash）</div>
+      <div class="slot-action">拆 A2 施工单：OTel SDK 手工埋点 + 四角色同 trace + 本地导出</div>
+      <div class="slot-artifact">_state_updates/a2-otel-construction-order-20260827.md</div>
+    </article><article class="slot ok" data-event="2" tabindex="0">
+      <div class="slot-top"><time>20:20</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">Codex terra（gpt-5.6-terra）</div>
+      <div class="slot-action">开发 A2 第一批：embed-otel.mjs / demo-otel-four-roles.mjs / verify-otel-export.mjs</div>
+      <div class="slot-artifact">agentteams/otel/embed-otel.mjs</div>
+    </article><article class="slot ok" data-event="3" tabindex="0">
+      <div class="slot-top"><time>20:40</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">Hermes 主控（GLM-5.3Flash）</div>
+      <div class="slot-action">验收：demo exit 0 + verify-otel 14/14 + 旧判据 50/50 → 发布 v19</div>
+      <div class="slot-artifact">code-agentteams-standalone-v19-final-20260827.zip</div>
+    </article><article class="slot ok" data-event="4" tabindex="0">
+      <div class="slot-top"><time>21:00</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">Codex terra（gpt-5.6-terra）</div>
+      <div class="slot-action">开发 A2b 五领域矩阵：textbook/cad/novel/rfp/contract 每域 checker+fixture+mutant</div>
+      <div class="slot-artifact">agentteams/domains/*</div>
+    </article><article class="slot ok" data-event="6" tabindex="0">
+      <div class="slot-top"><time>21:50</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">Hermes 主控（GLM-5.3Flash）</div>
+      <div class="slot-action">按 opus P0 修复：UNSET 才补 OK + operation.name/agent.name/response output/synthetic/CLIENT kind</div>
+      <div class="slot-artifact">embed-otel.mjs + verify-otel-export.mjs</div>
+    </article><article class="slot ok" data-event="8" tabindex="0">
+      <div class="slot-top"><time>22:20</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">Hermes 主控（GLM-5.3Flash）</div>
+      <div class="slot-action">按 sol R2 修复：exporter 透出真实 span.kind + 合成 TTFT 专用字段 + scope 版本声明 + verifier 排除 multidomain</div>
+      <div class="slot-artifact">embed-otel.mjs + verify-otel-export.mjs</div>
+    </article><article class="slot ok" data-event="10" tabindex="0">
+      <div class="slot-top"><time>22:45</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">Hermes 主控（GLM-5.3Flash）</div>
+      <div class="slot-action">R3 P1 收尾：viewer 字段同步 + resource 属性 allowlist 脱敏（过滤 process.*/host.*/command 路径泄露）</div>
+      <div class="slot-artifact">embed-otel.mjs</div>
+    </article></div>
+  </section><section class="group" data-group="judge" style="--gcolor:#b06fd9">
+    <div class="group-head"><span class="group-index">3</span><div><h3>判定 AI</h3><span class="group-blurb">会审 · 终审 · 机器判据 · Claude opus、gpt-5.6-sol、判据套件（机器验收）</span></div></div>
+    <div class="slots"><article class="slot no-go" data-event="5" tabindex="0">
+      <div class="slot-top"><time>21:35</time><b class="badge no-go">NO-GO</b></div>
+      <div class="slot-actor">Claude opus</div>
+      <div class="slot-action">R1 会审：GO（有条件）——抓到假绿 bug：inSpan 无条件 setStatus(OK) 覆盖 ERROR，全 19 span 绿</div>
+      <div class="slot-artifact">_state_updates/a2-review-brief-20260827.md</div>
+    </article><article class="slot no-go" data-event="7" tabindex="0">
+      <div class="slot-top"><time>22:05</time><b class="badge no-go">NO-GO</b></div>
+      <div class="slot-actor">gpt-5.6-sol</div>
+      <div class="slot-action">R2 会审：NO-GO——exporter 写死 kind=1（修复被丢弃）、TTFT 用标准字段装合成值、scope 无 semconv 版本、verifier 误验 multidomain trace</div>
+      <div class="slot-artifact">_state_updates/a2-review-r2-brief-20260827.md</div>
+    </article><article class="slot ok" data-event="9" tabindex="0">
+      <div class="slot-top"><time>22:35</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">gpt-5.6-sol</div>
+      <div class="slot-action">R3 复审：GO——实读实跑确认，P0 全闭环</div>
+      <div class="slot-artifact">_state_updates/a2-review-r3-brief-20260827.md</div>
+    </article><article class="slot ok" data-event="11" tabindex="0">
+      <div class="slot-top"><time>22:50</time><b class="badge ok">OK</b></div>
+      <div class="slot-actor">判据套件（机器验收）</div>
+      <div class="slot-action">v20 发布包终极验收：全新解包六套判据全绿</div>
+      <div class="slot-artifact">code-agentteams-standalone-v20-final-20260827.zip sha256 73ec9d0a…</div>
+    </article></div>
+  </section></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>会审回合：意见不是散文，全部落成判据</h2><span class="hint">3 轮会审 · 2 次 NO-GO · 每一次都有可复跑判据钉死</span></div>
+    <div class="card-body reviews"><section class="review good"><b>R1 · OPUS</b><span>6 条 P0</span><em>NO-GO</em></section>
+<section class="review ok"><b>修复</b><span>15/15 · 6 反向</span></section>
+<section class="review good"><b>R2 · SOL</b><span>4 条 P0</span><em>NO-GO</em></section>
+<section class="review ok"><b>修复</b><span>17/17 · 8 反向</span></section>
+<section class="review pass"><b>R3 · SOL · GO</b><span>P0 全闭环</span></section></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>解决了什么痛点</h2><span class="hint">每条痛点都有本面板与判据可复核的证据</span></div>
+    <div class="card-body pain-grid"><article class="pain-card"><div class="pain-no">痛点 01</div><h4>AI 改完说&#39;检查过了&#39;，没人知道依据在哪</h4><p class="pain-evidence"><b>证据</b>：四角色同 trace：谁观察、谁发证、谁审计，每一步有 span 属性可查</p></article><article class="pain-card"><div class="pain-no">痛点 02</div><h4>故障恢复看不见：超时/身份不可用/人工拒绝时系统怎么活</h4><p class="pain-evidence"><b>证据</b>：trace 里 2 个真实 ERROR span：human_approval_missing + timeout→自动重派恢复</p></article><article class="pain-card"><div class="pain-no">痛点 03</div><h4>评审意见是散文，改没改靠嘴说</h4><p class="pain-evidence"><b>证据</b>：会审 3 轮，每轮 NO-GO 都落成可验证判据，17/17 反向用例钉死</p></article><article class="pain-card"><div class="pain-no">痛点 04</div><h4>多 Agent 协作过程对人类不可见，人无法介入</h4><p class="pain-evidence"><b>证据</b>：本面板：每个 agent 的动作/产物/判定/时间线全部可视化，人是最终会审人</p></article></div>
+  </section>
+
+  <section class="card loop">
+    <div class="loop-copy"><h2>人机闭环：人不是旁观者</h2><p>人发出方向、看见判据与过程、参与会审，再决定下一轮协作。</p></div>
+    <div class="loop-flow"><span class="loop-node human">Human</span><span class="loop-arrow">→</span><span class="loop-node">指令</span><span class="loop-arrow">→</span><span class="loop-node">Agents</span><span class="loop-arrow">→</span><span class="loop-node">判据</span><span class="loop-arrow">→</span><span class="loop-node">可视化</span><span class="loop-arrow">→</span><span class="loop-node human">Human 会审</span><span class="loop-arrow">→</span><span class="loop-node">下一轮</span></div>
+  </section>
+</main>
+<aside class="detail" id="detail" role="dialog" aria-live="polite"></aside>
+<script>
+const session={"spec":"2origin.collaboration-session/0.1","kind":"ai-collaboration.events","title":"GOAI 复赛 A2 OTel —— 一次真实的五方 AI 协作开发（2026-08-27）","collected_at":"2026-08-27T22:55:00+08:00","source":"git log dacd332..4feeeec + _state_updates/a2-review-{brief,r2-brief,r3-brief}-20260827.md + 判据实跑记录","actors":[{"id":"human","name":"贺方升（人）","role":"需求方 / 最终会审人","color":"#f5a623"},{"id":"hermes","name":"Hermes 主控（GLM-5.3Flash）","role":"编排 / 验收 / 修复执行","color":"#4d7cff"},{"id":"terra","name":"Codex terra（gpt-5.6-terra）","role":"落代码主力","color":"#6fbf73"},{"id":"opus","name":"Claude opus","role":"独立评审 / 反单源偏见","color":"#b06fd9"},{"id":"sol","name":"gpt-5.6-sol","role":"终审 / 顽固缺陷复核","color":"#e05a5a"},{"id":"judge","name":"判据套件（机器验收）","role":"可复跑验证器","color":"#5ab0c8"}],"events":[{"t":"20:00","actor":"human","action":"参会带回评委口径：OTel 可按标准语义实测、场景要多、痛点要可视化","artifact":"答疑会录音","verdict":"ok","detail":"评委答疑会 19:00-21:00 钉钉 709236323"},{"t":"20:10","actor":"hermes","action":"拆 A2 施工单：OTel SDK 手工埋点 + 四角色同 trace + 本地导出","artifact":"_state_updates/a2-otel-construction-order-20260827.md","verdict":"ok","detail":"双高手预判：非 LangChain 框架，自动插桩盖不住 → 原生 SDK"},{"t":"20:20","actor":"terra","action":"开发 A2 第一批：embed-otel.mjs / demo-otel-four-roles.mjs / verify-otel-export.mjs","artifact":"agentteams/otel/embed-otel.mjs","verdict":"ok","detail":"codex exec --model gpt-5.6-terra 落代码"},{"t":"20:40","actor":"hermes","action":"验收：demo exit 0 + verify-otel 14/14 + 旧判据 50/50 → 发布 v19","artifact":"code-agentteams-standalone-v19-final-20260827.zip","verdict":"ok","detail":"全新解压五命令全绿；补超时重派故障恢复段"},{"t":"21:00","actor":"terra","action":"开发 A2b 五领域矩阵：textbook/cad/novel/rfp/contract 每域 checker+fixture+mutant","artifact":"agentteams/domains/*","verdict":"ok","detail":"verify-multidomain 14/14，同一 certify.mjs 穿越 5 行业"},{"t":"21:35","actor":"opus","action":"R1 会审：GO（有条件）——抓到假绿 bug：inSpan 无条件 setStatus(OK) 覆盖 ERROR，全 19 span 绿","artifact":"_state_updates/a2-review-brief-20260827.md","verdict":"no-go","detail":"P0×6：错误状态被覆盖 / 缺 operation.name / 无 agent.name / 只有 Input 无 Output / 跨进程断链 / kind 硬编码"},{"t":"21:50","actor":"hermes","action":"按 opus P0 修复：UNSET 才补 OK + operation.name/agent.name/response output/synthetic/CLIENT kind","artifact":"embed-otel.mjs + verify-otel-export.mjs","verdict":"ok","detail":"verify-otel-export 15/15（6 反向）；主仓提交 3153785"},{"t":"22:05","actor":"sol","action":"R2 会审：NO-GO——exporter 写死 kind=1（修复被丢弃）、TTFT 用标准字段装合成值、scope 无 semconv 版本、verifier 误验 multidomain trace","artifact":"_state_updates/a2-review-r2-brief-20260827.md","verdict":"no-go","detail":"opus 的修复没落到导出器；P0×2 + P1×2"},{"t":"22:20","actor":"hermes","action":"按 sol R2 修复：exporter 透出真实 span.kind + 合成 TTFT 专用字段 + scope 版本声明 + verifier 排除 multidomain","artifact":"embed-otel.mjs + verify-otel-export.mjs","verdict":"ok","detail":"verify-otel-export 17/17（8 反向 N1-N8 全抓）；主仓提交 05a9060"},{"t":"22:35","actor":"sol","action":"R3 复审：GO——实读实跑确认，P0 全闭环","artifact":"_state_updates/a2-review-r3-brief-20260827.md","verdict":"ok","detail":"17/17 实跑；kind 分布 INTERNAL=8/CLIENT=11；失败真红 status=2 + error.type"},{"t":"22:45","actor":"hermes","action":"R3 P1 收尾：viewer 字段同步 + resource 属性 allowlist 脱敏（过滤 process.*/host.*/command 路径泄露）","artifact":"embed-otel.mjs","verdict":"ok","detail":"主仓提交 4feeeec"},{"t":"22:50","actor":"judge","action":"v20 发布包终极验收：全新解包六套判据全绿","artifact":"code-agentteams-standalone-v20-final-20260827.zip sha256 73ec9d0a…","verdict":"ok","detail":"verify-otel 17/17 + verify-multidomain 14/14 + verify-agentteams 50/50 + anchors + runtime + benjing 85/85"},{"t":"22:55","actor":"human","action":"会审收官（人=参与会审的 AI）：双 GO 终裁进档案","artifact":"学历 agentteams-bridge v65","verdict":"ok","detail":"opus R1 条件全闭环 + sol R3 GO"}],"pain_points_addressed":[{"pain":"AI 改完说'检查过了'，没人知道依据在哪","evidence":"四角色同 trace：谁观察、谁发证、谁审计，每一步有 span 属性可查"},{"pain":"故障恢复看不见：超时/身份不可用/人工拒绝时系统怎么活","evidence":"trace 里 2 个真实 ERROR span：human_approval_missing + timeout→自动重派恢复"},{"pain":"评审意见是散文，改没改靠嘴说","evidence":"会审 3 轮，每轮 NO-GO 都落成可验证判据，17/17 反向用例钉死"},{"pain":"多 Agent 协作过程对人类不可见，人无法介入","evidence":"本面板：每个 agent 的动作/产物/判定/时间线全部可视化，人是最终会审人"}]};
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??'未记录').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const actors=Array.isArray(session.actors)?session.actors:[],events=Array.isArray(session.events)?session.events:[];
+const byId=new Map(actors.map(a=>[a.id,a]));const actorOf=id=>byId.get(id)||{id,name:id||'未记录',role:'未记录',color:'#8193ad'};
+const verdict=e=>String(e.verdict||'').toLowerCase()==='no-go'?'no-go':'ok';
+const detail=$('detail');
+function openDetail(index,anchor){
+  const e=events[index]||{},a=actorOf(e.actor),v=verdict(e);
+  detail.innerHTML='<button class="close">关闭</button><h3 style="border-left:4px solid '+esc(a.color)+';padding-left:8px">'+esc(a.name)+' · '+esc(e.t)+'</h3>'
+    +'<p><span class="meta-label">动作</span>'+esc(e.action)+'</p>'
+    +'<p><span class="meta-label">判定</span><b class="verdict-big '+(v==='no-go'?'no-go-text':'ok-text')+'">'+esc(e.verdict||'未记录').toUpperCase()+'</b></p>'
+    +'<p><span class="meta-label">产物</span>'+esc(e.artifact)+'</p>'
+    +'<p><span class="meta-label">细节</span>'+esc(e.detail)+'</p>';
+  const r=anchor.getBoundingClientRect();
+  detail.style.left=Math.max(15,Math.min(window.innerWidth-440,r.right+10))+'px';
+  detail.style.top=Math.min(window.innerHeight-90,r.top)+'px';
+  detail.classList.add('open');
+  detail.querySelector('.close').onclick=()=>detail.classList.remove('open');
+}
+document.querySelectorAll('.slot').forEach(s=>{
+  s.addEventListener('click',()=>openDetail(+s.dataset.event,s));
+  s.addEventListener('mouseenter',()=>openDetail(+s.dataset.event,s));
+  s.addEventListener('mouseleave',()=>detail.classList.remove('open'));
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')detail.classList.remove('open')});
+document.querySelectorAll('.slot').forEach(s=>s.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();openDetail(+s.dataset.event,s);}
+}));
+</script>
+</body>
+</html>
