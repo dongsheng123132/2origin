@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url'
 import { zip, unzip, crc32 } from './zip.mjs'
 import { parseXlsx, toR1C1, translateFormula, refsOf, colToNum, numToCol } from './xlsx.mjs'
 import { profileColumns, materialize, toObjects, detectHeaderRow, sniff } from './import.mjs'
-import { xlsxConstraints } from './dialect.mjs'
+import { xlsxConstraints, xlsxLimits } from './dialect.mjs'
 import { trace, toId, leaves } from './trace.mjs'
 import { projectToXlsx, staleCells } from './project.mjs'
 import { disclosure, projectionRecord } from '../../compiler/project.mjs'
@@ -72,7 +72,7 @@ const importFixture = (file) => {
   const profiles = materialize(wb)
   const { objects, relations } = toObjects(wb, { name: file.replace(/\.xlsx$/, ''), source: file, maxCells: 20000 })
   const dir = mkdtempSync(join(tmpdir(), 'xlsx-selftest-'))
-  initPackage(dir, { objects, relations, constraints: xlsxConstraints(profiles) })
+  initPackage(dir, { objects, relations, constraints: xlsxConstraints(profiles), limits: xlsxLimits({ truncated: false }) })
   const origin = loadOrigin(dir)
   return { wb, profiles, objects, relations, origin, dir }
 }
@@ -297,6 +297,34 @@ console.log('\n十二 · 缓存值过期')
   const item = plan.dropped.find((d) => d.code === 'stale-cached-value')
   ok(item && item.count === stale.length, '过期格写进投影披露，数目对得上')
   ok(item.why.includes('不重算'), '披露里说清楚为什么：本象不重算公式')
+}
+
+// ── 十三 · 体检报告（report.mjs 的不变量）───────────────────────
+console.log('\n十三 · 体检报告')
+{
+  const { execFileSync } = await import('node:child_process')
+  const { origin, dir } = importFixture('B-缺陷.xlsx')
+  const findings = (await import('../../compiler/provenance.mjs')).diagnose(origin).findings
+  const out = execFileSync(process.execPath, [join(HERE, 'report.mjs'), dir, '--key', '预算!D7', '--depth', '8'], { encoding: 'utf8' })
+
+  ok(out.startsWith('# xlsx 方言体检报告'), '报告有标题')
+  const errCount = findings.filter((f) => f.severity === 'error').length
+  const warnCount = findings.filter((f) => f.severity === 'warning').length
+  ok(out.includes(`error ${errCount} 条 / warning ${warnCount} 条`), '计分板 error/warning 数与 diagnose 一致')
+
+  for (const f of findings) {
+    const objId = f.msg.match(/(cell:[^\s.]+|header:[^\s.]+)/)?.[1]
+    if (objId) ok(out.includes(objId), `红点表里带着对象 ID：${objId}`)
+  }
+
+  ok(out.includes('xlsx-address-not-stable') && out.includes('xlsx-no-recalc') &&
+     out.includes('xlsx-styles-not-carried') && out.includes('xlsx-semantic-errors') &&
+     out.includes('xlsx-text-paste-undetectable') && out.includes('xlsx-formula-rules-unverified'),
+     'limits 六条一条不少地出现在报告里')
+
+  ok(out.includes('预算!D7') && out.includes('人工录入的格子决定'), '依赖追溯落地（--key 指定的格子）')
+  ok(/## 7\. 如果改了会怎样/.test(out), '过期格一节存在（即使本例无事务，也要报「无过期格可报」而不是缺这一节）')
+  ok(out.includes('未在真实财务模型上验证过假阳性率'), '口径声明带着公式类规则的边界警示')
 }
 
 console.log(`\n${pass}/${pass + fail} 通过`)

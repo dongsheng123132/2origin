@@ -8,7 +8,9 @@
 | `office/` | Office | **已落地雏形**：零依赖 docx→md（import.mjs，表格合并展开/章条结构化），底座规划 OfficeCLI + Docling + PDFium/MuPDF（见 [office/README.md](office/README.md)） |
 | `story/` | Story | **已落地（2026-08-06）**：OriginWriter 写作引擎——init/state/submit/check/hooks/outline 六命令，事务性写作（正文+状态变更），禁区/伏笔状态机/正文对照五道门禁，26 项自测（见 [story/README.md](story/README.md)） |
 | `memory/` | Memory | 自研 MCP Server |
-| `cad/` | CAD | FreeCAD / CLI-Anything / Modulor（Phase 4） |
+| `cad/` | CAD | FreeCAD / CLI-Anything / Modulor（Phase 4）；**已落地**：dxf 解析/生成/diff + 天正/美标图纸导入，55+15 项自测（见 [cad/README.md](cad/README.md)） |
+| `xlsx/` | XLSX | **已落地**：零依赖 OOXML 解析/写出，共享公式翻译、依赖链投影、缓存值过期检测，100 项自测（见 [xlsx/README.md](xlsx/README.md)） |
+| `textbook/` | Textbook | **已落地**：docx 教材体检，决策生命周期（pending→applied→verified），60 项自测（见 [textbook/README.md](textbook/README.md)） |
 | `video/` | Video | **已落地（2026-08-09）**：两遍制粗读—精读 + ASR 通道 + 三段式 events/audiences/appraisals，fail-closed 校验器；四篇文档里三篇是负结果（见 [video/README.md](video/README.md)） |
 | `embodied/` | Embodied | **v0.1（2026-08-13）**：机器人语义 observation events → 确定性 belief reducer；分离最后观察/当前信念与三种时间，原始视觉、SLAM 和控制留在外部（见 [embodied/README.md](embodied/README.md)） |
 

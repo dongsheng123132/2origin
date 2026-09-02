@@ -1,0 +1,6 @@
+{
+  "transaction_id": "tx-20260902-001",
+  "state_changes": [
+    { "object": "cell:假设!B/3", "field": "value", "from": 0.05, "to": 0.06 }
+  ]
+}

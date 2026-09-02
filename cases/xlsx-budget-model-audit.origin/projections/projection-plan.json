@@ -1,0 +1,69 @@
+{
+  "event": "projected",
+  "projection": "xlsx-projection",
+  "format": "xlsx",
+  "at_seq": 1,
+  "objects": 120,
+  "lossless": false,
+  "dropped": [
+    {
+      "code": "object-not-selected",
+      "count": 1
+    },
+    {
+      "code": "field-not-carried",
+      "count": 44
+    },
+    {
+      "code": "field-not-carried",
+      "count": 4
+    },
+    {
+      "code": "field-not-carried",
+      "count": 4
+    },
+    {
+      "code": "field-not-carried",
+      "count": 4
+    },
+    {
+      "code": "field-not-carried",
+      "count": 4
+    },
+    {
+      "code": "field-not-carried",
+      "count": 1
+    },
+    {
+      "code": "field-not-carried",
+      "count": 1
+    },
+    {
+      "code": "field-not-carried",
+      "count": 1
+    },
+    {
+      "code": "field-not-carried",
+      "count": 1
+    },
+    {
+      "code": "field-not-carried",
+      "count": 1
+    },
+    {
+      "code": "relation-dangling",
+      "count": 1
+    },
+    {
+      "code": "provenance-not-carried",
+      "count": 1
+    },
+    {
+      "code": "stale-cached-value",
+      "count": 28
+    }
+  ],
+  "output": "cases/xlsx-budget-model-audit.origin/projections/projected.xlsx",
+  "by": "案例演示",
+  "at": "2026-09-02T10:21:12.804Z"
+}

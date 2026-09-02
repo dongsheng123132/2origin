@@ -3,7 +3,7 @@
 [![Website](https://img.shields.io/badge/website-2origin.org-blue)](https://2origin.org)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
-[![verify](https://img.shields.io/badge/verify-91%20%2B%2055%20%2B%2015%20%2B%20104%20%2B%2020%20%2B%2087%20%2B%2025%20%2B%2083%20%C2%B7%20conformance%2087%2F87%20%C2%B7%20mutation%2019%2F19-brightgreen.svg)](#try-it)
+[![verify](https://img.shields.io/badge/verify-91%20%2B%2055%20%2B%2015%20%2B%20104%20%2B%2020%20%2B%20100%20%2B%2025%20%2B%2083%20%C2%B7%20conformance%2087%2F87%20%C2%B7%20mutation%2019%2F19-brightgreen.svg)](#try-it)
 [![conformance](https://img.shields.io/badge/conformance-87%2F87%20·%20JS%20%2B%20Python-brightgreen.svg)](spec/conformance/README.en.md)
 [![deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![中文](https://img.shields.io/badge/docs-%E4%B8%AD%E6%96%87-lightgrey.svg)](README.md)
@@ -149,7 +149,7 @@ PDFs, images, Markdown and EPUB are **not source files** — they are **projecti
 
 ```bash
 npm run verify   # selftest 91 + CAD 55 + CAD:tianzheng 15 + law 104 + office 20
-                 #               + xlsx 87 + e2e 25 + a3-projection 83
+                 #               + xlsx 100 + e2e 25 + a3-projection 83
                  #               + conformance 87/87 + mutation-check 19/19
 ```
 

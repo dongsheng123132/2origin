@@ -1,0 +1,20 @@
+{
+  "schema": "benxiang-evidence-certificate/v1",
+  "status": "diagnosed-with-known-defects",
+  "issued_at": "2026-09-02T10:00:00.000Z",
+  "subject": "xlsx-budget-model-audit",
+  "source_sha256": "A2092D1A0D6595190B9790BCC284FFA5371C533B35DA15A97F2096C7710254B8",
+  "certified_statement": "xlsx dialect read this self-authored quarterly cost budget workbook at cell/formula-dependency level and machine-checked it against 13 rule instances; result is 5 error-level findings, 2 warning-level findings, and 4 deliberately undetectable defect classes documented in graph/limits.json.",
+  "evidence": {
+    "sheets": 4,
+    "objects": 121,
+    "relations": 124,
+    "constraints_checked": "13/13 machine-decidable",
+    "errors": 5,
+    "warnings": 2,
+    "max_dependency_depth": 4,
+    "input_leaves_of_key_metric": 52,
+    "stale_cells_after_one_tx": 28
+  },
+  "disclaimer": "本证书只说「机器判据跑了什么、报了什么」，不是无损保证、不是财务审计意见、不是对该工作簿业务正确性的背书。素材为自造教学用例，非真实客户数据（见 README「口径声明」）。三条公式类规则未在真实财务模型上验证过假阳性率。"
+}

@@ -1,0 +1,14 @@
+# 本象包（xlsx 方言）
+artifact:
+  id: 季度成本预算模型
+  kind: spreadsheet
+  title: 季度成本预算模型
+
+payload:
+  uri: cases/xlsx-budget-model-audit.origin/payloads/季度成本预算模型.xlsx
+  media_type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  digest: sha256:a2092d1a0d6595190b9790bcc284ffa5371c533b35da15a97f2096c7710254b8
+
+provenance:
+  source: cases/xlsx-budget-model-audit.origin/payloads/季度成本预算模型.xlsx
+  history: ./provenance/history.jsonl

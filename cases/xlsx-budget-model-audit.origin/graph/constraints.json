@@ -1,0 +1,144 @@
+[
+  {
+    "id": "no-error-values",
+    "rule": "单元格不得残留错误值（#REF! / #DIV/0! / #VALUE! …）",
+    "check": {
+      "type": "in",
+      "object": "cell:*",
+      "field": "error",
+      "values": []
+    }
+  },
+  {
+    "id": "no-dangling-ref",
+    "rule": "公式不得引用不存在的工作表或越界地址",
+    "check": {
+      "type": "in",
+      "object": "cell:*",
+      "field": "bad_ref",
+      "values": []
+    }
+  },
+  {
+    "id": "aggregate-covers-data",
+    "rule": "求和/计数范围不得漏掉紧邻的数据行",
+    "check": {
+      "type": "in",
+      "object": "cell:*",
+      "field": "range_gap",
+      "values": []
+    }
+  },
+  {
+    "id": "text-number:假设!B",
+    "rule": "假设 表 B 列是数值列，不得混入文本型数字（\"1,234\" 会被 SUM 当作 0）",
+    "check": {
+      "type": "not_equals",
+      "object": "cell:假设!B/*",
+      "field": "text_number",
+      "value": true
+    }
+  },
+  {
+    "id": "text-number:明细!B",
+    "rule": "明细 表 B 列是数值列，不得混入文本型数字（\"1,234\" 会被 SUM 当作 0）",
+    "check": {
+      "type": "not_equals",
+      "object": "cell:明细!B/*",
+      "field": "text_number",
+      "value": true
+    }
+  },
+  {
+    "id": "text-number:明细!C",
+    "rule": "明细 表 C 列是数值列，不得混入文本型数字（\"1,234\" 会被 SUM 当作 0）",
+    "check": {
+      "type": "not_equals",
+      "object": "cell:明细!C/*",
+      "field": "text_number",
+      "value": true
+    }
+  },
+  {
+    "id": "formula-column-purity:明细!D",
+    "rule": "明细 表 D 列的公式区里混入了硬编码常量（有人填死了值，此后不再随上游更新）",
+    "check": {
+      "type": "not_equals",
+      "object": "cell:明细!D/*",
+      "field": "hardcoded_in_block",
+      "value": true
+    }
+  },
+  {
+    "id": "formula-column-consistency:明细!D",
+    "rule": "明细 表 D 列的公式形状不一致（多数为 RC[-2]*RC[-1] 或 SUM(R[-12]C:R[-1]C)）",
+    "severity": "warning",
+    "check": {
+      "type": "in",
+      "object": "cell:明细!D/*",
+      "field": "formula_shape",
+      "values": [
+        "RC[-2]*RC[-1]",
+        "SUM(R[-12]C:R[-1]C)"
+      ]
+    }
+  },
+  {
+    "id": "formula-column-purity:明细!E",
+    "rule": "明细 表 E 列的公式区里混入了硬编码常量（有人填死了值，此后不再随上游更新）",
+    "check": {
+      "type": "not_equals",
+      "object": "cell:明细!E/*",
+      "field": "hardcoded_in_block",
+      "value": true
+    }
+  },
+  {
+    "id": "formula-column-consistency:明细!E",
+    "rule": "明细 表 E 列的公式形状不一致（多数为 RC[-1]*假设!R3C2 或 SUM(R[-12]C:R[-1]C)）",
+    "severity": "warning",
+    "check": {
+      "type": "in",
+      "object": "cell:明细!E/*",
+      "field": "formula_shape",
+      "values": [
+        "RC[-1]*假设!R3C2",
+        "SUM(R[-12]C:R[-1]C)"
+      ]
+    }
+  },
+  {
+    "id": "formula-column-purity:明细!F",
+    "rule": "明细 表 F 列的公式区里混入了硬编码常量（有人填死了值，此后不再随上游更新）",
+    "check": {
+      "type": "not_equals",
+      "object": "cell:明细!F/*",
+      "field": "hardcoded_in_block",
+      "value": true
+    }
+  },
+  {
+    "id": "formula-column-consistency:明细!F",
+    "rule": "明细 表 F 列的公式形状不一致（多数为 RC[-2]+RC[-1] 或 SUM(R[-12]C:R[-1]C)）",
+    "severity": "warning",
+    "check": {
+      "type": "in",
+      "object": "cell:明细!F/*",
+      "field": "formula_shape",
+      "values": [
+        "RC[-2]+RC[-1]",
+        "SUM(R[-12]C:R[-1]C)"
+      ]
+    }
+  },
+  {
+    "id": "formula-column-purity:汇总!B",
+    "rule": "汇总 表 B 列的公式区里混入了硬编码常量（有人填死了值，此后不再随上游更新）",
+    "check": {
+      "type": "not_equals",
+      "object": "cell:汇总!B/*",
+      "field": "hardcoded_in_block",
+      "value": true
+    }
+  }
+]

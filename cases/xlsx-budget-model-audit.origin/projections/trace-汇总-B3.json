@@ -1,0 +1,862 @@
+{
+  "id": "cell:汇总!B/3",
+  "ref": "汇总!B3",
+  "value": 25737.54,
+  "formula": "明细!F14",
+  "kind": "formula",
+  "children": [
+    {
+      "id": "cell:明细!F/14",
+      "ref": "明细!F14",
+      "value": 25737.54,
+      "formula": "SUM(F2:F13)",
+      "kind": "formula",
+      "children": [
+        {
+          "id": "cell:明细!F/2",
+          "ref": "明细!F2",
+          "value": 1953,
+          "formula": "D2+E2",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/2",
+              "ref": "明细!D2",
+              "value": 1860,
+              "formula": "B2*C2",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/2",
+                  "ref": "明细!B2",
+                  "value": 120,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/2",
+                  "ref": "明细!C2",
+                  "value": 15.5,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/2",
+              "ref": "明细!E2",
+              "value": 93,
+              "formula": "D2*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/2",
+                  "ref": "明细!D2",
+                  "value": 1860,
+                  "formula": "B2*C2",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/2",
+                      "ref": "明细!B2",
+                      "value": 120,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/2",
+                      "ref": "明细!C2",
+                      "value": 15.5,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/3",
+          "ref": "明细!F3",
+          "value": 2268,
+          "formula": "D3+E3",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/3",
+              "ref": "明细!D3",
+              "value": 2160,
+              "formula": "B3*C3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/3",
+                  "ref": "明细!B3",
+                  "value": 135,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/3",
+                  "ref": "明细!C3",
+                  "value": 16,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/3",
+              "ref": "明细!E3",
+              "value": 108,
+              "formula": "D3*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/3",
+                  "ref": "明细!D3",
+                  "value": 2160,
+                  "formula": "B3*C3",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/3",
+                      "ref": "明细!B3",
+                      "value": 135,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/3",
+                      "ref": "明细!C3",
+                      "value": 16,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/4",
+          "ref": "明细!F4",
+          "value": 1824.9,
+          "formula": "D4+E4",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/4",
+              "ref": "明细!D4",
+              "value": 1738,
+              "formula": "B4*C4",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/4",
+                  "ref": "明细!B4",
+                  "value": "110",
+                  "formula": null,
+                  "kind": "text",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/4",
+                  "ref": "明细!C4",
+                  "value": 15.8,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/4",
+              "ref": "明细!E4",
+              "value": 86.9,
+              "formula": "D4*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/4",
+                  "ref": "明细!D4",
+                  "value": 1738,
+                  "formula": "B4*C4",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/4",
+                      "ref": "明细!B4",
+                      "value": "110",
+                      "formula": null,
+                      "kind": "text",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/4",
+                      "ref": "明细!C4",
+                      "value": 15.8,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/5",
+          "ref": "明细!F5",
+          "value": 2177.28,
+          "formula": "D5+E5",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/5",
+              "ref": "明细!D5",
+              "value": 2073.6,
+              "formula": "B5*C5",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/5",
+                  "ref": "明细!B5",
+                  "value": 128,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/5",
+                  "ref": "明细!C5",
+                  "value": 16.2,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/5",
+              "ref": "明细!E5",
+              "value": 103.68,
+              "formula": "D5*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/5",
+                  "ref": "明细!D5",
+                  "value": 2073.6,
+                  "formula": "B5*C5",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/5",
+                      "ref": "明细!B5",
+                      "value": 128,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/5",
+                      "ref": "明细!C5",
+                      "value": 16.2,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/6",
+          "ref": "明细!F6",
+          "value": 2337.3,
+          "formula": "D6+E6",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/6",
+              "ref": "明细!D6",
+              "value": 2226,
+              "formula": "B6*C6",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/6",
+                  "ref": "明细!B6",
+                  "value": 140,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/6",
+                  "ref": "明细!C6",
+                  "value": 15.9,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/6",
+              "ref": "明细!E6",
+              "value": 111.3,
+              "formula": "D6*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/6",
+                  "ref": "明细!D6",
+                  "value": 2226,
+                  "formula": "B6*C6",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/6",
+                      "ref": "明细!B6",
+                      "value": 140,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/6",
+                      "ref": "明细!C6",
+                      "value": 15.9,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/7",
+          "ref": "明细!F7",
+          "value": 2586.3,
+          "formula": "D7+E6",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/7",
+              "ref": "明细!D7",
+              "value": 2475,
+              "formula": "B7*C7",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/7",
+                  "ref": "明细!B7",
+                  "value": 150,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/7",
+                  "ref": "明细!C7",
+                  "value": 16.5,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/6",
+              "ref": "明细!E6",
+              "value": 111.3,
+              "formula": "D6*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/6",
+                  "ref": "明细!D6",
+                  "value": 2226,
+                  "formula": "B6*C6",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/6",
+                      "ref": "明细!B6",
+                      "value": 140,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/6",
+                      "ref": "明细!C6",
+                      "value": 15.9,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/8",
+          "ref": "明细!F8",
+          "value": 2328.48,
+          "formula": "D8+E8",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/8",
+              "ref": "明细!D8",
+              "value": 2217.6,
+              "formula": "B8*C8",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/8",
+                  "ref": "明细!B8",
+                  "value": 132,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/8",
+                  "ref": "明细!C8",
+                  "value": 16.8,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/8",
+              "ref": "明细!E8",
+              "value": 110.88,
+              "formula": "D8*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/8",
+                  "ref": "明细!D8",
+                  "value": 2217.6,
+                  "formula": "B8*C8",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/8",
+                      "ref": "明细!B8",
+                      "value": 132,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/8",
+                      "ref": "明细!C8",
+                      "value": 16.8,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/9",
+          "ref": "明细!F9",
+          "value": 2415,
+          "formula": "D9+E9",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/9",
+              "ref": "明细!D9",
+              "value": 2300,
+              "formula": null,
+              "kind": "input",
+              "children": []
+            },
+            {
+              "id": "cell:明细!E/9",
+              "ref": "明细!E9",
+              "value": 115,
+              "formula": "D9*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/9",
+                  "ref": "明细!D9",
+                  "value": 2300,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/10",
+          "ref": "明细!F10",
+          "value": 2318.4,
+          "formula": "D10+E10",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/10",
+              "ref": "明细!D10",
+              "value": 2208,
+              "formula": "B10*C10",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/10",
+                  "ref": "明细!B10",
+                  "value": 138,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/10",
+                  "ref": "明细!C10",
+                  "value": 16,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/10",
+              "ref": "明细!E10",
+              "value": 110.4,
+              "formula": "D10*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/10",
+                  "ref": "明细!D10",
+                  "value": 2208,
+                  "formula": "B10*C10",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/10",
+                      "ref": "明细!B10",
+                      "value": 138,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/10",
+                      "ref": "明细!C10",
+                      "value": 16,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/11",
+          "ref": "明细!F11",
+          "value": 2856,
+          "formula": "D11+E11",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/11",
+              "ref": "明细!D11",
+              "value": 2720,
+              "formula": "B11*C11",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/11",
+                  "ref": "明细!B11",
+                  "value": 160,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/11",
+                  "ref": "明细!C11",
+                  "value": 17,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/11",
+              "ref": "明细!E11",
+              "value": 136,
+              "formula": "D11*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/11",
+                  "ref": "明细!D11",
+                  "value": 2720,
+                  "formula": "B11*C11",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/11",
+                      "ref": "明细!B11",
+                      "value": 160,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/11",
+                      "ref": "明细!C11",
+                      "value": 17,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/12",
+          "ref": "明细!F12",
+          "value": 0,
+          "formula": "D12+E12",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/12",
+              "ref": "明细!D12",
+              "value": "见附注",
+              "formula": null,
+              "kind": "text",
+              "children": []
+            },
+            {
+              "id": "cell:明细!E/12",
+              "ref": "明细!E12",
+              "value": 0,
+              "formula": "D12*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/12",
+                  "ref": "明细!D12",
+                  "value": "见附注",
+                  "formula": null,
+                  "kind": "text",
+                  "children": []
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cell:明细!F/13",
+          "ref": "明细!F13",
+          "value": 2672.88,
+          "formula": "D13+E13",
+          "kind": "formula",
+          "children": [
+            {
+              "id": "cell:明细!D/13",
+              "ref": "明细!D13",
+              "value": 2545.6,
+              "formula": "B13*C13",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!B/13",
+                  "ref": "明细!B13",
+                  "value": 148,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                },
+                {
+                  "id": "cell:明细!C/13",
+                  "ref": "明细!C13",
+                  "value": 17.2,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cell:明细!E/13",
+              "ref": "明细!E13",
+              "value": 127.28,
+              "formula": "D13*假设!$B$3",
+              "kind": "formula",
+              "children": [
+                {
+                  "id": "cell:明细!D/13",
+                  "ref": "明细!D13",
+                  "value": 2545.6,
+                  "formula": "B13*C13",
+                  "kind": "formula",
+                  "children": [
+                    {
+                      "id": "cell:明细!B/13",
+                      "ref": "明细!B13",
+                      "value": 148,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    },
+                    {
+                      "id": "cell:明细!C/13",
+                      "ref": "明细!C13",
+                      "value": 17.2,
+                      "formula": null,
+                      "kind": "input",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cell:假设!B/3",
+                  "ref": "假设!B3",
+                  "value": 0.06,
+                  "formula": null,
+                  "kind": "input",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

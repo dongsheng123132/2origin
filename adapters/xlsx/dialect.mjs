@@ -13,6 +13,7 @@
 //   book:   工作簿本身（来源文件、表数、格数）
 //   sheet:  工作表
 //   cell:   单元格
+//   header: 表头（列的含义，与列里的数据点分开建对象，见下方「表头另立一类」）
 //
 // ## 这些规则不是编出来演示的
 //
@@ -25,12 +26,13 @@
 //   ③ 求和漏行 —— SUM(D2:D11) 但数据已经到了 D12。新增的那行永远不进合计。
 //   ④ 错误值残留 —— #REF! / #DIV/0! 就摆在表里，照样被复制进报告。
 //   ⑤ 文本型数字 —— 从系统导出的「1,234」是字符串，SUM 直接把它当 0。
+//   ⑥ 悬空引用 —— 公式引用了不存在的工作表或越界地址，删表改名之后旧名字仍留在公式里。
 //
-// 五条全部用现有谓词表达（in / not_equals），没有为它们新增任何谓词。
+// 六条全部用现有谓词表达（in / not_equals），没有为它们新增任何谓词。
 
 import { limit } from '../../compiler/limits.mjs'
 
-export const XLSX_TYPES = ['book', 'sheet', 'cell']
+export const XLSX_TYPES = ['book', 'sheet', 'cell', 'header']
 
 /**
  * 约束表。每一条都对应一类真实事故，且都是**数据**——
@@ -139,7 +141,7 @@ export const xlsxLimits = ({ truncated = 0 } = {}) => [
     '调大 --max-cells 重新导入。悄悄少算等于假装全查了，所以这一条只要发生就必然出现在这里。')] : []),
 ]
 
-export const XLSX_MANIFEST = (id, title, source) => `# 本象包（xlsx 方言）
+export const XLSX_MANIFEST = (id, title, source, digest) => `# 本象包（xlsx 方言）
 artifact:
   id: ${id}
   kind: spreadsheet
@@ -147,7 +149,8 @@ artifact:
 
 payload:
   uri: ${source}
-  media_type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  media_type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet${digest ? `
+  digest: sha256:${digest}` : ''}
 
 provenance:
   source: ${source}

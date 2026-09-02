@@ -1,0 +1,10 @@
+对象 121｜关系 124｜约束 13/13 可判定｜变更 1
+error	constraint	单元格不得残留错误值（#REF! / #DIV/0! / #VALUE! …）｜cell:明细!G/5.error = "#DIV/0!"，不在允许取值 [] 内
+error	constraint	公式不得引用不存在的工作表或越界地址｜cell:汇总!B/6.bad_ref = "引用了不存在的工作表：旧汇总"，不在允许取值 [] 内
+error	constraint	求和/计数范围不得漏掉紧邻的数据行｜cell:明细!B/14.range_gap = "B13 有数据却不在 B2:B12 内"，不在允许取值 [] 内
+error	constraint	明细 表 B 列是数值列，不得混入文本型数字（"1,234" 会被 SUM 当作 0）｜cell:明细!B/4.text_number 不得为 true
+error	constraint	明细 表 D 列的公式区里混入了硬编码常量（有人填死了值，此后不再随上游更新）｜cell:明细!D/9.hardcoded_in_block 不得为 true
+warning	constraint	明细 表 F 列的公式形状不一致（多数为 RC[-2]+RC[-1] 或 SUM(R[-12]C:R[-1]C)）｜cell:明细!F/7.formula_shape = "RC[-2]+R[-1]C[-1]"，不在允许取值 ["RC[-2]+RC[-1]","SUM(R[-12]C:R[-1]C)"] 内
+warning	dangling-relation	关系 cell:汇总!B/6 depends_on cell:旧汇总!C/4 的 object 「cell:旧汇总!C/4」不在本包对象表中（跨包引用？）
+info	drift-rate	模型前值声明偏差 0/1（0.0%）
+✗ 5 个 error 级问题
