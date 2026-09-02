@@ -39,10 +39,10 @@
       <a class="btn btn-ghost" href="manifesto.html">The Manifesto</a>
     </div>
     <div class="hero-metrics">
-      <div class="metric"><div class="num">95.8%<em>±5.9</em></div><div class="lbl">State accuracy · Benxiang (Run #27)</div></div>
-      <div class="metric"><div class="num">52.1%</div><div class="lbl">Bare model · same task</div></div>
-      <div class="metric"><div class="num">58.3%</div><div class="lbl">Vector RAG · same task</div></div>
-      <div class="metric"><div class="num">p=0.0024</div><div class="lbl">Permutation test vs. Benxiang</div></div>
+      <div class="metric"><div class="num">15.0%<em>/27.5%</em></div><div class="lbl">Traceable evidence fields · full mechanism (A3)</div></div>
+      <div class="metric"><div class="num">0%</div><div class="lbl">Traceable evidence · every prompt-only baseline</div></div>
+      <div class="metric"><div class="num">+41.3pt</div><div class="lbl">A0→A2 (one line of prompt), p=3.3×10⁻⁵</div></div>
+      <div class="metric"><div class="num">+2.5pt</div><div class="lbl">A2→A3 (full machinery), not significant</div></div>
     </div>
   </div>
 </header>
@@ -156,8 +156,18 @@
   <p class="sec-lead">The claim has been narrowed by experiment to exactly one dimension: <strong>state tracking</strong>.
   Task: across a 95k-character narrative, who holds the key right now, who learned the secret, which planted threads are still open.</p>
 
+  <div class="honesty">
+    <h3>Current framing (A2 ablation, 2026-08-13) — read this before the table below</h3>
+    <p>One line of prompt (A0→A2: "explicitly maintain state") accounts for <strong>+41.3pt</strong> of the state-accuracy
+    gain (p = 3.3×10⁻⁵, significant). Adding the full machinery on top — validator, evidence chain, compiler (A2→A3) —
+    adds only <strong>+2.5pt</strong>, not significant (p = 0.47 / 0.72). <strong>The only surviving categorical claim
+    is structural</strong>: prompts cannot produce evidence chains. A3 gives traceable evidence for <strong>15.0% / 27.5%</strong>
+    of tested fields; every prompt-only baseline stays at <strong>0%</strong>. Full writeup:
+    <a href="https://github.com/dongsheng123132/2origin#readme" target="_blank" rel="noopener">README §5 ablation</a>.</p>
+  </div>
+
   <table class="data-table">
-    <caption>ShadowBench-W · Run #27 (2026-08-05) · the only currently valid comparison · qwen-plus · 95k chars · n=6 each</caption>
+    <caption>ShadowBench-W · Run #27 (2026-08-05) · superseded by the A2 ablation above, kept as a tombstone, not a current claim · qwen-plus · 95k chars · n=6 each</caption>
     <thead><tr><th>W3 state accuracy</th><th>Benxiang</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
     <tbody>
       <tr><td>Score</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>

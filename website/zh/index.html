@@ -20,6 +20,7 @@
       <a href="manifesto.html" class="hide-sm">宣言</a>
       <a href="solutions.html" class="hide-sm">解决方案</a>
       <a href="cases.html" class="hide-sm">案例</a>
+      <a href="showcase.html" class="hide-sm">能力展厅</a>
       <a href="challenge.html" class="hide-sm">白鼓挑战</a>
       <a href="blog/cad-ai-audit.html" class="hide-sm">CAD 审图案例</a>
       <a href="https://github.com/dongsheng123132/2origin" class="gh" target="_blank" rel="noopener">GitHub ↗</a>
@@ -37,12 +38,13 @@
     <div class="hero-cta">
       <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">读协议源码</a>
       <a class="btn btn-ghost" href="manifesto.html">读宣言</a>
+      <a class="btn btn-ghost" href="showcase.html">看能力展厅</a>
     </div>
     <div class="hero-metrics">
-      <div class="metric"><div class="num">95.8%<em>±5.9</em></div><div class="lbl">状态准确率 · 本象（Run #27）</div></div>
-      <div class="metric"><div class="num">52.1%</div><div class="lbl">裸模型 · 同一道题</div></div>
-      <div class="metric"><div class="num">58.3%</div><div class="lbl">向量 RAG · 同一道题</div></div>
-      <div class="metric"><div class="num">p=0.0024</div><div class="lbl">置换检验 vs 本象</div></div>
+      <div class="metric"><div class="num">15.0%<em>/27.5%</em></div><div class="lbl">可溯源证据字段占比 · 全套机制（A3）</div></div>
+      <div class="metric"><div class="num">0%</div><div class="lbl">可溯源证据 · 所有纯提示词基线</div></div>
+      <div class="metric"><div class="num">+41.3pt</div><div class="lbl">A0→A2（只加一句提示词），p=3.3×10⁻⁵</div></div>
+      <div class="metric"><div class="num">+2.5pt</div><div class="lbl">A2→A3（全套机制），不显著</div></div>
     </div>
   </div>
 </header>
@@ -152,8 +154,18 @@
   <p class="sec-lead">对外主张已按实验结果收窄到<strong>一个</strong>维度：状态追踪。考题：在 9.5 万字的长篇叙事里，
   黑钥匙此刻在谁手里、谁知道了那个秘密、哪些伏笔还没收。</p>
 
+  <div class="honesty">
+    <h3>当前口径（A2 消融，2026-08-13）——请先看这段，再看下面那张旧表</h3>
+    <p>只加一句提示词（A0→A2：要求模型显式维护状态）就带来 <strong>+41.3 pt</strong> 的状态准确率提升
+    （p = 3.3×10⁻⁵，显著）。在此之上再加全套机制——校验器、证据链、编译器（A2→A3）——只多带来
+    <strong>+2.5 pt</strong>，不显著（p = 0.47 / 0.72）。<strong>唯一幸存的分类性主张是结构性的</strong>：
+    提示词结构上产不出证据链。A3 对 <strong>15.0% / 27.5%</strong> 的受测字段给出可溯源证据，
+    所有纯提示词基线均为 <strong>0%</strong>。完整论证见
+    <a href="https://github.com/dongsheng123132/2origin#readme" target="_blank" rel="noopener">README §5 消融实验</a>。</p>
+  </div>
+
   <table class="data-table">
-    <caption>ShadowBench-W · Run #27（2026-08-05）· 当前唯一有效对照口径 · qwen-plus · 9.5 万字 · 各 n=6</caption>
+    <caption>ShadowBench-W · Run #27（2026-08-05）· 已被上方 A2 消融取代，作为历史记录留存，不再是当前口径 · qwen-plus · 9.5 万字 · 各 n=6</caption>
     <thead><tr><th>W3 状态准确率</th><th>本象</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
     <tbody>
       <tr><td>得分</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
