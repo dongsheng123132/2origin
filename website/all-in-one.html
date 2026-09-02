@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2Origin 本象协议 · 一页总览</title>
+<meta name="description" content="本象协议双语一页版：首页 / 宣言 / 解决方案 / 案例 / 白鼓挑战 / 法律Demo / 长期任务。">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111113'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23c9a227'/%3E%3C/svg%3E">
+<style>
+/* ---------- all-in-one 附加样式（沿用 design tokens） ---------- */
+.tabx-header{position:sticky;top:0;z-index:60;background:rgba(17,17,19,.97);
+  border-bottom:1px solid rgba(250,249,246,.08);backdrop-filter:blur(8px)}
+.tabx-brand{max-width:1080px;margin:0 auto;padding:14px 20px 0;display:flex;
+  align-items:center;justify-content:space-between}
+.tabx-brand a.brand{display:flex;align-items:center;gap:8px;text-decoration:none;
+  color:#faf9f6;font-weight:700;font-size:17px}
+.tabx-brand .brand-mark{width:18px;height:18px;border-radius:5px;background:#111113;
+  position:relative;display:inline-block;border:1px solid #333}
+.tabx-brand .brand-mark::after{content:"";position:absolute;right:2px;top:2px;
+  width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.tabx-brand .zh-name{font-weight:500;color:rgba(250,249,246,.55);font-size:14px}
+.tabx-right{display:flex;align-items:center;gap:14px}
+.tabx-lang{display:flex;gap:4px}
+.tabx-lang button{appearance:none;border:1px solid rgba(250,249,246,.25);background:none;
+  color:rgba(250,249,246,.7);font-size:12.5px;padding:4px 10px;border-radius:999px;
+  cursor:pointer;font-family:inherit;transition:all .15s}
+.tabx-lang button:hover{border-color:var(--gold);color:var(--gold)}
+.tabx-lang button.active{background:var(--gold);color:var(--ink);border-color:var(--gold);
+  font-weight:700}
+.tabx-brand .gh{color:rgba(250,249,246,.75);text-decoration:none;font-size:13.5px;font-weight:600}
+.tabx-brand .gh:hover{color:var(--gold)}
+.tabx-tabs{max-width:1080px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;
+  padding:10px 20px 0;scrollbar-width:none}
+.tabx-tabs::-webkit-scrollbar{display:none}
+.tabx-tab{appearance:none;border:0;background:none;font-family:inherit;font-size:15px;
+  color:rgba(250,249,246,.6);padding:10px 18px 12px;cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.tabx-tab:hover{color:#faf9f6}
+.tabx-tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+.tabx-panel{display:none}
+.tabx-panel.active{display:block;animation:tabx-fade .25s ease}
+@keyframes tabx-fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:640px){.tabx-tab{padding:10px 13px 12px;font-size:14px}}
+</style>
+</head>
+<body>
+
+<header class="tabx-header">
+  <div class="tabx-brand">
+    <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"></span><span>2Origin</span><span class="zh-name">本象协议</span></a>
+    <div class="tabx-right">
+      <div class="tabx-lang" role="group" aria-label="Language">
+        <button data-lang="zh">中文</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a class="gh" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </div>
+  <nav class="tabx-tabs" aria-label="页面切换">
+<button class="tabx-tab" data-tab="home" data-zh="首页" data-en="Home">首页</button>
+<button class="tabx-tab" data-tab="manifesto" data-zh="宣言" data-en="Manifesto">宣言</button>
+<button class="tabx-tab" data-tab="solutions" data-zh="解决方案" data-en="Solutions">解决方案</button>
+<button class="tabx-tab" data-tab="cases" data-zh="案例" data-en="Cases">案例</button>
+<button class="tabx-tab" data-tab="challenge" data-zh="白鼓挑战" data-en="Challenge">白鼓挑战</button>
+<button class="tabx-tab" data-tab="demo" data-zh="法律Demo" data-en="Law Demo">法律Demo</button>
+<button class="tabx-tab" data-tab="longrun" data-zh="长期任务" data-en="Long-Run">长期任务</button>
+  </nav>
+</header>
+
+<section class="tabx-panel" data-panel="home" data-lang="zh">
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">2Origin 协议 · Origin IR · v0.1</div>
+    <h1>从影子，回到<span class="grad">本源</span>。</h1>
+    <p class="sub">一套面向 AI 的<em>持久对象表示层</em>。AI 不再去改 PDF、改截图——那些是影子的影子——
+    它改的是本源，而系统负责证明：这次改动真的对了。</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">读协议源码</a>
+      <a class="btn btn-ghost" href="#manifesto">读宣言</a>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="num">95.8%<em>±5.9</em></div><div class="lbl">状态准确率 · 本象（Run #27）</div></div>
+      <div class="metric"><div class="num">52.1%</div><div class="lbl">裸模型 · 同一道题</div></div>
+      <div class="metric"><div class="num">58.3%</div><div class="lbl">向量 RAG · 同一道题</div></div>
+      <div class="metric"><div class="num">p=0.0024</div><div class="lbl">置换检验 vs 本象</div></div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="home-zh-problem">
+  <div class="sec-kicker">病根</div>
+  <h2 class="sec-title">AI 读到的，是影子的影子<span class="zh">From shadow to shadow</span></h2>
+  <p class="sec-lead">真实建筑 → CAD 模型 → 平面图 → PDF → 截图 → OCR 文字。
+  每一步都更好传播，每一步都丢掉一些东西。AI 今天读到的，正是这种压缩了七八轮的
+  <strong>投影的投影</strong>——而我们竟然把最后那层影子当成了源文件。</p>
+  <div class="grid-3">
+    <div class="card">
+      <div class="tag">感知</div>
+      <h3>AI 没有眼睛</h3>
+      <p>它能生成 Word、Excel、PPT、CAD，却没有稳定的「打开-看见-定位-修改-复验」系统。
+      读到的往往是截图的 OCR、摘要的摘要。</p>
+    </div>
+    <div class="card">
+      <div class="tag">记忆</div>
+      <h3>上下文必炸</h3>
+      <p>聊天记录被当成项目状态。聊得越久越接近内存爆满，压缩摘要不断失真——状态和对话被混为一谈。</p>
+    </div>
+    <div class="card">
+      <div class="tag">输出</div>
+      <h3>终态不稳</h3>
+      <p>AI 直接吐完整成品：几十页 PPT、百万字全文、几百行图表配置。内容、格式、引用一起失控，
+      错了只能整个重来。</p>
+    </div>
+  </div>
+
+  <div class="origin-block">
+    <div class="quote">病根只有一句话：<em>我们把投影当成了对象本身。</em><br>
+    解法也只有一句话：<em>把本源留住，影子按需投影。</em></div>
+    <div class="subnote">一源万影 ·「圣人立象以尽意」——《易传·系辞》 · Save the origin, project on demand.</div>
+  </div>
+</section>
+
+<section class="section" id="home-zh-protocol">
+  <div class="sec-kicker">协议</div>
+  <h2 class="sec-title">不是更大的 JSON，而是持久的对象层<span class="zh">Origin IR</span></h2>
+  <p class="sec-lead">2Origin 同时保存七样东西。AI 只提交<strong>语义事务</strong>——改了什么、依赖什么、断言什么。
+  确定性的编译器校验、落地、生成终态。违规就带着证据退回重写，<strong>一个字节都不写</strong>。</p>
+  <div class="two-col">
+    <div>
+      <div class="pipeline">
+        <div class="flow">Word / CAD / Excel / 视频 / 网页 / 对话
+        ↓  导入
+        本象 IR（Origin IR）— 对象 · 语义 · 关系 · 状态 · 约束 · 来源 · 边界
+        ↓  输入侧编译（Context Compiler）
+        视觉地图 + 对象图 + 精确片段 + 可用动作 → AI
+        ↓  AI 输出语义事务
+        输出侧编译（Commit Compiler）
+        校验约束 → 更新状态 → 留存证据 → 重新投影
+        ↓
+        PDF / 图片 / 文字 / 三维 / 界面（按需生成的投影）</div>
+      </div>
+      <blockquote class="pull">
+        「对话只是操作本象的一个临时窗口。关掉对话、切换模型、清空上下文——世界还在。」
+        <span class="who">——《愿景与定位》</span>
+      </blockquote>
+    </div>
+    <div>
+      <div class="chips">
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>对象</h3>
+          <p>带稳定 ID 的真实实体——唯一能抓住的东西。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>关系</h3>
+          <p>谁拥有、谁引用、谁依赖、谁生成谁。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>状态与时间</h3>
+          <p>过去、现在、变化，以及每个变化的原因。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>来源与证据</h3>
+          <p>谁创建、谁修改、哪些是推断。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>行为与约束</h3>
+          <p>能做什么、不能违反什么——提交时强制执行。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>领域载荷</h3>
+          <p>各领域原生数据：几何、公式、时间线。</p>
+        </div>
+        <div class="chip">
+          <div class="en">七要素</div>
+          <h3>边界</h3>
+          <p><strong>这份表示保证不了什么。</strong>边界跟着包走，不是写在 README 里。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="home-zh-evidence">
+  <div class="sec-kicker">证据</div>
+  <h2 class="sec-title">状态追踪，实测——以及我们如实不主张什么<span class="zh">Measured, and bounded</span></h2>
+  <p class="sec-lead">对外主张已按实验结果收窄到<strong>一个</strong>维度：状态追踪。考题：在 9.5 万字的长篇叙事里，
+  黑钥匙此刻在谁手里、谁知道了那个秘密、哪些伏笔还没收。</p>
+
+  <table class="data-table">
+    <caption>ShadowBench-W · Run #27（2026-08-05）· 当前唯一有效对照口径 · qwen-plus · 9.5 万字 · 各 n=6</caption>
+    <thead><tr><th>W3 状态准确率</th><th>本象</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
+    <tbody>
+      <tr><td>得分</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
+      <tr><td>置换检验 vs 本象</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+    </tbody>
+  </table>
+
+  <p class="note"><strong>先把不利的说在前面。</strong>字段级看，本象在 <code>black-key.holder</code> 上是
+  <strong>4/6，比两条对照臂的 5/6 都差</strong>——而那恰恰是唯一能从近文直接读出来的字段。
+  优势全部集中在两条对照臂同时近乎全灭的那两格：</p>
+
+  <table class="data-table">
+    <thead><tr><th>字段</th><th>裸模型</th><th>RAG</th><th>本象</th></tr></thead>
+    <tbody>
+      <tr><td><code>black-key.holder</code>（最后一次转交就写在自己正文里）</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
+      <tr><td><code>bai-yao.secret_betrayal</code>（跨几十章累积的秘密）</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      <tr><td><code>hook:shen-yan-suspicion.status</code>（从不存在于任何一段文字里）</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+    </tbody>
+  </table>
+
+  <blockquote class="pull">
+    「能从自己刚写的正文里读出来的状态，检索和裸模型都够用，本象不占便宜；
+    需要跨全书累积、且从不在任何一段文字里被陈述的状态，只有状态机答得出来。」
+  </blockquote>
+
+  <table class="data-table">
+    <caption>臂内跨模型（Run #19，各 n=11）——跨模型主张中立住的那一半</caption>
+    <thead><tr><th></th><th>qwen-plus</th><th>deepseek-v4-flash</th><th>置换检验</th></tr></thead>
+    <tbody>
+      <tr><td><strong>W3 状态准确率</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>均值差 0.0000 · <strong>p = 1.0000</strong></td></tr>
+      <tr><td><strong>W1 EPC</strong>（正文，越低越好）</td><td>0.20</td><td>0.55</td><td>均值差 −0.35 · <strong>p = 0.0392</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p class="note strong">状态层的正确性与底模无关，正文层的质量与底模显著相关。
+  这正是「协议」该有的性质：不依赖底下那台机器有多强。而且是 11 对 11——不是 n=1。</p>
+
+  <div class="honesty">
+    <h3>我们不主张什么</h3>
+    <ul>
+      <li><strong>不主张「写得更一致」。</strong>正文一致性与向量 RAG 无显著差异（qwen p=0.1852、deepseek p=0.3341）。</li>
+      <li><strong>不主张「更省 Token」——也不再承认「更贵」。</strong>同口径实测 +12.2%，p = 0.5253，不显著。</li>
+      <li><strong>跨模型只成立一半。</strong>立住的是臂内；对照臂在第二个模型上作废，必须重跑。</li>
+      <li><strong>没有生产级适配器，没有真实用户。</strong>这个项目的可信度建立在把边界说清楚上。</li>
+      <li><strong>那堵 75% 的墙是假的。</strong>对照臂的零方差是提示词模板把答案印在了题面上——我们自查抓出来的。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="home-zh-dialects">
+  <div class="sec-kicker">领域方言</div>
+  <h2 class="sec-title">一个外壳，多个本源<span class="zh">通用外壳 + 领域方言</span></h2>
+  <p class="sec-lead">一个方言成功可能是巧合，<strong>两个才是协议</strong>。同一套核心，几乎零改动跑通四个域——
+  领域知识进的是<em>数据</em>（约束表、条文库），不是代码。四个方言合计只给核心加了 4 行。</p>
+  <div class="chips">
+    <div class="chip">
+      <div class="en">Memory</div>
+      <h3>项目状态</h3>
+      <p>聊天历史持续提交为世界状态，新会话秒恢复。MCP Server，零依赖。</p>
+    </div>
+    <div class="chip">
+      <div class="en">Story</div>
+      <h3>叙事</h3>
+      <p>人物、秘密、伏笔、禁区，目标是百万字不失忆、事务式写作。</p>
+    </div>
+    <div class="chip">
+      <div class="en">Law</div>
+      <h3>判决依据链</h3>
+      <p>引用白名单 + 量刑复算。自首减 55% 超出法定 40% 上限，当场拒绝，带依据。</p>
+    </div>
+    <div class="chip">
+      <div class="en">xlsx</div>
+      <h3>表格依赖链</h3>
+      <p>公式依赖落在协议自带的 relations 上。「这个数由哪 10 个人工录入决定」——Excel 自己答不了。</p>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:44px">
+    <div>
+      <table class="data-table">
+        <caption>一致性测试集——「协议」与「一个库」的分界线</caption>
+        <thead><tr><th></th><th>向量</th></tr></thead>
+        <tbody>
+          <tr><td>语言无关的测试向量（数据，不是代码）</td><td class="hl">68 / 68</td></tr>
+          <tr><td>JavaScript 参考实现</td><td>68 / 68</td></tr>
+          <tr><td>Python 第二实现（约 250 行，零依赖）</td><td>60 / 60 core</td></tr>
+          <tr><td>参考实现第三方依赖</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <p class="note">任何实现只要写一个几十行的适配器就能当场自证合规——
+      标准是那 68 条向量，不是「本象」这两个字。</p>
+    </div>
+    <div class="honesty">
+      <h3>为什么叫「协议」而不是「一个库」</h3>
+      <p style="margin-top:10px">一份实现自己跑通自己的测试，证明不了协议存在。变异检查故意打坏每一条协议承诺，
+      看<em>谁</em>抓得到——只被自测抓到的就是覆盖缺口。协议只保证向量钉住的部分。</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="home-zh-challenge">
+  <div class="sec-kicker">最难的一场考试</div>
+  <h2 class="sec-title">白鼓挑战<span class="zh">The White Drum Challenge</span></h2>
+  <p class="sec-lead">人类最长的长篇小说叫 <strong>Venmurasu</strong>（泰米尔语「白鼓」）——26 卷，约 22,400 页，
+  一个人，写了六年半。现在 AI 要挑战这个纪录，但我们给自己加了一个人类作者不需要面对的难度：
+  <strong>每一章的世界状态，都必须可验证。</strong></p>
+  <div class="milestones">
+    <div class="milestone"><div class="dist">现在</div><h3>两部连载在跑</h3><p>《月落渡口》2 章 · 《规则怪谈·无限层》4 章 · 状态开源可验证</p></div>
+    <div class="milestone"><div class="dist">下一步</div><h3>10 万字</h3><p>第一个公开里程碑</p></div>
+    <div class="milestone"><div class="dist">再然后</div><h3>100 万字</h3><p>百万字不失忆</p></div>
+    <div class="milestone"><div class="dist">目标</div><h3>破 22,400 页</h3><p>超越人类纪录，且全程可验证</p></div>
+  </div>
+  <p class="note" style="margin-top:22px">drift-rate（模型记错前值率）8.3%，可观测、逐章下降、目标归零。
+  每章：正文 + 世界状态 + git 证据链。 <a href="#challenge" style="color:var(--gold-deep);font-weight:600">看挑战规则 →</a></p>
+</section>
+
+<section class="section tight" id="home-zh-roadmap">
+  <div class="sec-kicker">往哪里去</div>
+  <h2 class="sec-title">AI 时代的文件<span class="zh">The origin package</span></h2>
+  <p class="sec-lead">如果这条路走通，AI 时代的「文件」不该再是 <code>.docx</code> 或 <code>.pdf</code>，
+  而应该是一个<strong>本象包</strong>——能被打开、被看见、被定位、被修改、被复验。
+  人看投影，AI 改本象，系统证明改对了。</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub 上验证</a>
+    <a class="btn btn-ghost" href="#manifesto" style="border-color:var(--gold);color:var(--gold-deep)">读完整宣言</a>
+  </div>
+</section>
+</section>
+<section class="tabx-panel" data-panel="home" data-lang="en">
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">2Origin Protocol · Origin IR · v0.1</div>
+    <h1>From <span class="grad">Shadow</span> to Origin.</h1>
+    <p class="sub">A persistent <em>object-representation layer</em> for AI. The AI no longer edits
+    PDFs and screenshots — the shadows of shadows. It edits the origin, and the system proves the edit was correct.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">Read the protocol</a>
+      <a class="btn btn-ghost" href="#manifesto">The Manifesto</a>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="num">95.8%<em>±5.9</em></div><div class="lbl">State accuracy · Benxiang (Run #27)</div></div>
+      <div class="metric"><div class="num">52.1%</div><div class="lbl">Bare model · same task</div></div>
+      <div class="metric"><div class="num">58.3%</div><div class="lbl">Vector RAG · same task</div></div>
+      <div class="metric"><div class="num">p=0.0024</div><div class="lbl">Permutation test vs. Benxiang</div></div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="home-en-problem">
+  <div class="sec-kicker">The disease</div>
+  <h2 class="sec-title">AI reads the shadow of a shadow<span class="zh">AI 读到的，是影子的影子</span></h2>
+  <p class="sec-lead">A real building becomes a CAD model, then a floor plan, then a PDF, then a screenshot, then OCR text.
+  Every step travels better; every step loses something. AI today is fed this seven-layer-compressed
+  <strong>projection of a projection</strong> — and we call the last shadow the source file.</p>
+  <div class="grid-3">
+    <div class="card">
+      <div class="tag">Perception</div>
+      <h3>AI has no eyes</h3>
+      <p>It generates Word, Excel, PPT and CAD — yet has no stable
+      open-see-locate-edit-verify loop. What it reads is screenshots of exports of summaries.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Memory</div>
+      <h3>The context explodes</h3>
+      <p>Chat history is treated as project state. The longer the chat, the closer to a full window —
+      and compressed summaries drift. State and conversation are conflated.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Output</div>
+      <h3>Final artifacts are unstable</h3>
+      <p>AI emits whole deliverables — 40-page decks, full novels, chart configs. Content, format and
+      references fail together; the only remedy is to regenerate everything.</p>
+    </div>
+  </div>
+
+  <div class="origin-block">
+    <div class="quote">The root cause is one line: <em>we mistook the projection for the object.</em><br>
+    The fix is one line too: <em>keep the body, cast shadows on demand.</em></div>
+    <div class="subnote">Save the origin, project on demand. 一源万影 — the sage establishes images to exhaust meaning. 《易传·系辞》</div>
+  </div>
+</section>
+
+<section class="section" id="home-en-protocol">
+  <div class="sec-kicker">The protocol</div>
+  <h2 class="sec-title">Not a bigger JSON — a persistent world layer<span class="zh">不是更大的 JSON，而是持久的对象层</span></h2>
+  <p class="sec-lead">2Origin keeps seven kinds of things together. The AI submits only a
+  <strong>semantic transaction</strong> — what changed, what it depends on, what it asserts. A deterministic
+  compiler validates it, applies it, and generates the artifact. Violations are bounced back with the
+  evidence attached; nothing is written unless it passes.</p>
+  <div class="two-col">
+    <div>
+      <div class="pipeline">
+        <div class="flow">Word / CAD / Excel / video / web / chat
+        ↓  import
+        Origin IR — objects · semantics · relations · state · constraints · provenance · limits
+        ↓  context compiler (input side)
+        visual map + object graph + precise excerpts + allowed actions → AI
+        ↓  AI emits a semantic transaction
+        commit compiler (output side)
+        validate constraints → update state → keep evidence → re-project
+        ↓
+        PDF / image / text / 3D / UI  (projections, generated on demand)</div>
+      </div>
+      <blockquote class="pull">
+        “Chat is only a temporary window onto the origin.
+        Close the chat, switch the model, clear the context — the world is still there.”
+        <span class="who">— docs/01-愿景与定位.md</span>
+      </blockquote>
+    </div>
+    <div>
+      <div class="chips">
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Objects</h3>
+          <p>real entities with stable IDs — the only thing you can hold onto.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Relations</h3>
+          <p>who owns, references, depends on, generates whom.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>State &amp; time</h3>
+          <p>past, present, change, and the reason for each.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Provenance</h3>
+          <p>who created, who modified, what was inferred.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Constraints</h3>
+          <p>what may and may never happen — enforced at commit.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Payloads</h3>
+          <p>native domain data: geometry, formulas, timelines.</p>
+        </div>
+        <div class="chip">
+          <div class="en">Seven elements</div>
+          <h3>Limits</h3>
+          <p><strong>what this representation cannot guarantee.</strong> The boundary travels inside the package, not in a README.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="home-en-evidence">
+  <div class="sec-kicker">The evidence</div>
+  <h2 class="sec-title">State tracking, measured — and what it does not claim<span class="zh">只主张状态追踪，且如实报告不主张什么</span></h2>
+  <p class="sec-lead">The claim has been narrowed by experiment to exactly one dimension: <strong>state tracking</strong>.
+  Task: across a 95k-character narrative, who holds the key right now, who learned the secret, which planted threads are still open.</p>
+
+  <table class="data-table">
+    <caption>ShadowBench-W · Run #27 (2026-08-05) · the only currently valid comparison · qwen-plus · 95k chars · n=6 each</caption>
+    <thead><tr><th>W3 state accuracy</th><th>Benxiang</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+    <tbody>
+      <tr><td>Score</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
+      <tr><td>Permutation test vs. Benxiang</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+    </tbody>
+  </table>
+
+  <p class="note"><strong>The unfavourable part first.</strong> Field by field, Benxiang scores <strong>4/6</strong> on
+  <code>black-key.holder</code> — worse than either control arm's 5/6 — and that is exactly the one field recoverable
+  from the prose the arm just wrote. Its whole advantage lives in the two fields where both controls collapse:</p>
+
+  <table class="data-table">
+    <thead><tr><th>Field</th><th>Bare</th><th>RAG</th><th>Benxiang</th></tr></thead>
+    <tbody>
+      <tr><td><code>black-key.holder</code> — last handover written in its own prose</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
+      <tr><td><code>bai-yao.secret_betrayal</code> — a secret accumulated over dozens of chapters</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      <tr><td><code>hook:shen-yan-suspicion.status</code> — never stated in any passage at all</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+    </tbody>
+  </table>
+
+  <blockquote class="pull">
+    “State you can read back from your own recent prose: retrieval and a bare model both suffice, and Benxiang has no edge.
+    State that must be accumulated across the whole book and is never stated in any one passage: only the state machine answers it.”
+  </blockquote>
+
+  <table class="data-table">
+    <caption>Within-arm, cross-model (Run #19, n=11 each) — the half of the cross-model claim that holds</caption>
+    <thead><tr><th></th><th>qwen-plus</th><th>deepseek-v4-flash</th><th>Permutation test</th></tr></thead>
+    <tbody>
+      <tr><td><strong>W3 state accuracy</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>diff 0.0000 · <strong>p = 1.0000</strong></td></tr>
+      <tr><td><strong>W1 EPC</strong> (prose, lower is better)</td><td>0.20</td><td>0.55</td><td>diff −0.35 · <strong>p = 0.0392</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p class="note strong">State-layer correctness is independent of the base model; prose-layer quality is not.
+  That is the property a protocol ought to have: it does not depend on how strong the machine underneath is. And it is 11 against 11 — not an n=1.</p>
+
+  <div class="honesty">
+    <h3>What we do not claim</h3>
+    <ul>
+      <li><strong>Not “writes more consistently.”</strong> Prose consistency shows no significant difference from vector RAG (qwen p=0.1852, deepseek p=0.3341).</li>
+      <li><strong>Not “saves tokens” — and no longer “more expensive” either.</strong> At matched conditions: +12.2%, p = 0.5253, not significant.</li>
+      <li><strong>Cross-model holds only halfway.</strong> What holds is within-arm. The control arms on the second model are void and must be re-run.</li>
+      <li><strong>No production adapters, no real users.</strong> The credibility of this project rests on stating its limits precisely.</li>
+      <li><strong>The 75% wall was fake.</strong> The control arms' zero variance was the probe template printing the answer key — our own self-audit found it.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="home-en-dialects">
+  <div class="sec-kicker">Domain dialects</div>
+  <h2 class="sec-title">One shell, many origins<span class="zh">通用外壳 + 领域方言</span></h2>
+  <p class="sec-lead">One dialect working could be a coincidence. <strong>Two is a protocol.</strong> The same core,
+  essentially unmodified, runs across four domains — domain knowledge lives in <em>data</em> (constraint tables,
+  statute books), not in code. All four dialects together added 4 lines to the core.</p>
+  <div class="chips">
+    <div class="chip">
+      <div class="en">Memory</div>
+      <h3>Project state</h3>
+      <p>Chat history committed as world state. A new session resumes in seconds. MCP server, zero deps.</p>
+    </div>
+    <div class="chip">
+      <div class="en">Story</div>
+      <h3>Narrative</h3>
+      <p>Characters, secrets, foreshadowing and forbidden zones held across a million-character target without amnesia.</p>
+    </div>
+    <div class="chip">
+      <div class="en">Law</div>
+      <h3>Judgment chains</h3>
+      <p>Citation whitelists and sentence recalculation. A 20%-over-limit mitigation is refused on the spot, with basis.</p>
+    </div>
+    <div class="chip">
+      <div class="en">xlsx</div>
+      <h3>Spreadsheet dependency graphs</h3>
+      <p>Formula dependencies as relations. “This number is decided by these 10 manual inputs” — Excel itself can’t answer that.</p>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:44px">
+    <div>
+      <table class="data-table">
+        <caption>Conformance — the line that makes this a protocol, not a library</caption>
+        <thead><tr><th></th><th>Vectors</th></tr></thead>
+        <tbody>
+          <tr><td>Language-neutral test vectors (data, not code)</td><td class="hl">68 / 68</td></tr>
+          <tr><td>JavaScript reference implementation</td><td>68 / 68</td></tr>
+          <tr><td>Python second implementation (~250 lines, zero deps)</td><td>60 / 60 core</td></tr>
+          <tr><td>Reference-implementation dependencies</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Any implementation that writes a small adapter can prove conformance on the spot —
+      the standard is the 68 vectors, not the name.</p>
+    </div>
+    <div class="honesty">
+      <h3>Why “protocol” and not “library”</h3>
+      <p style="margin-top:10px">An implementation passing its own tests proves nothing about a protocol.
+      The mutation check deliberately breaks each protocol promise and watches <em>who</em> catches it.
+      Promises caught only by the self-test are coverage gaps — the protocol guarantees only what the vectors pin down.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="home-en-challenge">
+  <div class="sec-kicker">The hardest test</div>
+  <h2 class="sec-title">The White Drum Challenge<span class="zh">白鼓挑战</span></h2>
+  <p class="sec-lead">The longest novel ever written by a human is <strong>Venmurasu</strong> — “the white drum” in
+  Tamil — 26 volumes, ~22,400 pages, one person, six and a half years. AI now challenges that record, with one
+  difficulty a human author never faced: <strong>the world state of every chapter must be verifiable.</strong></p>
+  <div class="milestones">
+    <div class="milestone"><div class="dist">now</div><h3>Two serials running</h3><p>《月落渡口》2 ch · 《规则怪谈·无限层》4 ch · state open-source, verifiable</p></div>
+    <div class="milestone"><div class="dist">next</div><h3>100k characters</h3><p>first public milestone</p></div>
+    <div class="milestone"><div class="dist">then</div><h3>1,000k characters</h3><p>a million without amnesia</p></div>
+    <div class="milestone"><div class="dist">goal</div><h3>Beyond 22,400 pages</h3><p>beating the human record, verifiably</p></div>
+  </div>
+  <p class="note" style="margin-top:22px">drift-rate — the model’s rate of misremembering prior values — is 8.3%,
+  observable, falling chapter by chapter, and aimed at zero. Every chapter: prose + world state + git evidence chain.
+  <a href="#challenge" style="color:var(--gold-deep);font-weight:600">Read the rules →</a></p>
+</section>
+
+<section class="section tight" id="home-en-roadmap">
+  <div class="sec-kicker">Where this goes</div>
+  <h2 class="sec-title">A file in the age of AI<span class="zh">AI 时代的文件</span></h2>
+  <p class="sec-lead">If this holds, a “file” should no longer be a <code>.docx</code> or a <code>.pdf</code>,
+  but an <strong>origin package</strong> that can be opened, seen, located, modified and re-verified.
+  Humans read projections. AI edits the origin. The system proves the edit was correct.</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">Star &amp; verify on GitHub</a>
+    <a class="btn btn-ghost" href="#manifesto" style="border-color:var(--gold);color:var(--gold-deep)">Read the full manifesto</a>
+  </div>
+</section>
+</section>
+<section class="tabx-panel" data-panel="manifesto" data-lang="zh">
+
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="#home">2Origin</a> / 宣言</div>
+    <h1>本象宣言</h1>
+    <p class="sub">一源万影，保存本象，按需投影。「圣人立象以尽意」——《易传·系辞》</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="prose">
+    <h2>一、病根：我们把影子当成了本体</h2>
+    <p>人类的信息史，是一部不断把世界压扁的历史。</p>
+<pre>真实建筑 → CAD 模型 → 平面图 → PDF → 截图 → OCR 文字
+真实企业 → 业务流程 → Excel 表 → 汇总数字 → 一段报告
+真实思想 → 关系网络 → 文章结构 → 线性文字</pre>
+    <p>每一步都更好传播，每一步都丢掉一些东西。这在人类之间是划算的——我们靠常识和经验，
+    能从残缺的投影里还原出大致的原物。</p>
+    <p><strong>但 AI 现在读到的，正是这种压缩了七八轮的「影子的影子」。</strong>
+    更糟的是，我们把最后那层影子当成了源文件。改 PDF、改截图、改摘要——改的都是投影，
+    而真正的对象从未存在于任何一个文件里。</p>
+    <p>这不是「反对文字」。文字是人类发明的极高压缩率、强组合的表示方式，对法律条款而言
+    文字本身就是本源。问题只在于<strong>把投影误当成对象本身</strong>：</p>
+    <table class="data-table">
+      <thead><tr><th>领域</th><th>本源是什么</th><th>我们却在改什么</th></tr></thead>
+      <tbody>
+        <tr><td>CAD</td><td>几何、约束、参数、装配</td><td>导出的平面图</td></tr>
+        <tr><td>Excel</td><td>公式与数据依赖</td><td>屏幕上的像素</td></tr>
+        <tr><td>小说</td><td>人物状态、时间线、伏笔图谱</td><td>一段一段的正文</td></tr>
+        <tr><td>软件</td><td>代码、状态、运行行为</td><td>截图</td></tr>
+      </tbody>
+    </table>
+
+    <h2>二、一条不可逆的界线</h2>
+    <p>从三维模型生成二维图片是容易的。从二维图片恢复唯一的三维模型——<strong>通常不可能</strong>。
+    无数不同的三维对象可以投出同一个影子。</p>
+<pre>本象 → 投影      ✅ 确定、可重复
+投影 ⇏ 唯一本象   ❌ 不可逆</pre>
+    <p>这条界线决定了架构的方向：<strong>不要试图从影子倒推本体，要把本体留住。</strong>
+    PDF、图片、Markdown、EPUB 都不是源文件，它们是投影——由本象按需生成的缓存视图。
+    删掉不心疼，因为随时能再投一次。</p>
+
+    <h2>三、AI 不该交付终态，该交付事务</h2>
+    <p>今天的 AI 直接吐出完整成品：四十页 PPT、几十万字正文、几百行图表配置。
+    内容、格式、引用一起失控，错了只能整个重来。</p>
+    <blockquote>「AI 只提交语义事务——改什么、依赖什么、断言什么。
+    由确定性的编译器校验、落地、生成终态。」</blockquote>
+    <p>AI 说「我把黑钥匙交给了沈砚，我保证赵七还活着」。校验器不听它保证，自己去查。
+    查不过就带着证据退回重写。这不是不信任模型，而是<strong>把「说到」和「做到」分开记账</strong>。</p>
+
+    <h2>四、今天的证据</h2>
+    <p>对外主张已按实验结果收窄到一个维度：<strong>状态追踪</strong>——在长篇叙事里，
+    关键物品此刻在谁手里、谁知道了那个秘密、哪些伏笔还没收。</p>
+
+    <table class="data-table">
+      <caption>Run #27（2026-08-05）· 当前唯一有效对照口径 · qwen-plus · 9.5 万字 · 各 n=6</caption>
+      <thead><tr><th>W3 状态准确率</th><th>本象</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
+      <tbody>
+        <tr><td>得分</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
+        <tr><td>置换检验</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+      </tbody>
+    </table>
+    <p>对照臂这一次拿到了自己写的全部两万字，题面上一个答案都没有，八个字段全问。
+    本象仍然领先 43.8 / 37.5 个百分点。</p>
+    <blockquote>「那堵 75% 的墙是假的，但墙后面的东西是真的。」</blockquote>
+    <p><strong>先说不利的一条：</strong>本象在 <code>black-key.holder</code> 上是 4/6，比两条对照臂的 5/6 都差——
+    而那恰恰是唯一能从近文直接读出来的字段。优势全部集中在两条对照臂同时近乎全灭的那两格：</p>
+    <table class="data-table">
+      <thead><tr><th>字段</th><th>裸模型</th><th>RAG</th><th>本象</th></tr></thead>
+      <tbody>
+        <tr><td><code>black-key.holder</code>（最后一次转交就写在自己正文里）</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
+        <tr><td><code>bai-yao.secret_betrayal</code>（跨几十章累积的秘密）</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+        <tr><td><code>hook:shen-yan-suspicion.status</code>（从不存在于任何一段文字里）</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      </tbody>
+    </table>
+    <p><em>「这条线收了没有」</em>不是任何一段文字里的事实，它是账本。检索能捞回写着它的段落——
+    如果有的话；可根本没有那样一段。</p>
+
+    <p><strong>跨模型只成立一半。</strong>立住的是臂内——A3 自己在两个模型上的表现，不经过探询调用。
+    同口径重打分后 11 对 11：</p>
+    <table class="data-table">
+      <thead><tr><th></th><th>qwen-plus（n=11）</th><th>deepseek-v4-flash（n=11）</th><th>置换检验</th></tr></thead>
+      <tbody>
+        <tr><td><strong>W3 状态准确率</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>均值差 0.0000 · <strong>p = 1.0000</strong></td></tr>
+        <tr><td><strong>W1 EPC</strong>（正文，越低越好）</td><td>0.20</td><td>0.55</td><td>均值差 −0.35 · <strong>p = 0.0392</strong></td></tr>
+      </tbody>
+    </table>
+    <blockquote>「状态层的正确性与底模无关，正文层的质量与底模显著相关。」</blockquote>
+
+    <h2>五、为什么这不是一个小说工具</h2>
+    <p>一个方言成功可能是巧合，<strong>两个才是协议</strong>。协议的形状是「通用外壳 + 领域方言」：
+    外壳只定义生命周期和最小结构，各领域自带 Schema，但共享同一套动作——
+    <code>inspect · render · query · act · diff · validate · commit · rollback</code>。</p>
+    <p>关键的一步是把约束从代码变成数据：三个写死的类型（名字里都带着小说味）现在收敛成六个通用谓词——
+    <code>equals · not_equals · contains · not_contains · range · unchanged</code>。
+    「主角不得知道这个秘密」和「营收字段不得为负」，在协议层是同一件事。</p>
+
+    <h2>六、往哪里去</h2>
+    <p><strong>眼下</strong>——长篇小说方言，已在 9.5 万字基线上验证，目标百万字：
+    人物状态、时间线、伏笔图谱、禁区约束全程不失忆，事务式写作。<strong>接着</strong>——同一套外壳装到
+    CAD/三维、Office、图表/数据、项目记忆上。<strong>远处</strong>——如果这条路走通，AI 时代的「文件」
+    不该再是一份 <code>.docx</code> 或 <code>.pdf</code>，而应该是一个能被打开、被看见、被定位、被修改、
+    被复验的本象包。人看投影，AI 改本象，系统证明改对了。</p>
+
+    <h2>七、我们不主张什么</h2>
+    <p>这个项目的可信度建立在把边界说清楚上。</p>
+    <ul>
+      <li><strong>不主张「写得更一致」。</strong>正文一致性与向量 RAG 无显著差异。</li>
+      <li><strong>不主张「更省 Token」——也不再承认「更贵」。</strong>同口径实测 +12.2%，p = 0.5253，不显著。</li>
+      <li><strong>跨模型只成立一半。</strong>立住的是臂内；对照臂须重跑。</li>
+      <li><strong>没有生产级适配器，没有真实用户。</strong>CAD、Office 目前只是方言登记表上的一行字。</li>
+      <li><strong>那堵 75% 的墙是假的。</strong>六起仪器事故全部自查出来并公开。
+      一个错误的负面结果，比一个错误的正面结果更难被质疑。我们把这些都记下来，因为对一个基准而言，
+      <strong>仪器的诚实度就是全部资产</strong>。</li>
+    </ul>
+
+    <div class="hero-cta" style="margin-top:44px">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin/blob/main/MANIFESTO.md" target="_blank" rel="noopener">GitHub 上看全文 + 实验记录</a>
+      <a class="btn btn-ghost" href="#home" style="border-color:var(--gold);color:var(--gold-deep)">回到概览</a>
+    </div>
+  </div>
+</section>
+</section>
+<section class="tabx-panel" data-panel="manifesto" data-lang="en">
+
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="#home">2Origin</a> / Manifesto</div>
+    <h1>The Manifesto</h1>
+    <p class="sub">Save the origin, project on demand. 一源万影 · «The sage establishes images to exhaust meaning.» — Book of Changes</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="prose">
+    <h2>I · The disease: we mistook the shadow for the thing</h2>
+    <p>The history of human information is a history of flattening the world.</p>
+<pre>a real building → CAD model → floor plan → PDF → screenshot → OCR text
+a real business → workflows → spreadsheet → summary figures → one paragraph
+a real argument → a web of relations → an outline → a line of prose</pre>
+    <p>Every step travels better. Every step loses something. Among humans this trade was fine — we carry
+    enough common sense to reconstruct the original from a damaged projection.</p>
+    <p><strong>But what AI reads today is the shadow of a shadow, seven or eight compressions deep.</strong>
+    Worse: we started treating that last shadow as the source file. Edit the PDF, edit the screenshot,
+    edit the summary — every one of those edits lands on a projection, while the actual object never existed
+    in any file at all.</p>
+    <p>This is not an argument against text. Text is a spectacularly high-compression, highly composable
+    representation, and for a legal clause the text <em>is</em> the origin. The error is narrower than that —
+    it is <strong>mistaking a projection for the object</strong>:</p>
+    <table class="data-table">
+      <thead><tr><th>Domain</th><th>What the origin actually is</th><th>What we edit instead</th></tr></thead>
+      <tbody>
+        <tr><td>CAD</td><td>geometry, constraints, parameters, assemblies</td><td>the exported drawing</td></tr>
+        <tr><td>Spreadsheets</td><td>formulas and data dependencies</td><td>pixels on screen</td></tr>
+        <tr><td>Novels</td><td>character state, timeline, planted–payoff graph</td><td>paragraphs of prose</td></tr>
+        <tr><td>Software</td><td>code, state, runtime behaviour</td><td>screenshots</td></tr>
+      </tbody>
+    </table>
+
+    <h2>II · One irreversible line</h2>
+    <p>Rendering a 2D image from a 3D model is easy. Recovering <em>the</em> 3D model from a 2D image is,
+    in general, <strong>impossible</strong> — infinitely many objects cast the same shadow.</p>
+<pre>origin → projection      ✅ deterministic, repeatable
+projection ⇏ the origin  ❌ irreversible</pre>
+    <p>That asymmetry sets the architecture: <strong>stop trying to infer the body from its shadow — keep the body.</strong>
+    PDFs, images, Markdown, EPUB are not source files. They are projections — cached views generated on demand.
+    Deleting one costs nothing, because it can always be cast again.</p>
+
+    <h2>III · AI should not deliver final artifacts. It should deliver transactions.</h2>
+    <p>Today's AI emits whole artifacts: a forty-page deck, a novel, hundreds of lines of chart config.
+    Content, formatting and references fail together, and the only remedy is to regenerate everything.</p>
+    <blockquote>“The AI submits only a semantic transaction — what changed, what it depends on, what it asserts.
+    A deterministic compiler validates it, applies it, and generates the final artifact.”</blockquote>
+    <p>The model says <em>“I handed the black key to Shen Yan, and I assert Zhao Qi is still alive.”</em>
+    The validator does not take its word for it. It checks. If the check fails, the transaction is bounced
+    back with the evidence attached. This is not distrust of the model. It is <strong>keeping separate books
+    for “claimed” and “verified”.</strong></p>
+
+    <h2>IV · What has actually been demonstrated</h2>
+    <p>The claim has been narrowed by experiment to exactly one dimension: <strong>state tracking</strong> —
+    across long-form narrative, who holds the key right now, who learned the secret, which planted threads are still open.</p>
+
+    <table class="data-table">
+      <caption>Run #27 (2026-08-05) — the only currently valid comparison · qwen-plus · 95k chars · n=6 each</caption>
+      <thead><tr><th>W3 state accuracy</th><th>Benxiang</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+      <tbody>
+        <tr><td>Score</td><td class="hl">95.8% ± 5.9</td><td>52.1% ± 19.7</td><td>58.3% ± 11.8</td></tr>
+        <tr><td>Permutation test</td><td>—</td><td class="hl">p = 0.0024</td><td class="hl">p = 0.0024</td></tr>
+      </tbody>
+    </table>
+    <p>This time the control arms got every character they had just written, no answer anywhere in the prompt,
+    and all eight fields asked. Benxiang still leads by 43.8 and 37.5 points.</p>
+    <blockquote>“The 75% wall was fake. What stood behind it is real.”</blockquote>
+    <p><strong>The unfavourable part first:</strong> Benxiang scores 4/6 on <code>black-key.holder</code> —
+    worse than either control arm — and that is exactly the field recoverable from the prose it just wrote.
+    Its whole advantage lives in the two fields where both controls collapse:</p>
+    <table class="data-table">
+      <thead><tr><th>Field</th><th>Bare</th><th>RAG</th><th>Benxiang</th></tr></thead>
+      <tbody>
+        <tr><td><code>black-key.holder</code> (last handover written in its own prose)</td><td>5/6</td><td>5/6</td><td class="dim">4/6</td></tr>
+        <tr><td><code>bai-yao.secret_betrayal</code> (secret accumulated over dozens of chapters)</td><td>1/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+        <tr><td><code>hook:shen-yan-suspicion.status</code> (never stated in any passage)</td><td>0/6</td><td>0/6</td><td class="hl">6/6</td></tr>
+      </tbody>
+    </table>
+    <p><em>“Has this thread been paid off”</em> is not a fact in any passage. It is a ledger entry. Retrieval can
+    fetch the passage that says so — except none exists.</p>
+
+    <p><strong>The cross-model comparison holds only halfway.</strong> What holds is the within-arm comparison,
+    A3 against itself on two models, which never touches the probe. After a uniform rescore, 11 runs against 11:</p>
+    <table class="data-table">
+      <thead><tr><th></th><th>qwen-plus (n=11)</th><th>deepseek-v4-flash (n=11)</th><th>Permutation test</th></tr></thead>
+      <tbody>
+        <tr><td><strong>W3 state accuracy</strong></td><td class="hl">98.9%</td><td class="hl">98.9%</td><td>diff 0.0000 · <strong>p = 1.0000</strong></td></tr>
+        <tr><td><strong>W1 EPC</strong> (prose, lower is better)</td><td>0.20</td><td>0.55</td><td>diff −0.35 · <strong>p = 0.0392</strong></td></tr>
+      </tbody>
+    </table>
+    <blockquote>“State-layer correctness is independent of the base model; prose-layer quality is not.”</blockquote>
+
+    <h2>V · Why this is not a novel-writing tool</h2>
+    <p>One dialect working could be a coincidence. <strong>Two is a protocol.</strong> The shape is
+    <em>generic shell + domain dialects</em>: the shell defines lifecycle and minimal structure, each domain
+    brings its own schema, and they share one action surface —
+    <code>inspect · render · query · act · diff · validate · commit · rollback</code>.</p>
+    <p>The move that made it a protocol was turning constraints from code into data: three hard-coded types
+    whose names reeked of fiction now collapse into six general predicates —
+    <code>equals · not_equals · contains · not_contains · range · unchanged</code>.
+    <em>“The protagonist must not learn this secret”</em> and <em>“revenue must never go negative”</em>
+    are the same statement at the protocol layer.</p>
+
+    <h2>VI · Where this goes</h2>
+    <p><strong>Now</strong> — the narrative dialect, validated at 95k characters, target one million:
+    character state, timeline, planted-payoff graph and forbidden zones held without amnesia, written
+    transactionally. <strong>Next</strong> — the same shell over CAD/3D, Office, Chart/data, and project memory.
+    <strong>Further out</strong> — if this holds, a “file” in the age of AI should no longer be a <code>.docx</code>
+    or a <code>.pdf</code>, but an origin package that can be opened, seen, located, modified and re-verified.
+    Humans read projections. AI edits the origin. The system proves the edit was correct.</p>
+
+    <h2>VII · What we do not claim</h2>
+    <p>The credibility of this project rests on stating its limits precisely.</p>
+    <ul>
+      <li><strong>Not “writes more consistently.”</strong> No significant difference from vector RAG.</li>
+      <li><strong>Not “saves tokens” — but no longer “more expensive” either.</strong> +12.2%, p = 0.5253, not significant.</li>
+      <li><strong>Cross-model holds only halfway.</strong> The within-arm half holds; the comparison half awaits control-arm re-runs.</li>
+      <li><strong>No production adapters, no real users.</strong> CAD and Office are, today, a line in a table.</li>
+      <li><strong>The 75% wall was fake.</strong> Six instrumentation accidents are all self-caught and published.
+      An erroneous negative result is harder to question than an erroneous positive one. We publish all of it,
+      because for a benchmark <strong>the honesty of the instrument is the entire asset</strong>.</li>
+    </ul>
+
+    <div class="hero-cta" style="margin-top:44px">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin/blob/main/MANIFESTO.md" target="_blank" rel="noopener">Full text + experiment log on GitHub</a>
+      <a class="btn btn-ghost" href="#home" style="border-color:var(--gold);color:var(--gold-deep)">Back to overview</a>
+    </div>
+  </div>
+</section>
+</section>
+<section class="tabx-panel" data-panel="solutions" data-lang="zh">
+
+<header class="page-hero"><div class="page-hero-inner">
+  <div class="breadcrumb"><a href="#home">2Origin</a> / 解决方案</div>
+  <h1>我们能解决什么</h1>
+  <p class="sub">不是让 AI 猜一个结果；而是把领域事实、依赖、约束和依据保存为可核验对象。违规不写入，并说明为什么。</p>
+</div></header>
+
+<section class="section"><div class="prose">
+  <h2>方言矩阵</h2>
+  <table class="data-table">
+    <thead><tr><th>方言</th><th>输入</th><th>机器判据</th><th>输出证据</th></tr></thead>
+    <tbody>
+      <tr><td>叙事 / 白鼓</td><td>长篇连载</td><td>五道门禁 + 伏笔状态机</td><td>每章世界状态可用 Node 验证。例：未回收伏笔却标记“已解决”时，事务零写入并退回。</td></tr>
+      <tr><td>判决依据链</td><td>裁判文书</td><td>量刑法定区间约束</td><td>违规零写入 + 拒绝依据。例：自首减 55% 超过法定 40% 上限，当场拒绝。</td></tr>
+      <tr><td>表格依赖链</td><td>Excel 公式表</td><td><code>relations</code> 依赖图</td><td>“这个数由哪 10 个人工录入决定”。例：公式引用断裂时，不生成看似正确的追溯链。</td></tr>
+      <tr><td>CAD 审图</td><td>DWG / DXF 窗洞构件</td><td>对象级约束</td><td>审计清单 + 位置锚点。例：没有可追溯源对象的窗洞计数，零写入并报缺失锚点。</td></tr>
+      <tr><td>教材体检</td><td>DOCX 插图规范</td><td>图号 / 引用一致性</td><td>体检报告（红点清单）。例：正文引用不存在的图号，拒绝把该稿标为通过。</td></tr>
+      <tr><td>项目状态</td><td>聊天记录</td><td>状态事务幂等</td><td>MCP 秒恢复。例：陈旧事务的 <code>expected_state_version</code> 不匹配时零写入并返回冲突。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>先看一个可运行的拒绝</h2>
+  <p>法律方言的关键不在“生成一份判决”，而在拒绝没有依据的写入。浏览器本地演示把自首减免故意改到上限之外，立即给出法定区间与拒绝理由。</p>
+  <div class="hero-cta"><a class="btn btn-primary" href="#demo">打开法律依据链 Demo</a><a class="btn btn-ghost" href="#cases" style="border-color:var(--gold);color:var(--gold-deep)">查看可跑案例</a></div>
+
+  <h2>联系</h2>
+  <p><a href="mailto:hi@2origin.org">hi@2origin.org</a> · <a href="https://github.com/dongsheng123132/2origin/issues" target="_blank" rel="noopener">GitHub Issues ↗</a></p>
+</div></section>
+</section>
+<section class="tabx-panel" data-panel="solutions" data-lang="en">
+
+<header class="page-hero"><div class="page-hero-inner"><div class="breadcrumb"><a href="#home">2Origin</a> / Solutions</div><h1>What We Solve</h1><p class="sub">We do not ask AI to guess an answer. We preserve domain facts, dependencies, constraints and grounds as inspectable objects. A violation writes nothing and explains why.</p></div></header>
+<section class="section"><div class="prose"><h2>Dialect matrix</h2><table class="data-table"><thead><tr><th>Dialect</th><th>Input</th><th>Machine criterion</th><th>Evidence output</th></tr></thead><tbody>
+<tr><td>Narrative / White Drum</td><td>Long-form serial</td><td>Five gates + foreshadowing state machine</td><td>Each chapter’s world state is Node-verifiable. Example: a thread marked resolved without payoff is rejected with zero writes.</td></tr>
+<tr><td>Judgment grounds chain</td><td>Judgment text</td><td>Statutory sentencing ranges</td><td>Zero writes on violation + grounds. Example: a 55% voluntary-surrender reduction exceeds the 40% cap and is rejected immediately.</td></tr>
+<tr><td>Spreadsheet dependency chain</td><td>Excel formulas</td><td><code>relations</code> dependency graph</td><td>“Which ten manual inputs determine this number?” A broken formula reference does not produce a plausible-looking trace.</td></tr>
+<tr><td>CAD review</td><td>DWG / DXF openings</td><td>Object-level constraints</td><td>Audit list + location anchors. An opening count without source-object anchors is not written.</td></tr>
+<tr><td>Textbook check</td><td>DOCX illustration rules</td><td>Figure-number / citation consistency</td><td>Health report with red flags. A reference to a missing figure cannot be marked passed.</td></tr>
+<tr><td>Project state</td><td>Chat history</td><td>Idempotent state transactions</td><td>MCP restores in seconds. A stale <code>expected_state_version</code> returns a conflict and writes nothing.</td></tr>
+</tbody></table>
+<h2>See a rejection run</h2><p>The point of the law dialect is not to generate a judgment, but to reject an unsupported state change. The local browser demo deliberately pushes a surrender reduction past its ceiling and shows the statutory range and refusal.</p><div class="hero-cta"><a class="btn btn-primary" href="#demo">Open the law-gounds demo</a><a class="btn btn-ghost" href="#cases" style="border-color:var(--gold);color:var(--gold-deep)">View runnable cases</a></div><h2>Contact</h2><p><a href="mailto:hi@2origin.org">hi@2origin.org</a> · <a href="https://github.com/dongsheng123132/2origin/issues" target="_blank" rel="noopener">GitHub Issues ↗</a></p></div></section>
+</section>
+<section class="tabx-panel" data-panel="cases" data-lang="zh">
+
+<header class="page-hero"><div class="page-hero-inner"><div class="breadcrumb"><a href="#home">2Origin</a> / 案例</div><h1>案例墙</h1><p class="sub">每张卡只给三件事：问题、可跑命令、可回看的证据。</p></div></header>
+<section class="section"><div class="grid-3">
+  <article class="card"><div class="tag">Law</div><h3>判决书量刑依据链</h3><p><strong>问题：</strong>自首、从犯等量刑调节能否逐项落在法定区间内？</p><p><code>node adapters/law/import.mjs adapters/law/fixtures/B-缺陷.txt /tmp/B.origin</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/law/fixtures" target="_blank" rel="noopener">证据：公开 fixture ↗</a></p></article>
+  <article class="card"><div class="tag">XLSX</div><h3>表格依赖链</h3><p><strong>问题：</strong>预算表里的一个公式数字究竟由哪些人工输入决定？</p><p><code>node adapters/xlsx/import.mjs adapters/xlsx/fixtures/A-合规.xlsx /tmp/A.origin</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/xlsx/fixtures" target="_blank" rel="noopener">证据：公开 fixture ↗</a></p></article>
+  <article class="card"><div class="tag">CAD</div><h3>CAD 窗洞审计</h3><p><strong>问题：</strong>窗洞对象是否能按源实体复核，而非靠截图计数？</p><p><code>node adapters/cad/import.mjs adapters/cad/fixtures/A-101.dxf /tmp/A-101.origin --name A-101</code></p><p><a href="zh/blog/cad-ai-audit.html">证据：脱敏审计博文与 fixture →</a></p></article>
+  <article class="card"><div class="tag">Textbook</div><h3>教材图片体检</h3><p><strong>问题：</strong>某出版社工程制图教材 3 份稿件的图号与正文引用是否一致？</p><p><code>node adapters/textbook/import.mjs adapters/office/fixtures/synthetic.docx --json</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/office/fixtures" target="_blank" rel="noopener">证据：合成 fixture ↗</a></p></article>
+  <article class="card"><div class="tag">Story</div><h3>白鼓叙事状态</h3><p><strong>问题：</strong>长篇连载的伏笔、秘密和人物状态能否逐章验证？</p><p><code>node adapters/story/cli.mjs state novels/月落渡口.origin</code></p><p><a href="#challenge">证据：白鼓挑战规则 →</a></p></article>
+</div></section>
+</section>
+<section class="tabx-panel" data-panel="cases" data-lang="en">
+
+<header class="page-hero"><div class="page-hero-inner"><div class="breadcrumb"><a href="#home">2Origin</a> / Cases</div><h1>Runnable cases</h1><p class="sub">Every card gives three things only: the problem, one command, and evidence to inspect.</p></div></header>
+<section class="section"><div class="grid-3">
+<article class="card"><div class="tag">Law</div><h3>Judgment sentencing grounds</h3><p><strong>Problem:</strong> can every sentencing adjustment be checked against a statutory range?</p><p><code>node adapters/law/import.mjs adapters/law/fixtures/B-缺陷.txt /tmp/B.origin</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/law/fixtures" target="_blank" rel="noopener">Evidence: public fixture ↗</a></p></article>
+<article class="card"><div class="tag">XLSX</div><h3>Spreadsheet dependency chain</h3><p><strong>Problem:</strong> which manual inputs determine a budget formula?</p><p><code>node adapters/xlsx/import.mjs adapters/xlsx/fixtures/A-合规.xlsx /tmp/A.origin</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/xlsx/fixtures" target="_blank" rel="noopener">Evidence: public fixture ↗</a></p></article>
+<article class="card"><div class="tag">CAD</div><h3>CAD opening audit</h3><p><strong>Problem:</strong> can opening objects be checked against source entities rather than counted from screenshots?</p><p><code>node adapters/cad/import.mjs adapters/cad/fixtures/A-101.dxf /tmp/A-101.origin --name A-101</code></p><p><a href="zh/blog/cad-ai-audit.html">Evidence: sanitized audit post and fixture →</a></p></article>
+<article class="card"><div class="tag">Textbook</div><h3>Textbook illustration check</h3><p><strong>Problem:</strong> are figure numbers and references consistent across three engineering-drawing drafts from one publisher?</p><p><code>node adapters/textbook/import.mjs adapters/office/fixtures/synthetic.docx --json</code></p><p><a href="https://github.com/dongsheng123132/2origin/tree/main/adapters/office/fixtures" target="_blank" rel="noopener">Evidence: synthetic fixture ↗</a></p></article>
+<article class="card"><div class="tag">Story</div><h3>White Drum narrative state</h3><p><strong>Problem:</strong> can foreshadowing, secrets and character state be verified chapter by chapter?</p><p><code>node adapters/story/cli.mjs state novels/月落渡口.origin</code></p><p><a href="#challenge">Evidence: White Drum Challenge →</a></p></article>
+</div></section>
+</section>
+<section class="tabx-panel" data-panel="challenge" data-lang="zh">
+
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="#home">2Origin</a> / 白鼓挑战</div>
+    <h1>白鼓挑战</h1>
+    <p class="sub">AI 挑战人类最长小说纪录，状态全程可验证。<br>
+    全球最难的 AI 写作考题：一致性。全球第一个敢这么做的挑战。</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="prose">
+    <h2>人类最长的长篇小说</h2>
+    <p>人类最长的长篇小说，叫 <strong>Venmurasu</strong>（泰米尔语「白鼓」）。
+    26 卷，约 22,400 页。一个人，写了六年半。</p>
+    <p>它是人类耐力的纪念碑——写到第 20 卷还记得第 1 卷的人物，这本身就是奇迹。</p>
+
+    <h2>现在，AI 要挑战这个纪录——而且更难</h2>
+    <p>我们给自己加了一个人类作者不需要面对的难度：</p>
+    <blockquote>「每一章的世界状态，都必须可验证。」</blockquote>
+    <p>写到第 100 万字时，第 3 章埋的伏笔还记得收，第 9 章受的伤还记得疼，
+    谁在什么时候知道了什么，全都查得出来——不是靠模型记性好，是靠门禁把关。</p>
+    <p>人类写长篇小说，唯一的天花板是记忆。<br>
+    AI 写长篇小说，过去连这个天花板都没有——写到 5 万字就穿帮。</p>
+
+    <h2>方法：把世界状态从模型的脑子里搬出来</h2>
+    <p>我们把<strong>世界状态</strong>从模型上下文里拆出来，变成持久化的对象。
+    每次改动 = 一个语义事务，五道门禁全过才落盘；违规零写入，理由返回重写。</p>
+    <ol>
+      <li><strong>正文非空</strong>——没有正文的章节不是章节。</li>
+      <li><strong>结构引用</strong>——引用的每个实体都必须存在。</li>
+      <li><strong>禁区约束</strong>——不可违反的约束。</li>
+      <li><strong>伏笔状态机</strong>——埋下的线头，收没收、还开着。</li>
+      <li><strong>正文对照</strong>——正文说的和状态记的必须一致。</li>
+    </ol>
+    <p>这不是「生成 100 万字」——生成器一天能吐 100 万字，但第 5 万字就穿帮。
+    这是<strong>「AI 写出 100 万字还不穿帮」</strong>，是 AI 写作的珠穆朗玛峰。</p>
+
+    <h2>诚实的基线</h2>
+    <p>自建基准 ShadowBench-W 上，本方法的状态回写准确率：</p>
+    <table class="data-table">
+      <thead><tr><th></th><th>2Origin 状态层</th><th>裸模型</th><th>向量 RAG</th></tr></thead>
+      <tbody>
+        <tr><td>状态回写准确率（33 轮系列）</td><td class="hl">98.9%</td><td>75.0%</td><td>75.0%</td></tr>
+      </tbody>
+    </table>
+    <p class="note">⚠️ 这是自建基准的口径，非第三方评测。探询修复后的权威对比（Run #27）为
+    95.8% ± 5.9 vs 52.1% ± 19.7 / 58.3% ± 11.8，p = 0.0024。全球没有第二家做「状态写回验证」的基准——
+    考题是我们定义的，标准制定权在我们手里。</p>
+
+    <h2>现在的进度（数字由 <code>scripts/challenge-stats.mjs</code> 生成，不手写）</h2>
+        <div id="challenge-zh-progress"><p>正在读取 <code>stats.json</code>…</p></div>
+        <p class="note" id="challenge-zh-drift-note">drift-rate（模型记错前值率）：上次实测 8.3%（2026-08-06；Run 编号未留存），
+        随下个里程碑按同协议重测后以「Run 编号 + 日期」更新。无编号的裸数字不上墙。</p>
+        <div class="milestones">
+          <div class="milestone"><div class="dist">现在</div><h3 id="challenge-zh-m-now">…</h3><p>每章世界状态可 clone 验证</p></div>
+          <div class="milestone"><div class="dist">M1</div><h3>20 章已验证</h3><p>主指标：可验证章数（字数只是副指标）</p></div>
+          <div class="milestone"><div class="dist">M2</div><h3>50 章已验证</h3><p>百万字不失忆的中途站</p></div>
+          <div class="milestone"><div class="dist">M3</div><h3>100 章已验证</h3><p>超过人类长篇平均长度的数量级</p></div>
+          <div class="milestone"><div class="dist">终极</div><h3>破 22,400 页</h3><p>超越人类纪录，且全程可验证</p></div>
+        </div>
+
+        <h2>连载节奏（cadence）</h2>
+        <p class="note">公开停更比假装连续更值钱。停更区间如实标注：</p>
+        <ul id="challenge-zh-cadence"><li>加载中…</li></ul>
+
+    <h2>规则（挑战本身也要可验证）</h2>
+    <ol>
+      <li>AI 每写一章 = 提交一个语义事务（正文 + 状态变更）。</li>
+      <li>五道门禁全过才落盘。</li>
+      <li>违规零写入，理由返回重写。</li>
+      <li>每章正文 + 世界状态 + git commit 全部公开。</li>
+      <li>任何人都能 clone 验证：<code>node adapters/story/cli.mjs state &lt;pkg&gt;</code></li>
+    </ol>
+
+    <h2>追连载</h2>
+    <p>人类用了 6.5 年。AI 会用多久？不知道。但我们公开每一章：正文、世界状态、伏笔图谱、
+    时间线，全部可 clone 可验证。<code>git log</code> 就是证据链。</p>
+
+    <div class="honesty">
+      <h3>诚实边界</h3>
+      <ul>
+        <li><strong>目标尚未达成——这是挑战，不是成绩单。</strong>现在 <span id="challenge-zh-now-words">…</span>，里程碑在前方。</li>
+        <li>实测基于单一模型（deepseek-v4-flash）、自造夹具。</li>
+        <li>「98.9% vs 75%」是自建基准 ShadowBench-W 的口径，非第三方评测。</li>
+        <li>Venmurasu 事实已核实（26 卷 / 约 22,400 页 / 2014–2020，单人完成，Wikipedia 2026-08-06）。</li>
+      </ul>
+    </div>
+
+    <div class="hero-cta" style="margin-top:44px">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub 上 clone 验证</a>
+      <a class="btn btn-ghost" href="#home" style="border-color:var(--gold);color:var(--gold-deep)">回到概览</a>
+    </div>
+  </div>
+</section>
+
+<script>
+// 数字全部来自 scripts/challenge-stats.mjs 生成的 stats.json（不手写）
+fetch('zh/stats.json').then(function (r) { return r.json() }).then(function (s) {
+  var rows = s.serials.map(function (x) {
+    return '<tr><td>' + x.title + ' · ' + x.genre + '</td><td>' + x.chapters_verified +
+      ' 章已验证 · ' + x.words.toLocaleString() + ' 字符' +
+      (x.drafts.length ? ' · ' + x.drafts.length + ' 章草稿未计' : '') + '</td></tr>'
+  }).join('')
+  document.getElementById('challenge-zh-progress').innerHTML =
+    '<table class="data-table"><thead><tr><th>连载</th><th>进度</th></tr></thead><tbody>' + rows +
+    '<tr><td><strong>合计</strong></td><td><strong>' + s.totals.chapters_verified +
+    ' 章已验证 · ' + s.totals.words.toLocaleString() + ' 字符</strong></td></tr></tbody></table>'
+  document.getElementById('challenge-zh-m-now').textContent = s.totals.chapters_verified + ' 章已验证 · ' + s.totals.words.toLocaleString() + ' 字符'
+  document.getElementById('challenge-zh-now-words').textContent = s.totals.chapters_verified + ' 章已验证、约 ' + (s.totals.words / 10000).toFixed(1) + ' 万字符'
+  var items = []
+  var cs = s.cadence
+  if (cs.length) {
+    // 最新章提交至今的停更区间（诚实标注）
+    items.push('<li><code>' + cs[0].sha + '</code> ' + cs[0].at.slice(0, 10) + ' — ' + cs[0].subject + '</li>')
+    for (var i = 1; i < cs.length; i++) {
+      var gap = (new Date(cs[i - 1].at) - new Date(cs[i].at)) / 86400000
+      if (gap > 7) items.push('<li class="note">▮ 停更 ' + Math.round(gap) + ' 天（' + cs[i].at.slice(0, 10) + ' → ' + cs[i - 1].at.slice(0, 10) + '）' + (cs[i].at.slice(0, 10) >= '2026-08-06' ? '：GOAI 复赛备赛期' : '') + '</li>')
+      items.push('<li><code>' + cs[i].sha + '</code> ' + cs[i].at.slice(0, 10) + ' — ' + cs[i].subject + '</li>')
+    }
+  }
+  document.getElementById('challenge-zh-cadence').innerHTML = items.join('') || '<li>（暂无提交记录）</li>'
+}).catch(function (e) {
+  document.getElementById('challenge-zh-progress').innerHTML = '<p class="note">stats.json 读取失败：' + e.message + '</p>'
+})
+</script>
+</section>
+<section class="tabx-panel" data-panel="challenge" data-lang="en">
+
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="#home">2Origin</a> / The Challenge</div>
+    <h1>The White Drum Challenge</h1>
+    <p class="sub">AI challenges the longest novel ever written by a human — with one difficulty a human author
+    never faced: <strong>the world state of every chapter must be verifiable.</strong></p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="prose">
+    <h2>The longest book ever written by a human</h2>
+    <p>The longest novel in the world is called <strong>Venmurasu</strong> — Tamil for “the white drum.”
+    26 volumes, roughly 22,400 pages. One person, six and a half years.</p>
+    <p>It is a monument to human endurance — to still remember the characters of volume 1 while writing
+    volume 20 is itself a miracle.</p>
+
+    <h2>Now AI takes the same test — with extra difficulty</h2>
+    <p>We are adding a difficulty a human author never faces:</p>
+    <blockquote>“The world state of every chapter must be verifiable.”</blockquote>
+    <p>At one million characters, the foreshadowing planted in chapter 3 must still be paid off, the injury
+    from chapter 9 must still hurt, and who knew what, and when — every bit of it checkable. Not because the
+    model has a good memory. Because a gate keeps the books.</p>
+    <p>A human writing a long novel has exactly one ceiling: memory.<br>
+    AI writing a long novel used to have no ceiling at all — it falls apart at 50,000 characters.</p>
+
+    <h2>The method: state outside the model's head</h2>
+    <p>We move <strong>world state</strong> out of the model's context and into persisted objects.
+    Every change is one <strong>semantic transaction</strong>, passed through five gates; nothing is written
+    unless all five pass; on failure, zero writes and the reason is returned for rewriting.</p>
+    <ol>
+      <li><strong>Text non-empty</strong> — a chapter with no prose is not a chapter.</li>
+      <li><strong>Structural references</strong> — every entity referenced exists.</li>
+      <li><strong>Forbidden zones</strong> — constraints that must not be violated.</li>
+      <li><strong>Foreshadowing state machine</strong> — planted threads tracked, paid off or still open.</li>
+      <li><strong>Prose-vs-state check</strong> — what the text says agrees with what the state says.</li>
+    </ol>
+    <p>This is not “generate a million characters” — a generator can vomit a million characters in a day
+    and fall apart at the 50-thousandth. This is <strong>AI writing a million characters without falling apart</strong>,
+    the Everest of AI writing.</p>
+
+    <h2>The honest baseline</h2>
+    <p>Against a self-built benchmark (ShadowBench-W), the method's <strong>state write-back accuracy</strong>:</p>
+    <table class="data-table">
+      <thead><tr><th></th><th>2Origin state layer</th><th>Bare model</th><th>Vector RAG</th></tr></thead>
+      <tbody>
+        <tr><td>State accuracy (33-run series)</td><td class="hl">98.9%</td><td>75.0%</td><td>75.0%</td></tr>
+      </tbody>
+    </table>
+    <p class="note">⚠️ This is the instrument of our own benchmark — not a third-party evaluation. The definitive
+    comparison after the probe fix (Run #27) is 95.8% ± 5.9 vs 52.1% ± 19.7 / 58.3% ± 11.8, p = 0.0024. Nobody else
+    runs a “state write-back correctness” benchmark — we defined the exam, and the standard-setting power is ours.</p>
+
+    <h2>Where we stand now (numbers generated by <code>scripts/challenge-stats.mjs</code>, never hand-written)</h2>
+        <div id="challenge-en-progress"><p>Loading <code>stats.json</code>…</p></div>
+        <p class="note" id="challenge-en-drift-note">drift-rate — the rate at which the model misremembers a prior value — was last
+        measured at <strong>8.3%</strong> (2026-08-06; run id not retained). It is re-measured at each milestone under the
+        same protocol and published with a run id + date. Unnumbered bare numbers do not go on this page.</p>
+        <div class="milestones">
+          <div class="milestone"><div class="dist">now</div><h3 id="challenge-en-m-now">…</h3><p>every chapter's state is clone-and-verify</p></div>
+          <div class="milestone"><div class="dist">M1</div><h3>20 verified chapters</h3><p>primary metric: verifiable chapters (char count is secondary)</p></div>
+          <div class="milestone"><div class="dist">M2</div><h3>50 verified chapters</h3><p>a waypoint on the road to a million without amnesia</p></div>
+          <div class="milestone"><div class="dist">M3</div><h3>100 verified chapters</h3><p>an order of magnitude beyond the average human novel</p></div>
+          <div class="milestone"><div class="dist">goal</div><h3>Beyond 22,400 pages</h3><p>beating the human record, verifiable all the way</p></div>
+        </div>
+
+        <h2>Cadence</h2>
+        <p class="note">Publicly marking pauses is worth more than pretending the serial never stopped.</p>
+        <ul id="challenge-en-cadence"><li>Loading…</li></ul>
+
+    <h2>The rules — the challenge must itself be verifiable</h2>
+    <ol>
+      <li>Each chapter = one semantic transaction (prose + state changes).</li>
+      <li>All five gates must pass before anything is written.</li>
+      <li>Violations write nothing; the reason is returned for rewriting.</li>
+      <li>Every chapter: prose + world state + git commit — all public.</li>
+      <li>Anyone can clone and verify: <code>node adapters/story/cli.mjs state &lt;pkg&gt;</code></li>
+    </ol>
+
+    <h2>Follow the serials</h2>
+    <p>Humans took 6.5 years. How long will AI take? Unknown. But every chapter is public —
+    prose, world state, foreshadowing graph, timeline — all cloneable, all verifiable.
+    <code>git log</code> is the evidence chain.</p>
+
+    <div class="honesty">
+      <h3>Honest boundaries</h3>
+      <ul>
+        <li><strong>This is a challenge, not a report card.</strong> The target has not been reached. We are at <span id="challenge-en-now-words">…</span>; the milestones are ahead.</li>
+        <li>Measurements rest on a single model (deepseek-v4-flash) and self-made fixtures.</li>
+        <li>“98.9% vs 75%” is the ShadowBench-W instrument of our own design — not third-party evaluation.</li>
+        <li>Venmurasu facts verified: 26 volumes / ~22,400 pages / 2014–2020, single author (Wikipedia, 2026-08-06).</li>
+      </ul>
+    </div>
+
+    <div class="hero-cta" style="margin-top:44px">
+      <a class="btn btn-primary" href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">Clone &amp; verify on GitHub</a>
+      <a class="btn btn-ghost" href="#home" style="border-color:var(--gold);color:var(--gold-deep)">Back to overview</a>
+    </div>
+  </div>
+</section>
+
+<script>
+// All numbers come from scripts/challenge-stats.mjs -> stats.json (never hand-written)
+fetch('stats.json').then(function (r) { return r.json() }).then(function (s) {
+  var rows = s.serials.map(function (x) {
+    return '<tr><td>' + x.title + ' · ' + x.genre + '</td><td>' + x.chapters_verified +
+      ' verified chapters · ' + x.words.toLocaleString() + ' chars' +
+      (x.drafts.length ? ' · ' + x.drafts.length + ' draft chapters not counted' : '') + '</td></tr>'
+  }).join('')
+  document.getElementById('challenge-en-progress').innerHTML =
+    '<table class="data-table"><thead><tr><th>Serial</th><th>Progress</th></tr></thead><tbody>' + rows +
+    '<tr><td><strong>Total</strong></td><td><strong>' + s.totals.chapters_verified +
+    ' verified chapters · ' + s.totals.words.toLocaleString() + ' chars</strong></td></tr></tbody></table>'
+  document.getElementById('challenge-en-m-now').textContent = s.totals.chapters_verified + ' verified chapters · ' + s.totals.words.toLocaleString() + ' chars'
+  document.getElementById('challenge-en-now-words').textContent = s.totals.chapters_verified + ' verified chapters, ~' + (s.totals.words / 10000).toFixed(1) + '0k chars'
+  var items = []
+  var cs = s.cadence
+  if (cs.length) {
+    items.push('<li><code>' + cs[0].sha + '</code> ' + cs[0].at.slice(0, 10) + ' — ' + cs[0].subject + '</li>')
+    for (var i = 1; i < cs.length; i++) {
+      var gap = (new Date(cs[i - 1].at) - new Date(cs[i].at)) / 86400000
+      if (gap > 7) items.push('<li class="note">▮ paused ' + Math.round(gap) + ' days (' + cs[i].at.slice(0, 10) + ' → ' + cs[i - 1].at.slice(0, 10) + ')' + (cs[i].at.slice(0, 10) >= '2026-08-06' ? ' — GOAI second-round preparation' : '') + '</li>')
+      items.push('<li><code>' + cs[i].sha + '</code> ' + cs[i].at.slice(0, 10) + ' — ' + cs[i].subject + '</li>')
+    }
+  }
+  document.getElementById('challenge-en-cadence').innerHTML = items.join('') || '<li>(no commits yet)</li>'
+}).catch(function (e) {
+  document.getElementById('challenge-en-progress').innerHTML = '<p class="note">Failed to load stats.json: ' + e.message + '</p>'
+})
+</script>
+</section>
+<section class="tabx-panel" data-panel="demo" data-lang="zh">
+
+<header class="page-hero"><div class="page-hero-inner">
+  <div class="breadcrumb"><a href="#home">2Origin</a> / 法律 Demo</div>
+  <h1>量刑依据链：越界，当场退回</h1>
+  <p class="sub">仅浏览器本地演示，不上传任何数据。示例均为虚构文本，不构成法律意见或裁判工具。</p>
+</div></header>
+
+<section class="section"><div class="prose">
+  <label for="sample-select"><strong>预置判决样例</strong></label>
+  <select id="sample-select" aria-label="选择预置判决样例">
+    <option value="lawful">样例一：自首减 35%（合法）</option>
+    <option value="illegal">样例二：自首减 55%（违法）</option>
+    <option value="accomplice">样例三：从犯减轻 50%（合法）</option>
+  </select>
+  <p id="judgment-text" class="note"></p>
+  <div class="hero-cta"><button id="force-violation" class="btn btn-primary" type="button">故意改成超上限</button><button id="restore-sample" class="btn btn-ghost" type="button" style="border-color:var(--gold);color:var(--gold-deep)">恢复预置样例</button></div>
+  <div id="result" aria-live="polite"></div>
+</div></section>
+
+<section class="section tight"><div class="two-col">
+  <div><div class="card"><div class="tag">Origin package</div><h2>本象包对象树</h2><div id="object-tree"></div></div></div>
+  <div><div class="card"><div class="tag">Why</div><h2>依据链</h2><div id="why-chain"></div></div></div>
+</div></section>
+
+<script src="demo/law-demo.js"></script>
+</section>
+<section class="tabx-panel" data-panel="longrun" data-lang="zh">
+<style>
+.tabx-panel[data-panel="longrun"] .console{ max-width: 1080px; margin: 0 auto; padding: 40px 22px; }.tabx-panel[data-panel="longrun"] .agent-card{
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 24px; margin-top: 20px; background: var(--paper);
+    box-shadow: var(--shadow-card);
+  }.tabx-panel[data-panel="longrun"] .agent-head{ display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }.tabx-panel[data-panel="longrun"] .agent-head h2{ font-size: 20px; color: var(--ink); }.tabx-panel[data-panel="longrun"] .badge{ font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; letter-spacing: .5px; }.tabx-panel[data-panel="longrun"] .badge.running{ background: #e6f4ea; color: #1e7d43; }.tabx-panel[data-panel="longrun"] .badge.idle{ background: #eef0f3; color: #5c5c66; }.tabx-panel[data-panel="longrun"] .badge.failed{ background: #fdecea; color: #c0392b; }.tabx-panel[data-panel="longrun"] .agent-meta{ margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 10px; font-size: 13.5px; color: var(--text-soft); }.tabx-panel[data-panel="longrun"] .agent-meta b{ color: var(--ink); font-weight: 600; }.tabx-panel[data-panel="longrun"] .logbox{
+    margin-top: 16px; background: var(--ink); color: var(--paper);
+    border-radius: 10px; padding: 14px 16px; font-family: var(--mono);
+    font-size: 12.5px; line-height: 1.7; max-height: 220px; overflow-y: auto;
+    white-space: pre-wrap; word-break: break-all;
+  }.tabx-panel[data-panel="longrun"] .empty{ padding: 60px 20px; text-align: center; color: var(--text-faint); }.tabx-panel[data-panel="longrun"] .status-bar{ font-family: var(--mono); font-size: 12px; color: var(--text-faint); margin-top: 30px; }.tabx-panel[data-panel="longrun"] .refresh{ margin-top: 20px; }
+
+</style>
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="#home">2Origin</a> / Long-Run Console</div>
+    <h1>长期任务控制台</h1>
+    <p class="sub">本象协议自己的长期维护员，正在哪台机器上跑、跑得怎么样——
+    这是一个「持续存在、间歇运行」的 agent 的公开状态页。</p>
+  </div>
+</header>
+
+<section class="console">
+  <div id="longrun-zh-agents"></div>
+  <div class="status-bar" id="longrun-zh-status"></div>
+</section>
+
+<script>
+const STATUS_LABEL = { running: '运行中', idle: '闲置', failed: '失败', never: '未运行' };
+
+async function load() {
+  const box = document.getElementById('longrun-zh-agents');
+  const status = document.getElementById('longrun-zh-status');
+  try {
+    const r = await fetch('longrun/agents.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    if (!data.agents || data.agents.length === 0) {
+      box.innerHTML = '<div class="empty">暂无已注册的长期任务</div>';
+    } else {
+      box.innerHTML = data.agents.map(a => {
+        const log = (a.log_tail || '（暂无日志）').trim();
+        return `<div class="agent-card">
+          <div class="agent-head">
+            <h2>${a.name}</h2>
+            <span class="badge ${a.status}">${STATUS_LABEL[a.status] || a.status}</span>
+          </div>
+          <div class="agent-meta">
+            <div><b>机器</b> ${a.host} (${a.os || '?'})</div>
+            <div><b>上次运行</b> ${a.last_run_at ? new Date(a.last_run_at).toLocaleString() : '—'}</div>
+            <div><b>调度</b> <code>${a.schedule || '—'}</code></div>
+            <div><b>上次结果</b> ${a.last_run_result || '—'}</div>
+            ${a.world ? `<div><b>世界状态</b> objects=${a.world.objects ?? '—'} · changes=${a.world.changes ?? '—'}${a.world.drift_rate ? ' · drift=' + a.world.drift_rate : ''}</div>` : ''}
+          </div>
+          <div class="logbox">${log.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+        </div>`;
+      }).join('');
+    }
+    status.textContent = '状态文件更新于 ' + new Date(data.updated_at).toLocaleString() + ' · agents.json v' + data.version;
+  } catch (e) {
+    box.innerHTML = `<div class="empty">状态文件不可读（${e.message}）。<br>
+      尚未同步 agents.json 到站点，或维护员还未产出首次状态。</div>`;
+    status.textContent = '';
+  }
+}
+load();
+setInterval(load, 60000); // 每分钟刷新
+</script>
+</section>
+
+<script>
+(function () {
+  var tabs   = Array.prototype.slice.call(document.querySelectorAll('.tabx-tab'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('.tabx-panel'));
+  var langBtns = Array.prototype.slice.call(document.querySelectorAll('.tabx-lang button'));
+  var TITLES = { zh: '2Origin 本象协议 · 一页总览', en: '2Origin Protocol · All-in-One' };
+  var lang = 'zh';
+
+  function storedLang() {
+    try { return localStorage.getItem('tabx-lang'); } catch (e) { return null; }
+  }
+
+  function show(key) {
+    var t = tabs.filter(function (x) { return x.dataset.tab === key })[0] || tabs[0];
+    tabs.forEach(function (x) { x.classList.toggle('active', x === t); });
+    panels.forEach(function (p) {
+      p.classList.toggle('active', p.dataset.panel === t.dataset.tab &&
+        (!p.dataset.lang || p.dataset.lang === lang));
+    });
+    window.scrollTo({ top: 0 });
+  }
+  function current() {
+    var k = location.hash.replace('#', '');
+    return tabs.some(function (x) { return x.dataset.tab === k }) ? k : tabs[0].dataset.tab;
+  }
+  function applyLang(l) {
+    lang = l;
+    try { localStorage.setItem('tabx-lang', l); } catch (e) {}
+    document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+    document.title = TITLES[l];
+    langBtns.forEach(function (b) { b.classList.toggle('active', b.dataset.lang === l); });
+    tabs.forEach(function (t) { t.textContent = l === 'zh' ? t.dataset.zh : t.dataset.en; });
+    show(current());
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () { location.hash = t.dataset.tab; });
+  });
+  langBtns.forEach(function (b) {
+    b.addEventListener('click', function () { applyLang(b.dataset.lang); });
+  });
+  // 页内改写过的 tab 链接（如案例卡里的“白鼓挑战规则 →”）也走切换
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var k = a.getAttribute('href').slice(1);
+    if (tabs.some(function (x) { return x.dataset.tab === k })) { e.preventDefault(); location.hash = k; }
+  });
+  window.addEventListener('hashchange', function () { show(current()); });
+
+  var saved = storedLang();
+  applyLang(saved === 'zh' || saved === 'en' ? saved
+    : ((navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en'));
+})();
+</script>
+</body>
+</html>
