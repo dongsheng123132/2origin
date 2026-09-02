@@ -273,13 +273,21 @@
   一个人，写了六年半。现在 AI 要挑战这个纪录，但我们给自己加了一个人类作者不需要面对的难度：
   <strong>每一章的世界状态，都必须可验证。</strong></p>
   <div class="milestones">
-    <div class="milestone"><div class="dist">现在</div><h3>两部连载在跑</h3><p>《月落渡口》2 章 · 《规则怪谈·无限层》4 章 · 状态开源可验证</p></div>
+    <div class="milestone"><div class="dist">现在</div><h3 id="serials-headline">连载在跑</h3><p id="serials-detail">正在读取 stats.json…</p></div>
     <div class="milestone"><div class="dist">下一步</div><h3>10 万字</h3><p>第一个公开里程碑</p></div>
     <div class="milestone"><div class="dist">再然后</div><h3>100 万字</h3><p>百万字不失忆</p></div>
     <div class="milestone"><div class="dist">目标</div><h3>破 22,400 页</h3><p>超越人类纪录，且全程可验证</p></div>
   </div>
-  <p class="note" style="margin-top:22px">drift-rate（模型记错前值率）8.3%，可观测、逐章下降、目标归零。
+  <p class="note" style="margin-top:22px">drift-rate（模型记错前值率）：上次实测 8.3%（2026-08-06；Run 编号未留存），非实时指标。
   每章：正文 + 世界状态 + git 证据链。 <a href="challenge.html" style="color:var(--gold-deep);font-weight:600">看挑战规则 →</a></p>
+  <script>
+  fetch('stats.json').then(function (r) { return r.json() }).then(function (s) {
+    var n = s.serials.length
+    var parts = s.serials.map(function (x) { return '《' + x.title + '》' + x.chapters_verified + ' 章' })
+    document.getElementById('serials-headline').textContent = n + ' 部连载在跑'
+    document.getElementById('serials-detail').textContent = parts.join(' · ') + ' · 状态开源可验证'
+  }).catch(function () {})
+  </script>
 </section>
 
 <section class="section tight" id="roadmap">

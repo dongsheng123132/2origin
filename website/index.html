@@ -277,14 +277,22 @@
   Tamil — 26 volumes, ~22,400 pages, one person, six and a half years. AI now challenges that record, with one
   difficulty a human author never faced: <strong>the world state of every chapter must be verifiable.</strong></p>
   <div class="milestones">
-    <div class="milestone"><div class="dist">now</div><h3>Two serials running</h3><p>《月落渡口》2 ch · 《规则怪谈·无限层》4 ch · state open-source, verifiable</p></div>
+    <div class="milestone"><div class="dist">now</div><h3 id="serials-headline">Serials running</h3><p id="serials-detail">Loading stats.json…</p></div>
     <div class="milestone"><div class="dist">next</div><h3>100k characters</h3><p>first public milestone</p></div>
     <div class="milestone"><div class="dist">then</div><h3>1,000k characters</h3><p>a million without amnesia</p></div>
     <div class="milestone"><div class="dist">goal</div><h3>Beyond 22,400 pages</h3><p>beating the human record, verifiably</p></div>
   </div>
-  <p class="note" style="margin-top:22px">drift-rate — the model’s rate of misremembering prior values — is 8.3%,
-  observable, falling chapter by chapter, and aimed at zero. Every chapter: prose + world state + git evidence chain.
+  <p class="note" style="margin-top:22px">drift-rate — the model’s rate of misremembering prior values — last measured at 8.3%
+  (2026-08-06; run id not retained), not a live metric. Every chapter: prose + world state + git evidence chain.
   <a href="challenge.html" style="color:var(--gold-deep);font-weight:600">Read the rules →</a></p>
+  <script>
+  fetch('stats.json').then(function (r) { return r.json() }).then(function (s) {
+    var n = s.serials.length
+    var parts = s.serials.map(function (x) { return '《' + x.title + '》' + x.chapters_verified + ' ch' })
+    document.getElementById('serials-headline').textContent = n + ' serials running'
+    document.getElementById('serials-detail').textContent = parts.join(' · ') + ' · state open-source, verifiable'
+  }).catch(function () {})
+  </script>
 </section>
 
 <section class="section tight" id="roadmap">
