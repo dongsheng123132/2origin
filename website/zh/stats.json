@@ -1,40 +1,42 @@
 {
-  "generated_at": "2026-08-27T11:54:52.084Z",
-  "commit": "dc39e2d6",
+  "generated_at": "2026-09-01T15:18:57.080Z",
+  "commit": "45933036",
   "serials": [
     {
       "id": "yueluo",
       "title": "月落渡口",
       "genre": "悬疑志怪",
-      "chapters_verified": 4,
+      "chapters_verified": 5,
       "chapter_list": [
         11,
         12,
         13,
-        14
+        14,
+        15
       ],
-      "words": 9518,
+      "words": 12934,
       "drafts": [],
-      "last_chapter": 14,
-      "last_at": "2026-08-27T10:59:52.852Z"
+      "last_chapter": 15,
+      "last_at": "2026-09-01T14:47:16.148Z"
     },
     {
       "id": "rules",
       "title": "规则怪谈·无限层",
       "genre": "规则怪谈",
-      "chapters_verified": 6,
+      "chapters_verified": 7,
       "chapter_list": [
         1,
         2,
         3,
         4,
         5,
-        6
+        6,
+        7
       ],
-      "words": 15613,
+      "words": 19791,
       "drafts": [],
-      "last_chapter": 6,
-      "last_at": "2026-08-06T01:18:31.122Z"
+      "last_chapter": 7,
+      "last_at": "2026-09-01T15:18:50.100Z"
     },
     {
       "id": "zs",
@@ -56,8 +58,8 @@
     }
   ],
   "totals": {
-    "chapters_verified": 16,
-    "words": 81589
+    "chapters_verified": 18,
+    "words": 89183
   },
   "drift_rate": null,
   "cadence": [
