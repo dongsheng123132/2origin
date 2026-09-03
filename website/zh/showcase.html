@@ -49,7 +49,7 @@
     <article class="card"><div class="tag">Textbook · Beta</div><h3>教材</h3><p>安全预检、教材判据、审阅建议与受限结构副本。当前唯一面向真实材料的本机能力。</p></article>
     <article class="card"><div class="tag">Narrative · Research</div><h3>本象小说</h3><p>长篇人物、秘密、伏笔的状态表示与逐章验证。改写风格、续写与用户偏好仍是后续研究，不在本站承诺交付。<a href="demo-story.html">现场试用真实在跑的连载状态 →</a></p></article>
     <article class="card"><div class="tag">CAD · Narrow scope</div><h3>CAD 审计</h3><p>已有公开 DXF fixture 案例；当前范围有限，不能替代工程审图、签章或合规结论。<a href="demo-cad.html">现场试用两版真实图纸的差异 →</a></p></article>
-    <article class="card"><div class="tag">XLSX · Beta</div><h3>表格公式体检</h3><p>把工作簿读成依赖关系图，机器判据查出 6 类真实缺陷，并追出改一个数后哪些格子变脏。三条公式类规则未在真实财务模型上验证过假阳性率，见<a href="cases.html">案例页</a>。</p></article>
+    <article class="card"><div class="tag">XLSX · Beta</div><h3>表格公式体检</h3><p>把工作簿读成依赖关系图，机器判据查出 6 类真实缺陷，并追出改一个数后哪些格子变脏。三条公式类规则未在真实财务模型上验证过假阳性率，见<a href="cases.html">案例页</a>。<a href="demo-xlsx.html">现场试用真实工作簿的公式体检 →</a></p></article>
     <article class="card"><div class="tag">Speech · Experimental</div><h3>语音与方言</h3><p>只作为观察实验方向。尚未形成足以公开承诺准确率的方言识别能力。</p></article>
     <article class="card"><div class="tag">Vision · Experimental</div><h3>视觉与视频</h3><p>把观察结果接入对象状态的方向；不把演示页面称为视频理解产品。</p></article>
     <article class="card"><div class="tag">Human-in-the-loop</div><h3>人始终在链上</h3><p>人可以看状态、改选择、拒绝建议；系统必须记录边界，而不是替人伪造结论。</p></article>
@@ -59,12 +59,19 @@
 <section class="section" id="actions">
   <div class="sec-kicker">无界面动作包</div>
   <h2 class="sec-title">给工作台调用，不给网页假装万能</h2>
-  <p class="sec-lead">教材预检能力已作为公开 Beta 发布到 ClawHub；它保持本机、只读、可复核的边界，不把审阅建议伪装成自动交付。</p>
+  <p class="sec-lead">本象协议自身与三个方言 skill（小说写作、状态持久化、原生文档结构化）已在 ClawHub / SkillHub 上架、可一条命令装走；多 Agent 协同的发证与身份闸门以 <a href="agentteams.html">AgentTeams</a> 为协同基点，是本方案的核心 Skill；跨机跨人的任务交接已开源并发布到 npm。全部都保持本机优先、只读观察与可复核的边界，不把审阅建议或协同结果伪装成自动交付。</p>
   <div class="action-list">
     <article><code>book-docx-safe-preflight</code><p>输入：本机 DOCX。输出：安全预检、只读观察与教材判据 JSON。默认不写回，不上传。</p><a class="status prep" href="https://clawhub.ai/dongsheng123132/skills/bookorigin-docx-review" target="_blank" rel="noopener">ClawHub 公开 Beta</a></article>
     <article><code>book-review-package</code><p>输入：已验证的本机案例。输出：复核来源哈希与记录链后的 advisory-only 审阅包。</p><a class="status prep" href="https://clawhub.ai/dongsheng123132/skills/bookorigin-docx-review" target="_blank" rel="noopener">ClawHub 公开 Beta</a></article>
+    <article><code>certify.stamp / observe / certify / whoami</code><p>输入：状态路径 + 经验 id，身份由 <code>observeIdentity()</code> 观察得到，不从参数取。输出：<code>certify.result</code> JSON，状态里记 <code>exam.examiner</code> 与 <code>separation_strength</code>，写发证台账。以 AgentTeams（原名 Hiclaw）自带 Matrix homeserver 为协同基点，作者不能给自己发证。</p><a class="status prep" href="agentteams.html">AgentTeams 桥接 · 判据 50/50 + 真 Tuwunel 12/12</a></article>
+    <article><code>task-passport</code><p>输入：任务短号。输出：<code>.taskpack</code>（ZIP + BagIt，RFC 8493）或 JSON，让任务带着当前世界状态跨 harness、跨机、跨人接力，不搬运聊天记录。</p><a class="status prep" href="https://github.com/dongsheng123132/task-passport" target="_blank" rel="noopener">MIT · GitHub + npm task-passport@0.3.0</a></article>
+    <article><code>origin-writer</code><p>输入：章节草稿与状态包。输出：每章一笔语义事务，过五道门禁（禁区/伏笔状态机/正文对照/自报断言复核）才落盘。站内可现场试用同一案例包 <code>novels/月落渡口.origin/</code> 的真实回放，见<a href="demo-story.html">本象小说</a>。</p><a class="status prep" href="https://clawhub.ai/dongsheng123132/skills/origin-writer" target="_blank" rel="noopener">ClawHub / SkillHub 已发布 · 自测 42/42</a></article>
+    <article><code>benxiang-memory</code><p>输入：项目状态路径。输出：MCP Server（stdio，零依赖），<code>origin_state</code> 取投影、<code>origin_commit</code> 提交，状态存 <code>.origin</code> 包不存聊天记录。</p><a class="status prep" href="https://clawhub.ai/dongsheng123132/skills/benxiang-memory" target="_blank" rel="noopener">ClawHub / SkillHub 已发布 · 端到端 25/25</a></article>
+    <article><code>origin-office</code><p>输入：本机 docx/pptx。输出：原生结构逐个建成对象，SHA-256 结构指纹入库，篡改即检出。明说不做 OCR，只做原生电子文档。</p><a class="status prep" href="https://clawhub.ai/dongsheng123132/skills/origin-office" target="_blank" rel="noopener">ClawHub / SkillHub 已发布 · 自测 20/20</a></article>
+    <article><code>benxiang-protocol</code><p>输入：对象+关系+状态+约束+来源。输出：事务过确定性门禁才落盘的状态层，每个字段都能回答"凭什么是这个值"；核心运行时零第三方依赖。</p><a class="status prep" href="https://clawhub.ai/dongsheng123132/skills/benxiang-protocol" target="_blank" rel="noopener">ClawHub / SkillHub 已发布 · 自测 96/96 · 一致性向量 87/87 · 变异检查 19/19</a></article>
   </div>
-  <p class="note">自动改写教材、CAD 工程审图、方言识别、视觉/视频理解都不在当前动作包清单中。</p>
+  <p class="install-cmd">可复制安装命令：<code>skillhub install origin-writer</code> · <code>skillhub install benxiang-protocol --namespace user_abeb50e0</code> · <code>skillhub install benxiang-memory --namespace user_abeb50e0</code> · <code>skillhub install origin-office --namespace user_abeb50e0</code></p>
+  <p class="note">自动改写教材、CAD 工程审图、方言识别、视觉/视频理解都不在当前动作包清单中。阿里云官方用云 Skills 本方案当前未使用——动作全在文档、图纸与本地状态上，不涉及云资源治理，理由详见提交材料《开源与第三方依赖披露》。</p>
 </section>
 
 <footer class="footer"><div class="footer-inner"><div><div class="brand-line">2Origin <span class="zh">本象协议</span></div><p>保存本象，按需投影。<br>协议、工作台与动作包各自承担不同边界。</p></div><div><h4>协议</h4><a href="manifesto.html">宣言</a><a href="cases.html">公开案例</a><a href="https://github.com/dongsheng123132/2origin" target="_blank" rel="noopener">GitHub ↗</a></div><div><h4>能力</h4><a href="showcase.html">能力展厅</a><a href="solutions.html">解决方案</a><a href="challenge.html">白鼓挑战</a></div></div><div class="footer-bottom"><div class="in"><span>© 2026 2Origin 协议 · Apache-2.0</span><span>本象协议 · Benxiang · Origin IR</span></div></div></footer>
