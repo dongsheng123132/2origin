@@ -2,3 +2,5 @@
 {"chapter":12,"file":"ch12.txt","chars":1464,"at":"2026-08-05T18:05:43.787Z","by":"hermes:pipeline","tx":"ch12-auto"}
 {"chapter":13,"file":"ch13.txt","chars":2547,"at":"2026-08-27T10:48:00.857Z","by":"hermes:deepseek-v4-flash","tx":"ch13-auto"}
 {"chapter":14,"file":"ch14.txt","chars":3115,"at":"2026-08-27T10:59:52.852Z","by":"hermes:deepseek-v4-flash","tx":"ch14-auto"}
+{"chapter":15,"file":"ch15.txt","chars":3629,"at":"2026-09-01T14:47:16.148Z","by":"commit-tx","tx":"ch15-auto"}
+{"chapter":16,"file":"ch16.txt","chars":1984,"at":"2026-09-06T13:12:27.713Z","by":"commit-tx","tx":"ch16-auto"}

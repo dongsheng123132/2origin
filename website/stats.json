@@ -1,29 +1,30 @@
 {
-  "generated_at": "2026-09-01T15:18:57.080Z",
-  "commit": "45933036",
+  "generated_at": "2026-09-06T14:03:51.631Z",
+  "commit": "cd0cc0d9",
   "serials": [
     {
       "id": "yueluo",
       "title": "月落渡口",
       "genre": "悬疑志怪",
-      "chapters_verified": 5,
+      "chapters_verified": 6,
       "chapter_list": [
         11,
         12,
         13,
         14,
-        15
+        15,
+        16
       ],
-      "words": 12934,
+      "words": 14819,
       "drafts": [],
-      "last_chapter": 15,
-      "last_at": "2026-09-01T14:47:16.148Z"
+      "last_chapter": 16,
+      "last_at": "2026-09-06T13:12:27.713Z"
     },
     {
       "id": "rules",
       "title": "规则怪谈·无限层",
       "genre": "规则怪谈",
-      "chapters_verified": 7,
+      "chapters_verified": 8,
       "chapter_list": [
         1,
         2,
@@ -31,12 +32,13 @@
         4,
         5,
         6,
-        7
+        7,
+        8
       ],
-      "words": 19791,
+      "words": 21935,
       "drafts": [],
-      "last_chapter": 7,
-      "last_at": "2026-09-01T15:18:50.100Z"
+      "last_chapter": 8,
+      "last_at": "2026-09-06T13:11:37.273Z"
     },
     {
       "id": "zs",
@@ -58,11 +60,16 @@
     }
   ],
   "totals": {
-    "chapters_verified": 18,
-    "words": 89183
+    "chapters_verified": 20,
+    "words": 93212
   },
   "drift_rate": null,
   "cadence": [
+    {
+      "sha": "cd0cc0d9",
+      "at": "2026-09-06 21:46:22 +0800",
+      "subject": "story: 白鼓挑战 M1 达成——规则怪谈 ch08 与月落渡口 ch15/ch16 过五门禁落盘"
+    },
     {
       "sha": "dc39e2d6",
       "at": "2026-08-27 19:47:05 +0800",
