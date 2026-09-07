@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+// 生成 月落渡口.origin/graph/limits.json —— 第七要素：边界。
+// 用完即弃的一次性脚本，不进 compiler/adapters，只写这一本书的包。
+
+import { writeFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+import { limit, checkLimits } from '../../../compiler/limits.mjs'
+
+const HERE = dirname(fileURLToPath(import.meta.url))
+
+const limits = [
+  limit(
+    'story-constraints-trust-declared-state',
+    'uncovered',
+    'graph:constraints.json',
+    'graph/constraints.json 里的 6 条禁区（fz:betrayal-secret / fz:gate-closed / fz:zhao-qi-alive / ' +
+      'fz:left-hand / fz:suspicion-unresolved / fz:a-zhi-silent）判定的是事务提交时声明的状态字段' +
+      '（char:lin-zheng.knows 数组、obj:black-key.used 布尔值、hook:*.status 等），不是对正文文字本身做语义理解。' +
+      '如果某一章正文里不小心写漏了嘴（比如林峥的台词暗示他已知道白遥叛变），但提交事务的 state_changes 没有如实声明这次知识变化，' +
+      '这 6 条约束抓不到——它们只信任事务里报的字段，不会反过来去读正文核实字段报得对不对。',
+    '这 6 条约束只能保证「声明的状态自洽」，不能保证「正文与声明的状态一致」；后者要靠 rule:* 那批 CED 正则（见 story-ced-vocab-unverified 边界）去扫正文，两者缺一不可。审计时不要只看 constraints 全绿就认为正文没破功，要连 CED 的判定结果一起看。'
+  ),
+
+  limit(
+    'story-ced-vocab-unverified',
+    'unverified',
+    'benchmark/shadowbench-w/eval/ced.mjs (RULES)',
+    'engine.mjs 提交章节时用来扫正文的 rule:* 判定规则（gate-time / left-hand / key-once / custody 等）是专门为《月落渡口》这一本书的具体人名地名' +
+      '（白遥、赵七、黑钥匙、月台、林峥…）手写的中文正则词表，不是通用的叙事一致性检测器。' +
+      'ced.mjs 自己的注释（2026-08-05，Run #23/#24）记录：补词表前六条规则合计只认得 13/40，补词表后在自己的失败用例集上做到 40/40、误报 0' +
+      '（该用例集共 65 条，含 25 个陷阱，见 eval/vocab-patch-check.mjs 与 selftest）。' +
+      '这个 40/40 是在同一批手写词表覆盖到的用例上自测的结果，没有做过集外验证——没有拿这本书之外的其它文本或这本书里词表没覆盖到的新写法测过误报/漏报率。',
+    '新写法、新人名地名、换一种说法描述同一违规（比如不用「持/握/挥/提」而用词表外的动词描述持刀），大概率漏检；不要把「CED 全过」当成「正文绝对没破功」的证明，仍需人工抽查，尤其是长篇写到后期新增人物/道具之后。'
+  ),
+
+  limit(
+    'story-history-imported-vs-observed',
+    'lossy',
+    'provenance/history.jsonl',
+    'provenance/history.jsonl 共 14 条变更记录，其中 seq 1–10（chapter 2–10）共 10 条 kind:imported、by:spec-import，' +
+      '是 initWriter() 从外部世界规格夹具（timeline/state-changes.jsonl）批量导入的初始重放历史，没有经过 submitChapter() 的事务提交流程' +
+      '（没有正文、没有门禁五道复核、部分记录如 seq 3/5/8 甚至没有 from 只有 to），本质是「导入时声明我认为这是真的」而不是「模型写了对应正文并被机器核验过」。' +
+      '剩下 seq 11–14（4 条，占 14 条中的 4/14）才是 kind:observed，由 hermes 各后端实际提交事务产生，带 from/to（或 claimed_from）与 basis，经过了完整门禁。',
+    '把这份历史当审计凭证用之前，先按 kind 字段分组看：kind:imported 的 10 条只代表「世界规格夹具这么写」，其可信度等同于导入时的原始夹具数据，不等同于「模型提交并通过校验」的历史；只有 kind:observed 的 4 条才具备真事务提交语义。若要评估「模型写作有没有守约束」，应只统计 kind:observed 那部分。'
+  ),
+]
+
+const bad = checkLimits(limits)
+if (bad.length) {
+  console.error('limits 自检未通过：')
+  for (const b of bad) console.error(`  [${b.severity}] ${b.code}: ${b.msg}`)
+  process.exit(1)
+}
+
+const outPath = join(HERE, 'limits.json')
+writeFileSync(outPath, JSON.stringify(limits, null, 2) + '\n', 'utf8')
+console.log(`写入 ${limits.length} 条 limit 到 ${outPath}`)
