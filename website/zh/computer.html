@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本源 AI 计算机 — 2Origin</title>
+<meta name="description" content="本源 AI 计算机把多 AI 协作、本象事务验收与 Origin Trace 连接起来。查看真实任务案例、已验证进展，以及检查点恢复的边界。">
+<link rel="canonical" href="https://2origin.org/zh/computer.html">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/computer.css">
+</head>
+<body>
+<nav class="nav" aria-label="主导航"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>2Origin</span></a>
+  <div class="nav-links"><a href="index.html">本象协议</a><a href="computer.html" aria-current="page">AI 计算机</a><a href="#cases">真实案例</a><a href="showcase.html" class="hide-sm">能力展厅</a><a href="https://github.com/dongsheng123132/2origin" class="gh">GitHub ↗</a></div>
+</div></nav>
+<header class="hero"><div class="hero-inner">
+  <p class="eyebrow">2Origin · 本源 AI 计算机 · 研究原型</p>
+  <h1>模型可换。<br><span class="grad">工作有据可接。</span></h1>
+  <p class="sub">让不同 AI 围绕同一项任务协作：<em>本象维护被接受的对象状态，Origin Trace 保存状态为什么变化。</em>人可以看见执行过程，检查结果，也可以拒绝一次没有依据的完成声明。</p>
+  <div class="hero-cta"><a class="btn btn-primary" href="#cases">看三个真实进展 →</a><a class="btn btn-ghost" href="#relationship">它与本象是什么关系？</a></div>
+  <p class="computer-note">进展记录：2026-09-09 · 本地验证阶段 · 本页为案例说明，不是在线运行控制台</p>
+</div></header>
+<main>
+<section class="section" id="relationship">
+  <div class="sec-kicker">从协议到整机</div>
+  <h2 class="sec-title">本象是底层，本源 AI 计算机把它用起来。</h2>
+  <p class="sec-lead">同一个 2Origin，对应两个层次：本象协议解决对象如何保存、校验与追溯；本源 AI 计算机把模型、任务状态、执行动作和验收过程连接起来。</p>
+  <div class="grid-3">
+    <article class="card"><div class="tag">本象 · 对象与事务</div><h3>什么结果被接受</h3><p>AI 提交候选变更，确定性编译器检查约束。通过后才更新对象；拒绝的候选不会成为被接受的状态。</p></article>
+    <article class="card"><div class="tag">本源 AI 计算机 · 运行系统</div><h3>谁来完成这项工作</h3><p>连接不同 AI 宿主、任务与动作入口，组织协作和复核。模型输出意见，运行核心负责落实状态变化。</p></article>
+    <article class="card"><div class="tag">Origin Trace · 执行证据</div><h3>为什么发生这次变化</h3><p>同一记录保存调用、前后状态、实际差异、审批与断言结果，供时间轴展示、离线回放和回归验收使用。</p></article>
+  </div>
+  <ol class="computer-flow" aria-label="一次任务的验收流程"><li>AI 提案</li><li>VERIFY 验证</li><li>COMMIT / REJECT</li><li>Trace 留下证据</li></ol>
+</section>
+<section class="section" id="cases">
+  <div class="sec-kicker">已完成的本地案例</div>
+  <h2 class="sec-title">从真实任务看进展。</h2>
+  <p class="sec-lead">这里记录实际执行过的工作，也明确每项结果能证明到哪里。原始运行证据尚未提供公开下载，不把内部验证写成第三方可独立复现。</p>
+  <div class="computer-cases">
+    <article class="card" id="multi-ai"><div class="tag">案例 01 · 真实多宿主协作</div><h3>三个 AI 宿主，完成一份诊断报告</h3><p><strong>任务：</strong>围绕两项已有回归失败，整理代码证据、提出待验证假设，生成诊断报告。</p><p class="computer-route">Hermes 整理 → Codex 诊断 → DSH 复核</p><p><strong>结果：</strong>顺序交接真实输出，形成带引用的报告；执行事件驱动本地时间轴与回放。</p><p class="computer-limit"><strong>边界：</strong>报告验收不等于 Bug 已修复；三个宿主的实际模型身份未可靠观测，不宣称是三个不同模型。</p></article>
+    <article class="card" id="acceptance"><div class="tag">案例 02 · 本象事务验收</div><h3>把“我完成了”交给核心检查</h3><p><strong>任务：</strong>复用诊断报告，验证是否可以把它登记为已验收结果。</p><p class="computer-route">虚假修复声明：REJECT · 合规报告提案：COMMIT</p><p><strong>结果：</strong>本象编译器拦截虚假修复声明与陈旧状态 head；合法提案写入后回读验证，拒绝时状态保持不变。</p><p class="computer-limit"><strong>边界：</strong>故意注入错误进行验证；本例是本地编译器执行，没有再次调用模型。</p></article>
+    <article class="card" id="recovery"><div class="tag">案例 03 · 写前检查点恢复</div><h3>运行进程中断，工作从证据接续</h3><p><strong>任务：</strong>在验证完成、世界写入尚未开始时终止运行进程，由后继 worker 接管。</p><p class="computer-route">保存检查点 → 终止原进程 → 接管复核 → 单次提交</p><p><strong>结果：</strong>另一进程完成提交；并发接力只产生一次 COMMIT，重复恢复不重写 Trace 或世界状态。</p><p class="computer-limit"><strong>边界：</strong>仅验证本机运行进程接力，未证明模型内部上下文续接。写入途中中断会要求核对，不自动重试。</p></article>
+  </div>
+</section>
+<section class="section" id="goai">
+  <div class="sec-kicker">GOAI · 从这里了解项目</div>
+  <h2 class="sec-title">一个入口，看清原理、案例与证据范围。</h2>
+  <div class="grid-3">
+    <article class="card"><h3>理解底层</h3><p>阅读本象协议，了解持久对象、语义事务、约束与来源。</p><a href="index.html">本象协议 →</a></article>
+    <article class="card"><h3>了解完整系统</h3><p>从多 AI 协作、结果验收、运行恢复三个案例理解本源 AI 计算机。</p><a href="#cases">本页案例 →</a></article>
+    <article class="card"><h3>试用已有能力</h3><p>已有领域案例与能力展厅保持独立入口；本页新增进展目前以本地验证为依据。</p><a href="cases.html">领域案例 →</a></article>
+  </div>
+  <aside class="computer-boundary"><h3>当前仍需解决</h3><p>扩大回归中，宿主识别与并发观察仍存在未通过项。任意阶段自动恢复、跨机器接力、模型内部上下文续接尚未验收。本页不代表这些能力已经完成，也不替代正式赛事提交材料。</p></aside>
+</section>
+</main>
+<footer class="footer"><div class="footer-inner"><div><div class="brand-line">2Origin</div><p>Agent 是可替换进程；本象维护被接受的现实；<br>Origin Trace 保存现实为什么变化。</p></div><div><h4>继续了解</h4><a href="index.html">本象协议</a><a href="showcase.html">能力展厅</a><a href="https://github.com/dongsheng123132/2origin">公开仓库</a></div></div></footer>
+</body>
+</html>
