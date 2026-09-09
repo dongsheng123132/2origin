@@ -1,5 +1,10 @@
 /* The AI computer overview reuses the protocol site's existing design tokens. */
 .computer-note { margin-top:24px; max-width:50em; color:rgba(250,249,246,.7); font-size:14px; }
+.computer-motherboard { margin:28px auto 32px; max-width:900px; }
+.computer-motherboard img { display:block; width:100%; height:auto; border:1px solid var(--line); border-radius:var(--radius); background:#08090c; }
+.computer-motherboard figcaption { margin-top:12px; color:var(--text-soft); font-size:14px; }
+.computer-boundary summary { cursor:pointer; font-weight:600; }
+.computer-boundary[open] summary { margin-bottom:12px; }
 .computer-flow { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:32px; padding:0; list-style:none; counter-reset:step; }
 .computer-flow li { padding:20px; border:1px solid var(--line); border-radius:var(--radius); font-weight:600; counter-increment:step; }
 .computer-flow li::before { content:counter(step,decimal-leading-zero) " / "; color:var(--gold-deep); font-family:var(--mono); }
