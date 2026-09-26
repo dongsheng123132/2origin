@@ -43,7 +43,7 @@ node agentteams/runtime.mjs start
 node agentteams/demo-publishing.mjs
 ```
 
-脚本使用真实教材一致性检查器 `demo/book-project/verify-book.mjs`，顺序证明：
+当独立包未包含主仓的 `demo/book-project/verify-book.mjs` 时，脚本会使用包内的样稿一致性检查器；这只复现发证流程，不证明真实教材检查器已经运行。完整的可复跑命令和边界见 [`../REPRO.md`](../REPRO.md)。流程顺序为：
 
 1. Executor 只能写入 candidate；
 2. 没有第三方观察时 Examiner 被拒，学历字节级不变；
@@ -51,24 +51,12 @@ node agentteams/demo-publishing.mjs
 4. Examiner 不跑命令，只读观察升为 verified；
 5. 同一观察无法重复发证。
 
-成功输出 `demo.result`，包含 8 个布尔判据和三方身份指纹，不含 token。审计事件经南桥追加到 `demo/agentteams-bridge/publishing-demo-ledger.jsonl`。更完整的真实身份攻击面验证与跨领域复用分别是：
+成功输出 `demo.result`，包含 8 个布尔判据和三方身份指纹，不含 token。审计事件经南桥追加到 `demo/agentteams-bridge/publishing-demo-ledger.jsonl`。独立包内可复跑的身份锚与四角色验证分别是：
 
 ```powershell
-node demo/agentteams-bridge/e2e-real-attestation.mjs
-node demo/agentteams-bridge/e2e-crossdomain.mjs
+node agentteams/verify-identity-anchors.mjs
+node agentteams/demo-four-roles.mjs
 ```
-
-## CAD 窗户计数证据
-
-```powershell
-node agentteams/cad-window-audit.mjs
-```
-
-默认对能力测试图 `D:/uking编程/本象协议/adapters/cad/fixtures/A-101.dxf` 运行真实 CAD 解析器，按门窗层闭合实体计数，并把标注文字逐樘关联回实体与 bbox。当前固定样例的结论是 4 樘窗、3 个标注、2 个唯一编号；C2 重号且第 4 樘漏编号。图文报告、原图/高亮图和机器可读 Trace 输出到 `agentteams/submission/cad-window-audit/`。
-
-这张 A-101 是能力测试图，不是客户原图。客户实图应优先提供 DXF（推荐 R13+，可保留实体 handle）；DWG 需先在本地离线转换，禁止把客户图上传在线转换站。R12/AC1009 仍可可靠计数，但跨版本实体身份只能退化为内容哈希。
-
-演示材料分开维护：初赛原稿 `agentteams/submission/AgentInfra-证据链-初赛方案.pptx` 不覆盖；包含 CAD 实体证据与运行证据的 13 页版本位于 `agentteams/submission/AgentInfra-证据链-路演演示版.pptx`；进一步把四层在线、出版社 Trace、真实身份/反向闸门、跨领域复用都做成实跑截图的 17 页版本位于 `agentteams/submission/AgentInfra-证据链-路演演示版-证据可视化.pptx`。
 
 ## 文件入口
 
@@ -78,7 +66,7 @@ node agentteams/cad-window-audit.mjs
 - `selfcheck.mjs`：不带密钥的可分发自检。
 - `verify-agentteams.mjs`：核心安全闸门判据。
 - `verify-runtime.mjs`：生命周期故障注入判据。
-- `cad-window-audit.mjs`：CAD 门窗实体计数、标注一致性与图文证据导出。
+- `verify-identity-anchors.mjs`：OIDC、SPIFFE 与 Kubernetes TokenReview 身份锚判据。
 - `AGENT-IDENTITY.md`：身份威胁模型和证明强度边界。
 - `SKILLS.md`：完整 Skill 输入输出、失败处理与复用说明。
 
@@ -89,4 +77,4 @@ node agentteams/cad-window-audit.mjs
 - 真身份 Demo 需要本地预置的三个 Matrix token；无密钥自检不需要。
 - 模型推理和付费 API 不在这条验证路径中，缺少模型 key 不影响闸门与审稿证据链复核。
 
-协议以 Apache-2.0 兼容方式分发，运行时代码无第三方 npm 依赖。
+本独立桥接包以 MIT 分发，见 [`../LICENSE`](../LICENSE)；2origin 主仓其余内容的适用范围见根目录 LICENSE。运行时代码无第三方 npm 依赖。
