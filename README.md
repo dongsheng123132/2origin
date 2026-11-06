@@ -1,6 +1,6 @@
 # 本象协议 Benxiang · Origin IR
 
-作者 / Author：贺去病（贺方升 / Dosen）· [hequbing.com](https://www.hequbing.com)
+作者 / Author：He Fangsheng (贺方升 / 贺去病; Dosen)· [hequbing.com](https://www.hequbing.com)
 
 [![官网 2origin.org](https://img.shields.io/badge/官网-2origin.org-blue)](https://2origin.org)
 [![CI](https://github.com/dongsheng123132/2origin/actions/workflows/ci.yml/badge.svg)](https://github.com/dongsheng123132/2origin/actions/workflows/ci.yml)
