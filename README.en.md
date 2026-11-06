@@ -1,5 +1,7 @@
 # Benxiang · 本象协议
 
+**Author / Maintainer：贺去病 (He Fangsheng / Dosen) · [hequbing.com](https://www.hequbing.com)**
+
 [![Website](https://img.shields.io/badge/website-2origin.org-blue)](https://2origin.org)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](package.json)
